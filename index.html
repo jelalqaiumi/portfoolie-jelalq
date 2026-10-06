@@ -18,6 +18,24 @@
     <title>Jelal Qaiumi — Systemutvecklare</title>
   </head>
   <body>
+    <!-- Sidan är helt klientrenderad och blir blank utan JavaScript. Det är en
+         känd följd av stackvalet, inte ett fel, men ett meddelande kostar
+         ingenting. Texten är ORDAGRANN ur ARKITEKTUR.md - formulera inte om
+         den. Ligger direkt före <div id="root"> enligt samma beslut.
+
+         INGEN styling, med avsikt. I bygget länkas CSS:en med <link rel
+         stylesheet>, så den laddas även utan JavaScript och meddelandet ärver
+         bodys ljusa text mot mörk botten. I dev importeras CSS:en ur main.jsx
+         och laddas alltså inte - då blir det webbläsarens standard, svart på
+         vitt. Båda är läsbara. En inline-färg hade varit sidans enda
+         hårdkodade färg, och en .noscript-klass hade blivit en tredje global
+         klass som ARKITEKTUR.md stängde dörren för. -->
+    <noscript>
+      <p>
+        Den här sidan behöver JavaScript för att visas. Slå på JavaScript i
+        webbläsaren och ladda om sidan.
+      </p>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

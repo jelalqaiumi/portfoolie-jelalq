@@ -4,13 +4,35 @@ import Skills from './components/Skills.jsx';
 import Projects from './components/Projects.jsx';
 import Section from './components/Section.jsx';
 import Footer from './components/Footer.jsx';
-import { sections, SKILLS_ID, PROJECTS_ID } from './data/sections.js';
+import { sections, SKILLS_ID, PROJECTS_ID, MAIN_ID } from './data/sections.js';
 
 function App() {
   return (
     <>
+      {/* SKIP-LÄNKEN är sidans FÖRSTA fokuserbara element och måste förbli det.
+          Lägg aldrig något fokuserbart före den - då tappar den sin uppgift,
+          att låta en tangentbordsanvändare hoppa över headern utan att tabba
+          genom den.
+
+          Dold med .visually-hidden, synlig vid :focus (global.css). Målet
+          hämtas ur MAIN_ID, inte som bokstavlig sträng: regeln att inget
+          sektions-id får skrivas av i en .jsx-fil gäller även detta ankare, och
+          MAIN_ID exporteras ur sections.js just för det.
+
+          Beslutat i ARKITEKTUR.md, "Skip-länk och aria-current". */}
+      <a className="visually-hidden" href={`#${MAIN_ID}`}>
+        Hoppa till innehållet
+      </a>
+
       <Header />
-      <main>
+      {/* tabIndex={-1} är det som FAKTISKT får skip-länken att fungera, och
+          det är uppmätt: utan den flyttade aktiveringen bara rullningen, medan
+          document.activeElement förblev <body>. Nästa Tab gick då tillbaka in i
+          headern - alltså precis det länken finns för att slippa.
+          -1 håller <main> utanför tabordningen men gör den mottaglig för
+          fokus via ankaret. Ingen synlig ring uppstår: :focus-visible matchar
+          inte programmatiskt fokus från en fragmentnavigering. */}
+      <main id={MAIN_ID} tabIndex={-1}>
         {/* Hero renderas ALLTID och ligger därför utanför mappningen. Det
             garanterar att sidan alltid har exakt ett <h1> och att
             logga-länkens ankare alltid har ett mål - även om hero-posten

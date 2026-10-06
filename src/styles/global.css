@@ -198,6 +198,55 @@ section[id] + section[id] {
   border-width: 0;
 }
 
+/* SKIP-LÄNKEN syns när den får fokus. Beslutat i ARKITEKTUR.md, "Skip-länk och
+ * aria-current": den döljs med samma .visually-hidden som headerns namn och
+ * blir synlig vid :focus.
+ *
+ * INGEN TREDJE GLOBAL KLASS. ARKITEKTUR.md stängde dörren för det
+ * ("den andra och sista sanktionerade globala klassen"), så detta är ett
+ * :focus-tillstånd på den befintliga primitiven, inte ett nytt namn.
+ *
+ * Begränsad till `a`, inte till .visually-hidden i största allmänhet: en
+ * framtida användning av primitiven på något som SKA förbli dolt även i fokus
+ * påverkas då inte. I dag finns två användningar - denna länk och headerns
+ * namn-span, som inte är fokuserbar.
+ *
+ * :focus och inte :focus-visible. En skip-länk ska synas för var och en som
+ * når den med tangentbord, och :focus-visible är webbläsarens heuristik för
+ * när den TROR att markeringen behövs. Här vet vi att den behövs.
+ *
+ * EJ I ARKITEKTUR: måtten, placeringen och lagernivån. Frågan är hur länken
+ * ska se ut och var den ska ligga när den väl syns.
+ *
+ * z-index måste vara HÖGRE än --z-header: headern är sticky, och länken ligger
+ * före den i DOM, så vid samma lagernivå hade headern målat över den. Det är
+ * därför projektet nu har ett andra z-index-värde, uttryckt som en relation
+ * till det första i stället för som ett nytt löst tal. */
+a.visually-hidden:focus {
+  position: fixed;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: calc(var(--z-header) + 1);
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  overflow: visible;
+  clip-path: none;
+  /* MÖRK panel med ljus text, INTE orange. Första försöket gav länken
+   * --color-accent som botten, och eftersom fokusringen också är orange blev
+   * ringen osynlig mot sin egen panel - uppmätt 1,000:1. Det är exakt samma fel
+   * som headerns kant hade när --color-border råkade bli lika med bandet.
+   *
+   * Med mörk panel ligger den orange ringen mot headerbandet i gapet som
+   * outline-offset lämnar, och mäter 5,047:1. Panelen har dessutom 19,7:1 mellan
+   * text och botten. Ringen får behålla sitt enda jobb: att vara en ring. */
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+}
+
 /* sm = 600px, brytpunkten ur ARKITEKTUR.md. Här blir namnet synlig text igen. */
 @media (min-width: 600px) {
   .visually-hidden-until-sm {

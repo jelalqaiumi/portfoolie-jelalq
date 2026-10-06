@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { sections, HERO_ID } from '../data/sections.js';
 import styles from './Header.module.css';
 
@@ -15,7 +16,102 @@ const navSections = sections.filter(
     section.id && typeof section.label === 'string' && section.label.trim() !== '',
 );
 
+/* ===== PROJEKTETS FÖRSTA useEffect ======================================
+ * Medvetet, och bara här. ARKITEKTUR.md: aria-current kräver en
+ * IntersectionObserver och blir därmed projektets första useEffect - "det ska
+ * vara ett medvetet val och inte smyga in tidigare".
+ *
+ * Jag prövade om det gick utan. Det gör det inte: vilken sektion som är i vy
+ * är ett tillstånd som bara webbläsaren känner, och det finns ingen
+ * CSS-mekanism som kan sätta ett ARIA-attribut.
+ *
+ * STÄDNINGEN ÄR POÄNGEN. En observer som överlever en avmontering är en läcka,
+ * och i StrictMode körs effekten två gånger i utvecklingsläge - utan disconnect
+ * hade två observers varit igång samtidigt och skrivit över varandra.
+ *
+ * VARFÖR intersectionRect.height OCH INTE intersectionRatio: skills-sektionen
+ * är drygt 2400 px hög, så dess ratio når aldrig över ca 0,35 på en vanlig
+ * skärm. En kort sektion som råkar synas helt (ratio 1,0) hade då vunnit över
+ * en lång som fyller hela skärmen. Måttet som svarar på frågan "vad ser
+ * användaren mest av" är hur många PIXLAR av vyporten sektionen täcker.
+ *
+ * HERO OBSERVERAS OCKSÅ, trots att den inte har någon navlänk. Det är inte
+ * överflödigt - det är det som gör toppen av sidan rätt. Första versionen
+ * observerade bara navsektionerna, och då vann skills vid scrollY 0 med sina
+ * 160 synliga pixlar medan hero täckte 676: "Kompetenser" markerades som
+ * aktuell innan användaren ens hade nått sektionen. Uppmätt.
+ *
+ * Nu jämförs alla sektioner på samma villkor, och eftersom hero inte har någon
+ * navlänk matchar ingen länk när hero vinner. Ingen extra logik behövs - det
+ * följer av att jämförelsen är fullständig.
+ * ======================================================================== */
+function useCurrentSection(ids) {
+  const [currentId, setCurrentId] = useState(null);
+
+  useEffect(() => {
+    const elements = ids
+      .map((id) => document.getElementById(id))
+      .filter((el) => el !== null);
+
+    if (elements.length === 0) return undefined;
+
+    /* Headerns höjd läses ur TOKENET, inte som ett tal här. Den klibbande
+     * headern täcker vyportens översta rad, så en sektion ska inte räknas som
+     * "i vy" för de pixlar som ligger under headern. */
+    const headerHeight = getComputedStyle(document.documentElement)
+      .getPropertyValue('--header-height')
+      .trim();
+
+    /* Sparas utanför callbacken: en observer rapporterar bara de poster som
+     * ÄNDRATS, inte alla. Utan ett minne hade en sektion som slutat ändras
+     * försvunnit ur jämförelsen. */
+    const visible = new Map();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          visible.set(entry.target.id, entry.isIntersecting ? entry.intersectionRect.height : 0);
+        }
+
+        let best = null;
+        let bestHeight = 0;
+
+        /* Itererar ids i DATANS ordning, inte Map-ordning, så att ett
+         * oavgjort läge alltid faller på den sektion som kommer först på
+         * sidan. Annars hade utfallet berott på i vilken ordning
+         * webbläpparen råkade rapportera. */
+        for (const id of ids) {
+          const height = visible.get(id) ?? 0;
+          if (height > bestHeight) {
+            bestHeight = height;
+            best = id;
+          }
+        }
+
+        setCurrentId(best);
+      },
+      { rootMargin: `-${headerHeight} 0px 0px 0px`, threshold: [0, 0.01, 0.25, 0.5, 0.75, 1] },
+    );
+
+    for (const el of elements) observer.observe(el);
+
+    return () => observer.disconnect();
+  }, [ids]);
+
+  return currentId;
+}
+
+/* Stabila referenser: en ny array varje rendering hade gjort useEffect:ens
+ * beroende olikt varje gång och kopplat upp observern om och om igen.
+ *
+ * HERO_ID står FÖRST, i sidans ordning. Ordningen är inte kosmetisk: den
+ * avgör vilken sektion som vinner ett oavgjort läge, och då ska det bli den
+ * som kommer först på sidan. */
+const observedIds = [HERO_ID, ...navSections.map((section) => section.id)];
+
 function Header() {
+  const currentId = useCurrentSection(observedIds);
+
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
@@ -63,7 +159,19 @@ function Header() {
           <ul className={styles.navList}>
             {navSections.map((section) => (
               <li key={section.id}>
-                <a className={styles.navLink} href={`#${section.id}`}>
+                {/* aria-current="true", inte "page": "page" betyder att länken
+                    pekar på den sida man står på, och detta är avsnitt på EN
+                    sida. Beslutat i ARKITEKTUR.md.
+
+                    undefined när länken inte är aktuell, aldrig "false": ett
+                    utskrivet aria-current="false" annonseras av vissa
+                    skärmläsare som ett tillstånd, och då hade varje länk burit
+                    ett påstående om sig själv i stället för bara den aktuella. */}
+                <a
+                  className={styles.navLink}
+                  href={`#${section.id}`}
+                  aria-current={section.id === currentId ? 'true' : undefined}
+                >
                   {section.label}
                 </a>
               </li>

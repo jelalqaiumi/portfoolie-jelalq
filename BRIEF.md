@@ -223,3 +223,19 @@ Valt: **slå ihop den nya listan med de befintliga 93.**
 Sektionen blir sidans tyngsta del. Uppskattad höjd ca 3000 px på desktop.
 Det är accepterat — men layouten bör göra vad den kan för att hålla den
 läsbar.
+
+## Kontaktuppgifter kompletta 2026-10-06
+    e-post    qaiumi@hotmail.com
+    GitHub    https://github.com/Jelalqaiumi
+    LinkedIn  https://www.linkedin.com/in/jelalqaiumi
+
+GitHub-adressen är verifierad (HTTP 200).
+
+LinkedIn-adressen är HÄRLEDD ur användarnamnet "Jelalqaiumi" som Jelal
+uppgav, enligt LinkedIns format linkedin.com/in/<slug>. Den gick INTE att
+verifiera: LinkedIn svarar HTTP 999 på automatiska anrop, vilket betyder
+blockerat, inte saknat. Slutdelen i en LinkedIn-adress är inte alltid samma
+som visningsnamnet.
+
+Jelal ska klicka på länken när sektionen är byggd och bekräfta att den leder
+rätt. Gör den inte det är det en rad i src/data/contact.js.

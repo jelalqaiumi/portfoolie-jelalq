@@ -107,13 +107,6 @@
   margin-top: 0;
 }
 
-/* Raden om vart uppgifterna tar vägen. */
-.privacy {
-  margin-top: var(--space-5);
-  max-width: var(--measure);
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
 
 /* HONEYPOT. display: none döljer den för alla - inklusive skärmläsare, som
  * inte annonserar element utan layoutbox. tabindex="-1" och aria-hidden i

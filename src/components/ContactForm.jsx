@@ -2,14 +2,6 @@ import { useId, useRef, useState } from 'react';
 import { contact } from '../data/contact.js';
 import styles from './ContactForm.module.css';
 
-/* ===== TEXT SOM JELAL SKA GODKÄNNA ======================================
- * Raden under formuläret om vart uppgifterna tar vägen. Den talar å hans
- * vägnar, så den ska godkännas eller ersättas av honom. Byt strängen nedan.
- * ======================================================================== */
-const PRIVACY_TEXT =
-  'Formuläret skickas via tjänsten Web3Forms. Ditt namn och din e-postadress '
-  + 'passerar deras servrar på vägen till Jelals inkorg.';
-
 /* Ämnet sätts här och inte av besökaren, så att inkorgen visar något begripligt
  * utan att någon behöver formulera det. */
 const SUBJECT = 'Nytt meddelande från portfoliosidan';
@@ -260,7 +252,6 @@ function ContactForm() {
         </p>
       </form>
 
-      <p className={styles.privacy}>{PRIVACY_TEXT}</p>
     </div>
   );
 }

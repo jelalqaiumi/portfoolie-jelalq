@@ -43,7 +43,10 @@
 export const contact = {
   email: 'qaiumi@hotmail.com',
   links: [
-    { label: 'GitHub', url: 'https://github.com/Jelalqaiumi' },
+    /* GitHub-länken är borttagen på Jelals begäran 2026-10-06. url: null
+     * betyder att posten INTE renderas - ingen tom länk uppstår. Fyll i
+     * adressen igen för att få tillbaka den. */
+    { label: 'GitHub', url: null },
 
     /* LinkedIn-adressen är HÄRLEDD, inte verifierad: LinkedIn svarar HTTP 999
      * på automatiska anrop, alltså blockerat och inte saknat. Slutdelen i en

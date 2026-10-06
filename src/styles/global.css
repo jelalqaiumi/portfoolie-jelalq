@@ -1,0 +1,211 @@
+/* Global CSS: reset, baselement och de regler som gäller hela dokumentet.
+ * All komponentspecifik stil bor i respektive .module.css. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+
+  /* EJ I ARKITEKTUR: ska webbläsarens egen textuppskalning stängas av?
+   *
+   * iOS/Safari blåser upp textstorleken i liggande läge. Golvet "360 px utan
+   * horisontell scroll" håller inte om webbläsaren skalar upp texten själv. */
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+
+  /* VIKTEN SÄTTS HÄR OCH ÄRVS NEDÅT. 400 är teckensnittets enda vikt.
+   * Beslutat i ARKITEKTUR.md, "Typsnittet - Didact Gothic, en enda vikt".
+   * Litteralen 400 och inget token: ett token hade antytt att det finns ett
+   * alternativ att välja, och det gör det inte. */
+  font-weight: 400;
+  line-height: var(--leading-normal);
+
+  /* 360 px-GOLVETS GARANT. Beslutat i ARKITEKTUR.md, "360 px-golvet och grid".
+   *
+   * Ligger på `body` och ärvs av ALLT. Selektorlistan `h1, h2, h3, p, li` är
+   * UPPHÄVD: en uppräkning täcker bara den text vi kan räkna upp i dag, och
+   * varje uppräkning har en lucka. Uppmätt lucka: en 60 tecken lång filsökväg
+   * i ett `<span>` sprack golvet vid 360 px (scrollWidth 398 mot clientWidth
+   * 345) medan båda de dåvarande reglerna var uppfyllda.
+   *
+   * `overflow-wrap` är en ärvd egenskap, så en deklaration här täcker varje
+   * element som finns nu OCH varje element någon lägger till senare -
+   * `<span>`, `<code>`, `<a>`. Säkert som standard med uttryckligt undantag,
+   * i stället för osäkert som standard med en lista man måste minnas att utöka.
+   *
+   * `anywhere`, ALDRIG `break-word`: `break-word` bryter ett ord som redan
+   * ligger ensamt på en rad men dess brytpunkter räknas INTE in i
+   * min-content-bredden. `anywhere` räknas in, så elementet får faktiskt bli
+   * smalare än sitt längsta ord.
+   *
+   * UNDANTAGEN ligger i Header.module.css på .navList, .navLink och .logoName.
+   * `overflow-wrap` saknar verkan där `white-space: nowrap` är satt, så de
+   * behöver inte häva något här - headern har låst höjd och får inte radbryta. */
+  overflow-wrap: anywhere;
+}
+
+/* STÄNGER AV WEBBLÄSARENS EGEN FETNING. Utan denna regel gör webbläsaren
+ * h1-h4, strong och b feta utan att någon bett om det - och eftersom
+ * teckensnittet bara finns i vikt 400 kan den fetningen bara bli SYNTETISK:
+ * konturerna smetas ut algoritmiskt. Det läses som grötighet, värst i stora
+ * grader mot mörk botten. En fetning som webbläsaren hittar på är inget
+ * designval.
+ *
+ * `inherit`, INTE `400`: det säger vad vi menar - vikt ärvs, den väljs inte.
+ * Ett upprepat 400 hade sett ut som ett värde man kan ändra på just den raden.
+ * Sätt aldrig font-weight till något annat än det ärvda, någonstans i
+ * projektet. Beslutat i ARKITEKTUR.md, "Typsnittet". */
+h1,
+h2,
+h3,
+h4,
+strong,
+b {
+  font-weight: inherit;
+}
+
+h1,
+h2,
+h3 {
+  line-height: var(--leading-tight);
+}
+
+/* Hierarkin bärs av storlek, spärrning, färg, versaler och luft - inte av vikt.
+ * Den negativa spärrningen på h1 och h2 är ny och hör till enviktsskärningen. */
+h1 {
+  font-size: var(--text-3xl);
+  letter-spacing: var(--tracking-tight);
+}
+
+h2 {
+  font-size: var(--text-2xl);
+  letter-spacing: var(--tracking-tight);
+}
+
+h3 {
+  font-size: var(--text-xl);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* Sidomarginalen ägs HÄR, globalt, för header, sektioner och footer. Beslutat i
+ * ARKITEKTUR.md, "Var sidmarginalen bor". Komponentmodulerna äger bara
+ * centreringen (max-width + margin-inline) på sin .inner och får ALDRIG sätta
+ * padding-inline på sin sektionsrot - då blir marginalen dubbel. */
+header,
+footer,
+section[id] {
+  padding-inline: var(--content-padding);
+}
+
+/* Sticky header skulle annars täcka rubriken man hoppar till. Måttet kommer
+ * från samma token som låser headerns höjd i Header.module.css. */
+section[id] {
+  scroll-margin-top: calc(var(--header-height) + var(--space-4));
+  padding-block: clamp(var(--space-8), 10vw, var(--space-10));
+}
+
+/* Sektionsavgränsare. Beslutat av Jelal 2026-10-03, se ARKITEKTUR.md
+ * "Sektionsavgränsare" - det UPPHÄVER rättelse 6 ("ingen linje"). Ta inte bort
+ * linjen igen med hänvisning till rättelse 6.
+ *
+ * SYSKONSELEKTORN ÄR AVSIKTLIG och får inte förenklas till `section[id]`.
+ * Invarianten: linjen markerar en GRÄNS MELLAN två sektioner, aldrig en kant
+ * mot något annat. Första sektionen gränsar inte uppåt mot en sektion utan mot
+ * headern, som bär sin egen border-bottom - en regel på alla sektioner hade
+ * därför gett två linjer med bara headerns höjd emellan. `+` uttrycker det
+ * villkoret direkt, utan ett hårdkodat undantag för ett id.
+ *
+ * TYST FELMEKANISM: regeln förutsätter att sektionerna är DIREKTA syskon i
+ * DOM. Läggs ett främmande element in mellan två sektioner i App.jsx bryts
+ * kedjan och linjen försvinner utan felmeddelande. Räkna om linjerna i
+ * renderingen varje gång App.jsx ändras.
+ *
+ * Linjen går kant i kant, eftersom border-top ligger utanför sektionens
+ * padding-inline. Det är samma uttryck som headerns linje.
+ *
+ * Färgen är samma token som headern och footern använder. Behöver linjen bli
+ * svagare är åtgärden ett eget --color-divider-token, inte ett inline-värde och
+ * inte en sänkning av --color-border, som också bär outline-pillarnas ram. */
+section[id] + section[id] {
+  border-top: 1px solid var(--color-border);
+}
+
+/* Tillgänglighetsprimitiv. MEDVETET UNDANTAG från regeln att global.css bara
+ * innehåller reset och baselement - beslutat i ARKITEKTUR.md, "Headerns
+ * logotyp": mönstret behövs igen av skip-länken i paket 7 och ska inte
+ * kopieras in i varje modul.
+ *
+ * Döljer visuellt men behåller elementet i tillgänglighetsträdet. Aldrig
+ * display: none - det tar bort elementet för skärmläsaren också.
+ *
+ * Beslutat i ARKITEKTUR.md, "Fyra noteringar från paket 2B": varianten
+ * .visually-hidden-until-sm är godkänd och är den andra och sista sanktionerade
+ * globala klassen. En CSS-modul kan varken `composes` inuti en media query
+ * eller nå en global klass, så brytpunkten ligger här bredvid primitiven.
+ * Mönstret står skrivet EN gång (delad selektorlista) och hävningen en gång. */
+.visually-hidden,
+.visually-hidden-until-sm {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* sm = 600px, brytpunkten ur ARKITEKTUR.md. Här blir namnet synlig text igen. */
+@media (min-width: 600px) {
+  .visually-hidden-until-sm {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip-path: none;
+  }
+}

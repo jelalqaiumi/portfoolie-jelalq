@@ -1,0 +1,45 @@
+/* Projektsektionen. Sektionsramen (<section id>, <h2>) och sidomarginalen
+ * kommer från <Section> respektive global.css - modulen får ALDRIG sätta
+ * padding-inline (ARKITEKTUR.md, "Var sidmarginalen bor"). */
+
+/* EJ I ARKITEKTUR: vilken typografi det tomma läget ska ha.
+ * Samma grader som teckenförklaringen i skills, eftersom de spelar samma roll:
+ * en lugn förklarande rad direkt under en sektionsrubrik. Alla värden är
+ * tokens, inga lösa tal. */
+.empty {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  max-width: var(--measure);
+}
+
+/* EJ I ARKITEKTUR: vad spårets undre gräns (280px) och avståndet mellan
+ * korten ska vara.
+ *
+ * TAKET LIGGER PÅ KORTET, INTE HÄR. Jelal valde mekanism M2 2026-10-05, efter
+ * att båda mekanismerna mätts upp. Se .card i ProjectCard.module.css.
+ *
+ * Varför spåret INTE bär taket, uppmätt: med `minmax(280px, <definit tak>)`
+ * räknar auto-fit ut antalet spår ur MAX-funktionen när den är definit, inte
+ * ur minimumet. Med taket 604,5 px blev antalet
+ * floor((1120 + 24) / (604,5 + 24)) = 1, alltså ett enda spår - korten
+ * staplades lodrätt, ett per rad. Med `1fr` (indefinit) används minimumet
+ * 280 px i stället, och då blir det upp till tre spår sida vid sida.
+ *
+ * Skriv alltså inte om maxvärdet till ett definit tal här. Det ser ut som en
+ * skärpning men byter tysta layouten från rader till en kolumn. */
+.grid {
+  display: grid;
+
+  /* Inget spår skrivet som bara `1fr`. ARKITEKTUR.md, "360 px-golvet och
+   * grid": `1fr` betyder `minmax(auto, 1fr)`, och ett grid-barns automatiska
+   * minimum ÄR min-content - spåret vägrar då bli smalare än det längsta ordet
+   * och växer förbi vyporten. Här är minimum explicit (280px), vilket är
+   * tillåtet enligt samma avsnitt: ett uttryckligt minimum är ett medvetet
+   * val, till skillnad från `auto`.
+   *
+   * Golvet bärs ändå av `overflow-wrap: anywhere` på body, som ärvs hit -
+   * spåret är hygien, inte garanti. Det är uppmätt: ett spår som krymper
+   * hindrar inte barnet från att svämma över det. */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-5);
+}

@@ -1,0 +1,26 @@
+{
+  "name": "portfoolie-jelalq",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "node scripts/validate-data.mjs && vite build",
+    "preview": "vite preview",
+    "lint": "oxlint",
+    "optimize:images": "node scripts/optimize-images.mjs",
+    "validate:data": "node scripts/validate-data.mjs"
+  },
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "oxlint": "^1.81.0",
+    "sharp": "^0.35.5",
+    "vite": "^8.3.0"
+  }
+}

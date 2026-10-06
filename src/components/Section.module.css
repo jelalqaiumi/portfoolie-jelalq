@@ -1,0 +1,9 @@
+.inner {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  /* Sidomarginalen kommer från den gemensamma regeln i global.css. */
+}
+
+.title {
+  margin-bottom: var(--space-5);
+}

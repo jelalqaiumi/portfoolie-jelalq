@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Monogram-ikonen med genomskinlig botten, inte lockupen. Flikfältet har
+         en egen färg vi inte styr över, så ikonen får inte ha inbakad botten.
+
+         Alla tre genererade ikonfilerna refereras här. Gränsen "noll
+         orefererade filer i dist/" gäller utan undantag, och 96-filen ger
+         skarp favicon vid hög pixeltäthet i stället för att strykas.
+         apple-touch-icon låg tidigare i paket 7; den placeringen är UPPHÄVD,
+         eftersom detta är resurslänkar till filer vi redan levererar.
+         <noscript> och skip-länken ligger kvar i paket 7 - de är beteende. -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo-mark-32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/logo-mark-96.png" />
+    <link rel="apple-touch-icon" href="/assets/logo-mark-192.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jelal Qaiumi — Systemutvecklare</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

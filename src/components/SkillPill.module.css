@@ -1,0 +1,40 @@
+/* Pillens två tillstånd. Måtten MÅSTE vara identiska i båda, annars hoppar
+ * listan när Jelal ändrar ett filled-värde. Därför ligger allt gemensamt i
+ * .pill - inklusive `border: 1px solid transparent` även på den ifyllda, som
+ * inte har någon synlig ram (ARKITEKTUR.md, "Pillarnas två tillstånd"). */
+
+/* Graden är --text-xs och den vågräta paddingen --space-2, sänkta från
+ * --text-sm respektive --space-3. Beslutat i ARKITEKTUR.md, "Pillarnas två
+ * tillstånd": det är den enda åtgärd som biter linjärt på drygt 300 pills, och
+ * 12 px är fortfarande läsbart för en etikett på ett till tre ord. */
+.pill {
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid transparent;
+
+  /* Pillen får radbryta INUTI sig själv. Ingen white-space: nowrap här - det är
+   * motsatt regel mot headerns navlänk, och avsiktligt: i headern är höjden
+   * låst så radbrytning klipper innehåll tyst, här är höjden fri så
+   * radbrytning är ofarlig medan utebliven radbrytning ger horisontell scroll
+   * och spräcker 360 px-golvet.
+   *
+   * Vilken sträng som är längst skrivs INTE här - den ändras varje gång Jelal
+   * redigerar skills.js, och en siffra i en kommentar blir fel i tysthet.
+   * Måttet som avgör golvet är dessutom längsta obrutna TOKEN, inte längsta
+   * sträng. Aktuella tal står i ARKITEKTUR.md, "360 px - den längsta
+   * strängen", och ska mätas om ur datan, inte läsas härifrån. */
+  max-width: 100%;
+}
+
+.filled {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  /* Ingen synlig ram - men border-bredden ärvs från .pill så måttet består. */
+}
+
+.outline {
+  background-color: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+}

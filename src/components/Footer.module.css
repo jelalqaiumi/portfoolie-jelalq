@@ -1,0 +1,22 @@
+.footer {
+  /* Beslutat i ARKITEKTUR.md, "Sektionsavgränsare": footerns egen border-top
+   * står kvar och bär linjen mellan sista sektionen och footern. <footer> är
+   * ingen section[id], så syskonregeln i global.css träffar den inte och
+   * linjen kan inte dubbleras.
+   *
+   * Bredd och färg MÅSTE vara identiska med den regeln - annars syns två
+   * olika linjetoner på samma sida. */
+  border-top: 1px solid var(--color-border);
+  padding-block: var(--space-6);
+  /* Sidomarginalen kommer från den gemensamma regeln i global.css. */
+}
+
+.inner {
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+.text {
+  color: var(--color-text-dim);
+  font-size: var(--text-sm);
+}

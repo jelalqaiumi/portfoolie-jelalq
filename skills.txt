@@ -1,0 +1,93 @@
+Systemutveckling
+Fullstack-utveckling
+C#
+.NET
+JavaScript (ES6+)
+React
+ASP.NET Core
+Node.js
+REST API
+Web API
+Git
+API-design
+HTML5
+CSS3
+React Native
+Klient-server-arkitektur
+Dependency injection
+GitHub
+Mobilapputveckling
+Cross-platform-utveckling
+MVC-mönster
+HTTP-metoder (GET, POST, PUT, DELETE)
+Async/await
+JSON
+OpenAPI
+Swagger
+npm
+Vite
+React Hooks
+Komponentbaserad utveckling
+Testning
+Felsökning
+Debugging
+Kodgranskning
+Refaktorisering
+Arkitektur och teknikval
+Versionshantering
+Branching
+Pull requests
+Middleware
+Controllers
+CORS
+HTTP-statuskoder
+Felhantering
+Expo
+React Navigation
+AsyncStorage
+CSS Grid
+Flexbox
+Responsiv design
+Media queries
+Fetch API
+Promise chaining
+FormData
+Filuppladdning
+Teknisk dokumentation
+Agila arbetssätt
+AI-verktyg i utveckling
+Agentisk AI
+AI-orkestrering
+Prompt engineering
+AI-assisterad felsökning
+AI-assisterad kodgranskning
+AI-assisterad testgenerering
+AI-assisterad dokumentation
+Chattbaserad AI-assisterad kodning
+Kodkomplettering
+Ansvarsfull AI-användning
+JSX
+Props
+Conditional rendering
+Controlled components
+useState
+useEffect
+useContext
+FlatList
+StyleSheet
+Platform-specifik styling
+TextInput
+Pressable
+Modal
+RefreshControl
+KeyboardAvoidingView
+TouchableOpacity
+Dimensions API
+useColorScheme
+expo-image-picker
+EAS Build
+expo-font
+expo vector-icons
+app.json-konfiguration
+Filbaserad datapersistens
+Trådsäkerhet (lock)

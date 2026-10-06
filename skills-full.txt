@@ -1,0 +1,328 @@
+# Jelals fullständiga kompetenslista, lämnad 2026-10-03.
+# Format: rader som börjar med ## är kategorier, övriga är skills.
+
+## Programmering & .NET
+C#
+.NET
+ASP.NET Core
+ASP.NET Core Web API
+Web API-utveckling
+Programmering
+Objektorienterad programmering (OOP)
+Klasser och objekt
+Konstruktorer
+Properties
+Access modifiers
+Inkapsling
+Arv
+Polymorfism
+Abstraktion
+Interfaces
+Komposition
+Enums
+Metoder
+Metodöverlagring
+Kontrollstrukturer
+If/else
+Switch
+For-, while- och foreach-loopar
+Arrayer
+Collections / samlingsklasser
+Generics
+Lambda-uttryck
+Exceptions
+Algoritmer
+Datastrukturer
+
+## Webbutveckling & Fullstack
+Systemutveckling
+Fullstack-utveckling
+Webbutveckling
+Moderna webbapplikationer
+Klient-server-arkitektur
+React
+React-komponenter
+Komponentbaserad utveckling
+JSX
+React Hooks
+useState
+Responsiv design
+Formulärhantering
+JavaScript
+HTML5
+CSS
+Blazor
+C#-baserad webbutveckling
+Routing
+State management
+
+## API & Backend
+REST
+REST API
+Web API
+API-utveckling
+API-design
+HTTP
+HTTP-metoder
+GET
+POST
+PUT
+Klient–server-kommunikation
+CORS
+API-felhantering
+Dependency Injection
+Controllers / API-endpoints
+Server-side utveckling
+Client-side / frontend-integration
+Fullstack-integration
+
+## Databaser
+Databaser
+Databasmodellering
+Datamodellering
+Relationsdatabaser
+Icke-relationella databaser
+NoSQL
+SQL
+SQL-syntax
+SQL-funktioner
+SQL DDL
+Microsoft SQL Server
+SQL Server Management Studio (SSMS)
+MongoDB
+CRUD
+Dokumentbaserade databaser
+Normalisering
+ORM (Object-Relational Mapping)
+Entity Framework
+Entity Framework Core (EF Core)
+LINQ
+EF Core Migrations
+
+## Testning & kvalitetssäkring
+Testning
+Enhetstestning
+Testdriven utveckling (TDD)
+xUnit
+Parametriserade tester
+Mocking
+Moq
+Testbar kod
+Testautomatisering
+Clean Tests
+Kodanalys
+Kodgranskning / Code Review
+Kodkvalitet
+Clean Code
+SOLID-principerna
+Designmönster
+Kodlukter
+Refaktorisering
+Kodförbättring
+Underhållbar kod
+Läsbar kod
+Felsökning
+Debugging
+Felhantering
+
+## Git & versionshantering
+Git
+GitHub
+Versionshantering
+Git branches
+Branching
+Pull Requests
+Code Review
+Git-baserade arbetsflöden
+Dokumentation av kodförändringar
+
+## Filhantering
+Filhantering
+Läsa från filer
+Skriva till filer
+Streams
+Filbaserad datapersistens
+Resurshantering
+try/catch/finally
+Exceptions
+Egna exceptions / throw
+Teknisk loggning
+
+## Mobilutveckling
+React Native
+Mobilapputveckling
+Cross-platform-utveckling
+Expo
+React Native-komponentbaserad utveckling
+Mobil datahantering
+Navigation i mobilapplikationer
+
+## DevOps & deployment
+DevOps
+CI/CD
+Continuous Integration
+Continuous Delivery
+Build pipelines
+Release pipelines
+Automatiserad build
+Automatiserad testning
+Deployment
+Azure DevOps
+YAML
+Yarn
+Azure Web App
+Linux deployment
+Build policies
+Pull Request build policies
+Artefakthantering
+DevSecOps
+Säkerhet i CI/CD
+Säkerhetsintegrering i DevOps
+OWASP Dependency Check
+Säker hantering av API-nycklar
+
+## Säker webbutveckling
+Säker webbutveckling
+Säker kodning
+Säker systemarkitektur
+Autentisering
+Multifaktorautentisering (MFA)
+TOTP
+Kontolåsning
+Recovery Codes
+JWT
+Refresh Tokens
+Identity
+Rollbaserad autentisering/auktorisering
+Kryptering
+Symmetrisk kryptering
+Asymmetrisk kryptering
+Hashning
+Salt
+Nyckelderivering
+Säker lösenordshantering
+Säker lagring av data
+Riskanalys
+Riskhantering
+Hotmodellering
+STRIDE
+OWASP
+OWASP Top 10
+XSS
+SQL Injection
+Brute Force
+Phishing
+Social Engineering
+Rate Limiting
+Statisk kodanalys
+Dynamisk kodanalys
+CodeQL
+GitHub Advanced Security
+OWASP ZAP
+Säkerhetstestning
+Penetrationstestning
+Capture The Flag (CTF)
+
+## Autentisering
+Authentication
+JWT-tokens
+JWT-baserad autentisering
+Refresh Tokens
+Login endpoints
+Authentication API
+Server-side authentication
+Client-side authentication
+Identity
+Rollbaserad API-auktorisering
+Kompletta autentiseringsflöden
+
+## Blazor
+Blazor
+Blazor Web Applications
+Blazor-komponenter
+Återanvändbara komponenter
+Routing
+Pages
+Layouts
+Formulär
+Formulärvalidering
+State management
+Datahantering i Blazor
+Navigation i Blazor
+
+## Agila arbetssätt & projektmetodik
+Agila arbetssätt
+Agile development
+Scrum
+Kanban
+Agile Manifesto
+Traditionell projektmetodik
+Waterfall
+Projektplanering
+Agil projektledning
+Teamarbete
+Tidsplanering
+Budgetering
+Projektfaser
+Processuppföljning
+Kvalitetsarbete
+Affärsnytta
+Metodval
+Azure DevOps som samarbetsverktyg
+
+## AI inom utveckling
+AI-verktyg i utveckling
+GitHub Copilot
+AI-assisterad kodning
+Kodkomplettering
+AI-assisterad felsökning
+AI-stöd vid programmering
+AI Chatbot-utveckling
+AI i utvecklingsworkflow
+
+## Kodkvalitet & arkitektur
+Arkitektur och teknikval
+Clean Code
+SOLID
+Designmönster
+Refaktorisering
+Kodanalys
+Kodgranskning
+Testbarhet
+Underhållbar kod
+Kodläsbarhet
+Separation av ansvar
+Dependency Injection
+Säker systemarkitektur
+Riskbaserade teknikval
+
+## Utvecklingsprocess
+Systemutveckling
+Programvaruutveckling
+Agil utveckling
+Scrum
+Kanban
+DevOps
+DevSecOps
+CI/CD
+Testdriven utveckling
+Versionshantering
+Code Review
+Pull Requests
+Refaktorisering
+Kodanalys
+Teknisk problemlösning
+Kravbaserade teknikval
+Projektarbete
+Parprogrammering
+Teamarbete
+
+## Övrigt
+Grafiska användargränssnitt (GUI)
+Publiceringsverktyg
+Säkerhet och drift
+Dokumentation
+Teknisk kommunikation
+Presentation av tekniska lösningar
+Analys av kodkvalitet
+Professionellt utvecklingsarbete

@@ -1,0 +1,194 @@
+/* Hero. Sidomarginalen (padding-inline) och den vertikala luften
+ * (padding-block) ligger på section[id] i global.css och får ALDRIG upprepas
+ * här - då blir marginalen dubbel (ARKITEKTUR.md, "Var sidmarginalen bor").
+ * Modulen äger bara centreringen och hero-specifik stil. */
+
+/* Heros sektionsrot. Grå bakgrund, samma yta som headern - tillsammans bildar
+ * de sidans övre grå fält, och den mörka bottnen börjar först vid Kompetenser.
+ * Beslutat av Jelal 2026-10-05, se ARKITEKTUR.md "Hero får grå bakgrund".
+ *
+ * Bakgrunden ligger HÄR och inte i global.css: en regel som gäller alla
+ * sektioner ska inte bära ett specialfall. Samma skäl som gjorde
+ * sektionsavgränsaren till en syskonselektor i stället för ett hero-undantag.
+ *
+ * Före detta hade section#hero backgroundColor rgba(0, 0, 0, 0) och visade
+ * body igenom. Genomskinlig är inte en färg - den som mäter på den måste lösa
+ * upp den effektiva ytan, annars läses den som svart.
+ *
+ * Klassen fanns inte innan: sektionsroten hade ingen className alls. Namnet
+ * följer modulernas befintliga konvention, där rotelementets klass heter som
+ * komponenten - .header i Header.module.css och .footer i Footer.module.css.
+ *
+ * Padding-inline och padding-block ligger på section[id] i global.css och får
+ * ALDRIG upprepas här (ARKITEKTUR.md, "Var sidmarginalen bor"). Den här
+ * klassen sätter bara bakgrunden. */
+.hero {
+  background-color: var(--color-bg-top);
+}
+
+.inner {
+  max-width: var(--content-max);
+  margin-inline: auto;
+
+  /* EJ I ARKITEKTUR: vilken layoutmekanism hero ska använda, om de två
+   * kolumnerna ska vara lika breda, och vilka avstånden ska vara.
+   *
+   * Grid med två lika spår valt eftersom bildspåret då blir 528 px vid
+   * --content-max, vilket ligger i det spann bildens sizes räknar med.
+   * Avstånden är tokens, inga lösa tal.
+   *
+   * Spårens SKRIVSÄTT är däremot beslutat - se minmax-regeln nedan. */
+  display: grid;
+
+  /* 360 px-golvet, halva två. Beslutat i ARKITEKTUR.md, "360 px-golvet och
+   * grid": INGET grid-spår får skrivas som bara `1fr`. `1fr` betyder
+   * `minmax(auto, 1fr)`, och ett grid-barns automatiska minimum ÄR min-content
+   * - spåret vägrar då bli smalare än det längsta ordet och växer förbi
+   * vyporten. `min-width: 0` på grid-BARNET hjälper inte; det är spåret som bär
+   * golvet. Gäller också den implicita enspaltsgridden här, inte bara
+   * tvåspaltsläget nedan. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-7);
+}
+
+@media (min-width: 900px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-8);
+    align-items: center;
+  }
+}
+
+/* EJ I ARKITEKTUR: hur titelraden mellan h1 och introt ska skiljas ut, och
+ * vilka de inre avstånden ska vara.
+ *
+ * Titeln får samma grad som introt och skiljs från det med FÄRG
+ * (--color-text mot --color-text-muted) i stället för av en fjärde typografisk
+ * nivå. Vikt kan inte användas: teckensnittet har bara en (ARKITEKTUR.md,
+ * "Typsnittet"). Ingen orange här - accenten hör till pills och fokus. */
+.text {
+  display: grid;
+
+  /* Inget omönstrat `display: grid`. ARKITEKTUR.md, "360 px-golvet och grid":
+   * regeln gäller VARJE grid-container utan undantag, inte bara den som har
+   * flera spår. Ett implicit spår är `auto`, vars minimum också är min-content
+   * - h1 ligger i detta spår och är sidans största text. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+/* h1 behöver ingen egen klass: graden (--text-3xl), radavståndet och vikten
+ * kommer från h1 i global.css, och marginalen nollas av reseten. */
+
+.role {
+  font-size: var(--text-lg);
+  color: var(--color-text);
+}
+
+.intro {
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+  max-width: var(--measure);
+}
+
+/* Bilden. GRÅSKALA plus en grå tonplatta, båda i CSS och inte inbakade i
+ * bildfilen - medvetet beslut i ARKITEKTUR.md ("Vad som INTE görs i
+ * bildskriptet") så att tonen kan justeras efter Leverans 1 utan att någon bild
+ * genereras om. Tonplattan är --color-overlay-grey, tokenet som finns just för
+ * detta.
+ *
+ * RUND BILD med ett tunt vitt streck. Beslutat av Jelal 2026-10-05, se
+ * ARKITEKTUR.md "Profilbilden är rund". Beskärningen görs HÄR i CSS - de sex
+ * 4:5-filerna är oförändrade och optimize-images.mjs är orörd.
+ *
+ * DIAMETERN ÄR RELATIV, aldrig ett fast pixeltal. En fast diameter är det enda
+ * sättet en cirkel kan spräcka 360 px-golvet, och den möjligheten ska inte
+ * finnas. width: 100% med max-width som tak.
+ *
+ * TAKET ÄR 360 UNDER 900 px OCH 420 FRÅN 900 px. Det är härlett, inte valt:
+ * vid brytpunkten 900 går hero från en kolumn till två, och grid-spåret är då
+ * smalare än hela spalten. Ett tak i enspaltsläget som överstiger spårets
+ * bredd gör att cirkeln KRYMPER när man drar isär fönstret. Taket får därför
+ * inte vara högre än spåret vid brytpunkten; 360 ligger strax under med
+ * marginal för avrundning.
+ *
+ * Serien ska vara ICKE-AVTAGANDE över hela bredden - cirkeln växer eller står
+ * still, aldrig krymper. Det är verifieringspunkt 5 i ARKITEKTUR.md.
+ *
+ * `max-width: none` över 900 px är avfärdat: då växer cirkeln till spårets
+ * fulla 528 px vid 1600, och 528 var måttet som avfärdades som dominerande.
+ *
+ * BYT INTE MEKANISM från border till outline eller box-shadow utan att läsa
+ * ARKITEKTUR.md, "Mekanismen: border". Kort: outline är reserverad för
+ * :focus-visible i hela projektet, box-shadow ligger utanför layouten och
+ * sticker ut 2 px som ingen breddmätning fångar. Och border är det enda
+ * alternativet där tonplattan STRUKTURELLT inte kan nå ut över strecket:
+ * overflow: hidden klipper barn till PADDING-boxen, alltså innanför ramen, och
+ * ::after { inset: 0 } placeras mot samma box. Det följer av boxmodellen, inte
+ * av att någon kommer ihåg det.
+ *
+ * Rundningen och overflow ligger på BEHÅLLAREN, inte på <img>. Då klipps allt
+ * inuti av samma rundning - bilden, gråskalan och tonplattan. Låg rundningen på
+ * <img> ensam hade tonplattan blivit kvar som en fyrkant ovanpå cirkeln. */
+.media {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+
+  /* Det vita strecket. 2 px, inte 1: en böjd 1 px-kontur kantutjämnas ut över
+   * flera delpixlar och läses som en skugga i stället för som ett streck. Inte
+   * 3 px eller mer - då läses det som en ram, vilket Jelal avfärdade när han
+   * sa "streck".
+   *
+   * --color-text och inget nytt token: båda användningarna lyder under samma
+   * villkor, sidans ljusaste ton mot mörk botten, så tokenet kan aldrig driva
+   * iväg åt ett håll som skadar strecket. Hårdkodat #FFFFFF är avfärdat - sidan
+   * har noll hårdkodade färger utanför tokens.css.
+   *
+   * box-sizing: border-box i global.css gör att strecket ryms INOM max-width
+   * och lägger noll pixlar utanpå. */
+  border: 2px solid var(--color-text);
+}
+
+/* Från 900 px är hero två kolumner och grid-spåret bär bredden. Taket höjs då
+ * till 420. Höj INTE taket under 900 px till 420 - då krymper cirkeln vid
+ * brytpunkten, vilket verifieringspunkt 5 fäller. */
+@media (min-width: 900px) {
+  .media {
+    max-width: 420px;
+  }
+}
+
+.image {
+  /* Fyller behållaren helt. object-fit: cover BESKÄR, den skalar inte om, så
+   * ingen kvalitet går förlorad. */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  /* Kvadraten tas från ÖVERKANTEN, inte från mitten. Uppmätt i
+   * profile-800.jpg (ARKITEKTUR.md): hjässan på y 142, huvudets mitt på y 335,
+   * axlarna på y 528. En kvadrat från överkanten lägger huvudets mitt på
+   * 335/800 = ca 42 % av cirkelns höjd - strax ovanför mitten, där ett ansikte
+   * hör hemma i en rund ram. Centrerad beskärning hade skurit av hjässan. */
+  object-position: 50% 0%;
+
+  /* EJ I ARKITEKTUR: vilket contrast-värde gråskalan ska ha.
+   *
+   * 1.05 är en knappt märkbar höjning som håller porträttet från att bli platt
+   * under tonplattan. Ett värde att justera när Jelal sett bilden. */
+  filter: grayscale(1) contrast(1.05);
+}
+
+/* Den grå tonplattan läggs OVANPÅ bilden. pointer-events: none så att lagret
+ * inte fångar markering eller klick. */
+.media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-overlay-grey);
+  pointer-events: none;
+}

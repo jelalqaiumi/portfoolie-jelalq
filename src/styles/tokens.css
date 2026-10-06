@@ -1,0 +1,245 @@
+/* Designtokens. Enda stället där färg, spacing, typografi och radier bestäms.
+ * Ändra här - aldrig i en komponentmodul.
+ *
+ * Brytpunkter: CSS-variabler fungerar inte i @media, så dessa är fasta tal.
+ * Använd exakt dessa, inga andra:
+ *
+ *   (bas)                              360-599 px. En kolumn överallt.
+ *   @media (min-width: 600px)    sm    Två kolumner skills, större hero-typografi
+ *   @media (min-width: 900px)    md    Hero två kolumner, nav alltid synlig, tre kolumner skills
+ *   @media (min-width: 1200px)   lg    Max bredd slår in, fyra kolumner skills
+ *
+ * Golvet är 360 px utan horisontell scroll.
+ */
+
+:root {
+  /* Färger - mörk bas, orange som ENDA accent.
+   * --color-accent är pixelmätt ur assets-source/logo.png. Ändra den inte.
+   * Källbilderna ligger utanför public/ och publiceras därför aldrig. */
+  --color-bg: #0b0b0c;
+  --color-surface: #141416;
+
+  /* Sidans ÖVRE GRÅA FÄLT: headern och hero tillsammans, en sammanhängande
+   * yta. Parar med --color-bg: den mörka bottnen och det gråa övre fältet,
+   * båda sidbakgrunder. Beslutat av Jelal 2026-10-05, se ARKITEKTUR.md
+   * "Hero får grå bakgrund".
+   *
+   * AVSIKTLIGT ett eget token. Det bröts ut ur ett token som också bar
+   * hover-läget på kort, och testet var inte "ser de likadana ut" utan "vill vi
+   * ändra dem tillsammans". Att de divergerade redan vid första tonändringen är
+   * beviset: bandet ljusnade till #2A2A2E 2026-10-05 och hover-tonen följde
+   * inte med. (Hover-tokenet är sedan dess borttaget - det hade ingen
+   * konsument.)
+   *
+   * ⚠️ SAMMANTRÄFFANDE, INTE KOPPLING: detta token har nu samma hexvärde som
+   * --color-border. Slå inte ihop dem och ersätt inte det ena med det andra.
+   * Den ena är sidans övre bakgrundsyta, den andra är varje hårfin linje och
+   * outline-pillarnas ram. De ska kunna röra sig oberoende. */
+  --color-bg-top: #2a2a2e;
+
+  /* Här låg --color-surface-raised. BORTTAGET 2026-10-05: det hade noll
+   * konsumenter efter att --color-bg-top bröts ut, och projektkorten har ingen
+   * hover (de är inte interaktiva). Ett token ska införas av en komponent som
+   * behöver det, inte i väntan på en. Behöver korten hover någon gång införs
+   * det då, med en verklig användning bakom sig. */
+  --color-border: #2a2a2e;
+
+  /* HEADERNS UNDERKANT, och bara den. Eget token sedan 2026-10-05.
+   *
+   * Varför det behövdes: när bandet ljusnade till #2A2A2E blev --color-border
+   * exakt samma färg som sin egen bakgrund - kontrast 1,00:1, alltså en helt
+   * osynlig linje. Kantens uppgift är att visa var den klibbande headern
+   * slutar, så att innehåll som glider in under den inte ser ut att kapas
+   * mitt i tecknen.
+   *
+   * Denna kant är LJUSARE än bandet, till skillnad från sidans övriga linjer
+   * som är ljusare än den mörka bottnen. Riktningen är omvänd av nödvändighet:
+   * mörkare än #2A2A2E hade krockat med --color-surface. */
+  --color-header-border: #45454b;
+  --color-text: #ededef;
+  --color-text-muted: #a1a1a8;
+  --color-text-dim: #6e6e76;
+  --color-accent: #fc6f03;
+  --color-accent-hover: #fd9140;
+
+  /* Här låg --color-accent-soft. BORTTAGET 2026-10-05: noll användningar i
+   * src/. Det infördes "vid behov" - alltså utan behov. Samma regel som ovan. */
+  --color-on-accent: #0b0b0c;
+  --color-overlay-grey: rgba(32, 32, 36, 0.45);
+  --color-focus: #fc6f03;
+
+  /* Spacing - 8 px-rytm, 4 px som finsteg */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+
+  /* Typografi.
+   * 'Didact Gothic' först, systemstacken som reserv. @font-face står i
+   * fonts.css, som main.jsx importerar före denna fil. Laddas filen aldrig är
+   * sidan fullt läsbar i reserven - den är en systemfont som alltid finns, inte
+   * ett andra nedladdat typsnitt. */
+  --font-sans: 'Didact Gothic', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: clamp(1.25rem, 2.5vw, 1.5rem);
+  --text-2xl: clamp(1.75rem, 4vw, 2.5rem);
+  --text-3xl: clamp(2.5rem, 8vw, 4.5rem);
+
+  --leading-tight: 1.1;
+  --leading-normal: 1.6;
+  --tracking-wide: 0.08em;
+
+  /* Negativ spärrning på h1 och h2. En enviktsskärning i stora grader får lätt
+   * glesa, luckiga ordbilder; detta stramar upp dem. Verktyget behövdes inte
+   * när vikten fanns. */
+  --tracking-tight: -0.02em;
+
+  /* --weight-regular / --weight-medium / --weight-bold är BORTTAGNA, inte
+   * omvärderade. Didact Gothic har en enda vikt (400), så ett viktvärde är
+   * inget val längre, och ett token utan alternativ är dött fält. Vikten
+   * hanteras i global.css med font-weight: inherit - lägg inte tillbaka ett
+   * vikttoken här. Beslutat i ARKITEKTUR.md, "Typsnittet". */
+
+  /* Max radlängd för brödtext */
+  --measure: 62ch;
+
+  /* Layout, radier och övrigt */
+  --content-max: 1120px;
+  --content-padding: clamp(1rem, 5vw, 3rem);
+  --header-height: 64px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-pill: 999px;
+  --transition: 150ms ease;
+
+  /* Sticky headerns lagernivå. Enda z-index-värdet i projektet. */
+  --z-header: 10;
+}
+
+/* ===== LJUS YTA ==========================================================
+ * Binder om färgtokenen för en sektion med vit bakgrund. Beslutat av Jelal
+ * 2026-10-05, se ARKITEKTUR.md "Ljus yta - Kompetenser får vit bakgrund".
+ *
+ * OMBINDNING, INTE NYA TOKENNAMN. Med --color-text-on-light och liknande hade
+ * varje regel i Skills.module.css och SkillPill.module.css behövt byta
+ * variabelnamn, och SkillPill hade fått kunskap om ljus botten inbakad i sig.
+ * Med ombindning behöver INGEN komponent ändras: pillen frågar efter
+ * --color-text-muted och får rätt svar för den yta den står på.
+ *
+ * --color-text betyder ett enda jobb - textens färg mot den yta den står på.
+ * Ombindning ger den inte en andra betydelse, den löser in dess enda betydelse
+ * mot ett annat underlag. Det är skillnaden mot ett token som bär två
+ * obesläktade jobb: ett sådant ska DELAS i två, inte bindas om.
+ *
+ * DE DÄMPADE PILLARNAS VÄRDEN ÄR HÄRLEDDA UR KVOTEN, inte valda ur en palett.
+ * Målet är att underordningen ska vara lika stark på båda ytorna:
+ *   ram mot bakgrund   #2A2A2E/mörkt = 1,38:1  ->  #CFCFD4/#F4F4F6 = 1,41:1
+ *   text mot bakgrund  #A1A1A8/mörkt = 7,01:1  ->  #55555C/#F4F4F6 = 6,73:1
+ *
+ * Ramen är omräknad efter bytet till brutet vitt och träffar målet. TEXTEN gör
+ * det inte längre - den sjönk från 7,40 till 6,73 av samma byte. Avvikelsen är
+ * känd och ligger hos arkitekten: den kan välja att kompensera eller acceptera.
+ * Ändra inte #55555C här innan beslutet kommer.
+ *
+ * --color-accent är MEDVETET INTE ombunden. Orange som yta mot den ljusa ytan
+ * ger 2,58:1 och når inte WCAG 1.4.11:s 3:1 - och det går inte att lösa med
+ * bakgrunden, för det skulle kräva en yta ljusare än rent vitt, som i sin tur
+ * bara ger 2,83:1. Texten i den ifyllda pillen
+ * behåller ändå sina 6,95:1, eftersom både orangen och --color-on-accent är
+ * desamma på båda ytorna.
+ *
+ * En andra, mörkare orange prövades och återtogs av Jelal 2026-10-05 ("återgå
+ * till den vanliga orange"). Lägg inte tillbaka den: orange är sidans ENDA
+ * accentfärg och värdet är pixelmätt ur loggan, så en andra ton gör att
+ * pillarna inte längre matchar JQ-märket i headern - som syns samtidigt,
+ * eftersom headern är klibbande. Avsteget från 1.4.11 är utskrivet i
+ * ARKITEKTUR.md med skäl, inte förbisett.
+ *
+ * Ser pillarna urvattnade ut är rätt åtgärd att ompröva den vita bakgrunden,
+ * inte att införa en andra orange.
+ *
+ * --color-bg-top binds om trots att ingen regel i sektionen använder den:
+ * den är ärvd, och utan ombindningen hade ett framtida element inuti en ljus
+ * yta kunnat plocka upp den gråa headerbottnen.
+ * ======================================================================== */
+.surface-light {
+  /* BRUTET VITT, valt av Jelal 2026-10-05 efter att han sett rent vitt i
+   * renderingen. Sektionen är sidans största ljusa yta - 2410 px på desktop
+   * och drygt 6600 px på mobil - och rent vitt läste som för hårt. */
+  --color-bg: #f4f4f6;
+  --color-bg-top: #f4f4f6;
+  --color-text: #0b0b0c;
+  --color-text-muted: #55555c;
+  --color-text-dim: #76767e;
+
+  /* RAMEN ÄR OMRÄKNAD, INTE OMVALD. Målet är att de dämpade pillarnas
+   * underordning ska vara exakt lika stark på båda ytorna, och den kvoten går
+   * sönder av ett bakgrundsbyte:
+   *
+   *   #D9D9DE mot vitt      1,4065:1   <- målkvoten, satt mot mörk botten
+   *   #D9D9DE mot #F4F4F6   1,280:1    <- för ljus, ramen tappar sin tyngd
+   *   #CFCFD4 mot #F4F4F6   1,413:1    <- närmast målet
+   *
+   * Byts bakgrunden igen måste detta värde räknas om på samma sätt. Det är
+   * KVOTEN som är beslutet, inte hexvärdet. */
+  --color-border: #cfcfd4;
+
+  /* ⚠️ --color-surface har SAMMA VÄRDE som bakgrunden ovan sedan Jelal valde
+   * brutet vitt. Ingen regel inuti den ljusa ytan använder den i dag - enda
+   * konsumenten är .card i ProjectCard.module.css, och projektsektionen ligger
+   * utanför klassen. Men hamnar ett kort någon gång i en ljus yta blir det
+   * osynligt mot sin egen bakgrund, exakt samma fel som headerns kant hade när
+   * --color-border råkade bli lika med bandet. Rapporterat till arkitekten. */
+  --color-surface: #f4f4f6;
+
+  /* FOKUSRINGEN binds om, till skillnad från --color-accent ovan. Att de två
+   * behandlas olika ser godtyckligt ut men är det inte, och skälet är värt att
+   * läsa innan någon "städar" bort skillnaden:
+   *
+   *   Pillen       bär sitt budskap med TRE signaler samtidigt - fylld yta,
+   *                mörk text, ingen ram. Sviker kontrasten syns tillståndet
+   *                ändå.
+   *   Fokusringen  är EN enda signal. Sviker kontrasten försvinner
+   *                markeringen helt, och tangentbordsanvändaren vet inte var
+   *                på sidan den står.
+   *
+   * En kontrastkvot är alltså inte godtagbar eller ogiltig i sig - det beror på
+   * om signalen är redundant. Mot den ljusa ytan ger #FC6F03 bara 2,58:1;
+   * #C25102 ger 4,28:1 och klarar WCAG 1.4.11:s 3:1 med marginal. Kulören är
+   * 24,7 grader mot originalets 26,0 - samma orange, mörkare valör.
+   *
+   * Ringen ligger utanför elementet (outline-offset) och har därför ingen mörk
+   * text inuti sig att ta hänsyn till. Det är varför den tål en mörkare ton
+   * medan pillen inte gör det. */
+  --color-focus: #c25102;
+
+  /* DE TVÅ RADERNA NEDAN ÄR NÖDVÄNDIGA, inte dekoration. Utan dem gör
+   * ombindningen ovan ingenting synligt, och det är UPPMÄTT:
+   *
+   * global.css sätter `background-color: var(--color-bg)` och
+   * `color: var(--color-text)` på BODY. En custom property löses in där den
+   * används, inte där den deklareras - så bodys regler tog :root-värdena och
+   * blev aldrig vita. Sektionen mätte `rgba(0, 0, 0, 0)`, alltså genomskinlig,
+   * och visade den mörka bottnen igenom.
+   *
+   * `color` är dessutom ärvt som ETT INLÖST VÄRDE: h2 ärvde bodys färdiga
+   * #EDEDEF och blev ljus text, medan .legend, .groupTitle och pillarna - som
+   * sätter `color: var(--color-text-muted)` i sina egna regler - plockade upp
+   * ombindningen och blev mörka. Resultatet var ljus rubrik och mörk brödtext
+   * på mörk botten, alltså oläsligt.
+   *
+   * De här två raderna löser in samma två egenskaper en gång till, nu mot de
+   * ombundna värdena, så att allt under klassen får rätt underlag. */
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}

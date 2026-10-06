@@ -1,0 +1,162 @@
+.header {
+  position: sticky;
+  top: 0;
+
+  /* Headerns höjd LÅSES till tokenet. global.css räknar scroll-margin-top på
+   * samma token, och de två måtten får inte kunna glida isär. box-sizing:
+   * border-box i global.css gör att border-bottom ryms inom höjden, så
+   * renderad höjd är exakt --header-height. */
+  height: var(--header-height);
+
+  /* Grå header. Beslutat av Jelal 2026-10-03 - han har sett sidan. Det
+   * UPPHÄVER "Headerns bakgrund - avgjort", som slog fast --color-bg med
+   * motiveringen att loggan skulle ligga mot den mörka bottnen utan platta.
+   * Sätt inte tillbaka --color-bg med hänvisning till det avsnittet.
+   *
+   * Tokenet, aldrig #1C1C1F som inline-värde: tonen ska kunna ändras på ett
+   * ställe.
+   *
+   * --color-bg-top är ett eget token för just denna yta: sedan 2026-10-05 har
+   * hero samma botten, så headern och hero är ETT sammanhängande grått fält och
+   * ska alltid ändras tillsammans. Tokenet bröts ut ur ett som också bar
+   * hover-läget på kort - det delade inget villkor med sidans största
+   * bakgrundsyta, och är sedan dess borttaget eftersom ingen komponent
+   * använde det. */
+  background-color: var(--color-bg-top);
+
+  /* Kantlinjen står KVAR, och är nu det ENDA som markerar var headern slutar.
+   * Invarianten den skyddar: headern är sticky, så innehåll scrollar förbi
+   * under den, och utan en markerad underkant ser text ut att kapas mitt i
+   * tecknen när den glider in under headern.
+   *
+   * Sedan hero fick samma yta som headern finns inget färgsteg kvar att falla
+   * tillbaka på - uppmätt 1,00:1 mellan header och hero, alltså ingen gräns
+   * alls utan linjen. Kantens uppgift är därmed viktigare än förut, inte
+   * mindre.
+   *
+   * --color-header-border, INTE --color-border: det senare har samma hexvärde
+   * som bandet självt, så kanten hade blivit osynlig mot sin egen bakgrund.
+   * Denna linje är därför LJUSARE än sin yta, till skillnad från sidans övriga
+   * linjer som är ljusare än den mörka bottnen. Riktningen är omvänd av
+   * nödvändighet, inte av smak. */
+  border-bottom: 1px solid var(--color-header-border);
+
+  z-index: var(--z-header);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  height: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  /* Sidomarginalen kommer från den gemensamma regeln i global.css. */
+}
+
+/* Loggan har ingen EGEN platta och ingen ram - den ligger direkt mot headerns
+ * botten, vilken den än är. (Headerns botten är sedan 2026-10-03 grå; det är
+ * headerns beslut, inte loggans, och ändrar inget här.)
+ * EN länk, två barn: ikonen och namnet. Måtten är beslutade i ARKITEKTUR.md,
+ * "Headerns uppbyggnad". */
+.logoLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3); /* 12 px mellan ikon och namn */
+  flex-shrink: 0;
+}
+
+/* Det tajta märket renderas på HÖJD, inte på en kvadratisk ruta: 36 px i en
+ * 64 px hög header lämnar 14 px luft över och under, och bredden följer av
+ * proportionen 592 : 442 -> ca 48 px. Beslutat i ARKITEKTUR.md, "Ikonens
+ * optiska storlek - rättat efter paket 2B". */
+.logo {
+  height: 36px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+/* Namnet som riktig text, inte bild. Ingen orange: accenten hör till pills och
+ * fokus, och monogrammet bredvid bär redan orangen.
+ * Döljningen under 600 px ligger på .visually-hidden-until-sm i global.css. */
+/* Vikten är borta eftersom teckensnittet bara har en (ARKITEKTUR.md,
+ * "Typsnittet"). Lägg inte tillbaka font-weight här.
+ *
+ * Namnet skiljdes en tid från navlänkarna med färg, men sedan Jelal valde
+ * ljusa navlänkar 2026-10-05 har båda --color-text. De skiljs nu bara av grad
+ * (--text-base mot --text-sm) och spärrning (0.04em mot normal). Hur namnet
+ * ska skiljas ut är en öppen fråga hos arkitekten - påstå inte här att färgen
+ * gör det. */
+.logoName {
+  font-size: var(--text-base);
+  letter-spacing: 0.04em;
+  /* UTTRYCKLIGT UNDANTAG från `overflow-wrap: anywhere` på body: namnet får
+   * aldrig brytas till två rader i en header med låst höjd. */
+  white-space: nowrap;
+  color: var(--color-text);
+}
+
+/* flex-wrap: nowrap, ALDRIG wrap. Beslutat i ARKITEKTUR.md, "Navigeringen på
+ * smal skärm - förebyggande regel, inte en felrättning".
+ *
+ * Detta är en FÖREBYGGANDE regel. Den rättar inget observerat fel: regeln
+ * vilar inte på en mätning utan på invarianten att headern har låst höjd
+ * (--header-height), och att wrap inuti en låst höjd klipper innehåll nedåt
+ * där ingen kontroll tittar. Med `nowrap` blir ett framtida överskridande i
+ * stället en vågrät överspillning - alltså horisontell scroll, som larmar av
+ * sig självt. Regeln byter ett tyst felläge mot ett som syns.
+ *
+ * Samma mening täcker både listan och den enskilda länken nedan: ingenting
+ * inuti headern får radbryta.
+ *
+ * Utrymmesbudgeten för smal skärm står i ARKITEKTUR.md - inga tal upprepas
+ * här. Budgetens font-size --text-sm och gap --space-4 är modulens värden i
+ * ALLA bredder och behöver därför ingen media query. */
+.navList {
+  display: flex;
+  flex-wrap: nowrap;
+
+  /* UTTRYCKLIGT UNDANTAG från `overflow-wrap: anywhere` på body. `flex-wrap`
+   * hindrar bara att LISTPOSTER bryter till ny rad; `white-space: nowrap`
+   * hindrar text från att brytas och upphäver samtidigt overflow-wrap, som
+   * saknar verkan när nowrap är satt. Den är ärvd, så den täcker även ett
+   * element någon lägger till i listan senare. Beslutat i ARKITEKTUR.md,
+   * "360 px-golvet och grid" (undantagslistan) samt "Navigeringen på smal
+   * skärm". */
+  white-space: nowrap;
+  gap: var(--space-4);
+  margin: 0;
+}
+
+.navLink {
+  /* Ljus text, valt av Jelal 2026-10-05: länkarna ska synas bättre. Det
+   * UPPHÄVER `--color-text-muted` för navlänkar (tokentabellen, "navlänkar i
+   * viloläge", och "Typsnittet"). Sätt inte tillbaka --color-text-muted här med
+   * hänvisning till de avsnitten.
+   *
+   * Tokenet, aldrig #FFFFFF: --color-text är sidans ljusa textfärg och läses
+   * som vitt. Ett inline-värde hade blivit sidans enda hårdkodade färg. Tycker
+   * Jelal att den är för dämpad är rent vitt ett eget beslut, inte en genväg
+   * här.
+   *
+   * FÖLJD som arkitekten äger: namnet i headern skiljdes från länkarna med
+   * just denna färgskillnad, sedan vikten försvann. Nu har de samma ton. Hur
+   * namnet ska skiljas ut i stället avgörs av arkitekten - rör inte .logoName
+   * härifrån. */
+  color: var(--color-text);
+  font-size: var(--text-sm);
+
+  /* UTTRYCKLIGT UNDANTAG från `overflow-wrap: anywhere` på body, och hör ihop
+   * med `flex-wrap: nowrap` på listan - samma förebyggande försvar en nivå ned.
+   * `flex-wrap` hindrar bara att LISTPOSTER bryter till ny rad; texten inuti en
+   * post kan fortfarande brytas, och då är den tysta bortklippningen nedåt
+   * tillbaka i en header med låst höjd. Står kvar uttryckligen även om listan
+   * ärver nowrap: etiketten är det som faktiskt bär text. Beslutat i
+   * ARKITEKTUR.md, "Navigeringen på smal skärm". */
+  white-space: nowrap;
+}
+
+.navLink:hover {
+  color: var(--color-accent);
+}

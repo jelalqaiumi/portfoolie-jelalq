@@ -239,3 +239,25 @@ som visningsnamnet.
 
 Jelal ska klicka på länken när sektionen är byggd och bekräfta att den leder
 rätt. Gör den inte det är det en rad i src/data/contact.js.
+
+## Kontaktformulär — beslutat av Jelal 2026-10-06
+Kontaktsektionen ska ha ett FORMULÄR där besökaren skriver ett meddelande som
+mejlas till Jelal, utöver länkarna.
+
+Tjänst: Web3Forms. Gratisplanen ger 250 meddelanden/månad, obegränsat antal
+formulär, inget konto krävs.
+
+    access key: 79f08fa8-8cdf-4841-8392-066feea2a389
+    mottagare : qaiumi@hotmail.com
+
+Nyckeln är AVSEDD att vara publik och ligger i klientkoden. Den är inte en
+hemlighet i säkerhetsmening — den säger "skicka hit", inte "läs härifrån".
+Men vem som helst som ser den kan skicka meddelanden till Jelals inkorg, så
+skräppostskydd behövs.
+
+VIKTIGT: domänbegränsning är en BETALFUNKTION och ska INTE aktiveras. Om den
+någon gång aktiveras slutar formuläret fungera på localhost, alltså där vi
+utvecklar. Den får i så fall slås på först efter att sidan ligger live.
+
+Jelal har också sagt att länkarna till GitHub och LinkedIn ska finnas kvar —
+formuläret ersätter dem inte.

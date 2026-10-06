@@ -29,7 +29,7 @@ const ACTIVE = [
   'sections',
   'skills',
   'projects',
-  // 'contact',   <- avkommenteras i paket 6
+  'contact',
 ];
 
 const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -367,6 +367,70 @@ function checkProjects(mod) {
   summary.push(`${projects.length} projekt`);
 }
 
+/* ===== contact.js =======================================================
+ * Aktiverad i paket 6, tillsammans med datafilen. Två steg hör ihop: raden i
+ * ACTIVE och posten i CHECKS nedan.
+ * ======================================================================== */
+function checkContact(mod) {
+  const { contact } = mod;
+
+  if (contact === null || typeof contact !== 'object') {
+    /* EJ I ARKITEKTUR: vad meddelandet ska lyda när exporten är borta - samma
+     * öppna fråga som i checkSections. */
+    fail('contact.js: contact saknas eller är inte ett objekt');
+    return;
+  }
+
+  if (!hasText(contact.email)) {
+    fail('contact.js: email saknas');
+  }
+
+  /* links får vara en tom lista, men måste vara en lista. En sträng hade
+   * itererats som enstaka bokstäver. */
+  if (!Array.isArray(contact.links)) {
+    fail('contact.js: links måste vara en array');
+  } else {
+    contact.links.forEach((link, index) => {
+      if (!hasText(link?.label)) {
+        /* Posten kan inte namnges utan label, så den får sin plats i listan,
+         * räknad från 1 som en människa gör. */
+        fail(`contact.js: länk saknar label (post ${index + 1})`);
+      }
+
+      /* EJ I ARKITEKTUR: om url ska grindas och med vilket meddelande.
+       * null är det beslutade sättet att säga "länken finns inte". En tom
+       * sträng eller '#' är det troligaste misstaget när någon tömmer fältet i
+       * stället för att skriva null, och båda skulle rendera en länk utan mål -
+       * exakt det felläge komponenten filtrerar bort. Grinden säger till i
+       * stället för att låta länken tyst försvinna. */
+      const { url } = link ?? {};
+
+      if (url !== null && url !== undefined && !hasText(url)) {
+        fail(`contact.js: url måste vara en adress eller null (label "${link?.label}", fick "${url}")`);
+      }
+
+      if (typeof url === 'string' && url.trim() === '#') {
+        fail(`contact.js: url får inte vara "#" - skriv null när länken saknas (label "${link?.label}")`);
+      }
+    });
+  }
+
+  if (contact.form === null || typeof contact.form !== 'object') {
+    fail('contact.js: form saknas eller är inte ett objekt');
+    return;
+  }
+
+  if (!hasText(contact.form.accessKey)) {
+    fail('contact.js: form.accessKey saknas eller är tom');
+  }
+
+  if (!hasText(contact.form.endpoint)) {
+    fail('contact.js: form.endpoint saknas eller är tom');
+  }
+
+  summary.push(`${Array.isArray(contact.links) ? contact.links.length : 0} kontaktlänkar`);
+}
+
 /* ===== TECKENSNITTETS TÄCKNING ==========================================
  * Varje tecken i varje sträng i src/data/ måste ha en GLYF i den
  * teckensnittsfil som @font-face pekar på.
@@ -488,13 +552,13 @@ function checkFontSubset(fileName, mod, coverage) {
   }
 }
 
-/* Kontrollen för contact.js skrivs i paket 6, tillsammans med datafilen. Står
- * ett namn i ACTIVE utan att ha en kontroll här blir det ett FEL, inte en tyst
- * överhoppning. */
+/* Alla fyra datafiler har nu en kontroll. Står ett namn i ACTIVE utan att ha
+ * en kontroll här blir det ett FEL, inte en tyst överhoppning. */
 const CHECKS = {
   sections: checkSections,
   skills: checkSkills,
   projects: checkProjects,
+  contact: checkContact,
 };
 
 const FONT_COVERAGE = readFontCoverage();

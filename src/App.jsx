@@ -2,9 +2,9 @@ import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
 import Skills from './components/Skills.jsx';
 import Projects from './components/Projects.jsx';
-import Section from './components/Section.jsx';
+import Contact from './components/Contact.jsx';
 import Footer from './components/Footer.jsx';
-import { sections, SKILLS_ID, PROJECTS_ID, MAIN_ID } from './data/sections.js';
+import { MAIN_ID } from './data/sections.js';
 
 function App() {
   return (
@@ -58,23 +58,21 @@ function App() {
             efter varje ändring i denna fil. */}
         <Projects />
 
-        {/* Kvar som tom platshållare med rubrik, byggd ur sections.js. Byts ut
-            i paket 6: contact -> <Contact />.
+        {/* Contact äger sin egen <Section> och hämtar id och rubrik ur
+            sections.js, precis som Skills och Projects.
 
-            Inget HERO_ID-filter: hero ligger inte längre i sections
-            (ARKITEKTUR.md, "Hero-posten tas bort ur sections"), och
-            scripts/validate-data.mjs fäller körningen om id:t smyger tillbaka.
-            SKILLS_ID och PROJECTS_ID undantas bara därför att <Skills /> och
-            <Projects /> ovan äger sina egna <Section>, inte som ett urval ur
-            listan.
+            MAPPNINGEN ÖVER sections ÄR BORTA. Varje sektion i listan har nu en
+            egen komponent, så filtret hade undantagit samtliga poster och
+            renderat ingenting - alltså dött fält. Sektionernas ORDNING ligger
+            kvar i sections.js, som fortfarande är enda källan för id och
+            navrubriker; det är ordningen HÄR som måste följa den.
 
-            Poster utan id hoppas över - en sektion utan id går inte att länka
-            till. Saknad eller blank "label" fångas av <Section> själv. */}
-        {sections
-          .filter((section) => section.id && section.id !== SKILLS_ID && section.id !== PROJECTS_ID)
-          .map((section) => (
-            <Section key={section.id} id={section.id} title={section.label} />
-          ))}
+            Att de fyra ligger som direkta syskon är inte kosmetik:
+            sektionsavgränsarna i global.css är `section[id] + section[id]`.
+            Hamnar något främmande mellan två sektioner bryts kedjan och
+            linjerna försvinner UTAN felmeddelande. Räkna om de tre linjerna
+            efter varje ändring i denna fil. */}
+        <Contact />
       </main>
       <Footer />
     </>

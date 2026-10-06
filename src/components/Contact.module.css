@@ -1,0 +1,31 @@
+/* Kontaktsektionen. Sektionsramen (<section id>, <h2>) och sidomarginalen
+ * kommer från <Section> respektive global.css - modulen får ALDRIG sätta
+ * padding-inline (ARKITEKTUR.md, "Var sidmarginalen bor").
+ *
+ * Sektionen ligger på --color-bg, alltså den mörka ytan. Ingen .surface-light
+ * här. */
+
+.email {
+  font-size: var(--text-lg);
+}
+
+/* EJ I ARKITEKTUR: länkradens avstånd och mellanrum. */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  margin-top: var(--space-4);
+}
+
+/* EJ I ARKITEKTUR: länkarnas färg och understrykning. Orange är tillåtet för
+ * länkar enligt kontrastbeslutet i ARKITEKTUR.md, "Färger" - 6,95:1 mot den
+ * mörka ytan. Understrykningen gör att länken inte skiljs ut av färg ensam. */
+.link {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.link:hover {
+  color: var(--color-accent-hover);
+}

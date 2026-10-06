@@ -56,6 +56,19 @@
    * som är ljusare än den mörka bottnen. Riktningen är omvänd av nödvändighet:
    * mörkare än #2A2A2E hade krockat med --color-surface. */
   --color-header-border: #45454b;
+
+  /* RAM PÅ FORMULÄRFÄLT. Eget token sedan 2026-10-06, med en verklig konsument
+   * - ContactForm. Det är skillnaden mot de två token som togs bort: det här
+   * införs av en komponent som behöver det, inte i väntan på en.
+   *
+   * Varför inget befintligt token duger: ett inmatningsfälts ram är en
+   * gränssnittskomponents avgränsning och omfattas av WCAG 1.4.11:s 3:1 mot
+   * omgivningen. Mot --color-bg ger --color-surface 1,07:1 och --color-border
+   * 1,38:1. Detta värde ger 3,16:1.
+   *
+   * --color-border duger alltså för dekorativa linjer men inte här. Ändra inte
+   * till den "för enhetlighetens skull". */
+  --color-field-border: #606068;
   --color-text: #ededef;
   --color-text-muted: #a1a1a8;
   --color-text-dim: #6e6e76;

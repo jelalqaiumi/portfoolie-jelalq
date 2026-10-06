@@ -1,0 +1,124 @@
+/* Kontaktformuläret. Ligger på --color-bg, alltså den mörka ytan - INTE i
+ * .surface-light. Alla kontraster i ARKITEKTUR.md, "Utseende på mörk yta", är
+ * räknade mot #0B0B0C. */
+
+.wrapper {
+  margin-top: var(--space-7);
+}
+
+/* EJ I ARKITEKTUR: formulärets maxbredd och avstånden mellan fälten.
+ * --measure är tokenet för max radlängd på brödtext, och ett inmatningsfält
+ * som är bredare än texten man skriver i det är svårare att läsa tillbaka. */
+.form {
+  max-width: var(--measure);
+}
+
+.field {
+  margin-bottom: var(--space-5);
+}
+
+/* Synlig etikett ovanför fältet. display: block så att fältet hamnar på egen
+ * rad under den. */
+.label {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+}
+
+/* FÄLTET. width 100% + box-sizing (global.css) och ALDRIG en fast pixelbredd:
+ * det är det enda sättet ett fält kan spräcka 360 px-golvet.
+ *
+ * Ramen är --color-field-border och inget annat token. Ett inmatningsfälts ram
+ * är en gränssnittskomponents avgränsning och omfattas av WCAG 1.4.11:s 3:1
+ * mot omgivningen. --color-surface ger 1,07:1 och --color-border 1,38:1 - båda
+ * för svaga. Detta ger 3,16:1. Byt inte "för enhetlighetens skull". */
+.input {
+  width: 100%;
+  padding: var(--space-3);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-field-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+
+  /* Ärvs inte av formulärkontroller i någon webbläsare - de har egna
+   * standardvärden. Måste sättas uttryckligen, annars står fälten i
+   * webbläsarens systemfont medan resten av sidan står i Didact Gothic. */
+  font-family: inherit;
+  font-size: var(--text-base);
+}
+
+/* Textarea får inte dras ut i bredd av användaren - det spräcker golvet.
+ * Lodrät storleksändring är ofarlig och användbar. */
+.input:is(textarea) {
+  resize: vertical;
+  min-height: 8rem;
+}
+
+/* EJ I ARKITEKTUR: felmeddelandets färg och grad.
+ * Orange, inte rött: sidan har EN accentfärg, och ett nytt rött token för tre
+ * meddelanden hade varit en andra accent. Felet bärs dessutom av tre signaler
+ * samtidigt - texten, aria-invalid och att fokus flyttas dit - så färgen är
+ * inte ensam bärare. 6,95:1 mot --color-bg. */
+.error {
+  display: block;
+  margin-top: var(--space-2);
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+}
+
+/* EJ I ARKITEKTUR: knappens utseende. Fylld orange med mörk text, samma par
+ * som den ifyllda pillen - 6,95:1 - så att den läser som sidans enda
+ * accentfärg och inte som en fjärde ton. */
+.button {
+  padding: var(--space-3) var(--space-5);
+  background-color: var(--color-accent);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--color-on-accent);
+  font-family: inherit;
+  font-size: var(--text-base);
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.button:hover {
+  background-color: var(--color-accent-hover);
+}
+
+/* aria-disabled, inte disabled - knappen förblir fokuserbar. Markören säger
+ * ändå att den inte tar emot just nu. Ingen opacitet: en nedtonad knapp som
+ * fortfarande går att trycka på är ett motsägelsefullt besked, och texten
+ * byter redan till "Skickar ...". */
+.button[aria-disabled='true'] {
+  cursor: progress;
+}
+
+/* STATUSRADEN finns alltid i DOM, tom i vilande läge. Därför ingen margin som
+ * syns när den är tom - min-height skulle ha gett ett tomrum under knappen i
+ * vilande läge. Marginalen kommer i stället av att raden får innehåll. */
+.status {
+  margin-top: var(--space-4);
+  color: var(--color-text);
+  font-size: var(--text-base);
+}
+
+.status:empty {
+  margin-top: 0;
+}
+
+/* Raden om vart uppgifterna tar vägen. */
+.privacy {
+  margin-top: var(--space-5);
+  max-width: var(--measure);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* HONEYPOT. display: none döljer den för alla - inklusive skärmläsare, som
+ * inte annonserar element utan layoutbox. tabindex="-1" och aria-hidden i
+ * JSX:en gör avsikten explicit och överlever att någon byter till en annan
+ * döljningsteknik här. */
+.honeypot {
+  display: none;
+}

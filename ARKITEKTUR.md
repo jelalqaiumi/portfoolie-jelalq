@@ -226,6 +226,7 @@ Mörk bas rakt igenom, i loggans nästan-svarta ton. Orange är enda accenten.
 | `--color-on-accent` | `#0B0B0C` | **Text ovanpå orange yta.** Mörk text, inte vit. |
 | `--color-overlay-grey` | `rgba(32, 32, 36, 0.45)` | Grå tonplatta över profilbilden (paket 3) |
 | `--color-focus` | `#FC6F03` | Fokusring. Binds om i `.surface-light` — se "Fokusringen". |
+| `--color-field-border` | `#606068` | Ram på formulärfält. **3,16:1** mot `--color-bg` — WCAG 1.4.11 kräver 3:1 för gränssnittskomponenters avgränsning, och `--color-border` (1,38:1) duger inte. |
 
 > **Två token har tagits bort av samma skäl, och det skälet är värt att minnas.**
 > `--color-surface-raised` ("hover på kort") och `--color-accent-soft` ("vid
@@ -1631,42 +1632,259 @@ bilder ligga kvar högst upp. Markeringen `EJ I ARKITEKTUR` kan tas bort.
 
 ### `src/data/contact.js` — kontaktuppgifter (paket 6)
 
-Uppgifterna är givna av Jelal 2026-10-02 i `BRIEF.md`. E-posten är känd, GitHub
-och LinkedIn är **ännu ej givna** och ska vara platshållare som Jelal kan fylla i
-utan att öppna komponentkod.
+Alla uppgifter är nu givna (`BRIEF.md`, 2026-10-06).
 
 ```js
 /**
  * @typedef {Object} ContactLink
- * @property {string}      label  Svensk etikett som visas, t.ex. "GitHub"
- * @property {string|null} url    Fullständig URL, eller null om den inte är känd än
+ * @property {string}      label  Svensk etikett som visas
+ * @property {string|null} url    Fullständig URL, eller null — då renderas den INTE
+ *
+ * @typedef {Object} ContactForm
+ * @property {string} endpoint   Web3Forms POST-adress
+ * @property {string} accessKey  Publik nyckel. Se "Nyckeln är publik".
  *
  * @typedef {Object} Contact
- * @property {string}        email  OBLIGATORISK. Renderas som mailto:-länk i klartext.
- * @property {ContactLink[]} links  Övriga länkar. Poster med url === null renderas INTE.
+ * @property {string}        email  OBLIGATORISK. mailto:-länk i klartext.
+ * @property {ContactLink[]} links
+ * @property {ContactForm}   form
  */
 export const contact = {
   email: 'qaiumi@hotmail.com',
   links: [
-    { label: 'GitHub', url: null },   // fyll i URL här när den finns
-    { label: 'LinkedIn', url: null }, // fyll i URL här när den finns
+    { label: 'GitHub',   url: 'https://github.com/Jelalqaiumi' },
+    { label: 'LinkedIn', url: 'https://www.linkedin.com/in/jelalqaiumi' },
   ],
+  form: {
+    endpoint:  'https://api.web3forms.com/submit',
+    accessKey: '79f08fa8-8cdf-4841-8392-066feea2a389',
+  },
 };
 ```
+
+**Formen håller.** `url: null`-mekaniken står kvar även om ingen post använder den
+i dag — den är inte dött fält, för den är **beteendet** när en länk saknas, inte
+ett värde ingen läser. Tar Jelal bort LinkedIn sätter han `null` och länken
+försvinner utan att komponentkod rörs.
+
+**`form` ligger i samma fil som resten.** Endpoint och nyckel är konfiguration för
+kontaktsektionen, inte infrastruktur för sidan — och om Jelal någon gång byter
+nyckel vill han ha den där han redan letar. Regeln att `src/data/` bara innehåller
+data gäller fortfarande: det här är data, inte logik.
 
 Regler som byggaren måste följa:
 
 - E-posten skrivs **i klartext** som `<a href="mailto:qaiumi@hotmail.com">`. Ingen
-  obfuskering, ingen entity-kodning, inget `[at]`, inget kontaktformulär och ingen
-  backend. Det är Jelals uttryckliga beslut, taget med full insikt om
-  skräppost-risken.
+  obfuskering, ingen entity-kodning, inget `[at]`. Jelals uttryckliga beslut, taget
+  med full insikt om skräppost-risken.
 - `links` filtreras på `url !== null` före rendering. **Tomma länkar renderas
   aldrig** — ingen grå ikon, ingen "kommer snart", inget `href="#"`.
-- Byggaren **gissar inte** en GitHub- eller LinkedIn-URL. `null` står kvar tills
-  Jelal fyller i den.
-- Att lägga till en länk senare = byta `null` mot en URL-sträng på en rad i denna
-  fil. Ingen komponentfil rörs. Samma princip som för skills.
+- **Formuläret ersätter inte länkarna.** Båda ska finnas.
+- Att ändra en länk = en rad i denna fil. Ingen komponentfil rörs.
 - Filen inleds med en kommentar på svenska som förklarar just detta.
+
+> **LinkedIn-adressen är härledd, inte verifierad.** LinkedIn svarar HTTP 999 på
+> automatiska anrop, alltså blockerat och inte saknat — den gick varken att
+> bekräfta eller avfärda. Slutdelen i en LinkedIn-adress är inte alltid samma som
+> visningsnamnet. **Jelal klickar på länken när sektionen är byggd.** Leder den
+> fel är det en rad här. Detta är en öppen punkt tills han svarat.
+
+### Kontaktformuläret — beslutat av Jelal 2026-10-06
+
+Tjänst: **Web3Forms**, gratisplan, 250 meddelanden/månad, inget konto.
+
+#### Fälten: tre, alla obligatoriska
+
+| Fält | Typ | Obligatoriskt |
+|------|-----|---------------|
+| Namn | `text` | ja |
+| E-post | `email` | ja |
+| Meddelande | `textarea` | ja |
+
+**Alla tre är obligatoriska, och det är en följd av en regel snarare än en
+avvägning: ett valfritt fält är ett fält man inte har bestämt sig om.** Behövs
+namnet för att kunna svara artigt? Ja — då är det obligatoriskt. Behövs det inte?
+Då ska det bort. Ett fält som får lämnas tomt kostar besökaren uppmärksamhet utan
+att ge Jelal något.
+
+Inget ämnesfält, ingen telefon, inget företag. Ämnet sätts som dolt fält:
+`subject = "Nytt meddelande från portfoliosidan"`, så att Jelals inkorg visar något
+begripligt utan att besökaren behöver formulera det.
+
+Dolda fält som Web3Forms kräver eller drar nytta av: `access_key`, `subject`, och
+honeypot enligt nedan.
+
+#### Skräppostskydd: honeypot, ingenting mer
+
+```html
+<input type="checkbox" name="botcheck" tabindex="-1" aria-hidden="true"
+       style="display:none" />
+```
+
+Web3Forms avvisar inlägg där `botcheck` är ikryssad. Noll friktion för en
+människa.
+
+**`tabindex="-1"` och `aria-hidden="true"` är inte valfria.** Ett dolt fält som
+går att tabba till eller som läses upp av en skärmläsare är en fälla för de
+besökare som har svårast att ta sig igenom formuläret — alltså precis tvärtemot
+avsikten. `display: none` ensamt räcker i praktiken, men de två attributen gör
+avsikten explicit och överlever att någon byter döljningsteknik.
+
+**Ingen CAPTCHA.** Den lägger friktion på varje människa för att stoppa en robot,
+drar in ytterligare en tredje part, och gratisplanens tak på 250 meddelanden gör
+missbruk både synligt och begränsat.
+
+**Domänbegränsning aktiveras INTE.** Den är en betalfunktion, och aktiverad slutar
+formuläret fungera på `localhost` — alltså där det utvecklas och testas. Den får
+slås på först när sidan ligger live, och då som ett eget beslut.
+
+#### Nyckeln är publik — och det är inte en miss
+
+`accessKey` ligger i klientkoden och arkivet är publikt. Nyckeln säger **"skicka
+hit"**, inte "läs härifrån": den kan inte användas för att hämta meddelanden, ändra
+inställningar eller läsa Jelals inkorg. Att den syns är tjänstens avsedda
+användning.
+
+Det den tillåter är att vem som helst skickar meddelanden till Jelals inkorg. Det
+hanteras av honeypot och månadstaket, inte av att gömma nyckeln — en nyckel i
+klientkod går inte att gömma.
+
+#### De fyra tillstånden
+
+| Tillstånd | Vad som syns | Vad som läses upp |
+|-----------|--------------|-------------------|
+| Vilande | formuläret | ingenting |
+| Skickar | knappen `aria-disabled`, formuläret `aria-busy="true"` | "Skickar …" |
+| Lyckades | formuläret töms, statusraden visas | "Tack! Meddelandet är skickat." |
+| Misslyckades | statusraden visas, fälten behåller sitt innehåll | "Meddelandet kunde inte skickas. Försök igen, eller mejla qaiumi@hotmail.com direkt." |
+
+**Statusraden är ett `<p role="status" aria-live="polite">` som alltid finns i
+DOM**, direkt efter knappen, tom i vilande läge.
+
+> **Den får inte renderas villkorat.** En live-region som läggs till samtidigt som
+> sitt innehåll annonseras ofta inte alls — skärmläsaren måste observera regionen
+> *innan* texten dyker upp i den. Det är den vanligaste orsaken till att ett
+> formulär "fungerar men säger inget".
+
+**Knappen förblir fokuserbar under sändning.** `disabled` tar bort elementet ur
+tabbordningen och fokus hamnar på `<body>` — en tangentbordsanvändare tappar sin
+plats mitt i en åtgärd. I stället `aria-disabled="true"` plus att hanteraren
+ignorerar nya inskick medan ett pågår.
+
+**Vid lyckat inskick töms fälten, vid misslyckat gör de det inte.** Den som fick
+ett fel ska kunna trycka igen utan att skriva om allt.
+
+#### Felen är två sorter och ska inte se likadana ut
+
+**Valideringsfel** hör till fältet:
+- felmeddelandet står under fältet, kopplat med `aria-describedby`
+- fältet får `aria-invalid="true"`
+- fokus flyttas till **första** felande fält vid inskicksförsök
+- statusraden används **inte** — den är för inskickets utfall, inte för ifyllnad
+
+**Tjänstefel** hör till statusraden, och meddelandet ska säga tre saker: att det
+**inte** gick fram, att man kan försöka igen, och att e-postlänken finns.
+
+> **Besökaren får aldrig lämnas i ovisshet.** Därför också: anropet får en
+> **timeout på 15 sekunder** via `AbortController`. Utan den kan ett hängande
+> anrop lämna formuläret i "Skickar …" för alltid, och det är det verkliga
+> ovisshetsläget — värre än ett tydligt fel. Vid timeout, nätverksfel eller
+> svar som inte är `ok` gäller felmeddelandet ovan. **Formuleringen ska vara
+> entydig: meddelandet kom inte fram.** Inget "kanske".
+
+#### Validering: båda, i lager
+
+`required` och `type="email"` står kvar på fälten — de bär semantiken till
+hjälpmedel och fungerar som sista skyddsnät. Men `<form noValidate>` stänger av
+webbläsarens egna bubblor, och valideringen görs i komponenten med **svenska**
+meddelanden.
+
+Skälet: webbläsarens inbyggda meddelanden kommer på webbläsarens språk, inte
+sidans. En tysk valideringsbubbla på en svensk sida är ett sämre fel än att skriva
+tre meddelanden själv.
+
+| Fält | Regel |
+|------|-------|
+| Namn | icke-tomt efter `trim()` |
+| E-post | icke-tomt, exakt ett `@`, icke-tomma delar på båda sidor, minst en `.` efter `@` |
+| Meddelande | icke-tomt efter `trim()`, högst 5000 tecken |
+
+**E-postregeln ska vara medvetet tillåtande.** Att avvisa en giltig adress är
+värre än att släppa igenom en ogiltig — den ogiltiga studsar bara, den giltiga
+besökaren ger upp. **Ingen komplicerad regex.**
+
+Ingen minimilängd på meddelandet. Taket på 5000 finns för att hindra orimliga
+inlägg, inte för att styra hur någon skriver.
+
+#### Utseende på mörk yta
+
+Kontaktsektionen ligger på `--color-bg`, **inte** i `.surface-light`.
+
+| Egenskap | Värde | Kontrast mot `#0B0B0C` |
+|----------|-------|------------------------|
+| Fältets botten | `var(--color-surface)` `#141416` | 1,07:1 — syns knappt, därav ramen |
+| **Fältets ram** | **`var(--color-field-border)` `#606068`** | **3,16:1** |
+| Fältets text | `var(--color-text)` | — |
+| Etikett | `var(--color-text)` | — |
+| Fokusring | `var(--color-focus)` `#FC6F03` | **6,95:1** |
+
+**`--color-field-border` är ett nytt token med en verklig konsument.** Ett
+inmatningsfälts ram är en gränssnittskomponents avgränsning och omfattas av WCAG
+1.4.11:s 3:1 — `--color-border` (1,38:1) duger för dekorativa linjer men inte här.
+Det är skillnaden mot de två token jag nyss tog bort: det här införs av en
+komponent som behöver det, inte i väntan på en.
+
+Fokusringen klarar sig med marginal på den mörka ytan, 6,95:1. Ingen ombindning
+behövs här.
+
+**Synliga `<label>` ovanför varje fält.** Ingen platshållare som etikett — den
+försvinner när man börjar skriva, och då vet den som tappat tråden inte längre vad
+fältet var.
+
+#### En rad om vart uppgifterna tar vägen
+
+Under formuläret, i `var(--color-text-muted)`:
+
+> Formuläret skickas via tjänsten Web3Forms. Ditt namn och din e-postadress
+> passerar deras servrar på vägen till Jelals inkorg.
+
+Två meningar, inga paragrafhänvisningar, ingen kryssruta att godkänna. Besökaren
+ska kunna läsa den på tre sekunder och förstå vad som händer. **Texten ska
+godkännas av Jelal** — den talar å hans vägnar.
+
+#### Verifiering
+
+Paket 7 lämnade fyra punkter oprövade **för att kontaktsektionen var tom**. Alla
+fyra blir prövbara nu och ska prövas:
+
+1. **Fokusringar på kontaktlänkarna** — sidans första fokuserbara element utanför
+   headern.
+2. **Tabbordningen efter navlänkarna.**
+3. **`aria-current` för "Kontakt"** — kunde aldrig bli aktuell, eftersom projects
+   täckte 351 px mot contacts 325 px vid sidans maxrullning. Med formuläret på
+   plats växer contact och fallet blir prövbart. Mät om.
+4. **`#C25102`-ringen i den ljusa ytan** — fortfarande oprövad på ett verkligt
+   element.
+
+Formuläret lägger till fyra fokuserbara element på en gång, plus tre länkar.
+
+> **Räkna upp varje fokuserbart element på sidan och mät fokusringens kontrast på
+> vart och ett, mot den yta det står på. Uttömmande, inte stickprov.** Det var
+> frånvaron av element som dolde fokusringsfelet förra gången, och ett formulär är
+> precis det som ändrar den frånvaron.
+
+Utöver det:
+
+- **Honeypot:** bekräfta att `botcheck` varken går att tabba till eller annonseras.
+  Testa med tangentbord **och** med skärmläsare, inte bara genom att läsa CSS.
+- **Timeout:** tvinga den att fallera — blockera anropet och bekräfta att
+  felmeddelandet kommer efter 15 sekunder och att "Skickar …" inte blir kvar.
+- **Statusraden:** bekräfta att alla fyra tillstånden faktiskt annonseras, inte
+  bara att texten byts i DOM.
+- **360 px:** fälten får inte spräcka golvet. `width: 100%` och `box-sizing:
+  border-box`, aldrig en fast pixelbredd.
+- **Ett riktigt meddelande ska skickas** och landa i `qaiumi@hotmail.com`. Ett
+  formulär som inte har levererat ett meddelande är inte verifierat.
 
 ---
 
@@ -1694,7 +1912,8 @@ Regler som byggaren måste följa:
 | `src/components/SkillPill.jsx` | `function SkillPill({ name, filled })` | Renderar en `<li>` med pill. `filled === true` → orange fylld, mörk text. `filled === false` → outline mot mörk botten. Ren presentation, inget state. |
 | `src/components/Projects.jsx` | `function Projects()` | Läser `projects`. `projects.length === 0` → tomt läge på svenska. Annars en lista av `<ProjectCard />`. |
 | `src/components/ProjectCard.jsx` | `function ProjectCard({ project })` | Tar hela project-objektet. Renderar `url`/`repoUrl` endast när de inte är `null`. |
-| `src/components/Contact.jsx` | `function Contact()` | Läser `contact` från `src/data/contact.js`. Renderar e-posten som `mailto:`-länk i klartext samt `contact.links.filter(l => l.url !== null)`. Innehåller inga adresser eller URL:er hårdkodade. |
+| `src/components/Contact.jsx` | `function Contact()` | Läser `contact`. Renderar e-posten som `mailto:`-länk, `contact.links.filter(l => l.url !== null)`, och `<ContactForm />`. Inga adresser eller URL:er hårdkodade. |
+| `src/components/ContactForm.jsx` | `function ContactForm()` | Läser `contact.form`. Äger de fyra tillstånden, valideringen och statusraden. **Projektets första komponent med `useState`** — tre fältvärden, ett tillstånd, ett felobjekt. Se "Kontaktformuläret". |
 | `src/components/Footer.jsx` | `function Footer()` | `<footer>` med namn och årtal. Inget `id`, inget navmål. |
 
 Alla komponenter är funktionskomponenter utan `useState`/`useEffect` i paket 1–6.
@@ -2647,7 +2866,7 @@ Skriptet kontrollerar:
 | `sections.js` | paket 4 | `id` unika (`new Set(ids).size === ids.length`), `label` finns på **alla** poster, `HERO_ID` förekommer **inte** i listan |
 | `skills.js` | paket 4 | Se "Validering av skills" nedan — korsreferens mot källistorna, unika namn, `filled` boolean, unika grupp-id, `title` finns, varje grupp ≥ 1 skill |
 | `projects.js` | **paket 5** | `id` unika, `id`/`title`/`description` finns, `tech` är en array |
-| `contact.js` | **paket 6** | `email` finns, varje `links`-post har `label` |
+| `contact.js` | **paket 6** | `email` finns, varje `links`-post har `label`, `form.endpoint` och `form.accessKey` är icke-tomma strängar |
 
 Felmeddelanden skrivs på svenska, namnger filen och det värde som är fel, och
 skriptet avslutas med nollskild kod. Inga nya beroenden — ren Node.
@@ -2679,6 +2898,8 @@ projects.js: tech måste vara en array (id "portfolio")
 
 contact.js: email saknas
 contact.js: länk saknar label (post 2)
+contact.js: form.accessKey saknas eller är tom
+contact.js: form.endpoint saknas eller är tom
 
 Valideringen hittade 3 fel. Bygget avbryts.
 ```
@@ -3036,7 +3257,7 @@ Skapa inga tomma filer i förväg.
 | 3 | `Hero.jsx` + `Hero.module.css` |
 | 4 | `src/data/skills.js`, `Skills.jsx` + modul, `SkillPill.jsx` + modul, `scripts/validate-data.mjs` + `validate:data` i `package.json` + inkoppling i `build` |
 | 5 | `src/data/projects.js`, `Projects.jsx` + modul, `ProjectCard.jsx` + modul, **`'projects'` aktiveras i `ACTIVE`** |
-| 6 | `src/data/contact.js`, `Contact.jsx` + modul, **`'contact'` aktiveras i `ACTIVE`** |
+| 6 | `src/data/contact.js`, `Contact.jsx` + modul, `ContactForm.jsx` + modul, `--color-field-border` i `tokens.css`, **`'contact'` aktiveras i `ACTIVE`** |
 
 ---
 
@@ -3538,6 +3759,29 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   sig — jag hade bara räknat på det ena av två motriktade krav. Tabellen står kvar
   som underlag. (påverkat av lärdom: ja — räkna på **båda** sidor av en avvägning
   innan den kallas omöjlig)
+- **Kontaktformulär med Web3Forms, tre obligatoriska fält** — Jelals val
+  2026-10-06. Alla tre obligatoriska enligt regeln att **ett valfritt fält är ett
+  fält man inte har bestämt sig om**: behövs det, gör det obligatoriskt; behövs det
+  inte, ta bort det. Honeypot utan CAPTCHA, eftersom CAPTCHA lägger friktion på
+  varje människa för att stoppa en robot. Domänbegränsning aktiveras inte — den
+  skulle slå ut `localhost`. (påverkat av lärdom: nej)
+- **Statusraden finns alltid i DOM, knappen förblir fokuserbar** — en live-region
+  som läggs till samtidigt som sitt innehåll annonseras ofta inte alls, och
+  `disabled` på knappen kastar fokus till `<body>` mitt i en åtgärd. Två fel som
+  båda är osynliga för den som bara tittar på skärmen. (påverkat av lärdom: ja)
+- **Timeout på 15 sekunder via `AbortController`** — det verkliga ovisshetsläget är
+  inte ett felmeddelande utan ett "Skickar …" som aldrig tar slut. Felmeddelandet
+  ska dessutom vara entydigt: meddelandet kom **inte** fram, inget "kanske".
+  (påverkat av lärdom: ja — välj det felläge som syns)
+- **`noValidate` plus egen validering på svenska** — webbläsarens inbyggda
+  meddelanden kommer på webbläsarens språk, inte sidans. `required` och
+  `type="email"` står kvar för semantiken. E-postregeln är medvetet tillåtande:
+  **att avvisa en giltig adress är värre än att släppa igenom en ogiltig.**
+  (påverkat av lärdom: nej)
+- **`--color-field-border` `#606068` införs** — ett inmatningsfälts ram omfattas av
+  WCAG 1.4.11:s 3:1, och `--color-border` ger 1,38:1. Skillnaden mot de två token
+  jag nyss tog bort är att detta **införs av en komponent som behöver det**.
+  (påverkat av lärdom: ja)
 - **Ljus yta: `#F4F4F6`, och tre härledda värden räknades om** — Jelals val
   2026-10-05. Ett bakgrundsbyte på en yta vars alla färger är **härledda ur
   bakgrunden** är aldrig en radändring: ram, dämpad text och svagaste text tappade
@@ -3824,10 +4068,13 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
 
 ## Öppna punkter som INTE är arkitektens att besluta
 
-- **GitHub- och LinkedIn-URL:er** är ännu ej givna av Jelal. De ligger som
-  `url: null` i `src/data/contact.js` och fylls i av Jelal när de finns. Byggaren
-  gissar inte en URL och renderar inte en tom länk. E-posten är däremot given och
-  beslutad — den är inte längre en öppen punkt.
+- **LinkedIn-adressen är härledd, inte verifierad.** LinkedIn svarar HTTP 999 på
+  automatiska anrop, så den gick varken att bekräfta eller avfärda. Jelal klickar
+  på den när sektionen är byggd. Leder den fel är det en rad i `contact.js`.
+- **Formulärets integritetsrad** talar å Jelals vägnar om vart besökarens uppgifter
+  tar vägen och ska godkännas av honom.
+- **Domänbegränsning hos Web3Forms** får slås på först när sidan ligger live, och
+  då som ett eget beslut — den slår ut `localhost`.
 - **Sammanslagningen av `HTTP-metoder` + `GET` + `POST` + `PUT`** till den gamla
   fullständiga strängen är det enda stället där tre av Jelals poster tas bort utan
   att vara rena stavningsvarianter. Gäller tills han säger annat; säger han nej är

@@ -1121,18 +1121,22 @@ inte är det.
 
 #### De ifyllda pillarna — accenten ändras inte, och kan inte heller räddas
 
-Orange `#FC6F03` som **yta** mot vitt ger **2,83:1**, mot 6,95:1 på mörk botten.
-Det ligger under WCAG:s 3:1 för grafiska objekt.
+Orange `#FC6F03` som **yta** mot den ljusa bakgrunden `#F4F4F6` ger **2,58:1**,
+mot 6,95:1 på mörk botten. Det ligger under WCAG:s 3:1 för grafiska objekt.
 
 **Och det går inte att lösa med bakgrunden.** För att nå 3:1 skulle bakgrunden
-behöva vara ljusare än vitt. Rent vitt är alltså *bästa möjliga* fall för orangen,
-och det räcker ändå inte.
+behöva vara ljusare än rent vitt. Vitt är alltså *bästa möjliga* fall för orangen,
+och räcker ändå inte.
 
 | Bakgrund | Orange som yta mot den |
 |----------|------------------------|
 | `#FFFFFF` | 2,83:1 |
-| `#F4F4F6` (brutet vitt) | 2,53:1 |
+| **`#F4F4F6`** (gällande) | **2,58:1** |
 | `#0B0B0C` (sidans mörka) | 6,95:1 |
+
+**Avstegets storlek är alltså 2,58, inte 2,83.** Talet står utskrivet på flera
+ställen och ska hållas rätt: ett medvetet avsteg vars storlek är felskriven är på
+väg att bli ett omedvetet.
 
 **Beslut: `--color-accent` är `#FC6F03` överallt, även på ljus yta. En andra
 orange avfärdas.**
@@ -1233,6 +1237,21 @@ missade det åttonde, därför att inget element använde det ännu.
 renderade fokusringens kontrast mot underlaget på varje. Minst 3:1. Listan ska
 vara uttömmande, inte stickprov — det är frånvaron av element som dolde felet.
 
+> **Så mäts en fokusring, och så mäts den inte.** Ett programmatiskt `.focus()`
+> utlöser **inte** `:focus-visible` i Chrome — den regeln kräver
+> tangentbordsnavigering. En mätning gjord så läser webbläsarens standardkontur,
+> inte sidans: första försöket gav `#0B0B0C`, 3 px, vilket är ett värde sidan
+> aldrig sätter. Använd `CSS.forcePseudoState` eller verklig tabbning. Rätt värde:
+> `rgb(194, 81, 2)`, 2 px solid, offset 3 px.
+>
+> Samma felklass som `--window-size` mot CSS-vyporten: **rätt verktyg, fel
+> utlösare.** Den som mäter ett tillstånd måste försäkra sig om att tillståndet
+> faktiskt råder, inte bara att mätningen gav ett tal.
+
+**Fokusringens ombindning är bevisad nödvändig, inte förebyggande.** Mot den
+slutliga bakgrunden `#F4F4F6` ger originalringen `#FC6F03` **2,579:1** — under
+3:1. Den ombundna `#C25102` ger 4,275:1, uppmätt i renderad sida.
+
 #### Underlag om frågan kommer upp igen
 
 Jelal bad 2026-10-05 om en mörkare orange, fick siffrorna nedan, valde `#D65B02`
@@ -1279,20 +1298,24 @@ Vid hero → skills gör dessutom färgsteget grått → vitt nästan hela jobbe
 linjen blir knappt synlig där. Det är rätt: jag beslutade tidigare att den gränsen
 bär dubbel markering, och viktningen mellan de två signalerna är fri.
 
-#### Till Jelal: rent vitt eller brutet vitt
+#### ~~Till Jelal: rent vitt eller brutet vitt~~ — AVGJORT
 
 Sektionen är 2410 px hög på desktop och 6634 px på mobil. Det är en stor ljus yta
 att scrolla igenom på en i övrigt nästan svart sida.
 
-| | `#FFFFFF` | `#F4F4F6` |
+| | `#FFFFFF` | **`#F4F4F6`** |
 |---|---|---|
-| Mörk text mot bakgrunden | 19,7:1 | 17,6:1 |
-| Orange pill som yta | 2,83:1 | 2,53:1 |
+| Mörk text mot bakgrunden | 19,7:1 | **17,91:1** |
+| Orange pill som yta | 2,83:1 | **2,58:1** |
 | Upplevd bländning | hårdast möjliga | mjukare |
 
-**Byggt: `#FFFFFF`**, eftersom det är vad Jelal bad om. Men lägg fram `#F4F4F6`
-som alternativ med talen ovan — båda misslyckas på orangens 3:1, så den frågan
-avgör inte valet, och då återstår bländningen.
+**Jelal valde `#F4F4F6`** 2026-10-05, ur `#FAFAFB` / `#F4F4F6` / `#EDEDF0`.
+
+Jag lade fram det här valet med talen och noterade att **orangens 3:1 inte avgör
+det**, eftersom båda ligger under — och att det som återstod därför var
+bländningen. Det var rätt sätt att ställa frågan: när ett mätbart krav inte
+skiljer alternativen åt ska man säga det, så att den som väljer vet att det är
+ögonen och inte siffrorna som bestämmer.
 
 ### Skills — rendering
 
@@ -2575,6 +2598,9 @@ att det inte uppstår en ny tvetydighet när markeringarna städas bort:
 | `--color-surface-raised` | borttaget, ingen konsument | tokentabellen |
 | `--color-accent-soft` | borttaget, ingen konsument | tokentabellen |
 | `257 ifyllda` / `50 dämpade` som fast tal | levande data — läs filen | "Förväntat antal: 307" |
+| `.surface-light` bakgrund `#FFFFFF` | `#F4F4F6` (Jelal 2026-10-05) | "Bakgrunden blir `#F4F4F6`" |
+| `#D9D9DE` / `#55555C` / `#76767E` i `.surface-light` | `#CFCFD4` / `#4F4F56` / `#6E6E76` | samma avsnitt |
+| "avsteget är 2,83:1" | **2,58:1** mot den gällande bakgrunden | "De ifyllda pillarna" |
 | `.surface-light` utan `background-color`/`color` | klassen måste måla, inte bara binda om | "Mekanismen" |
 | `--weight-medium` / `--weight-bold` / `--weight-regular` | tokenen är borttagna, vikten är alltid 400 | "Typsnittet" |
 | `font-weight: 500` / `600` / `700` | `font-weight: inherit`, aldrig syntetisk fetning | "Typsnittet" |
@@ -3512,6 +3538,17 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   sig — jag hade bara räknat på det ena av två motriktade krav. Tabellen står kvar
   som underlag. (påverkat av lärdom: ja — räkna på **båda** sidor av en avvägning
   innan den kallas omöjlig)
+- **Ljus yta: `#F4F4F6`, och tre härledda värden räknades om** — Jelals val
+  2026-10-05. Ett bakgrundsbyte på en yta vars alla färger är **härledda ur
+  bakgrunden** är aldrig en radändring: ram, dämpad text och svagaste text tappade
+  alla sin målkvot. `--color-text-dim` föll dessutom till 4,10:1, **under AA**.
+  Det var det tredje tokenet jag missade på samma yta, efter `--color-focus`.
+  (påverkat av lärdom: ja)
+- **Den dämpade texten kompenseras, trots att 6,73:1 klarar AA** — avvikelsen från
+  "exakt lika stark" vore inte värd en ändring i sig. Men 6,73 faller under AAA
+  medan den mörka ytan ligger över, och **att den ljusa ytan blir mätbart sämre
+  tillgänglig än den mörka är en asymmetri som inte går att försvara.**
+  (påverkat av lärdom: nej)
 - **`--color-focus` binds om i `.surface-light` till `#C25102`** — ett eget token
   som inte följde med accenten, och mot vitt bara 2,832:1. Inget var fel i dag, för
   inget fokusbart element låg i den vita sektionen — men paket 7 och Jelals första

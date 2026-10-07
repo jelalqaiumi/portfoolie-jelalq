@@ -16,6 +16,11 @@ const navSections = sections.filter(
     section.id && typeof section.label === 'string' && section.label.trim() !== '',
 );
 
+/* LÄSRADENS HÖJD. Ett tunt band, inte en enda pixelrad: en rad på exakt 0 px
+ * ger ingen skärning alls för IntersectionObserver, och en sektionsgräns som
+ * landar mittemellan två heltalspixlar hade då kunnat hamna i ingen sektion. */
+const READING_BAND = 8;
+
 /* ===== PROJEKTETS FÖRSTA useEffect ======================================
  * Medvetet, och bara här. ARKITEKTUR.md: aria-current kräver en
  * IntersectionObserver och blir därmed projektets första useEffect - "det ska
@@ -27,23 +32,34 @@ const navSections = sections.filter(
  *
  * STÄDNINGEN ÄR POÄNGEN. En observer som överlever en avmontering är en läcka,
  * och i StrictMode körs effekten två gånger i utvecklingsläge - utan disconnect
- * hade två observers varit igång samtidigt och skrivit över varandra.
+ * hade två observers varit igång samtidigt och skrivit över varandra. Samma sak
+ * gäller de två fönsterlyssnarna nedan.
  *
- * VARFÖR intersectionRect.height OCH INTE intersectionRatio: skills-sektionen
- * är drygt 2400 px hög, så dess ratio når aldrig över ca 0,35 på en vanlig
- * skärm. En kort sektion som råkar synas helt (ratio 1,0) hade då vunnit över
- * en lång som fyller hela skärmen. Måttet som svarar på frågan "vad ser
- * användaren mest av" är hur många PIXLAR av vyporten sektionen täcker.
+ * ===== REGELN: LÄSRADEN, INTE STÖRST SYNLIG YTA =====
+ * Den sektion som skär ett tunt band direkt under headern är aktuell.
+ * Beslutat i ARKITEKTUR.md, "aria-current byter regel: läsraden, inte störst
+ * yta".
+ *
+ * ~~Tidigare regel: den sektion som täckte flest pixlar av vyporten.~~ UPPHÄVD
+ * 2026-10-07. Den följde sin egen logik, men logiken var fel: den fungerar bara
+ * så länge sektionerna är ungefär lika höga. Uppmätt fel vid scrollY 676, med
+ * projektsektionens överkant precis under headern: projects visade 351 px och
+ * skills 485, så skills vann. Man klickade "Projekt" och navet lyste
+ * "Kompetenser".
+ *
+ * Läsraden är OBEROENDE AV SEKTIONSHÖJD och svarar på det en läsare menar med
+ * "var är jag" - det som står överst, inte det som råkar täcka flest pixlar.
+ *
+ * Att vänta ut felet avfärdades uttryckligen: det hade troligen dolts när Jelal
+ * lägger in riktiga projekt och sektionen växer, och att låta innehåll dölja
+ * ett logikfel är mönstret "fungerar i dag".
  *
  * HERO OBSERVERAS OCKSÅ, trots att den inte har någon navlänk. Det är inte
- * överflödigt - det är det som gör toppen av sidan rätt. Första versionen
- * observerade bara navsektionerna, och då vann skills vid scrollY 0 med sina
- * 160 synliga pixlar medan hero täckte 676: "Kompetenser" markerades som
- * aktuell innan användaren ens hade nått sektionen. Uppmätt.
- *
- * Nu jämförs alla sektioner på samma villkor, och eftersom hero inte har någon
- * navlänk matchar ingen länk när hero vinner. Ingen extra logik behövs - det
- * följer av att jämförelsen är fullständig.
+ * överflödigt - det är det som gör toppen av sidan rätt. Observerades bara
+ * navsektionerna skulle den första navlänken markeras redan vid scrollY 0,
+ * innan användaren nått sektionen. Eftersom hero inte har någon navlänk matchar
+ * ingen länk när hero skär läsraden. Ingen extra logik behövs - det följer av
+ * att jämförelsen är fullständig.
  * ======================================================================== */
 function useCurrentSection(ids) {
   const [currentId, setCurrentId] = useState(null);
@@ -55,47 +71,140 @@ function useCurrentSection(ids) {
 
     if (elements.length === 0) return undefined;
 
-    /* Headerns höjd läses ur TOKENET, inte som ett tal här. Den klibbande
-     * headern täcker vyportens översta rad, så en sektion ska inte räknas som
-     * "i vy" för de pixlar som ligger under headern. */
-    const headerHeight = getComputedStyle(document.documentElement)
-      .getPropertyValue('--header-height')
-      .trim();
+    /* ===== LÄSRADENS LÄGE LÄSES UR SEKTIONERNAS EGEN scroll-margin-top =====
+     * Inte ur --header-height, och det är ett UPPMÄTT fel som ligger bakom.
+     *
+     * Första versionen lade bandet direkt under --header-height, alltså på
+     * y 64-72. Då markerades fel länk vid varje klick, systematiskt en sektion
+     * efter: klick på "Projekt" gav scrollY 660 och bandet skars av HERO, klick
+     * på "Kompetenser" gav bandet skuret av PROJECTS. Orsaken är att
+     * global.css ger varje sektion
+     * `scroll-margin-top: calc(var(--header-height) + var(--space-4))`, alltså
+     * 80 px: en klickad sektion kommer till vila 16 px LÄGRE än headerns
+     * underkant, och i de 16 pixlarna ligger fortfarande föregående sektion.
+     * Bandet låg i glappet.
+     *
+     * Felet syntes bara för att länkarna KLICKADES. Med window.scrollTo till
+     * sektionens överkant hade varje mätning visat rätt, eftersom den hoppar
+     * över just det glapp som scroll-margin-top skapar.
+     *
+     * Därför läses värdet ur `scrollMarginTop` på en verklig sektion i stället
+     * för att räknas ihop av tokens här. Då är bandet per definition där en
+     * navigerad sektion LANDAR, och ändrar någon --space-4 eller
+     * --header-height följer bandet med utan att denna fil behöver röras. Det
+     * är samma skäl som att headerns höjd aldrig skrivs som ett tal.
+     *
+     * Reservvärdet är --header-height, för det fall en sektion saknar regeln. */
+    const probe = elements.find((el) => el.matches('section[id]')) ?? elements[0];
+    const bandTop =
+      parseFloat(getComputedStyle(probe).scrollMarginTop) ||
+      parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue('--header-height'),
+      ) ||
+      0;
 
     /* Sparas utanför callbacken: en observer rapporterar bara de poster som
      * ÄNDRATS, inte alla. Utan ett minne hade en sektion som slutat ändras
      * försvunnit ur jämförelsen. */
-    const visible = new Map();
+    const crossing = new Map();
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          visible.set(entry.target.id, entry.isIntersecting ? entry.intersectionRect.height : 0);
-        }
+    let observer = null;
+    let atBottom = false;
 
-        let best = null;
-        let bestHeight = 0;
+    function decide() {
+      /* ===== UNDANTAGET FÖR SIDANS BOTTEN =====
+       * Är sidan rullad längst ned kan en kort sista sektion aldrig nå
+       * läsraden - bandet ligger då i en sektion ovanför, och den sista
+       * markeras aldrig hur långt man än rullar. Då markeras den sista
+       * sektionen.
+       *
+       * Undantaget står HÄR, i koden, och ska inte behöva upptäckas.
+       * Beslutat i ARKITEKTUR.md, samma avsnitt som läsraden.
+       *
+       * Sista i elements, inte i ids: en post i sections.js utan renderad
+       * sektion har redan filtrerats bort ovan, och då ska undantaget peka på
+       * den sista som FINNS på sidan. */
+      if (atBottom) {
+        setCurrentId(elements[elements.length - 1].id);
+        return;
+      }
 
-        /* Itererar ids i DATANS ordning, inte Map-ordning, så att ett
-         * oavgjort läge alltid faller på den sektion som kommer först på
-         * sidan. Annars hade utfallet berott på i vilken ordning
-         * webbläpparen råkade rapportera. */
-        for (const id of ids) {
-          const height = visible.get(id) ?? 0;
-          if (height > bestHeight) {
-            bestHeight = height;
-            best = id;
+      /* Itererar ids i SIDANS ordning och låter den SISTA som skär bandet
+       * vinna. Normalt skär bara en sektion ett 8 px-band; de få pixlar där
+       * två gör det är precis vid en gräns, och då är den senare den man är på
+       * väg in i. Ordningen är alltså avgörandet, inte Map-ordningen, som hade
+       * berott på i vilken ordning webbläsaren råkade rapportera. */
+      let best = null;
+
+      for (const id of ids) {
+        if (crossing.get(id)) best = id;
+      }
+
+      setCurrentId(best);
+    }
+
+    /* Bandet räknas i pixlar ur vyportens höjd och måste därför byggas om när
+     * höjden ändras. rootMargin tar varken calc() eller en blandning av "100 %
+     * minus 64 px", och en procentsats i underkanten hade gett ett band som
+     * blir NEGATIVT på låga vyporter - alltså ingen skärning alls och ingen
+     * markerad länk, tyst. */
+    function build() {
+      if (observer) observer.disconnect();
+      crossing.clear();
+
+      /* Underkanten krymps så att bara bandet återstår. Max(0, ...) är ett
+       * skyddsnät för en vyport som är lägre än headern plus bandet: då blir
+       * bandet i stället "allt under headern", vilket är en försämring men
+       * fortfarande en fungerande markering. Aldrig ett negativt band. */
+      const bottomInset = Math.max(0, window.innerHeight - bandTop - READING_BAND);
+
+      observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            crossing.set(entry.target.id, entry.isIntersecting);
           }
-        }
 
-        setCurrentId(best);
-      },
-      { rootMargin: `-${headerHeight} 0px 0px 0px`, threshold: [0, 0.01, 0.25, 0.5, 0.75, 1] },
-    );
+          decide();
+        },
+        { rootMargin: `-${bandTop}px 0px -${bottomInset}px 0px`, threshold: 0 },
+      );
 
-    for (const el of elements) observer.observe(el);
+      for (const el of elements) observer.observe(el);
+    }
 
-    return () => observer.disconnect();
+    /* Botten kan nås UTAN att någon skärning ändras: är den sista sektionen
+     * kort fortsätter sektionen ovanför att skära bandet hela vägen ned, och
+     * observern har då ingenting att rapportera. Undantaget behöver därför en
+     * egen lyssnare - det går inte att läsa ur observern. */
+    function onScroll() {
+      const doc = document.documentElement;
+
+      /* -2 px tolerans: scrollHeight och den summerade höjden går isär på
+       * bråkdelspixlar vid vissa zoomnivåer, och ett exakt likhetstest hade då
+       * aldrig blivit sant. */
+      const next = window.scrollY + window.innerHeight >= doc.scrollHeight - 2;
+
+      if (next !== atBottom) {
+        atBottom = next;
+        decide();
+      }
+    }
+
+    function onResize() {
+      build();
+      onScroll();
+    }
+
+    build();
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+    };
   }, [ids]);
 
   return currentId;

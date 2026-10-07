@@ -185,22 +185,23 @@
  * känd och ligger hos arkitekten: den kan välja att kompensera eller acceptera.
  * Ändra inte #55555C här innan beslutet kommer.
  *
- * --color-accent är MEDVETET INTE ombunden. Orange som yta mot den ljusa ytan
- * ger 2,58:1 och når inte WCAG 1.4.11:s 3:1 - och det går inte att lösa med
- * bakgrunden, för det skulle kräva en yta ljusare än rent vitt, som i sin tur
- * bara ger 2,83:1. Texten i den ifyllda pillen
- * behåller ändå sina 6,95:1, eftersom både orangen och --color-on-accent är
- * desamma på båda ytorna.
+ * ~~--color-accent är MEDVETET INTE ombunden.~~ UPPHÄVT 2026-10-07. Skälet
+ * byggde på att den ljusa ytan bar PILLARNA, där orange är en YTA och alltså
+ * omfattas av WCAG 1.4.11:s 3:1 - ett krav ingen orange klarar mot en ljus
+ * botten. Den ljusa ytan ligger sedan 2026-10-07 på PROJEKTSEKTIONEN, och där
+ * är orange inte en yta utan LÄNKTEXT. Då gäller 1.4.3 och 4,5:1, och det är
+ * ett krav som går att uppfylla. Se ombindningen längre ner i blocket.
  *
- * En andra, mörkare orange prövades och återtogs av Jelal 2026-10-05 ("återgå
- * till den vanliga orange"). Lägg inte tillbaka den: orange är sidans ENDA
- * accentfärg och värdet är pixelmätt ur loggan, så en andra ton gör att
- * pillarna inte längre matchar JQ-märket i headern - som syns samtidigt,
- * eftersom headern är klibbande. Avsteget från 1.4.11 är utskrivet i
- * ARKITEKTUR.md med skäl, inte förbisett.
+ * Pillarna berörs inte: de ligger kvar i kompetenssektionen, som är mörk igen.
+ * Uppmätt efter flytten är den ifyllda pillen 6,946:1 mot --color-bg, så det
+ * utskrivna avsteget från 1.4.11 har upphört av sig självt.
  *
- * Ser pillarna urvattnade ut är rätt åtgärd att ompröva den vita bakgrunden,
- * inte att införa en andra orange.
+ * KVAR SOM GÄLLANDE ur det upphävda stycket: orange är sidans ENDA accentfärg
+ * och root-värdet är pixelmätt ur loggan. Jelal återtog en andra, mörkare
+ * orange 2026-10-05 ("återgå till den vanliga orange"). Det beslutet gäller
+ * fortfarande för DEN MÖRKA YTAN, där märket i den klibbande headern syns
+ * samtidigt som pillarna och måste matcha dem. Ombindningen nedan gäller bara
+ * inuti en ljus yta, där märket inte är i bild på samma underlag.
  *
  * --color-bg-top binds om trots att ingen regel i sektionen använder den:
  * den är ärvd, och utan ombindningen hade ett framtida element inuti en ljus
@@ -214,7 +215,15 @@
   --color-bg-top: #f4f4f6;
   --color-text: #0b0b0c;
   --color-text-muted: #4f4f56;
-  --color-text-dim: #6e6e76;
+
+  /* Här låg --color-text-dim: #6e6e76. BORTTAGEN 2026-10-07: värdet var
+   * IDENTISKT med root-värdet, alltså en nolloperation, och tokenets enda
+   * konsument är .footer, som aldrig ligger inuti en ljus yta. En ombindning
+   * som inte binder om något är dött fält - samma regel som fällde
+   * --color-surface-raised och --color-accent-soft.
+   *
+   * Behöver något i en ljus yta tonen: den måste räknas om mot #F4F4F6 först.
+   * Kopiera inte root-värdet tillbaka hit. */
 
   /* RAMEN ÄR OMRÄKNAD, INTE OMVALD. Målet är att de dämpade pillarnas
    * underordning ska vara exakt lika stark på båda ytorna, och den kvoten går
@@ -228,13 +237,22 @@
    * KVOTEN som är beslutet, inte hexvärdet. */
   --color-border: #cfcfd4;
 
-  /* ⚠️ --color-surface har SAMMA VÄRDE som bakgrunden ovan sedan Jelal valde
-   * brutet vitt. Ingen regel inuti den ljusa ytan använder den i dag - enda
-   * konsumenten är .card i ProjectCard.module.css, och projektsektionen ligger
-   * utanför klassen. Men hamnar ett kort någon gång i en ljus yta blir det
-   * osynligt mot sin egen bakgrund, exakt samma fel som headerns kant hade när
-   * --color-border råkade bli lika med bandet. Rapporterat till arkitekten. */
-  --color-surface: #f4f4f6;
+  /* KORTETS EGNA YTA. Rent vitt, inte sektionens brutna vitt: 1,10:1 mot
+   * bakgrunden ovan, vilket speglar den mörka ytans 1,07:1 mellan
+   * --color-surface och --color-bg. Kortet får alltså en egen ton på båda
+   * ytorna, och lika svag på båda.
+   *
+   * RÄTTAT 2026-10-07. Tokenet hade samma värde som bakgrunden, och när den
+   * ljusa ytan flyttades till projektsektionen blev den latenta buggen akut:
+   * kortet mätte 1,000:1 mot sektionen och skildes enbart av sin ram. Det var
+   * exakt samma fel som headerns kant hade när --color-border råkade bli lika
+   * med bandet - ett token vars värde sammanfaller med sitt underlag.
+   *
+   * Här får det alltså vara RENT vitt trots att Jelal valde brutet vitt för
+   * sektionen. De två besluten rör olika ytor: hans gällde den stora
+   * bakgrunden som läste för hård, detta gäller en liten upphöjd platta som
+   * måste gå att skilja från den. */
+  --color-surface: #ffffff;
 
   /* FOKUSRINGEN binds om, till skillnad från --color-accent ovan. Att de två
    * behandlas olika ser godtyckligt ut men är det inte, och skälet är värt att
@@ -266,6 +284,27 @@
    * därför att det råkade inte finnas något fokuserbart i den ljusa ytan.
    * Flyttas formuläret, eller får en ljus yta ett fält, är färgen redan rätt. */
   --color-error: #c0271e;
+
+  /* ACCENTEN binds om, sedan den ljusa ytan flyttades till projektsektionen.
+   * Där är orange LÄNKTEXT, inte en yta: projektkortens två länkar är enda
+   * konsumenterna av tokenet inuti klassen. Kravet är därför 1.4.3:s 4,5:1 och
+   * inte 1.4.11:s 3:1, och root-orangen föll på 2,579:1 respektive 2,056:1 i
+   * hover - uppmätt på ett kort innan ombindningen fanns.
+   *
+   * ⚠️ FOKUSRINGENS #C25102 DUGER INTE HÄR, trots att den redan finns i filen
+   * några rader upp och ser ut att vara "den mörkare orangen vi valt". Den ger
+   * 4,28:1 mot #F4F4F6 och faller på 4,5. Den valdes för ett krav på 3:1.
+   * ETT TOKEN SOM KLARAR ETT KRAV KLARAR INTE AUTOMATISKT ETT HÅRDARE - det är
+   * hela skälet att de två är olika värden, och att återanvända ringens färg
+   * här vore att återinföra felet med en färg som ser beprövad ut.
+   *
+   * HOVER MÖRKNAR HÄR, medan den LJUSNAR på den mörka ytan (#FD9140). Det ser
+   * ut som en inkonsekvens och är det inte: regeln är att hover rör sig BORT
+   * FRÅN UNDERLAGET, inte att hover är ljusare. Räta inte ut det - att låta
+   * hover ljusna mot en ljus yta hade sänkt kontrasten i det läge användaren
+   * just pekat på. */
+  --color-accent: #ae4802;
+  --color-accent-hover: #8f3a01;
 
   /* DE TVÅ RADERNA NEDAN ÄR NÖDVÄNDIGA, inte dekoration. Utan dem gör
    * ombindningen ovan ingenting synligt, och det är UPPMÄTT:

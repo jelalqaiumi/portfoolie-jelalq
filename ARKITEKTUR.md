@@ -847,7 +847,144 @@ sida vid sida.
 Byggaren ska **inte** formatera om filen till flerradiga objekt, och inte låta en
 formaterare bryta raderna.
 
+### Kompetenssektionen görs om från grunden — beslutat av Jelal 2026-10-07
+
+**Från 307 kompetenser i 18 grupper till ungefär 60 i nio grupper.** Det är ett
+beslut, inte en rättelse: Jelal har sett vad som försvinner och valt ändå.
+
+De nio grupperna, i denna ordning, med id:
+
+| # | `id` | `title` |
+|---|------|---------|
+| 1 | `backend` | Backend |
+| 2 | `frontend` | Frontend |
+| 3 | `mobil` | Mobil |
+| 4 | `databaser` | Databaser |
+| 5 | `sakerhet` | Säkerhet |
+| 6 | `testning-och-kvalitet` | Testning och kvalitet |
+| 7 | `devops` | DevOps |
+| 8 | `arbetssatt` | Arbetssätt |
+| 9 | `ai-i-utveckling` | AI i utveckling |
+
+Innehållet skrivs av **exakt** ur Jelals meddelande, tecken för tecken.
+
+#### Vad som utgår, uppräknat
+
+Det här är en betydande mängd verifierat arbete, och det ska stå utskrivet vad som
+faller — inte försvinna tyst.
+
+| Utgår | Varför |
+|-------|--------|
+| **`filled`-fältet på varje skill** | Den nya listan har ingen sådan dimension |
+| **Pillarnas två tillstånd** — orange fylld mot dämpad outline | Följer av ovan |
+| **`SkillPill`s `filled === true`-gren** | Död kod |
+| **Teckenförklaringen** "De orange har jag arbetat med…" | Förklarar en skillnad som inte finns |
+| **De 270 markeringar Jelal gjort** | Ingen plats att bo på |
+| **Indelningen i 18 grupper**, dubblettlösningen, de tolv nära-dubbletterna, `MERGED`-tabellen | Ersätts av nio grupper med nytt innehåll |
+| **Fyra korsreferensgrindar** mot `skills.txt` och `skills-full.txt` | Källistorna är inte längre källa |
+| **Flerkolumnlayouten** (`columns: 1/2/3/4`) | Ersätts av ett kortrutnät |
+
+**Det här står kvar och ska inte röras:**
+
+- **Teckengrinden** — varje tecken i `src/data/` måste täckas av typsnittsfilen.
+  Den är inte knuten till källistorna och gäller oförändrat.
+- **`--color-on-accent`** överlever trots att de fyllda pillarna försvinner: heros
+  primärknapp blir en orange yta med mörk text och behöver tokenet.
+- **`--color-error` och dess ombindning i `.surface-light`** hör till formuläret,
+  inte till skills. Opåverkade.
+
+#### `skills.txt` och `skills-full.txt` — historik, inte källa
+
+**Filerna står kvar i arkivet, men är inte längre källa för någon grind.**
+
+Att radera dem avfärdas. De är Jelals egna ord, de dokumenterar vad sektionen var,
+och arkivet är publikt. Att ersätta dem med den nya listan avfärdas också — då
+förlorar vi historiken utan att vinna något, eftersom den nya listan redan bor i
+`skills.js`.
+
+**Den nya listan är sin egen källa.** Det finns ingen andra lista att jämföra mot,
+och därmed ingen korsreferens att göra.
+
+#### Vad som ersätter korsreferensgrindarna
+
+De fyra grindarna fanns för att inget av Jelals skulle falla bort tyst. Med en
+lista i stället för två försvinner den mekanismen, och ett hårdkodat antal är
+uttryckligen bortvalt sedan tidigare — det fallerar av fel skäl så fort han ändrar
+något.
+
+**Ersättning: en grind på gruppernas id och ordning.**
+
+Nio grupper, exakt de nio id:na ovan, i exakt den ordningen. Det är en struktur
+**Jelal har bestämt**, inte ett antal som driver. Grinden slår bara till om någon
+råkar byta ordning, stava ett id fel eller tappa en hel grupp — vilket är de fel
+som faktiskt kan smyga sig in när nio kort skrivs av för hand.
+
+Kvar gäller också: varje namn unikt i hela filen, varje grupp minst en post, varje
+grupp har `title`.
+
+#### Ny struktur: kort med chips
+
+```css
+.grid { display: grid; gap: var(--space-6); grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 600px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 900px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+```
+
+**Inget spår skrivs som bara `1fr`.** Regeln har bitit två gånger.
+
+- Varje grupp är ett **kort** med `h3`-rubrik.
+- Kompetenserna är **chips i en riktig `<ul>` med `<li>`** — en lista ska vara en
+  lista, och skärmläsaren annonserar antalet.
+- `align-items: start` på rutnätet, så att ett kort inte sträcks av sin granne.
+- Ingen procentstapel, ingen nivåmätare, ingen sortering på kunnande.
+
+Rubrikordningen håller: ett `h1` (namnet), `h2` per sektion ur `sections.js`, `h3`
+per kompetensgrupp.
+
+#### Chipsens färg — ett utseendeval att lägga fram
+
+Med `filled` borta finns ingen skillnad kvar för orange att bära.
+
+| Alt | Chips | Följd |
+|-----|-------|-------|
+| **A** | neutrala: `--color-surface` botten, `--color-border` ram, `--color-text` text | Orange försvinner ur sektionen. Accenten blir heros primärknapp och fokusringen. |
+| B | orange fyllda, `--color-on-accent` text | Närmast dagens utseende, men 60 täta orange ytor i nio kort är betydligt kompaktare än 270 utspridda över 2338 px |
+
+**Byggt: A.** Skälet är att orange hittills har *betytt* något — "den här behärskar
+jag" — och när betydelsen försvinner blir färgen dekoration. En accent som används
+på allt accentuerar inget.
+
+**Men det är en synlig förändring Jelal inte har bett om, och den ska läggas fram.**
+Hans specifikation säger "chips" utan att nämna färg.
+
+#### Fem punkter i specifikationen som inte stämde
+
+Lösta i förväg, och skrivna här så att ingen försöker igen:
+
+| Specifikationen sa | Vad som gäller |
+|---------------------|----------------|
+| `src/data/skills.ts` | **`.js`** — projektet är inte TypeScript |
+| `#projekt`, `#kontakt` | **`#projects`, `#contact`** — våra befintliga id. Att döpa om dem bryter nav, `aria-current`, sektionsavgränsarna och `sections.js` |
+| "använd ikonbiblioteket som redan finns" | **Det finns inget.** Se nedan |
+| "lugn in-animation om sidan redan använder animationer" | Sidan gör inte det, och specifikationen säger då själv "annars ingen". **Ingen animation.** |
+| "kontrollera även undersidor" | **Det finns inga.** Sidan är en enda |
+
+#### Inga ikoner
+
+Premissen var fel — projektet har noll ikonberoenden, och det är ett medvetet
+läge: jag har avvisat ikonbibliotek tidigare med motiveringen att inga ikoner är
+beställda.
+
+Alternativet vore nio inline-SVG:er att rita, namnge och underhålla. **Och de
+skulle tillföra mindre än orden de står bredvid** — "Arbetssätt" och "Testning och
+kvalitet" är begrepp utan självklar bild, och en gissad symbol är sämre än ingen.
+
 ### Skills — kategoriindelning
+
+> **UPPHÄVT i sin helhet 2026-10-07.** De 18 grupperna, dubblettlösningen, de tolv
+> nära-dubbletterna och korsreferensen mot källistorna gäller inte längre. Se
+> "Kompetenssektionen görs om från grunden" ovan. Avsnittet står kvar som historik
+> över hur den gamla listan hanterades — **bygg inget efter det.**
 
 #### Hur abstraktionsnivån hanteras
 
@@ -1106,10 +1243,13 @@ Jelal: *"sektionen med kompetens sidan ha bakrunden vit."* Varje färg i sektion
   --color-bg-top:     #F4F4F6;   /* hindrar läckage om något ärver den */
   --color-text:       #0B0B0C;   /* 17,9:1 */
   --color-text-muted: #4F4F56;   /* 7,40:1 */
-  --color-text-dim:   #6E6E76;   /* 4,60:1 */
+  /* --color-text-dim binds INTE om — se noten nedan */
   --color-border:     #CFCFD4;   /* 1,413:1 */
-  --color-focus:      #C25102;   /* 4,28:1 — se "Fokusringen" */
-  --color-error:      #C0271E;   /* 5,39:1 — se "Det röda binds om" */
+  --color-surface:       #FFFFFF;   /* kortets egen yta, 1,10:1 */
+  --color-focus:         #C25102;   /* 4,28:1 — se "Fokusringen" */
+  --color-error:         #C0271E;   /* 5,39:1 — se "Det röda binds om" */
+  --color-accent:        #AE4802;   /* 5,13:1 — se "Accenten på ljus yta" */
+  --color-accent-hover:  #8F3A01;   /* 6,89:1 */
   /* --color-accent binds INTE om. Se "De ifyllda pillarna". */
 
   /* Utan dessa två målar klassen ingenting. */
@@ -1119,6 +1259,16 @@ Jelal: *"sektionen med kompetens sidan ha bakrunden vit."* Varje färg i sektion
 ```
 
 Alla kvoter ovan är mot `--color-bg` i samma block, alltså `#F4F4F6`.
+
+> **`--color-text-dim` band tidigare om till `#6E6E76` — exakt rotens värde.** Det
+> var en nolloperation, och dess enda konsument är footern som aldrig ligger på
+> ljus yta. **Raden är borttagen.**
+>
+> Jag räknade fram värdet som uppfyllde 4,60:1 mot `#F4F4F6` och det råkade
+> sammanfalla med rotens. Att skriva ned ett värde som inte ändrar något är dött
+> fält, och den risk raden skulle ha täckt — att roten ändras och ljusa ytan
+> spricker tyst — täcks redan av den generella regeln: **ändras ett rotfärgtoken
+> ska varje token mätas om mot varje yta.**
 
 > **De två sista raderna är nödvändiga, inte prydnad.** Mitt första block hade
 > bara anpassade egenskaper, och en klass som enbart definierar variabler sätter
@@ -1239,6 +1389,55 @@ bakgrund han valde för kompetenssektionen, så det är hans beslut och inte mit
 Byter ytan sektion flyttar `.surface-light` med den, och de ombundna tokenen följer
 automatiskt — det var hela poängen med att binda om i stället för att införa egna
 namn.
+
+#### Accenten på ljus yta — binds om, och det motsäger inte det tidigare beslutet
+
+Byggaren mätte på ett riktigt projektkort:
+
+| Vad | Mot `#F4F4F6` | Krav | |
+|-----|----------------|------|---|
+| Länktext `--color-accent` `#FC6F03` | **2,579:1** | 4,5 (1.4.3) | **faller** |
+| Samma länk, hover `#FD9140` | **2,056:1** | 4,5 | **faller** |
+
+**Gällande: `--color-accent: #AE4802` (5,13:1) och `--color-accent-hover: #8F3A01`
+(6,89:1) inuti `.surface-light`.** Kulör 24,4° respektive 24,1° mot rotens 26,0° —
+samma orange, mörkare valör.
+
+> **`#C25102` duger inte här, trots att den redan finns i projektet.** Den ger
+> 4,70:1 mot **rent vitt**, men ytan är `#F4F4F6` och där blir den **4,28:1** —
+> under 4,5. Den valdes för fokusringen, som bara kräver 3:1. **Ett token som
+> klarar ett krav klarar inte automatiskt ett hårdare.**
+
+**Varför detta inte motsäger att jag avvisade en mörkare orange för pillarna.**
+Den frågan gällde stora färgade *ytor* och 1.4.11:s 3:1, och mitt skäl var att
+pillarna då inte längre skulle matcha JQ-märket. Här handlar det om **liten text
+och 1.4.3:s 4,5:1** — ett hårdare krav — och ingen jämför en länks textfärg med en
+logotyp. Framför allt: det förra var ett utseendeval, det här är ett fel.
+
+**Hover går åt motsatt håll på de två ytorna, och det är avsiktligt.** På mörk
+botten ljusnar hovern (`#FC6F03` → `#FD9140`), på ljus mörknar den
+(`#AE4802` → `#8F3A01`). Regeln är inte "hover är ljusare" utan **"hover rör sig
+bort från underlaget"**. Räta inte ut inkonsekvensen — den är poängen.
+
+#### Kortet får en egen yta igen
+
+`--color-surface` band om till `#F4F4F6`, alltså exakt sektionens egen bakgrund:
+kortets kontrast mot sektionen blev **1,000:1**. Kortet var inget kort längre.
+
+**Gällande: `--color-surface: #FFFFFF` på ljus yta**, 1,10:1 mot sektionen.
+
+Det speglar läget på mörk botten, där kortet är `#141416` mot `#0B0B0C` — **1,07:1**.
+Kortet har alltså aldrig definierats av sin fyllnad utan av fyllnad **plus** ram,
+och den balansen är nu densamma på båda ytorna. Vitt framför mörkare för att
+tokenets namn betyder upphöjd yta, och på en ljus sektion ligger det upphöjda
+ljusare.
+
+> **Kortets ram på 1,413:1 är inget fel.** Den rapporterades mot kravet 3:1, men
+> **1.4.11 gäller gränssnittskomponenter och betydelsebärande grafik** — ett
+> projektkort är varken, och tekniketiketterna är inte interaktiva. Länkarna
+> *inuti* kortet är komponenterna, och de omfattas av 1.4.3 som nu är åtgärdat.
+> Ramen är lika subtil som på mörk botten (1,38:1), där den accepterades. **Att
+> behandla den som ett fel skulle ge tunga ramar överallt för att lösa ingenting.**
 
 #### Bakgrunden blir `#F4F4F6` — och vad som följde med
 
@@ -2410,7 +2609,7 @@ Utöver det:
 
 | Fil | Signatur | Ansvar |
 |-----|----------|--------|
-| `src/App.jsx` | `function App()` | Renderar `<Header />`, `<main>` med `<Hero />`, `<Skills />`, `<Projects />`, `<Contact />`, och `<Footer />`. Ingen egen logik. |
+| `src/App.jsx` | `function App()` | Renderar `<Header />`, `<main>` med `<Hero />` följt av `sections.map(...)` som slår upp komponenten i `SECTION_COMPONENTS`, och `<Footer />`. Uppslaget är konfiguration, inte logik — se "`sections.js` blir åter enda källan". |
 | `src/components/Header.jsx` | `function Header()` | Sticky header. JQ-märket (`logo-mark-tight-96/192.png`, `alt=""` + `aria-hidden="true"`) plus namnet som HTML-text, tillsammans **en** länk till `HERO_ID`, utan platta eller ram runt märket. Headerbandet är grått (`--color-bg-top`). Navlänkar genereras från hela `sections`. Tar inga props. Detaljerna står i "Headerns uppbyggnad" — den som bara läser denna rad har inte hela beslutet. |
 | `src/components/Section.jsx` | `function Section({ id, title, children, className })` | Återanvänd ram för skills/projects/contact. Renderar `<section id={id}>` med `<h2>{title}</h2>` och innehållet. `className` är valfri och läggs till efter modulens egen klass. Används **inte** av Hero. |
 | `src/components/Hero.jsx` | `function Hero()` | Renderar sin egen `<section id="hero">` med `<h1>`, titel, intro och profilbilden. Egen, eftersom hero har `h1` och ingen `h2`-rubrik. |
@@ -2659,7 +2858,10 @@ tillbaka.
 
 **Verifiering:**
 
-1. Räkna linjerna i renderad sida: **tre** mellan sektionerna, plus footerns.
+1. Räkna linjerna i renderad sida: **en färre än antalet sektioner** — med fem
+   sektioner alltså **fyra** mellan dem, plus footerns. Formuleringen är avsiktligt
+   relativ: talet ändrades när Om mig tillkom och ska inte behöva rättas nästa
+   gång.
 2. Bekräfta att det inte finns någon dubbellinje under headern.
 3. Syskonselektorn förutsätter att sektionerna är direkta syskon utan främmande
    element emellan. Läggs något in mellan dem i `<main>` bryts kedjan **tyst** —
@@ -2973,11 +3175,42 @@ bedöma:
 > `--text-xs` under 600 px — **inte** att korta Jelals etikett. Storleken är
 > presentation, etiketten är innehåll.
 >
-> Felläget är ändå tryggt: `flex-wrap: nowrap` gör ett överskridande till
-> horisontell scroll, som golvkontrollen fångar. Det är regeln som gör sitt jobb.
+> ~~Felläget är ändå tryggt: `flex-wrap: nowrap` gör ett överskridande till
+> horisontell scroll, som golvkontrollen fångar.~~ **Det påståendet var fel. Se
+> nedan.**
 >
 > **Navet är nu sidans trängsta element vid 360 px. En femte länk ryms inte**, och
 > det är värt att veta innan någon föreslår en.
+
+#### Det "trygga fälläget" fanns inte — en blind zon på 18 px
+
+Min uppskattning av den fjärde länken låg inom en pixel och hamnade på fel sida.
+Det var väntat och ofarligt, eftersom jag skrev att byggaren skulle mäta.
+
+**Det som inte var väntat är att ingen grind larmade.** Byggarens mätning:
+
+> Alla fyra länkar låg inom headerns rektangel och golvkontrollen passerade — men
+> navlistan låg utanför sin box och åt 11,2 av högermarginalens 18 px.
+
+**Mellan "spiller över sin box" och "spiller över sidan" ligger hela sidmarginalen,
+och där tiger varje kontroll vi har.** Vid 360 px är det 18 px. Jag trodde att
+`nowrap` omvandlade ett överskridande till horisontell scroll; i själva verket
+omvandlar det ett överskridande till **tyst intrång i marginalen**, och först när
+marginalen är uppäten blir det scroll.
+
+**Regel: ett överskridande mäts mot sin egen behållare, aldrig mot sidan.**
+
+En sidnivåkontroll som `scrollWidth === clientWidth` kan per definition inte se
+ett överskridande som är mindre än all padding mellan elementet och vyportens
+kant. Den är ett sista skyddsnät, inte en kontroll.
+
+**Ny kontroll för navet:** mät navlistans högerkant mot headerns **innerkant**,
+alltså dess content-box. Den ska ligga innanför. `scrollWidth` räcker inte.
+
+Det är tredje gången ett antaget "tryggt felläge" visat sig ha en blind zon, och
+mönstret är detsamma varje gång: **jag resonerade om var felet skulle ta vägen i
+stället för att mäta var det faktiskt tar vägen.** Slack — padding, marginal,
+clamp-golv — absorberar fel, och absorberade fel larmar inte.
 
 > **Rättat.** Tabellen räknade tidigare med 16 px sidmarginal och landade på 328 px
 > spaltbredd och ~57 px marginal. `--content-padding` är
@@ -3813,9 +4046,38 @@ med robusthetsgenomgången.
   så att regeln "inget id som bokstavlig sträng i `.jsx`" håller.
 - **`aria-current`:** navlänken till den sektion som är i vy får
   `aria-current="true"` (inte `"page"` — det gäller sidor, inte avsnitt på en
-  sida). Kräver en `IntersectionObserver` och blir därmed **projektets första
-  `useEffect`**. Det är acceptabelt i paket 7, där den mobila navigationen ändå
-  kan behöva state, men det ska vara ett medvetet val och inte smyga in tidigare.
+  sida).
+
+#### `aria-current` byter regel: läsraden, inte störst yta
+
+**Felet:** man klickar "Projekt", scrollar dit, och navet lyser "Kompetenser".
+Uppmätt vid scrollY 676 visar projects 351 px och skills 485 px, så skills vinner.
+
+Regeln följde sin egen logik. **Logiken var fel.** "Störst synlig yta" fungerar så
+länge sektionerna är ungefär lika höga, och slutar fungera i samma stund en kort
+sektion ligger före en på 2338 px. Omflyttningen skapade precis det läget.
+
+**Gällande regel: den sektion som skär en tunn läsrad strax under headern är
+aktuell.**
+
+```
+IntersectionObserver med rootMargin som lämnar ett band på några pixel
+direkt under --header-height. Den sektion som skär bandet är current.
+```
+
+Den är **oberoende av sektionshöjd** och motsvarar vad en läsare menar med "var är
+jag" — det som står överst, inte det som råkar täcka flest pixlar.
+
+**Specialfall:** är sidan scrollad längst ned kan en kort sista sektion aldrig nå
+bandet. Då markeras den sista sektionen. Det är ett undantag som ska stå i koden,
+inte upptäckas.
+
+> Jag avfärdar att vänta ut problemet. Det skulle troligen döljas när Jelal lägger
+> in riktiga projekt och sektionen växer — **men att låta innehåll dölja ett
+> logikfel är precis mönstret "fungerar i dag" som redan kostat oss två omtag.**
+
+Observern är **projektets första `useEffect`**, vilket var ett medvetet val och
+inte något som smugit in.
 
 Båda tillförs paket 7:s omfattning.
 
@@ -4422,6 +4684,32 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   läge **kör valideringen och flyttar fokus till första felande fält**, vilket är
   bättre än båda utgångspunkterna — en knapp som inte går att trycka på berättar
   aldrig varför. (påverkat av lärdom: ja)
+- **`--color-accent` och `--color-accent-hover` binds om på ljus yta** till
+  `#AE4802` (5,13:1) och `#8F3A01` (6,89:1). Länktexten föll på **2,579:1** mot
+  kravet 4,5. **Det motsäger inte att jag avvisade en mörkare orange för pillarna:**
+  det var stora ytor, 1.4.11 och ett utseendeval — detta är liten text, 1.4.3 och
+  ett fel. `#C25102` dög inte trots att den finns i projektet; den ger 4,70:1 mot
+  rent vitt men 4,28:1 mot `#F4F4F6`. **Ett token som klarar ett krav klarar inte
+  automatiskt ett hårdare.** (påverkat av lärdom: ja)
+- **Hover rör sig bort från underlaget, inte alltid mot ljusare** — på mörk botten
+  ljusnar den, på ljus mörknar den. Inkonsekvensen är regeln, inte ett fel att
+  räta ut. (påverkat av lärdom: nej)
+- **`--color-surface: #FFFFFF` på ljus yta** — kortet hade 1,000:1 mot sektionen
+  och var inget kort längre. Kvoten speglar nu den mörka ytans 1,07:1. **Kortet
+  har aldrig definierats av sin fyllnad utan av fyllnad plus ram**, och ramens
+  1,413:1 är därför inget fel: 1.4.11 gäller komponenter och betydelsebärande
+  grafik, och ett kort är varken. (påverkat av lärdom: ja)
+- **`aria-current` byter från "störst synlig yta" till "skär läsraden under
+  headern"** — den gamla regeln fungerade bara så länge sektionerna var ungefär
+  lika höga. Att vänta ut felet tills Jelal lägger in projekt avfärdas: **att låta
+  innehåll dölja ett logikfel är mönstret "fungerar i dag".**
+  (påverkat av lärdom: ja)
+- **Det "trygga fälläget" för navet fanns inte** — jag skrev att `nowrap` gör ett
+  överskridande till horisontell scroll som golvkontrollen fångar. I själva verket
+  blir det **tyst intrång i sidmarginalen**, och först när de 18 pixlarna är
+  uppätna blir det scroll. **Ett överskridande mäts mot sin egen behållare, aldrig
+  mot sidan.** Slack absorberar fel, och absorberade fel larmar inte. Tredje gången
+  ett antaget felläge visat sig ha en blind zon. (påverkat av lärdom: ja)
 - **Sidans ordning blir hero → projekt → kompetenser → om mig → kontakt** — Jelals
   val 2026-10-07, med hans eget skäl: kompetenssektionen är 2338 px hög och
   projekten låg bakom den. (påverkat av lärdom: nej)

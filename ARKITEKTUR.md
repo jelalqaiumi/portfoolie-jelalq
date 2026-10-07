@@ -173,7 +173,10 @@ regression som upptäcks fyra paket senare är dyr att spåra.
 | **oxlint** — mallens egen linter behålls som den levereras | Dev-beroende, noll runtime-kostnad. Vite-mallen `react` ger i dag (vite 8.3.0) `.oxlintrc.json` + `oxlint`, **inte** ESLint. Regeln `react/rules-of-hooks: error` finns med, vilket är exakt det skydd vi ville ha. | Att byta ut mallens linter mot ESLint (nytt beroende och ny konfiguration för ett skydd vi redan har), att strippa lintern helt (tar bort ett verkligt skyddsnät gratis) |
 | Inga andra runtime-beroenden | Briefen: "Inga externa beroenden utöver React/Vite om det inte är motiverat". Ankarnavigering, pills, grid och gråskala löses med plattformen. | react-router (one-pager använder ankare), framer-motion (ingen animation är beställd), ikonbibliotek (inga ikoner är beställda) |
 
-**Runtime-beroenden totalt: `react`, `react-dom`. Inget mer.**
+| **`@hcaptcha/react-hcaptcha`** | hCaptchas **officiella** React-paket. Sköter skriptladdning, livscykel i React:s modell, skydd mot omrendering och — avgörande — `resetCaptcha()`, som arkitekturen kräver i två lägen. hCaptchas JavaScript laddas externt i **alla** alternativ, så frågan är inte "beroende eller inte" utan vem som skriver limmet. | Web3Forms klientskript som fyller en `div` React äger, **utan dokumenterad återställning**; och att ladda `api.js` själva, vilket flyttar hela livscykeln till oss att underhålla |
+
+**Runtime-beroenden totalt: `react`, `react-dom`, `@hcaptcha/react-hcaptcha`.
+Inget mer.**
 
 ---
 
@@ -226,6 +229,7 @@ Mörk bas rakt igenom, i loggans nästan-svarta ton. Orange är enda accenten.
 | `--color-on-accent` | `#0B0B0C` | **Text ovanpå orange yta.** Mörk text, inte vit. |
 | `--color-overlay-grey` | `rgba(32, 32, 36, 0.45)` | Grå tonplatta över profilbilden (paket 3) |
 | `--color-focus` | `#FC6F03` | Fokusring. Binds om i `.surface-light` — se "Fokusringen". |
+| `--color-error` | `#F85149` | **Formulärets uppmärksamhetsfärg**: obligatorisk-asterisken och felmeddelandena. 5,87:1 mot `--color-bg`. Binds om i `.surface-light` till `#C0271E`. Jelals beslut 2026-10-07 — se "Asterisken är röd". |
 | `--color-field-border` | `#606068` | Ram på formulärfält. **3,16:1** mot `--color-bg` — WCAG 1.4.11 kräver 3:1 för gränssnittskomponenters avgränsning, och `--color-border` (1,38:1) duger inte. |
 
 > **Två token har tagits bort av samma skäl, och det skälet är värt att minnas.**
@@ -1053,6 +1057,7 @@ Jelal: *"sektionen med kompetens sidan ha bakrunden vit."* Varje färg i sektion
   --color-text-dim:   #6E6E76;   /* 4,60:1 */
   --color-border:     #CFCFD4;   /* 1,413:1 */
   --color-focus:      #C25102;   /* 4,28:1 — se "Fokusringen" */
+  --color-error:      #C0271E;   /* 5,39:1 — se "Det röda binds om" */
   /* --color-accent binds INTE om. Se "De ifyllda pillarna". */
 
   /* Utan dessa två målar klassen ingenting. */
@@ -1641,8 +1646,9 @@ Alla uppgifter är nu givna (`BRIEF.md`, 2026-10-06).
  * @property {string|null} url    Fullständig URL, eller null — då renderas den INTE
  *
  * @typedef {Object} ContactForm
- * @property {string} endpoint   Web3Forms POST-adress
- * @property {string} accessKey  Publik nyckel. Se "Nyckeln är publik".
+ * @property {string} endpoint         Web3Forms POST-adress
+ * @property {string} accessKey        Publik nyckel. Se "Nyckeln är publik".
+ * @property {string} hcaptchaSiteKey  Web3Forms delade publika platsnyckel.
  *
  * @typedef {Object} Contact
  * @property {string}        email  OBLIGATORISK. mailto:-länk i klartext.
@@ -1656,8 +1662,9 @@ export const contact = {
     { label: 'LinkedIn', url: 'https://www.linkedin.com/in/jelalqaiumi' },
   ],
   form: {
-    endpoint:  'https://api.web3forms.com/submit',
-    accessKey: '79f08fa8-8cdf-4841-8392-066feea2a389',
+    endpoint:      'https://api.web3forms.com/submit',
+    accessKey:     '79f08fa8-8cdf-4841-8392-066feea2a389',
+    hcaptchaSiteKey: '50b2fe65-b00b-4b9e-ad62-3ba471098be2', // Web3Forms delade, publika
   },
 };
 ```
@@ -1693,26 +1700,137 @@ Regler som byggaren måste följa:
 
 Tjänst: **Web3Forms**, gratisplan, 250 meddelanden/månad, inget konto.
 
-#### Fälten: tre, alla obligatoriska
+> **Utbyggt 2026-10-07 enligt Jelals specifikation.** Fem fält, hCaptcha via
+> Web3Forms, nya texter. Avsnitten nedan är uppdaterade. Fyra beslut i det
+> ursprungliga formuläret krockade med specifikationen och är lösta var för sig —
+> **inget av dem är upphävt, tre är förenade och ett är ändrat med skäl.**
 
-| Fält | Typ | Obligatoriskt |
-|------|-----|---------------|
-| Namn | `text` | ja |
-| E-post | `email` | ja |
-| Meddelande | `textarea` | ja |
+#### Fälten: fem, varav fyra obligatoriska
 
-**Alla tre är obligatoriska, och det är en följd av en regel snarare än en
-avvägning: ett valfritt fält är ett fält man inte har bestämt sig om.** Behövs
-namnet för att kunna svara artigt? Ja — då är det obligatoriskt. Behövs det inte?
-Då ska det bort. Ett fält som får lämnas tomt kostar besökaren uppmärksamhet utan
-att ge Jelal något.
+| Fält | Namn i formuläret | Typ | Obligatoriskt | Platshållare |
+|------|-------------------|-----|---------------|--------------|
+| Namn | `name` | `text` | ja | Skriv in ditt namn |
+| E-post | `email` | `email` | ja | Skriv in din e-postadress |
+| Företag/Organisation | `company` | `text` | **nej** | Skriv in ditt företag/organisation |
+| Ämne för förfrågan | `subject` | `text` | ja | Skriv in ditt ämne för förfrågan |
+| Meddelande | `message` | `textarea` | ja | — |
 
-Inget ämnesfält, ingen telefon, inget företag. Ämnet sätts som dolt fält:
-`subject = "Nytt meddelande från portfoliosidan"`, så att Jelals inkorg visar något
-begripligt utan att besökaren behöver formulera det.
+Rubrik ovanför fälten: **"Fyll i dina uppgifter"**. Knapptext: **"Skicka
+förfrågan"**. `textarea` ska gå att förstora: `resize: vertical`, aldrig `none` —
+den som skriver långt ska kunna se vad hen skrivit.
 
-Dolda fält som Web3Forms kräver eller drar nytta av: `access_key`, `subject`, och
-honeypot enligt nedan.
+#### Varför `company` får vara valfritt när regeln sa motsatsen
+
+Min regel löd: *ett valfritt fält är ett fält man inte har bestämt sig om.*
+`company` ser ut som ett undantag men är det inte — **regeln var ofullständig.**
+
+Dess syfte är att stoppa fält som kostar uppmärksamhet utan att ge något. Men
+`Företag/Organisation` gäller inte alla: en privatperson har inget företag, och
+att kräva det hade stängt ute den som hör av sig som person. **Ett fält som inte
+gäller alla ska vara valfritt, inte borttaget.**
+
+Regeln lyder därför nu: *ett fält ska vara obligatoriskt om det gäller alla och
+behövs, valfritt om det inte gäller alla, och borttaget om det inte behövs.*
+`company` är det enda fältet i mitten.
+
+#### `subject` skrivs nu av besökaren
+
+Den fasta strängen `subject = "Nytt meddelande från portfoliosidan"` **tas bort**.
+Fältet heter `subject` så att Web3Forms använder det som ämnesrad — då ser Jelal
+direkt i inkorgen vad förfrågan gäller, vilket är hela poängen med att be om det.
+
+**Lämna inte kvar både det dolda fältet och det synliga.** Två fält med samma namn
+i samma formulär ger ett godtyckligt utfall beroende på ordning.
+
+Dolda fält: `access_key` och honeypot enligt nedan. Ingen telefon.
+
+#### Asterisken är röd — beslutat av Jelal 2026-10-07
+
+~~**Asterisken blir orange, `var(--color-accent)`.** Att införa en ny färg enbart
+för den vore att betala mest för det som bär minst.~~
+
+**UPPHÄVT.** Jag lade fram orange mot rött med mina skäl och Jelal höll fast vid
+specifikationen. Hans sida, hans beslut.
+
+> **Återinför inte orange med hänvisning till den upphävda punkten, och inte
+> heller till regeln "orange är enda accentfärgen".** Den regeln är fortfarande
+> sann om *accenten*. Det röda är ingen accent — det är formulärets
+> uppmärksamhetsfärg, och Jelal har beslutat att sidan ska ha en.
+
+**`--color-error: #F85149`**
+
+| Krav | Utfall |
+|------|--------|
+| Mot `--color-bg` `#0B0B0C` | **5,87:1** — AA kräver 4,5 för liten text |
+| Kulör | **2,7°** mot accentens **26,0°** |
+| Blåkanal | **73** mot accentens **3** |
+
+**Om kulöravståndet, eftersom det är den svåra delen.** Rött och orange är
+grannar på färgcirkeln. 26° är i praktiken hela det avstånd som finns att ta ut —
+går man längre från orange hamnar man i rosa, inte i "rödare rött".
+
+Separationen bärs därför av tre saker tillsammans, inte av kulören ensam:
+
+- **26° kulörskillnad**, så långt det går utan att glida mot magenta.
+- **Blåkanalen, 73 mot 3.** Accenten är en bränd orange med praktiskt taget noll
+  blått; det röda är svalare. Det är den skillnaden ögat faktiskt läser när de två
+  står i samma formulär.
+- **Ljushet**, 0,263 mot 0,321 — det röda är mörkare än orangen.
+
+En mättad `#FF0000` avfärdades: den vibrerar mot nästan svart och läses som larm
+snarare än som markering. `#F85149` är en beprövad mörkläges-röd som håller sig
+lugn på mörk botten.
+
+**Färgen är ändå inte ensam bärare**, vilket WCAG 1.4.1 kräver: asterisken står
+alltid intill etikettens ord, och ovanför formuläret står förklaringen en gång:
+
+> \* obligatoriskt fält
+
+#### Felmeddelandena använder samma röda
+
+**Ja — förslaget är rätt och jag tar det.**
+
+Jag valde tidigare orange för felmeddelandena med motiveringen att ett rött token
+för tre meddelanden blir en andra accent. **Den invändningen har upphört att
+gälla**: den andra färgen finns nu oavsett. Kvar blir bara nackdelen av att ha
+två olika färger för "det här är fel" i samma formulär, vilket är sämre än en.
+
+`--color-error` bär alltså båda: asterisken och felmeddelandena under fälten.
+Testet "vill vi ändra dem tillsammans" ger ja — de är samma signal, formulärets
+uppmärksamhetsfärg.
+
+Mot `--color-bg` ger den 5,87:1, vilket räcker för brödtext.
+
+#### Det röda binds om på ljus yta
+
+```css
+.surface-light { --color-error: #C0271E; }   /* 5,39:1 mot #F4F4F6 */
+```
+
+Mot den ljusa ytan ger `#F85149` bara **3,05:1** — under AA för liten text.
+
+**Ingenting använder färgen där i dag**, och det är precis skälet att binda om den
+nu: `--color-focus` missades av exakt den anledningen och blev en latent bugg som
+upptäcktes först i en läckagekartläggning. Regeln lyder att varje signalbärande
+token prövas mot varje yta, inte bara mot de ytor där det råkar användas.
+
+Kulören hålls, 3,3° mot det mörka lägets 2,7°.
+
+#### Platshållare är förenliga med etiketterna
+
+Mitt beslut löd "synliga `<label>` ovanför varje fält, **ingen platshållare som
+etikett**". Specifikationen vill ha platshållare **som komplement**. Det är inte en
+krock — etiketten står kvar permanent ovanför, platshållaren är ett exempel inuti.
+
+Två villkor:
+
+- **Platshållaren får aldrig bära information som inte finns någon annanstans.**
+  Den försvinner när man börjar skriva, och den som tappar tråden mitt i ska kunna
+  läsa etiketten i stället.
+- **Platshållartexten använder `var(--color-text-muted)`**, inte
+  `--color-text-dim`. Mot fältets botten `--color-surface` ger `dim` **3,64:1**,
+  under AA:s 4,5. `muted` ger **7,17:1**. Platshållare som är för ljusa är ett av
+  de vanligaste tillgänglighetsfelen i formulär, och här hade vi gått rakt i det.
 
 #### Skräppostskydd: honeypot, ingenting mer
 
@@ -1730,9 +1848,97 @@ besökare som har svårast att ta sig igenom formuläret — alltså precis tvä
 avsikten. `display: none` ensamt räcker i praktiken, men de två attributen gör
 avsikten explicit och överlever att någon byter döljningsteknik.
 
-**Ingen CAPTCHA.** Den lägger friktion på varje människa för att stoppa en robot,
-drar in ytterligare en tredje part, och gratisplanens tak på 250 meddelanden gör
-missbruk både synligt och begränsat.
+~~**Ingen CAPTCHA.**~~ **UPPHÄVT av Jelal 2026-10-07: hCaptcha via Web3Forms.**
+Mitt skäl — friktion för varje människa, ytterligare en tredje part — står kvar som
+en kostnad han känner till och har valt att betala. Honeypot behålls **utöver**
+captchan; de stoppar olika sorters robotar och den ena ersätter inte den andra.
+
+#### hCaptcha: `@hcaptcha/react-hcaptcha` införs som tredje körningsberoende
+
+Dokumentationen är nu läst och tre vägar finns. Paketet är **inte nödvändigt** —
+och väljs ändå.
+
+| Väg | Vad vi slipper | Vad vi tar på oss |
+|-----|----------------|-------------------|
+| **A. `@hcaptcha/react-hcaptcha`** ✓ | skriptladdning, livscykel, återställning, skydd mot omrendering | ett körningsberoende |
+| B. Web3Forms klientskript + `<div class="h-captcha">` | ett npm-paket | ett externt skript som letar upp en `div` och fyller den — mitt i ett träd React äger. Och **ingen dokumenterad återställning**: vi hade fått nå `window.hcaptcha.reset()` i ett skript vi inte laddat själva. |
+| C. hCaptchas `api.js` + explicit rendering | både paketet och Web3Forms skript | mest egen kod: laddning, renderingstajming, uppstädning vid unmount, allt vårt att underhålla |
+
+**Det avgörande är att frågan inte är "beroende eller inte".** hCaptchas egen
+JavaScript laddas från en extern domän i **alla tre** vägarna. Tredjepartskostnaden
+i runtime är identisk. Det enda som skiljer är **vem som skriver limmet.**
+
+Då blir valet: ett litet, officiellt, underhållet paket från hCaptcha själva —
+eller handskriven livscykelkod för en widget vars återställning vi annars når via
+ett odokumenterat globalt objekt.
+
+**Återställningen fäller avgörandet.** Arkitekturen kräver att captchan nollställs
+i *båda* slutlägena. Paketet har `resetCaptcha()`. Väg B har ingenting dokumenterat.
+Att bygga ett krav på en odokumenterad global är att bygga en tyst framtida
+felkälla.
+
+Det här bryter inte mot min regel om beroenden, det tillämpar den. Jag har avvisat
+router, animationsbibliotek och ikonpaket **för att plattformen redan gör det de
+gör**. Att foga in en tredjepartswidget i React:s livscykel gör plattformen inte.
+
+Villkor:
+
+- Exakt `@hcaptcha/react-hcaptcha`, hCaptchas officiella paket. Ingen wrapper av
+  tredje part.
+- Ligger i `dependencies`, inte `devDependencies` — det körs i webbläsaren.
+- `reCaptchaCompat={false}`, så att paketet inte definierar `window.grecaptcha`.
+  Vi använder inte reCAPTCHA och vill inte ha dess globala namn på sidan.
+- Token skickas som `h-captcha-response`.
+- **Bundlens storlek mäts och rapporteras.** Gränserna gäller oförändrat:
+  `dist/` ≤ 1 MB, enskild fil ≤ 300 kB.
+
+**Körningsberoenden blir därmed tre: `react`, `react-dom`,
+`@hcaptcha/react-hcaptcha`.**
+
+#### Platsnyckeln är Web3Forms egen — och ligger i `contact.js`
+
+```
+50b2fe65-b00b-4b9e-ad62-3ba471098be2
+```
+
+Web3Forms delade publika platsnyckel för gratisplanen. **Ingen egen
+hCaptcha-registrering behövs**, och nyckeln är inte Jelals.
+
+Den läggs i `contact.form` intill `accessKey`. Båda är publika konstanter för
+kontaktsektionen och hör ihop.
+
+**Ingen `.env.example`, ingen `VITE_`-variabel.** Skälet är nu enklare än mitt
+tidigare: **det finns ingen nyckel av vår som skulle kunna sättas.** Det gamla
+skälet står kvar som bakgrund — en `VITE_`-prefixad variabel bakas in i bundlen och
+ligger i klartext i den publicerade filen, alltså ingen hemlighet utan bara en
+mindre synlig konstant.
+
+#### En förutsättning som inte syns i arkivet
+
+**hCaptcha måste slås på i Web3Forms instrumentpanel.** Görs inte det avvisas
+inskicken, och felet går inte att se i någon fil i det här arkivet — koden ser
+korrekt ut, bygget är grönt, och meddelanden försvinner.
+
+> **En förutsättning som bor utanför arkivet ska skrivas ned i arkivet.** Den som
+> felsöker om ett halvår har inte tillgång till minnet av att någon klickade i en
+> ruta. Byggaren ska bekräfta i överlämningen att inställningen är påslagen, och
+> verifieringens krav på ett **verkligt levererat meddelande** är det som bevisar
+> det — inte en skärmbild av panelen.
+
+#### Tredjepartsskript i runtime
+
+Sidan går från noll externa körningsanrop till flera, och hCaptcha behandlar
+besökarens IP. **Jelal tog bort integritetsraden i går och lägger till hCaptcha i
+dag — det andra beslutet gör det första mer relevant, inte mindre.** Det är hans
+sida och hans val; det ska bara vara ett val och inte en följd han inte sett.
+
+#### Rate limiting utgår — det glömdes inte
+
+Begränsning per IP kräver en server som ser anropen. Jelal har valt en statisk
+sida utan backend, och **då finns ingen plats där en sådan regel kan köras.** Det
+som återstår är honeypot, hCaptcha och Web3Forms tak på 250 meddelanden i månaden.
+
+Det står utskrivet så att ingen tror att punkten föll bort.
 
 **Domänbegränsning aktiveras INTE.** Den är en betalfunktion, och aktiverad slutar
 formuläret fungera på `localhost` — alltså där det utvecklas och testas. Den får
@@ -1755,8 +1961,22 @@ klientkod går inte att gömma.
 |-----------|--------------|-------------------|
 | Vilande | formuläret | ingenting |
 | Skickar | knappen `aria-disabled`, formuläret `aria-busy="true"` | "Skickar …" |
-| Lyckades | formuläret töms, statusraden visas | "Tack! Meddelandet är skickat." |
-| Misslyckades | statusraden visas, fälten behåller sitt innehåll | "Meddelandet kunde inte skickas. Försök igen, eller mejla qaiumi@hotmail.com direkt." |
+| Lyckades | formuläret töms, hCaptcha återställs, statusraden visas | "Tack! Jag återkommer så snart jag kan." |
+| Misslyckades | statusraden visas, fälten behåller sitt innehåll, **hCaptcha återställs** | "Något gick fel – försök igen, eller mejla qaiumi@hotmail.com direkt." |
+
+**hCaptcha måste återställas i båda slutlägena.** En token är engångs och kortlivad;
+återanvänds den avvisas nästa försök, och besökaren ser ett fel som inte har med
+hens ifyllnad att göra.
+
+> **Feltexten är Jelals formulering plus en tillagd mening.** Han skrev "Något gick
+> fel – försök igen". Jag har lagt till *"eller mejla qaiumi@hotmail.com direkt"*,
+> eftersom mitt tidigare beslut kräver att besökaren får veta att meddelandet
+> **inte** kom fram och erbjuds en väg som fungerar. "Något gick fel" ensamt lämnar
+> öppet om det skickades.
+>
+> **Tillägget är en synlig ändring av hans text — lägg fram den.** Vill han ha den
+> kortare är det hans röst som gäller, men då bör e-postlänken stå tydligt intill
+> formuläret i stället.
 
 **Statusraden är ett `<p role="status" aria-live="polite">` som alltid finns i
 DOM**, direkt efter knappen, tom i vilande läge.
@@ -1766,13 +1986,33 @@ DOM**, direkt efter knappen, tom i vilande läge.
 > *innan* texten dyker upp i den. Det är den vanligaste orsaken till att ett
 > formulär "fungerar men säger inget".
 
-**Knappen förblir fokuserbar under sändning.** `disabled` tar bort elementet ur
-tabbordningen och fokus hamnar på `<body>` — en tangentbordsanvändare tappar sin
-plats mitt i en åtgärd. I stället `aria-disabled="true"` plus att hanteraren
-ignorerar nya inskick medan ett pågår.
-
 **Vid lyckat inskick töms fälten, vid misslyckat gör de det inte.** Den som fick
 ett fel ska kunna trycka igen utan att skriva om allt.
+
+#### Knappen: dämpad men aldrig `disabled`
+
+Specifikationen vill ha knappen "nedtonad/inaktiverad tills alla obligatoriska fält
+är ifyllda och hCaptcha är godkänd". Mitt beslut säger att den aldrig får bli
+`disabled`. **Båda avsikterna uppfylls samtidigt, och mitt beslut är inte upphävt:**
+
+| Vad | Hur |
+|-----|-----|
+| Ser inaktiverad ut | dämpad bakgrund och text, `cursor: not-allowed` |
+| Är inaktiverad för hjälpmedel | `aria-disabled="true"` |
+| Går fortfarande att nå | **inget `disabled`-attribut** — kvar i tabbordningen |
+| Gör inget skadligt vid klick | hanteraren vägrar skicka |
+
+`disabled` tar bort elementet ur tabbordningen. En tangentbordsanvändare som
+tabbar nedåt hittar då ingen knapp alls och får ingen förklaring till varför.
+
+**Och knappen gör något nyttigt när man trycker på den i dämpat läge:** den kör
+valideringen, visar felmeddelandena och flyttar fokus till första felande fält.
+Det är bättre än både specifikationens variant och min ursprungliga — en knapp som
+inte går att trycka på berättar aldrig *varför*, medan den här gör det i samma
+rörelse.
+
+Samma mönster gäller under sändning: `aria-disabled="true"`, hanteraren ignorerar
+nya inskick, knappen behåller fokus.
 
 #### Felen är två sorter och ska inte se likadana ut
 
@@ -1781,6 +2021,17 @@ ett fel ska kunna trycka igen utan att skriva om allt.
 - fältet får `aria-invalid="true"`
 - fokus flyttas till **första** felande fält vid inskicksförsök
 - statusraden används **inte** — den är för inskickets utfall, inte för ifyllnad
+
+**Mönstret skalar till fem fält utan ändring**, med två krav:
+- varje felmeddelande har ett **unikt `id`** härlett ur fältnamnet, t.ex.
+  `error-email`. Ett delat id kopplar fel meddelande till fel fält och syns inte
+  vid okulär granskning.
+- `aria-describedby` får peka på flera id. Har ett fält både en hjälptext och ett
+  felmeddelande ska **båda** stå där — att byta ut beskrivningen mot felet gör att
+  hjälptexten försvinner just när den behövs mest.
+
+`company` valideras inte alls. Ett valfritt fält som ger felmeddelanden är i
+praktiken obligatoriskt.
 
 **Tjänstefel** hör till statusraden, och meddelandet ska säga tre saker: att det
 **inte** gick fram, att man kan försöka igen, och att e-postlänken finns.
@@ -1877,6 +2128,22 @@ Utöver det:
 
 - **Honeypot:** bekräfta att `botcheck` varken går att tabba till eller annonseras.
   Testa med tangentbord **och** med skärmläsare, inte bara genom att läsa CSS.
+- **Knappen i dämpat läge:** bekräfta att den går att tabba till, att ett klick
+  visar felmeddelandena och flyttar fokus till första felande fält, och att inget
+  inskick sker. En knapp som ser inaktiv ut men är tyst när man trycker är sämre än
+  en riktig `disabled`.
+- **hCaptcha återställs** i både lyckat och misslyckat läge. Skicka två gånger i
+  rad och bekräfta att det andra försöket inte avvisas på en förbrukad token.
+- **Platshållarnas kontrast** mot fältbakgrunden: minst 4,5:1. Mät, anta inte —
+  `--color-text-dim` ger 3,64 och hade fallit.
+- **Asterisken och ett felmeddelande ska stå samtidigt synliga som accenten** —
+  knappen eller fokusringen i samma vy. Bekräfta okulärt att de inte läses som
+  samma färg. Kvoterna säger att de är olika; bara ögat kan säga att skillnaden
+  syns.
+- **Ändringar utanför kontaktsektionen: noll.** Jelal har sagt "ändra inget annat
+  på sidan". Jämför renderad utdata före och efter för hero, skills, projekt,
+  header och footer. Det enda som får tillkomma utanför sektionen är
+  `--color-field-border` i `tokens.css`.
 - **Timeout:** tvinga den att fallera — blockera anropet och bekräfta att
   felmeddelandet kommer efter 15 sekunder och att "Skickar …" inte blir kvar.
 - **Statusraden:** bekräfta att alla fyra tillstånden faktiskt annonseras, inte
@@ -2815,6 +3082,7 @@ att det inte uppstår en ny tvetydighet när markeringarna städas bort:
 | `--color-text-on-light` o.likn. som nya tokennamn | ombundna befintliga token | "Ljus yta" |
 | `#D65B02` / `--color-accent` i `.surface-light` | `#FC6F03` överallt — Jelal återtog begäran | "De ifyllda pillarna" |
 | `--color-surface-raised` | borttaget, ingen konsument | tokentabellen |
+| "asterisken är orange" / orange felmeddelanden | `--color-error` `#F85149` (Jelal 2026-10-07) | "Asterisken är röd" |
 | `--color-accent-soft` | borttaget, ingen konsument | tokentabellen |
 | `257 ifyllda` / `50 dämpade` som fast tal | levande data — läs filen | "Förväntat antal: 307" |
 | `.surface-light` bakgrund `#FFFFFF` | `#F4F4F6` (Jelal 2026-10-05) | "Bakgrunden blir `#F4F4F6`" |
@@ -2866,7 +3134,7 @@ Skriptet kontrollerar:
 | `sections.js` | paket 4 | `id` unika (`new Set(ids).size === ids.length`), `label` finns på **alla** poster, `HERO_ID` förekommer **inte** i listan |
 | `skills.js` | paket 4 | Se "Validering av skills" nedan — korsreferens mot källistorna, unika namn, `filled` boolean, unika grupp-id, `title` finns, varje grupp ≥ 1 skill |
 | `projects.js` | **paket 5** | `id` unika, `id`/`title`/`description` finns, `tech` är en array |
-| `contact.js` | **paket 6** | `email` finns, varje `links`-post har `label`, `form.endpoint` och `form.accessKey` är icke-tomma strängar |
+| `contact.js` | **paket 6** | `email` finns, varje `links`-post har `label`, och `form.endpoint`, `form.accessKey`, `form.hcaptchaSiteKey` är icke-tomma strängar |
 
 Felmeddelanden skrivs på svenska, namnger filen och det värde som är fel, och
 skriptet avslutas med nollskild kod. Inga nya beroenden — ren Node.
@@ -2900,6 +3168,7 @@ contact.js: email saknas
 contact.js: länk saknar label (post 2)
 contact.js: form.accessKey saknas eller är tom
 contact.js: form.endpoint saknas eller är tom
+contact.js: form.hcaptchaSiteKey saknas eller är tom
 
 Valideringen hittade 3 fel. Bygget avbryts.
 ```
@@ -3759,6 +4028,63 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   sig — jag hade bara räknat på det ena av två motriktade krav. Tabellen står kvar
   som underlag. (påverkat av lärdom: ja — räkna på **båda** sidor av en avvägning
   innan den kallas omöjlig)
+- **`@hcaptcha/react-hcaptcha` införs — projektets tredje körningsberoende.**
+  Dokumentationen visade att paketet **inte** är nödvändigt; det väljs ändå.
+  **Frågan är inte "beroende eller inte": hCaptchas JavaScript laddas externt i
+  alla tre vägarna, så tredjepartskostnaden är identisk och det enda som skiljer är
+  vem som skriver limmet.** Återställningen fäller avgörandet — arkitekturen kräver
+  `resetCaptcha()` i två lägen, och den skriptbaserade vägen har ingen dokumenterad
+  sådan. Att bygga ett krav på ett odokumenterat globalt objekt är att bygga en
+  tyst framtida felkälla. Regeln om beroenden bryts inte utan tillämpas: jag har
+  avvisat router och ikonpaket **för att plattformen redan gör det de gör**, och
+  att foga in en tredjepartswidget i React:s livscykel gör plattformen inte.
+  (påverkat av lärdom: nej)
+- **Jag lät bli att gissa, och det var rätt** — mitt tidigare beslut var en
+  bevisbörda i stället för ett påstående om ett api jag inte kunde läsa. Underlaget
+  kom sedan från någon som faktiskt hade åtkomst. **Ett beslut formulerat som
+  "detta gäller tills någon mäter" är inte ett svagare beslut, det är ett ärligare.**
+  (påverkat av lärdom: ja)
+- **Ingen `.env.example`, ingen `VITE_`-variabel** — skälet är nu enklare än mitt
+  första: **det finns ingen nyckel av vår att sätta.** Platsnyckeln är Web3Forms
+  delade publika. Det gamla skälet står kvar som bakgrund: en `VITE_`-variabel
+  bakas in i bundlen och är ingen hemlighet, bara en mindre synlig konstant.
+  (påverkat av lärdom: nej)
+- **En förutsättning som bor utanför arkivet skrivs ned i arkivet** — hCaptcha
+  måste slås på i Web3Forms instrumentpanel, annars avvisas inskicken utan att
+  någon fil i arkivet visar varför: koden ser rätt ut, bygget är grönt, och
+  meddelanden försvinner. Den som felsöker om ett halvår har inte minnet av att
+  någon klickade i en ruta. (påverkat av lärdom: ja — tysta fel ska göras synliga)
+- **Knappen dämpas visuellt men får aldrig `disabled`** — specifikationen och mitt
+  tidigare beslut är **förenade, inte det ena upphävt**: dämpad yta,
+  `aria-disabled`, kvar i tabbordningen, hanteraren vägrar. Och ett klick i dämpat
+  läge **kör valideringen och flyttar fokus till första felande fält**, vilket är
+  bättre än båda utgångspunkterna — en knapp som inte går att trycka på berättar
+  aldrig varför. (påverkat av lärdom: ja)
+- ~~**Asterisken blir orange, inte röd**~~ **UPPHÄVT av Jelal 2026-10-07: röd.**
+  `--color-error: #F85149`, 5,87:1 mot `--color-bg`. **Regeln "orange är enda
+  accentfärgen" är inte bruten** — det röda är ingen accent utan formulärets
+  uppmärksamhetsfärg, och Jelal har beslutat att sidan ska ha en. Kulöravståndet
+  till accenten är 26°, vilket är praktiskt taget allt som finns att ta ut innan
+  man glider mot rosa; separationen bärs därför lika mycket av blåkanalen (73 mot
+  3) och ljusheten. (påverkat av lärdom: ja — mät separationen, anta den inte)
+- **Felmeddelandena får samma röda** — min invändning mot ett rött token var att
+  det blir en andra accent. **Den invändningen har upphört att gälla eftersom den
+  andra färgen finns oavsett**, och kvar blir bara nackdelen av två olika färger
+  för "det här är fel" i samma formulär. Ett skäl som vilar på en förutsättning
+  ska omprövas när förutsättningen faller, inte försvaras. (påverkat av lärdom: ja)
+- **`--color-error` binds om i `.surface-light` fastän ingenting använder den där**
+  — `#F85149` ger bara 3,05:1 mot den ljusa ytan. Att ingenting använder färgen
+  där är **precis** skälet att göra det nu: `--color-focus` missades av exakt den
+  anledningen och blev en latent bugg. (påverkat av lärdom: ja)
+- **`company` får vara valfritt — regeln var ofullständig, inte bruten** — mitt
+  "ett valfritt fält är ett fält man inte bestämt sig om" täckte inte fält som
+  **inte gäller alla**. En privatperson har inget företag. Regeln lyder nu:
+  obligatoriskt om det gäller alla och behövs, valfritt om det inte gäller alla,
+  borttaget om det inte behövs. (påverkat av lärdom: ja)
+- **Rate limiting utgår och det skrivs ut** — en IP-regel kräver en server som ser
+  anropen, och Jelal har valt en statisk sida. Kvar: honeypot, hCaptcha och
+  månadstaket. Utskrivet så att ingen tror att punkten föll bort.
+  (påverkat av lärdom: ja — ett medvetet bortval ska synas)
 - **Kontaktformulär med Web3Forms, tre obligatoriska fält** — Jelals val
   2026-10-06. Alla tre obligatoriska enligt regeln att **ett valfritt fält är ett
   fält man inte har bestämt sig om**: behövs det, gör det obligatoriskt; behövs det
@@ -4071,8 +4397,15 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
 - **LinkedIn-adressen är härledd, inte verifierad.** LinkedIn svarar HTTP 999 på
   automatiska anrop, så den gick varken att bekräfta eller avfärda. Jelal klickar
   på den när sektionen är byggd. Leder den fel är det en rad i `contact.js`.
-- **Formulärets integritetsrad** talar å Jelals vägnar om vart besökarens uppgifter
-  tar vägen och ska godkännas av honom.
+- **hCaptcha måste slås på i Web3Forms instrumentpanel.** Steget bor utanför
+  arkivet. Byggaren bekräftar i överlämningen att det är gjort, och kravet på ett
+  verkligt levererat meddelande är det som bevisar det.
+- **Tredjepartsskript i runtime.** hCaptcha behandlar besökarens IP och laddas från
+  en extern domän. Jelal tog bort integritetsraden i går och lägger till hCaptcha i
+  dag — han bör få veta att det andra gör det första mer relevant, inte mindre.
+  Hans beslut, men det ska vara ett beslut.
+- **Feltexten har fått tillägget "eller mejla qaiumi@hotmail.com direkt"** och
+  avviker därmed från Jelals formulering. Ska läggas fram.
 - **Domänbegränsning hos Web3Forms** får slås på först när sidan ligger live, och
   då som ett eget beslut — den slår ut `localhost`.
 - **Sammanslagningen av `HTTP-metoder` + `GET` + `POST` + `PUT`** till den gamla

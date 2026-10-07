@@ -428,6 +428,14 @@ function checkContact(mod) {
     fail('contact.js: form.endpoint saknas eller är tom');
   }
 
+  /* Platsnyckeln till captchan. Saknas den renderas ingen captcha-widget alls,
+   * och eftersom Web3Forms avvisar inskick utan token skulle formuläret se
+   * korrekt ut men aldrig leverera - samma tysta felläge som en avstängd
+   * hCaptcha i instrumentpanelen. Grinden gör den halvan synlig. */
+  if (!hasText(contact.form.hcaptchaSiteKey)) {
+    fail('contact.js: form.hcaptchaSiteKey saknas eller är tom');
+  }
+
   summary.push(`${Array.isArray(contact.links) ? contact.links.length : 0} kontaktlänkar`);
 }
 

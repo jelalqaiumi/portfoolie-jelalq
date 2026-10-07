@@ -69,6 +69,27 @@
    * --color-border duger alltså för dekorativa linjer men inte här. Ändra inte
    * till den "för enhetlighetens skull". */
   --color-field-border: #606068;
+
+  /* FORMULÄRETS UPPMÄRKSAMHETSFÄRG. Bär BÅDE asterisken vid obligatoriska
+   * fält och felmeddelandena under dem. Jelals beslut 2026-10-07.
+   *
+   * Det är INGEN accent. Regeln "orange är sidans enda accentfärg" gäller
+   * fortfarande om accenten - det röda är en annan sorts signal, och Jelal har
+   * beslutat att sidan ska ha en. Återinför inte orange här med hänvisning till
+   * accentregeln.
+   *
+   * 5,87:1 mot --color-bg, alltså över AA:s 4,5 för liten text.
+   *
+   * Varför separationen mot accenten håller, trots att rött och orange är
+   * grannar på färgcirkeln: den bärs av tre saker tillsammans, inte av kulören
+   * ensam. Kulör 2,7 grader mot accentens 26,0. Blåkanal 73 mot accentens 3 -
+   * accenten är en bränd orange med praktiskt taget noll blått, det röda är
+   * svalare, och det är den skillnaden ögat faktiskt läser när de står i samma
+   * formulär. Ljushet 0,263 mot 0,321.
+   *
+   * En mättad #FF0000 är avfärdad: den vibrerar mot nästan svart och läses som
+   * larm i stället för som markering. */
+  --color-error: #f85149;
   --color-text: #ededef;
   --color-text-muted: #a1a1a8;
   --color-text-dim: #6e6e76;
@@ -235,6 +256,16 @@
    * text inuti sig att ta hänsyn till. Det är varför den tål en mörkare ton
    * medan pillen inte gör det. */
   --color-focus: #c25102;
+
+  /* DET RÖDA binds om här också. #F85149 ger bara 2,47:1 mot #F4F4F6 och faller
+   * på AA; #C0271E ger 5,39:1.
+   *
+   * OMBUNDEN I FÖRVÄG, trots att ingen regel använder färgen i den ljusa ytan i
+   * dag - formuläret ligger på den mörka. Det är avsiktligt: exakt den
+   * underlåtenheten gjorde fokusringen till en latent bugg, som bara upptäcktes
+   * därför att det råkade inte finnas något fokuserbart i den ljusa ytan.
+   * Flyttas formuläret, eller får en ljus yta ett fält, är färgen redan rätt. */
+  --color-error: #c0271e;
 
   /* DE TVÅ RADERNA NEDAN ÄR NÖDVÄNDIGA, inte dekoration. Utan dem gör
    * ombindningen ovan ingenting synligt, och det är UPPMÄTT:

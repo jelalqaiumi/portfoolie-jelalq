@@ -6,6 +6,28 @@
   margin-top: var(--space-7);
 }
 
+/* EJ I ARKITEKTUR: rubrikens grad och avstånd. h3 ärver --text-xl ur
+ * global.css; bara luften under sätts här. */
+.heading {
+  margin-bottom: var(--space-2);
+}
+
+/* Förklaringen av asterisken, en gång ovanför fälten. */
+.requiredHint {
+  margin-bottom: var(--space-5);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* ASTERISKEN. --color-error, inte --color-accent: det röda är formulärets
+ * uppmärksamhetsfärg och bär både detta och felmeddelandena. Beslutat av Jelal
+ * 2026-10-07 - återinför inte orange med hänvisning till accentregeln.
+ * aria-hidden i JSX:en: "obligatoriskt" bärs för hjälpmedel av attributet
+ * required, inte av ett tecken. */
+.required {
+  color: var(--color-error);
+}
+
 /* EJ I ARKITEKTUR: formulärets maxbredd och avstånden mellan fälten.
  * --measure är tokenet för max radlängd på brödtext, och ett inmatningsfält
  * som är bredare än texten man skriver i det är svårare att läsa tillbaka. */
@@ -49,21 +71,39 @@
 }
 
 /* Textarea får inte dras ut i bredd av användaren - det spräcker golvet.
- * Lodrät storleksändring är ofarlig och användbar. */
+ * Lodrät storleksändring är ofarlig OCH efterfrågad: den som skriver långt ska
+ * kunna se vad hen skrivit. Aldrig resize: none. */
 .input:is(textarea) {
   resize: vertical;
   min-height: 8rem;
 }
 
-/* EJ I ARKITEKTUR: felmeddelandets färg och grad.
- * Orange, inte rött: sidan har EN accentfärg, och ett nytt rött token för tre
- * meddelanden hade varit en andra accent. Felet bärs dessutom av tre signaler
- * samtidigt - texten, aria-invalid och att fokus flyttas dit - så färgen är
- * inte ensam bärare. 6,95:1 mot --color-bg. */
+/* PLATSHÅLLAREN sätts uttryckligen. Webbläsarens standardfärg varierar och är
+ * ofta för svag; den måste vara läsbar eftersom den bär en instruktion.
+ *
+ * --color-text-muted, INTE --color-text-dim: mot fältets botten --color-surface
+ * ger muted 6,55:1 medan dim ger 3,64:1 och faller på AA:s 4,5 för liten text.
+ * Dim är gjord för footer och metadata mot sidans botten, inte för text i ett
+ * fält. Byt inte hit den. */
+.input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1; /* Firefox sänker annars placeholderns opacitet till 0,54 */
+}
+
+/* FELMEDDELANDET bär samma röda som asterisken. Två olika färger för "det här
+ * är fel" i samma formulär är sämre än en, och testet "vill vi ändra dem
+ * tillsammans" ger ja - de är samma signal.
+ *
+ * Orange stod här tidigare, med motiveringen att ett rött token för tre
+ * meddelanden blir en andra accent. Den invändningen upphörde när Jelal
+ * beslutade det röda: färgen finns nu oavsett.
+ *
+ * 5,87:1 mot --color-bg. Färgen är ändå inte ensam bärare - felet bärs också av
+ * texten, av aria-invalid och av att fokus flyttas dit. */
 .error {
   display: block;
   margin-top: var(--space-2);
-  color: var(--color-accent);
+  color: var(--color-error);
   font-size: var(--text-sm);
 }
 
@@ -86,12 +126,33 @@
   background-color: var(--color-accent-hover);
 }
 
-/* aria-disabled, inte disabled - knappen förblir fokuserbar. Markören säger
- * ändå att den inte tar emot just nu. Ingen opacitet: en nedtonad knapp som
- * fortfarande går att trycka på är ett motsägelsefullt besked, och texten
- * byter redan till "Skickar ...". */
-.button[aria-disabled='true'] {
-  cursor: progress;
+/* DÄMPAT LÄGE: ser inaktiverad ut, är det för hjälpmedel, men finns kvar i
+ * tabbordningen och gör något nyttigt vid klick - kör valideringen, visar felen
+ * och flyttar fokus till första felande fält.
+ *
+ * Inget disabled-attribut, någonsin. disabled tar bort elementet ur
+ * tabbordningen, och då hittar en tangentbordsanvändare ingen knapp alls och
+ * får ingen förklaring till varför.
+ *
+ * Dämpad yta i stället för opacitet: opacity sänker också TEXTENS kontrast mot
+ * knappen, och då blir "nedtonad" en tillgänglighetsbrist i stället för en
+ * signal. Här sänks bara ytan, och texten får en dämpad men läsbar ton -
+ * --color-text-muted mot --color-surface ger 6,55:1.
+ *
+ * Markören är not-allowed i både dämpat läge och under sändning. Att skilja de
+ * två på markören övervägdes och valdes bort: det hade krävt ett andra attribut
+ * för en skillnad ingen läser, och texten säger redan "Skickar ...". */
+.button[data-muted='true'] {
+  background-color: var(--color-surface);
+  border-color: var(--color-field-border);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+/* CAPTCHAN. Egen klass bara för luften runt - widgetens inre utseende ägs av
+ * hCaptcha och ska inte stylas härifrån. */
+.captcha {
+  margin-bottom: var(--space-5);
 }
 
 /* STATUSRADEN finns alltid i DOM, tom i vilande läge. Därför ingen margin som

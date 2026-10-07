@@ -2512,31 +2512,94 @@ osynliga för Jelal tills de spricker.
 distinktioner som flyttade till vilket verktyg.** Då vet nästa ändring vad den
 bär.
 
-| Skillnad | Bärs i dag av | Bars tidigare av |
-|----------|---------------|------------------|
-| Namn mot navlänkar | placering + ikonens närhet + `0.04em` spärrning | vikt (500), sedan färg |
+| Skillnad eller signal | Bärs i dag av | Bars tidigare av |
+|-----------------------|---------------|------------------|
+| ~~Namn mot navlänkar~~ | **utgår** — namnet syns inte längre | vikt (500) → färg → placering |
+| **Logga-länkens tillgängliga namn** | **enbart den visuellt dolda texten** ⚠ | synlig text |
 | Navlänk viloläge mot hover | kulör **och** ljushet (vit → orange) | enbart kulör (grått → orange) |
 | Rubriknivå mot brödtext | storlek + spärrning + luft | vikt + storlek |
 | Grupprubrik mot pills | versaler + spärrning + grad + dämpad färg | samma, plus vikt |
 | Ifylld mot ej ifylld pill | fylld orange mot genomskinlig med ram | samma |
+| Formulärfel mot vanlig text | `--color-error` + text + `aria-invalid` | — |
 
 Tabellen uppdateras varje gång ett verktyg tas bort eller tas i anspråk. **Står en
-skillnad kvar med bara en bärare är den sårbar** — det var exakt namnets läge
-mellan de två senaste ändringarna.
+skillnad kvar med bara en bärare är den sårbar.**
 
-**På smal skärm döljs namnet visuellt, inte semantiskt.** Under `600px` får
-`<span>`-elementet mönstret "visually hidden" (1 px clip), **inte**
-`display: none`. Skälet: på 360 px finns inte plats för ikon, namn och tre
-navlänkar samtidigt, men namnet måste ändå finnas kvar i tillgänglighetsträdet —
-annars blir länken namnlös för en skärmläsare precis på den skärm där den är
-svårast att använda ändå.
+> **Raden med ⚠ är projektets enda enbärarsignal, och den är ny.** När den synliga
+> texten togs bort blev den visuellt dolda `<span>`-en det *enda* som ger
+> logga-länken ett namn. Den ser ut som död markup för den som läser `Header.jsx`
+> — och tas den bort blir sidans första fokuserbara element efter skip-länken en
+> namnlös länk.
+>
+> **Därför verifieringspunkten nedan, och därför denna rad.** Registret spårar
+> numera inte bara synliga skillnader utan **varje signal med en enda bärare**.
 
-Det ger också svaret på alt-frågan:
+Registret har redan bevisat sitt värde: namn-mot-nav-raden var det som gjorde att
+den här ändringens följd upptäcktes innan den byggdes, i stället för efteråt. Det
+är tredje gången den distinktionen flyttar — vikt, färg, och nu bort helt.
+
+#### Namnet döljs i alla bredder — beslutat av Jelal 2026-10-07
+
+Jelal: *"Bredvid loggan står det jelalqaiumi, den kan du plocka bort."* Han menar
+den synliga texten.
+
+~~Under `600px` döljs namnet med `.visually-hidden-until-sm`.~~ **Klassen byts mot
+`.visually-hidden` rakt av.** Texten försvinner från skärmen i alla bredder och
+stannar i tillgänglighetsträdet.
+
+**Texten tas inte bort ur DOM.** Den bär logga-länkens tillgängliga namn, och utan
+den blir sidans första fokuserbara element efter skip-länken en namnlös länk som
+annonseras som enbart "länk".
+
+Två alternativ avfärdades:
+
+| Väg | Varför inte |
+|-----|-------------|
+| `aria-label` på länken, texten bort ur DOM | Mitt gamla skäl — att namnet skulle läsas två gånger — faller när texten är borta. Men `aria-label` **degraderar till ingenting** om något går fel, medan visuellt dold text degraderar till *synlig text* om CSS inte laddas. En länk utan namn är ett sämre felläge än en länk med ett namn som syns. |
+| `alt` på ikonen i stället | Gör ikonen till innehåll i stället för dekoration och upphäver ett fungerande beslut, utan att lösa något den dolda texten inte redan löser. |
+
+Vald väg **upphäver ingenting**. Den återanvänder en primitiv som redan finns,
+redan är mätt och redan är sanktionerad.
+
+Kvar gäller:
 
 - Ikonen får **`alt=""` och `aria-hidden="true"`**, alltid, i alla bredder.
-- Länkens tillgängliga namn kommer helt från `<span>`-texten. Därmed läses
-  "Jelal Qaiumi" upp exakt en gång, aldrig två, och aldrig noll gånger.
-- Ingen `aria-label` på länken — den hade bara dubblerat textnoden.
+- Länkens tillgängliga namn kommer helt från `<span>`-texten — exakt en gång,
+  aldrig två, aldrig noll.
+- Ingen `aria-label` på länken.
+
+#### Följderna av att namnet försvinner
+
+**1. Träffytan krymper, och det ska kompenseras.** Länkens box var tidigare ikon
+plus text; nu är den bara ikonen, 48 × 36 px. Det klarar WCAG 2.5.8:s 24 × 24 men
+inte 2.5.5:s 44 × 44.
+
+```css
+/* Header.module.css, på logga-länken */
+padding-block: 4px;   /* 36 + 8 = 44 px hög träffyta */
+```
+
+Bakgrunden är genomskinlig, så det syns inte — men träffytan blir 48 × 44.
+**Det här är den sortens försämring som smyger in när något tas bort:** ingen
+mätning går sönder, inget larmar, och knappen blir bara lite svårare att träffa
+för den som har skakiga händer.
+
+**2. `.logoName` tappar sina visuella regler.** `color`, `font-size`,
+`letter-spacing`, `font-weight` och `white-space: nowrap` har ingen verkan på text
+som är klippt till 1 px. **Ta bort dem.** Klassen ska bara vara den visuellt dolda
+texten — en deklaration utan observerbar effekt är död CSS, samma regel som fällde
+de två döda tokenen.
+
+Skulle namnet någon gång visas igen återställs de då, med värden som passar det
+läget.
+
+**3. Utrymmet på bred skärm frigörs — och lämnas tomt.** Navets budget vid 360 px
+räknade aldrig med namnet, det var redan dolt där, så **golvet påverkas inte**. På
+bred skärm blir det mer luft mellan märket och navet.
+
+**Inget flyttas.** Jelal bad om att ta bort en text, inte att göra om headern. Att
+passa på att omfördela utrymmet vore en andra ändring han inte bett om, och den
+sortens tillägg är hur en enkel begäran blir en omdesign.
 
 #### Ikonens optiska storlek — rättat efter paket 2B
 

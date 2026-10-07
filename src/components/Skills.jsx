@@ -9,19 +9,19 @@ import styles from './Skills.module.css';
  * den ska godkännas eller ersättas av Jelal. Byt strängen nedan, ingen annan
  * fil behöver röras.
  *
- * Förhållandet är omvänt mot tidigare: nu är de flesta pillarna orange och det
- * dämpade är undantaget, så raden beskriver undantaget. Den säger bara vad
- * färgen betyder - ingen nivå, inget filter, ingen räknare.
+ * Raden säger bara vad den orange färgen betyder - ingen nivå, inget filter,
+ * ingen räknare.
  *
- * Den säger medvetet INGENTING om Jelals förhållande till de dämpade posterna
- * utöver att de inte är markerade. Ett påstående om att han "rört vid men inte
- * markerat" dem är det bara han som kan göra.
+ * Den säger medvetet INGENTING om de dämpade posterna. Jelal strök meningen
+ * "Övriga är ännu inte markerade" 2026-10-07. Varje påstående om hans
+ * förhållande till det omarkerade är det bara han som kan göra, och han har
+ * valt att inte göra något.
  *
  * Raden renderas ALLTID, aldrig villkorad på antalet ifyllda. En rad som
  * försvinner av sig själv när det sista skillet markeras är ett tyst
  * tillståndsbyte. Den fungerar som teckenförklaring i båda lägena.
  * ======================================================================== */
-const LEGEND = 'De orange har jag arbetat med. Övriga är ännu inte markerade.';
+const LEGEND = 'De orange har jag arbetat med.';
 
 /* Obligatoriskt textfält ur src/data/: ett fält med bara blanksteg är lika
  * tomt som ett som saknas (LARDOMAR.md 2026-10-02). Samma uttryck används i

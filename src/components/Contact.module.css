@@ -5,16 +5,76 @@
  * Sektionen ligger på --color-bg, alltså den mörka ytan. Ingen .surface-light
  * här. */
 
+/* TVÅSPALTIGT FRÅN 900 px: formuläret till vänster, kontaktuppgifterna till
+ * höger. Beslutat av Jelal 2026-10-07.
+ *
+ * BRYTPUNKTEN 900 ÄR RÄKNAD, INTE VALD, och det är hCaptcha-widgeten som sätter
+ * den. Widgeten går inte att krympa. ARKITEKTUR.md räknar med 320 px; UPPMÄTT
+ * i Edge är iframen 302 px. Slutsatsen står kvar - 302 ryms inte heller i 286 -
+ * men marginalen är en annan än den skrivna:
+ *
+ *   vid 600 px   innehåll 525 px   formulärspåret 286 px   RYMS INTE (-16 px)
+ *   vid 900 px   innehåll 795 px   formulärspåret 448 px   ryms, 146 px över
+ *                                  (arkitekturen skrev 128 px, med 320)
+ *
+ * Widgeten är sektionens minst eftergivliga element. Vid 600 hade den spräckt
+ * spåret och gett horisontell scroll. Byts captchan eller dess bredd ut MÅSTE
+ * talet räknas om - 900 är inte en vana här, det är ett resultat.
+ *
+ * 900 är dessutom projektets redan deklarerade md-brytpunkt (tokens.css), så
+ * inget nytt brytvärde har införts i systemet. Att det räknade talet sammanföll
+ * med det befintliga är en tillfällighet, inte skälet.
+ *
+ * minmax(0, ...) på BÅDA spåren, aldrig bara `3fr`. Ett spår skrivet som bara
+ * `3fr` betyder `minmax(auto, 3fr)`, och ett grid-barns automatiska minimum ÄR
+ * min-content - spåret vägrar då krympa under sitt bredaste innehåll. Regeln har
+ * bitit två gånger i det här projektet.
+ *
+ * align-items: start så att länkspalten inte sträcks ut till formulärets höjd -
+ * samma regel som för pills och projektkort: innehåll inuti en spalt ska aldrig
+ * ärva granspaltens höjd. */
+.grid {
+  display: grid;
+  gap: var(--space-7);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  }
+}
+
+/* Fälten ska inte bli bredare än en läsbar radlängd - en textarea på 700 px är
+ * obekväm att skriva i. --measure är tokenet för just det måttet. */
+.formColumn {
+  max-width: var(--measure);
+}
+
+/* EJ I ARKITEKTUR: länkspaltens inre avstånd. */
+.linkHeading {
+  margin-bottom: var(--space-4);
+}
+
 .email {
   font-size: var(--text-lg);
 }
 
-/* EJ I ARKITEKTUR: länkradens avstånd och mellanrum. */
+/* EJ I ARKITEKTUR: länkradens riktning och mellanrum.
+ *
+ * column i stället för row: i en smal högerspalt (298 px vid brytpunkten) hade
+ * en vågrät rad brutits oförutsägbart. En lodrät lista läser dessutom som en
+ * uppräkning av kontaktvägar, vilket är vad den är. */
 .links {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-5);
-  margin-top: var(--space-4);
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+
+  /* Länkarna ska inte sträckas till spaltens bredd - en länks träffyta ska
+   * följa dess text, inte spalten. align-items, inte align-self, eftersom det
+   * är posterna som ska hållas ihop. */
+  align-items: flex-start;
 }
 
 /* EJ I ARKITEKTUR: länkarnas färg och understrykning. Orange är tillåtet för

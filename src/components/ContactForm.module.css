@@ -2,9 +2,15 @@
  * .surface-light. Alla kontraster i ARKITEKTUR.md, "Utseende på mörk yta", är
  * räknade mot #0B0B0C. */
 
-.wrapper {
-  margin-top: var(--space-7);
-}
+/* Här låg .wrapper med margin-top: var(--space-7). BORTTAGEN 2026-10-07 när
+ * sektionen blev tvåspaltig: formuläret är nu det första i sin spalt, så
+ * marginalen hade förskjutit det mot länkspaltens rubrik. Avståndet mellan
+ * spalterna ägs av rutnätets gap i Contact.module.css, och maxbredden av
+ * .formColumn där.
+ *
+ * Omslagsdiven togs bort helt och komponenten returnerar ett fragment. En tom
+ * regel hade strukits av minifieraren och gjort styles.wrapper undefined -
+ * uppmätt när .logoName tömdes på samma sätt. */
 
 /* EJ I ARKITEKTUR: rubrikens grad och avstånd. h3 ärver --text-xl ur
  * global.css; bara luften under sätts här. */

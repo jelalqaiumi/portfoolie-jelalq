@@ -2092,16 +2092,118 @@ behövs här.
 försvinner när man börjar skriva, och då vet den som tappat tråden inte längre vad
 fältet var.
 
-#### En rad om vart uppgifterna tar vägen
+#### ~~En rad om vart uppgifterna tar vägen~~ — BORTTAGEN av Jelal
 
-Under formuläret, i `var(--color-text-muted)`:
+~~Under formuläret, i `var(--color-text-muted)`: "Formuläret skickas via tjänsten
+Web3Forms. Ditt namn och din e-postadress passerar deras servrar på vägen till
+Jelals inkorg."~~
 
-> Formuläret skickas via tjänsten Web3Forms. Ditt namn och din e-postadress
-> passerar deras servrar på vägen till Jelals inkorg.
+**Jelal har tagit bort integritetsraden. Den ska inte återinföras av någon som
+läser detta avsnitt och tror att den fortfarande gäller.** Avsnittet stod kvar som
+om texten fanns, vilket var fel i dokumentet och inte i koden.
 
-Två meningar, inga paragrafhänvisningar, ingen kryssruta att godkänna. Besökaren
-ska kunna läsa den på tre sekunder och förstå vad som händer. **Texten ska
-godkännas av Jelal** — den talar å hans vägnar.
+Texten står kvar ovan **som underlag**, inte som beslut, eftersom frågan kan
+återkomma: sidan laddar numera hCaptcha från en extern domän och behandlar
+besökarens IP, vilket gör en integritetsrad **mer** relevant än när han tog bort
+den, inte mindre. Det är framfört till honom som information. Vill han ha tillbaka
+den är formuleringen färdig.
+
+### Kontaktsektionen blir tvåspaltig — beslutat av Jelal 2026-10-07
+
+Jelal: *"De är nog bättre att kontakt är på högra sidan utav de man fyller i och
+inte ovanför."* Formuläret till vänster, kontaktuppgifterna till höger.
+
+#### DOM-ordningen byts också — inte bara den visuella
+
+**Beslut: formuläret först i koden, länkarna efter.**
+
+Alternativet — att låta länkarna ligga kvar först i DOM och bara flytta dem
+visuellt med grid-placering — **avfärdas.** Det hade gjort tangentbordsordningen
+olik den visuella på bred skärm, och att de två stämmer överens har varit en
+uttrycklig verifieringspunkt sedan paket 7. Att bryta en mätt regel för en
+placeringsändring vore att byta bort något säkert mot något smakmässigt.
+
+**Och ordningen stämmer med Jelals egen prioritering.** Han har sagt att
+formuläret ska stå till vänster, alltså läsas först. Att det då också kommer först
+på smal skärm är en följd av hans beslut, inte en avvikelse från det.
+
+> **Men följden på mobil ska läggas fram för honom.** I dag står länkarna ovanför
+> formuläret, så den som bara vill mejla ser adressen utan att scrolla. Efter
+> ändringen ligger de **under** formuläret — fem fält och en captcha bort. Han
+> tittar sannolikt på en bred skärm och har inte sett det.
+>
+> Jag föreslår ingen kompensation. Att upprepa e-posten på två ställen vore två
+> ställen att underhålla och adressen uppläst två gånger för en skärmläsare. Vill
+> han ha den högre upp på mobil är det hans beslut, och då en egen ändring med en
+> egen lösning.
+
+#### Spalterna
+
+```css
+.grid {
+  display: grid;
+  gap: var(--space-7);                 /* 48 px, båda axlarna */
+  align-items: start;
+}
+@media (min-width: 900px) {
+  .grid { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+}
+```
+
+`minmax(0, …)` på båda spåren, aldrig bara `3fr`. Regeln har bitit två gånger.
+
+`align-items: start` så att länkspalten inte sträcks ut till formulärets höjd —
+samma regel som för pills och projektkort.
+
+**Formulärets block får `max-width: var(--measure)`.** Fälten ska inte bli bredare
+än en läsbar radlängd; en textarea på 700 px är obekväm att skriva i.
+
+#### Brytpunkten 900 är räknad, inte vald
+
+Projektet har 600 och 900. **600 går inte**, och skälet är captchan:
+
+| Vid brytpunkten | Innehållsbredd | Formulärspåret (3 av 5, minus 48 px gap) | Captchan ryms? |
+|-----------------|----------------|-------------------------------------------|----------------|
+| 600 px | 525 px | **286 px** | **nej — widgeten är 320 px** |
+| 900 px | 795 px | **448 px** | ja, med 128 px marginal |
+
+hCaptcha-widgeten är **320 px bred och går inte att krympa**. Den är sektionens
+minst eftergivliga element och bestämmer därför var spalterna får uppstå. Vid 600
+hade den spräckt spåret och gett horisontell scroll.
+
+**Det är widgeten som sätter brytpunkten, inte tycke.** Byts captchan eller dess
+bredd ut måste talet räknas om.
+
+#### Rubrikerna
+
+| Rubrik | Nivå | Omfattar |
+|--------|------|----------|
+| "Kontakt" | `h2`, ur `sections.js` | hela sektionen, **ovanför** rutnätet |
+| "Fyll i dina uppgifter" | `h3` | **endast** formulärspalten |
+| Kontaktuppgifternas rubrik | `h3` | **endast** länkspalten |
+
+`h2` ligger utanför rutnätet och spänner hela bredden — den namnger sektionen,
+inte en spalt.
+
+**Länkspalten får en egen `h3`.** Utan den blir högerspalten ett namnlöst block
+som svävar bredvid formuläret, och den som hoppar mellan rubriker med skärmläsare
+får ingen väg dit. Förvald text: **"Kontaktuppgifter"**. Neutral och beskrivande —
+**men den är min, inte Jelals, och ska godkännas** som alla texter som talar i
+hans namn.
+
+#### Verifiering av flytten
+
+- **Tangentbordsordningen mot den visuella, i båda lägena.** Tabba igenom
+  sektionen vid 360 px och vid 1280 px och jämför med den visuella ordningen.
+  **Mät, tolka inte** — det är hela skälet att DOM-ordningen byts.
+- **360 px-golvet med captchan.** Den var den trängsta posten senast.
+- **Spåret vid exakt 900 px.** Formulärspåret ska vara ≥ 320 px. Mät vid 900, inte
+  bara vid 1280 — brytpunkten är den smalaste punkten i tvåspaltigt läge.
+- **De sju fokusringarna** — fem i formuläret, två på länkarna — mäts mot sin
+  faktiska bakgrund efter flytten. Länkarna byter inte yta men de byter plats, och
+  en mätning som inte gjorts om är ingen mätning.
+- **Inget annat på sidan ändras.** Jämför renderad utdata för header, hero, skills,
+  projekt och footer före och efter.
 
 #### Verifiering
 
@@ -2592,6 +2694,27 @@ Bakgrunden är genomskinlig, så det syns inte — men träffytan blir 48 × 44.
 mätning går sönder, inget larmar, och knappen blir bara lite svårare att träffa
 för den som har skakiga händer.
 
+#### Navlänkarnas träffyta — 19 px, och det är en egen ändring
+
+Byggaren har mätt navlänkarna till **19 px höga**, och de har alltid varit det.
+
+WCAG 2.5.8 kräver 24 × 24 px, med undantag för underdimensionerade mål som ligger
+tillräckligt glest. Med ~70 px mellan länkarnas mittpunkter håller undantaget
+sannolikt, så det är troligen inget formellt fel. **Men 19 px är en dålig träffyta
+på en pekskärm**, och åtgärden är densamma som för logga-länken: `padding-block`
+tills den renderade rektangeln är minst 44 px hög. Det ryms i en 64 px hög header.
+
+**Jag bakar inte in den här.** Två skäl:
+
+1. Jelal har sagt *"ändra inget annat på sidan"*, och navlänkarna ligger utanför
+   kontaktsektionen.
+2. Padding är osynlig — men **fokusringen växer med träffytan**, och det syns. Det
+   är alltså inte en osynlig rättelse.
+
+Den ska göras, men som en egen punkt med eget godkännande, och med ommätning av att
+headern fortfarande är exakt 64,00 px. Att smyga in den i en annan ändring vore
+precis det jag avvisade när utrymmet i headern frigjordes.
+
 **2. `.logoName` tappar sina visuella regler.** `color`, `font-size`,
 `letter-spacing`, `font-weight` och `white-space: nowrap` har ingen verkan på text
 som är klippt till 1 px. **Ta bort dem.** Klassen ska bara vara den visuellt dolda
@@ -2765,10 +2888,14 @@ rektanglar, tolka inte en bild.**
   **UPPHÄVT** — läggs in **nu**, tillsammans med de två `rel="icon"`-raderna. Se
   "Utdatafiler för ikonen" för skälet: placeringen i paket 7 gjorde två genererade
   filer orefererade i `dist/` i tre paket.
-- **`.visually-hidden-until-sm` i `global.css` godkänns.** En CSS-modul kan varken
+- ~~**`.visually-hidden-until-sm` i `global.css` godkänns.**~~ **BORTTAGEN
+  2026-10-07 — noll konsumenter** sedan namnet döljs i alla bredder. Klassen var
+  motiverad så länge något använde den; en global klass utan användning är dött
+  fält, samma regel som fällde `--color-surface-raised` och `--color-accent-soft`.
+  `.visually-hidden` står kvar och används av logga-namnet och skip-länken.
+  Ursprunglig motivering, nu utan föremål: en CSS-modul kan varken
   `composes` inuti en media query eller nå en global klass, så mönstret hade annars
-  behövt stå på ett ställe och hävningen på ett annat. Det är **den andra och sista
-  sanktionerade globala klassen** vid sidan av `.visually-hidden`. Markeringen
+  behövt stå på ett ställe och hävningen på ett annat. Markeringen
   `EJ I ARKITEKTUR` kan tas bort.
 - **React 19:s automatiska `<link rel="preload" as="image">`** för ikonen är
   väntat beteende från ramverket, inte något byggaren skrivit. Ingen åtgärd, och
@@ -4131,6 +4258,21 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   läge **kör valideringen och flyttar fokus till första felande fält**, vilket är
   bättre än båda utgångspunkterna — en knapp som inte går att trycka på berättar
   aldrig varför. (påverkat av lärdom: ja)
+- **Kontaktsektionen blir tvåspaltig, och DOM-ordningen byts med den** — Jelals val
+  2026-10-07. Att bara flytta visuellt med grid-placering avfärdades: det hade
+  gjort tangentbordsordningen olik den visuella, vilket varit en mätt
+  verifieringspunkt sedan paket 7. **Att bryta en mätt regel för en
+  placeringsändring vore att byta bort något säkert mot något smakmässigt.**
+  Följden att länkarna hamnar under formuläret på mobil läggs fram för Jelal — den
+  stämmer med hans prioritering men han har inte sett den. (påverkat av lärdom: ja)
+- **Brytpunkten 900 är räknad ur captchans 320 px, inte vald** — vid 600 hade
+  formulärspåret blivit 286 px och widgeten spräckt golvet. **Sektionens minst
+  eftergivliga element bestämmer var spalterna får uppstå.** Byts captchan måste
+  talet räknas om. (påverkat av lärdom: ja — härled tal, välj dem inte)
+- **Navlänkarnas 19 px träffyta rättas, men som en egen ändring** — padding är
+  osynlig, men fokusringen växer med träffytan och det syns. Att bunta ihop den
+  med kontaktflytten vore precis det jag avvisade när headerns utrymme frigjordes.
+  (påverkat av lärdom: ja)
 - **Namnet bredvid märket döljs i alla bredder, men tas inte ur DOM** — Jelals val
   2026-10-07. `.visually-hidden-until-sm` blir `.visually-hidden`. `aria-label`
   avfärdades trots att mitt gamla skäl mot den fallit: **`aria-label` degraderar
@@ -4491,6 +4633,13 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   Hans beslut, men det ska vara ett beslut.
 - **Feltexten har fått tillägget "eller mejla qaiumi@hotmail.com direkt"** och
   avviker därmed från Jelals formulering. Ska läggas fram.
+- **Länkspaltens `h3` "Kontaktuppgifter"** är min text, inte Jelals. Ska godkännas.
+- **Länkarna hamnar under formuläret på mobil** efter tvåspaltsflytten. Följden ska
+  läggas fram för Jelal — han har sannolikt bara sett bred skärm.
+- **Navlänkarnas träffyta på 19 px** ska rättas som en egen, godkänd ändring.
+- **Inget verkligt meddelande har skickats** genom formuläret, och hCaptcha i
+  Web3Forms instrumentpanel är obekräftad. Formuläret är inte verifierat förrän
+  ett meddelande landat i inkorgen.
 - **Domänbegränsning hos Web3Forms** får slås på först när sidan ligger live, och
   då som ett eget beslut — den slår ut `localhost`.
 - **Sammanslagningen av `HTTP-metoder` + `GET` + `POST` + `PUT`** till den gamla

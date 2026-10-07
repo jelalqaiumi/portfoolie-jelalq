@@ -180,13 +180,15 @@ section[id] + section[id] {
  * Döljer visuellt men behåller elementet i tillgänglighetsträdet. Aldrig
  * display: none - det tar bort elementet för skärmläsaren också.
  *
- * Beslutat i ARKITEKTUR.md, "Fyra noteringar från paket 2B": varianten
- * .visually-hidden-until-sm är godkänd och är den andra och sista sanktionerade
- * globala klassen. En CSS-modul kan varken `composes` inuti en media query
- * eller nå en global klass, så brytpunkten ligger här bredvid primitiven.
- * Mönstret står skrivet EN gång (delad selektorlista) och hävningen en gång. */
-.visually-hidden,
-.visually-hidden-until-sm {
+ * KONSUMENTER: logga-namnet i Header.jsx och skip-länken i App.jsx. Båda
+ * behöver texten i tillgänglighetsträdet men inte på skärmen.
+ *
+ * Här låg även varianten .visually-hidden-until-sm, som visade namnet från
+ * 600 px. BORTTAGEN 2026-10-07: när Jelal bad om att dölja namnet i alla
+ * bredder fick den noll konsumenter, och en regel utan konsument är död CSS -
+ * samma grund som fällde de två döda tokenen. Behövs ett "dolt till en viss
+ * bredd" igen skrivs det då, med en verklig användning bakom sig. */
+.visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -247,14 +249,3 @@ a.visually-hidden:focus {
   font-size: var(--text-base);
 }
 
-/* sm = 600px, brytpunkten ur ARKITEKTUR.md. Här blir namnet synlig text igen. */
-@media (min-width: 600px) {
-  .visually-hidden-until-sm {
-    position: static;
-    width: auto;
-    height: auto;
-    margin: 0;
-    overflow: visible;
-    clip-path: none;
-  }
-}

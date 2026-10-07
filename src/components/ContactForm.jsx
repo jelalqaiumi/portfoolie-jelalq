@@ -204,7 +204,7 @@ function ContactForm() {
   }[state];
 
   return (
-    <div className={styles.wrapper}>
+    <>
       <h3 className={styles.heading}>Fyll i dina uppgifter</h3>
 
       {/* Förklaringen av asterisken står EN gång, ovanför fälten. Den gör att
@@ -317,7 +317,7 @@ function ContactForm() {
           {status}
         </p>
       </form>
-    </div>
+    </>
   );
 }
 

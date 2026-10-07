@@ -7,7 +7,7 @@ const name = 'Jelal Qaiumi';
 
 /* Titeln ur BRIEF.md: "En personlig portfolio-webbplats för Jelal Qaiumi
  * (systemutvecklare)". */
-const role = 'Systemutvecklare';
+const role = 'Fullstackutvecklare';
 
 /* ===== UTKAST - TEXT SOM JELAL SKA GODKÄNNA ELLER ERSÄTTA =================
  *

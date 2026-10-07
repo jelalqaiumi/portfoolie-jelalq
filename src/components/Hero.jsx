@@ -5,8 +5,10 @@ import styles from './Hero.module.css';
  * (ARKITEKTUR.md, rättelse 2). Namnet kommer ur BRIEF.md. */
 const name = 'Jelal Qaiumi';
 
-/* Titeln ur BRIEF.md: "En personlig portfolio-webbplats för Jelal Qaiumi
- * (systemutvecklare)". */
+/* Titeln. Jelal bytte den från "Systemutvecklare" 2026-10-07 — den härleds
+ * alltså INTE längre ur BRIEF.md, som fortfarande säger systemutvecklare.
+ * Hans ord gäller. Samma sträng står i <title> i index.html och de två ska
+ * följas åt. */
 const role = 'Fullstackutvecklare';
 
 /* ===== UTKAST - TEXT SOM JELAL SKA GODKÄNNA ELLER ERSÄTTA =================

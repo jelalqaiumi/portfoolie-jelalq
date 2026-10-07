@@ -38,7 +38,22 @@ function Projects() {
   const visible = projects.filter(isComplete);
 
   return (
-    <Section id={section?.id} title={section?.label}>
+    /* "surface-light" är en GLOBAL klass i tokens.css, inte en modulklass.
+       Den binder om färgtokenen för hela sektionen så att den får vit bakgrund.
+       Samma mönster som "visually-hidden" i global.css: en sanktionerad global
+       klass, därför en bokstavlig sträng och inte styles.x.
+
+       YTAN FLYTTADES HIT FRÅN KOMPETENSER av Jelal 2026-10-07, i samma omgång
+       som projekten flyttades upp före kompetenserna. Skälet är hans eget: han
+       vill att projekten ska synas.
+
+       ⚠️ KLASSEN BÄR MER ÄN EN BAKGRUND. Den binder om --color-border,
+       --color-text-muted, --color-text-dim, --color-error och --color-focus för
+       allt inuti sektionen - alltså även sektionsavgränsarens ton, kortens ram
+       och fokusringen på kortens länkar. Flyttas den vidare till en annan
+       sektion följer alla fem med. Läs "Ljus yta" i ARKITEKTUR.md innan den
+       rörs; en flytt är inte en bakgrundsändring. */
+    <Section id={section?.id} title={section?.label} className="surface-light">
       {visible.length === 0 ? (
         /* TOMT LÄGE. En kort rad, aldrig en tom yta. Villkoret står på
          * filtrerade listan och inte på projects.length: finns bara

@@ -29,6 +29,7 @@ const ACTIVE = [
   'sections',
   'skills',
   'projects',
+  'about',
   'contact',
 ];
 
@@ -367,6 +368,60 @@ function checkProjects(mod) {
   summary.push(`${projects.length} projekt`);
 }
 
+/* ===== about.js =========================================================
+ * Aktiverad 2026-10-07, tillsammans med datafilen. Tre steg hör ihop: raden i
+ * ACTIVE, denna funktion och posten i CHECKS nedan.
+ *
+ * Datamodellen har ETT obligatoriskt fält, och det ska därför ha en egen grind
+ * oavsett att kontrolltabellen är kort (LARDOMAR.md 2026-10-05: ett fält som en
+ * typedef märker OBLIGATORISK får inte sakna grind).
+ *
+ * VILKEN LEGITIM ÄNDRING FÅR FÄLLA DEN? Ingen. Jelal ska kunna skriva om
+ * texten, lägga till ett stycke och ta bort ett - allt det tiger grinden om.
+ * Den fäller bara tomma stycken och en tom lista, alltså sådant som renderar
+ * ett osynligt radavstånd eller en rubrik utan innehåll. Det är kravet på en
+ * grind enligt LARDOMAR.md 2026-10-05.
+ * ======================================================================== */
+function checkAbout(mod) {
+  const { about } = mod;
+
+  if (about === null || typeof about !== 'object') {
+    /* EJ I ARKITEKTUR: vad meddelandet ska lyda när exporten är borta - samma
+     * öppna fråga som i checkSections och checkContact. */
+    fail('about.js: about saknas eller är inte ett objekt');
+    return;
+  }
+
+  /* En sträng i stället för en array är det troligaste misstaget här, eftersom
+   * texten ÄR en text: den som skriver `paragraphs: 'Jag arbetar...'` får utan
+   * denna kontroll varje BOKSTAV renderad som ett eget stycke. Meddelandet
+   * säger därför vad formen ska vara, inte bara att den är fel. */
+  if (!Array.isArray(about.paragraphs)) {
+    fail('about.js: paragraphs måste vara en array av stycken, ett stycke per post');
+    return;
+  }
+
+  /* Minst ett stycke. En tom lista ger en rubrik utan innehåll, alltså en
+   * sektion som ser ut som ett fel men inte är ett - samma skäl som att
+   * <Section> vägrar rendera en sektion utan rubrik. */
+  if (about.paragraphs.length === 0) {
+    fail('about.js: paragraphs är tom - sektionen behöver minst ett stycke');
+    return;
+  }
+
+  about.paragraphs.forEach((paragraph, index) => {
+    if (!hasText(paragraph)) {
+      /* Posten kan inte namnges med sitt innehåll, så den får sin plats i
+       * listan, räknad från 1 som en människa gör. Både '' och '   ' fångas
+       * av hasText: ett stycke med bara blanksteg renderar ett tomt <p> som
+       * ser ut som ett layoutfel. */
+      fail(`about.js: stycke ${index + 1} är tomt eller innehåller bara blanksteg`);
+    }
+  });
+
+  summary.push(`${about.paragraphs.length} stycken i Om mig`);
+}
+
 /* ===== contact.js =======================================================
  * Aktiverad i paket 6, tillsammans med datafilen. Två steg hör ihop: raden i
  * ACTIVE och posten i CHECKS nedan.
@@ -560,12 +615,13 @@ function checkFontSubset(fileName, mod, coverage) {
   }
 }
 
-/* Alla fyra datafiler har nu en kontroll. Står ett namn i ACTIVE utan att ha
- * en kontroll här blir det ett FEL, inte en tyst överhoppning. */
+/* Varje datafil i ACTIVE har en kontroll här. Står ett namn i ACTIVE utan att
+ * ha en kontroll blir det ett FEL, inte en tyst överhoppning. */
 const CHECKS = {
   sections: checkSections,
   skills: checkSkills,
   projects: checkProjects,
+  about: checkAbout,
   contact: checkContact,
 };
 

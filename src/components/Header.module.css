@@ -116,8 +116,9 @@
  * inuti headern får radbryta.
  *
  * Utrymmesbudgeten för smal skärm står i ARKITEKTUR.md - inga tal upprepas
- * här. Budgetens font-size --text-sm och gap --space-4 är modulens värden i
- * ALLA bredder och behöver därför ingen media query. */
+ * här. gap --space-4 är modulens värde i alla bredder. Graden är det INTE
+ * längre: se media queryn vid .navLink nedan, som kom till när navet fick sin
+ * fjärde länk. */
 .navList {
   display: flex;
   flex-wrap: nowrap;
@@ -149,7 +150,28 @@
    * 2026-10-07 inte längre en fråga: namnet är visuellt dolt i alla bredder, så
    * det finns ingen synlig text att skilja från. */
   color: var(--color-text);
-  font-size: var(--text-sm);
+
+  /* GRADEN ÄR SMALSKÄRMENS, och den större graden kommer först vid 600 px.
+   * Mobile-first åt samma håll som projektets övriga brytpunkter, som alla är
+   * `min-width` (tokens.css).
+   *
+   * VARFÖR: navet fick en fjärde länk, "Om mig", 2026-10-07. Med --text-sm i
+   * alla bredder blev navlistan 256,2 px vid 360 px vyport, medan headerns
+   * innehållsbox är 309 px och loggan plus mellanrummet tar 64. Navet spillde
+   * alltså över sin behållare med 11,2 px och åt av högermarginalen. UPPMÄTT -
+   * arkitektens uppskattning låg inom en pixel från taket och hamnade på fel
+   * sida om det.
+   *
+   * ÅTGÄRDEN ÄR GRADEN, ALDRIG ETIKETTEN. Storleken är presentation, etiketten
+   * är innehåll - "Om mig" är Jelals ord och kortas inte för att skapa plats.
+   * Beslutat i ARKITEKTUR.md, "En fjärde navlänk 2026-10-07".
+   *
+   * OBS att överspillningen INTE gav horisontell scroll: sidmarginalens 18 px
+   * absorberade den, så golvkontrollen passerade medan navet låg utanför sin
+   * box. Felläget som arkitekturen kallar "tryggt" larmar först när
+   * överspillningen äter upp hela marginalen. Mät navlistans högerkant mot
+   * headerns innerkant, inte bara scrollWidth. */
+  font-size: var(--text-xs);
 
   /* UTTRYCKLIGT UNDANTAG från `overflow-wrap: anywhere` på body, och hör ihop
    * med `flex-wrap: nowrap` på listan - samma förebyggande försvar en nivå ned.
@@ -163,4 +185,15 @@
 
 .navLink:hover {
   color: var(--color-accent);
+}
+
+/* Från 600 px finns utrymmet igen och graden går tillbaka till --text-sm, samma
+ * som resten av sidans småtext. Brytpunkten är projektets sm (tokens.css), inte
+ * ett eget tal: utrymmet räcker redan vid 420 px, men att införa ett femte
+ * brytvärde för 60 px skulle göra systemet svårare att hålla i huvudet än
+ * vinsten är värd. */
+@media (min-width: 600px) {
+  .navLink {
+    font-size: var(--text-sm);
+  }
 }

@@ -52,13 +52,23 @@ function Skills() {
   );
 
   return (
-    /* "surface-light" är en GLOBAL klass i tokens.css, inte en modulklass.
-       Den binder om färgtokenen för hela sektionen så att den får vit
-       bakgrund - beslutat av Jelal 2026-10-05, se ARKITEKTUR.md "Ljus yta".
-       Samma mönster som "visually-hidden" i global.css: en sanktionerad global
-       klass, därför en bokstavlig sträng och inte styles.x.
-       Ingen annan fil i sektionen behöver känna till den ljusa ytan. */
-    <Section id={section?.id} title={section?.label} className="surface-light">
+    /* DEN LJUSA YTAN LÅG HÄR fram till 2026-10-07. Jelal har flyttat den till
+       projektsektionen: han flyttade upp projekten för att de ska synas, och en
+       ljus yta direkt efter hero är det mest iögonfallande sidan har.
+       className="surface-light" står nu i Projects.jsx.
+
+       FÖLJDEN FÖR DENNA SEKTION, uppmätt: pillarna är tillbaka på mörk botten.
+       De ifyllda låg på 2,58:1 mot den vita ytan, ett avsteg från WCAG 1.4.11
+       som arkitekturen uttryckligen accepterade. Mot --color-bg är de 6,95:1
+       igen, så avsteget upphör av sig självt - det behöver inte längre stå som
+       ett accepterat undantag.
+
+       Sektionen ärver nu sidans mörka ytas token utan ombindning. Sätt inte
+       tillbaka klassen här utan att först läsa "Ljus yta" i ARKITEKTUR.md: den
+       binder om --color-border, --color-text-muted, --color-text-dim,
+       --color-error och --color-focus för hela sektionen, och alla fem gäller
+       numera projekten. */
+    <Section id={section?.id} title={section?.label}>
       <p className={styles.legend}>{LEGEND}</p>
 
       <div className={styles.groups}>

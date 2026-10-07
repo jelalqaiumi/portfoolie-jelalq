@@ -1,10 +1,48 @@
 import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
-import Skills from './components/Skills.jsx';
 import Projects from './components/Projects.jsx';
+import Skills from './components/Skills.jsx';
+import About from './components/About.jsx';
 import Contact from './components/Contact.jsx';
 import Footer from './components/Footer.jsx';
-import { MAIN_ID } from './data/sections.js';
+import {
+  sections,
+  MAIN_ID,
+  PROJECTS_ID,
+  SKILLS_ID,
+  ABOUT_ID,
+  CONTACT_ID,
+} from './data/sections.js';
+
+/* ===== UPPSLAGET: ett sektions-id till en komponent ======================
+ * SIDANS ORDNING BOR INTE HÄR. Den bor i sections.js, och denna tabell säger
+ * bara vilken komponent ett id motsvarar. Att byta ordning på sektionerna är
+ * därför EN redigering, i sections.js - inte två.
+ *
+ * Varför det är viktigt: tidigare renderade denna fil namngivna komponenter i
+ * en egen fast ordning, medan sections.js lovade att listans ordning var
+ * sidans. Ordningen bodde på två ställen, och en omordning på bara det ena
+ * hade gett ett nav och ett innehåll som säger olika saker - tyst, utan
+ * felmeddelande. Det var precis det fallet som uppstod när projekten skulle
+ * flyttas före kompetenserna. Beslutat i ARKITEKTUR.md, "sections.js blir åter
+ * enda källan för sidans ordning".
+ *
+ * TABELLEN ÄR KONFIGURATION, INTE LOGIK. Arkitektens regel att App.jsx inte
+ * har egen logik gäller fortfarande: här finns inga villkor och inga
+ * beräkningar, bara en koppling från id till komponent. Nycklarna är
+ * konstanterna ur sections.js, aldrig bokstavliga strängar - ett sektions-id
+ * får inte skrivas av i en .jsx-fil.
+ *
+ * ATT LÄGGA TILL EN SEKTION kräver fortfarande två redigeringar: posten i
+ * sections.js och raden här. Det är accepterat och sällsynt. Glöms raden här
+ * renderas sektionen inte, och det fångas av verifieringspunkten nedan.
+ * ======================================================================== */
+const SECTION_COMPONENTS = {
+  [PROJECTS_ID]: Projects,
+  [SKILLS_ID]: Skills,
+  [ABOUT_ID]: About,
+  [CONTACT_ID]: Contact,
+};
 
 function App() {
   return (
@@ -40,39 +78,30 @@ function App() {
             sitt eget <h1>. */}
         <Hero />
 
-        {/* Skills äger sin egen <Section> och hämtar både id och rubrik ur
-            sections.js. Den ligger därför utanför mappningen nedan, precis som
-            Hero - jämför ARKITEKTUR.md:s komponenttabell, där <App> renderar
-            <Hero />, <Skills />, <Projects /> och <Contact /> var för sig. */}
-        <Skills />
+        {/* SEKTIONERNA I DATANS ORDNING. Varje komponent äger sin egen
+            <Section> och hämtar både id och rubrik ur sections.js.
 
-        {/* Projects äger sin egen <Section> och hämtar id och rubrik ur
-            sections.js, precis som Skills. Den ligger HÄR, mellan <Skills />
-            och mappningen, så att sektionerna förblir DIREKTA syskon i <main>
-            i datans ordning: hero, skills, projects, contact.
+            Poster vars id saknas i uppslaget hoppas över i stället för att
+            krascha. En okänd komponent går inte att rendera, och ett vitt kort
+            är ett sämre felläge än en saknad sektion - men tyst ska det inte
+            vara: verifieringspunkten "den renderade sidan ska innehålla exakt
+            de sektioner som står i sections.js, i samma ordning" mäter utdata
+            och fångar både en post utan komponent och en komponent i fel
+            ordning. En statisk grind i validate-data.mjs valdes bort: den hade
+            behövt läsa denna fil som text och gissa sig till tabellens
+            innehåll.
 
-            Att ordningen är direkt syskonskap är inte kosmetik:
-            sektionsavgränsarna i global.css är `section[id] + section[id]`.
+            ATT SEKTIONERNA BLIR DIREKTA SYSKON i <main> är inte kosmetik.
+            Sektionsavgränsarna i global.css är `section[id] + section[id]`.
             Hamnar något främmande mellan två sektioner bryts kedjan och
-            linjerna försvinner UTAN felmeddelande. Räkna om de tre linjerna
-            efter varje ändring i denna fil. */}
-        <Projects />
-
-        {/* Contact äger sin egen <Section> och hämtar id och rubrik ur
-            sections.js, precis som Skills och Projects.
-
-            MAPPNINGEN ÖVER sections ÄR BORTA. Varje sektion i listan har nu en
-            egen komponent, så filtret hade undantagit samtliga poster och
-            renderat ingenting - alltså dött fält. Sektionernas ORDNING ligger
-            kvar i sections.js, som fortfarande är enda källan för id och
-            navrubriker; det är ordningen HÄR som måste följa den.
-
-            Att de fyra ligger som direkta syskon är inte kosmetik:
-            sektionsavgränsarna i global.css är `section[id] + section[id]`.
-            Hamnar något främmande mellan två sektioner bryts kedjan och
-            linjerna försvinner UTAN felmeddelande. Räkna om de tre linjerna
-            efter varje ändring i denna fil. */}
-        <Contact />
+            linjerna försvinner UTAN felmeddelande. Mappningen renderar varje
+            sektion utan omslag just därför - lägg aldrig in en <div> eller ett
+            <Fragment> med markup runt posterna här. Räkna om linjerna efter
+            varje ändring i denna fil. */}
+        {sections.map((section) => {
+          const SectionComponent = SECTION_COMPONENTS[section.id];
+          return SectionComponent ? <SectionComponent key={section.id} /> : null;
+        })}
       </main>
       <Footer />
     </>

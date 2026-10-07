@@ -672,10 +672,11 @@ glida isär.
  * @property {string} label  OBLIGATORISK. Svensk text i navigationen och som h2-rubrik.
  */
 export const HERO_ID     = 'hero';
-export const SKILLS_ID   = 'skills';
 export const PROJECTS_ID = 'projects';
+export const SKILLS_ID   = 'skills';
+export const ABOUT_ID    = 'about';
 export const CONTACT_ID  = 'contact';
-export const MAIN_ID     = 'main';   // <main id>, mål för skip-länken i paket 7
+export const MAIN_ID     = 'main';   // <main id>, mål för skip-länken
 
 export const sections = [ /* se tabellen nedan, id hämtas ur konstanterna ovan */ ];
 ```
@@ -687,14 +688,65 @@ granskningen av paket 1".
 
 Innehållet är beslutat och ska vara exakt detta, i denna ordning:
 
-| `id` | `label` |
-|------|---------|
-| `skills` | `Kompetenser` |
-| `projects` | `Projekt` |
-| `contact` | `Kontakt` |
+| # | `id` | `label` |
+|---|------|---------|
+| 1 | `projects` | `Projekt` |
+| 2 | `skills` | `Kompetenser` |
+| 3 | `about` | `Om mig` |
+| 4 | `contact` | `Kontakt` |
 
 Båda fälten är obligatoriska på **varje** post. Inga undantag, inga valfria fält.
 Footern är inget navmål och får inget `id`.
+
+**Ordningen är Jelals, beslutad 2026-10-07:** *"Lägg projekt sektionen över
+kompetenser så att mina projekter syns, sen ska de vara en liten sektion 'om mig'
+längre ner men över kontakt sektionen."* Sidans ordning blir alltså
+**hero → projekt → kompetenser → om mig → kontakt**.
+
+Skälet står i hans egen mening: kompetenssektionen är 2338 px hög på desktop och
+betydligt mer på mobil, så projekten låg bakom en vägg.
+
+#### `sections.js` blir åter enda källan för sidans ordning
+
+Granskaren har påpekat att `sections.js` **lovar** att listans ordning är sidans
+ordning, men att `App.jsx` renderar namngivna komponenter i en egen fast ordning.
+Ordningen bodde alltså på två ställen.
+
+**Den här ändringen är precis det fall där de glider isär.** Att flytta projekt
+före kompetenser kräver en redigering på båda ställena, och den som bara gör den
+ena får en sida vars nav och innehåll säger olika saker.
+
+**Beslut: `App.jsx` mappar över `sections` och slår upp komponenten.**
+
+```jsx
+const SECTION_COMPONENTS = {
+  [PROJECTS_ID]: Projects,
+  [SKILLS_ID]:   Skills,
+  [ABOUT_ID]:    About,
+  [CONTACT_ID]:  Contact,
+};
+```
+
+Hero ligger kvar utanför listan och renderas först, som tidigare.
+
+**Att ändra ordning blir då en redigering på ett ställe.** Att lägga till en
+sektion kräver fortfarande två — posten i `sections.js` och raden i uppslaget —
+men det är en sällsynt operation, medan omordning är den som just hänt och som
+kommer att hända igen.
+
+> **Uppslaget är konfiguration, inte logik.** Min regel att `App.jsx` inte ska ha
+> egen logik gäller fortfarande: det här är en tabell som kopplar ett id till en
+> komponent, utan villkor och utan beräkning.
+
+**Och den kvarvarande tvåställeskopplingen görs mekanisk, inte ihågkommen.** Ny
+verifieringspunkt: den renderade sidan ska innehålla **exakt** de sektioner som
+står i `sections.js`, **i samma ordning**. Kontrollen mäter utdata, inte markup —
+den fångar både en post utan komponent och en komponent som renderas i fel
+ordning.
+
+En statisk grind i `validate-data.mjs` övervägdes och valdes bort: den hade behövt
+läsa `App.jsx` som text och gissa sig till uppslagets innehåll. **Att mäta den
+renderade sidan är både enklare och svårare att lura.**
 
 #### Hero-posten tas bort ur `sections` — rättat efter granskningen
 
@@ -1159,6 +1211,34 @@ oförändrat.
 
 Det här är ett medvetet avsteg från 1.4.11 med ett utskrivet skäl, inte ett
 förbiseende.
+
+#### Var den ljusa ytan sitter efter omordningen — Jelals val
+
+Med den nya ordningen blir rytmen:
+
+**hero (grå) → projekt (mörk) → kompetenser (vit) → om mig (mörk) → kontakt (mörk)**
+
+Två mörka sektioner i rad på slutet. **Det är ingen defekt** — sektionerna skiljs
+åt av rubriker och avgränsarlinjer oavsett bakgrund, och omväxlingen är estetisk,
+inte funktionell. Men den var en följd av den gamla ordningen, och nu när ordningen
+ändrats bör placeringen få bekräftas i stället för att ärvas.
+
+| Alt | Ljus yta på | Rytm |
+|-----|-------------|------|
+| **A** | Kompetenser (som i dag) | grå, mörk, **vit**, mörk, mörk |
+| **B** | Om mig | grå, mörk, mörk, **vit**, mörk |
+| **C** | Projekt | grå, **vit**, mörk, mörk, mörk |
+
+**Byggt: A.** Det är statusläget och upphäver inget beslut han redan fattat.
+
+Värt att nämna när frågan läggs fram: **C ligger närmast hans eget skäl till
+flytten.** Han flyttade projekten "så att mina projekter syns", och en vit yta
+direkt efter hero är det mest iögonfallande sidan har. Men det vore att flytta en
+bakgrund han valde för kompetenssektionen, så det är hans beslut och inte mitt.
+
+Byter ytan sektion flyttar `.surface-light` med den, och de ombundna tokenen följer
+automatiskt — det var hela poängen med att binda om i stället för att införa egna
+namn.
 
 #### Bakgrunden blir `#F4F4F6` — och vad som följde med
 
@@ -1634,6 +1714,46 @@ till en enda höjd, 29,19 px, över båda testkorten.
 innehåll inuti kortet aldrig får ärva kortets utsträckta höjd. Ett kort blir högt
 av sin granne, inte av sitt eget innehåll, och då ska dess etiketter, knappar och
 bilder ligga kvar högst upp. Markeringen `EJ I ARKITEKTUR` kan tas bort.
+
+### `src/data/about.js` — Om mig
+
+Ny sektion, beslutad av Jelal 2026-10-07. Han sa **"en liten sektion"**, och det
+är en del av specifikationen, inte en artighet.
+
+```js
+/**
+ * @typedef {Object} About
+ * @property {string[]} paragraphs  OBLIGATORISK. Ett stycke per post. Minst ett.
+ */
+export const about = {
+  paragraphs: [
+    // Jelals text. 1–3 stycken.
+  ],
+};
+```
+
+**Texten ligger i `src/data/`, inte i komponenten.** Hero-texten bor i sin
+komponent, och `GUIDE.md` har därför ett avsnitt "Texter som inte ligger i
+`src/data/`". **Den listan ska bli kortare, inte längre.** En ny sektion med fri
+text som Jelal kommer att vilja ändra hör hemma där han redan letar efter sin
+text.
+
+**En array av stycken, inte en sträng med radbrytningar.** Två skäl: en sträng
+hade krävt att komponenten delar på `\n` och renderar styckena, alltså logik i en
+komponent som ska vara presentation — och varje stycke blir en egen rad att
+redigera i stället för ett textblock där radbrytningarna är osynliga.
+
+Rendering: `<p>` per post, `max-width: var(--measure)`. Rubriken kommer från
+`sections.js` (`Om mig`) som för alla andra sektioner.
+
+**Formen inbjuder inte till tillväxt.** Inga fält för bild, rubriknivåer eller
+länkar. Behövs något av det är det ett eget beslut, och då är det inte längre en
+liten sektion.
+
+Validering: `paragraphs` är en icke-tom array av icke-tomma strängar.
+
+> **Innehållet är en öppen punkt.** Jelal ska säga vad som ska stå. Byggaren
+> hittar inte på text om honom.
 
 ### `src/data/contact.js` — kontaktuppgifter (paket 6)
 
@@ -2164,10 +2284,13 @@ Projektet har 600 och 900. **600 går inte**, och skälet är captchan:
 
 | Vid brytpunkten | Innehållsbredd | Formulärspåret (3 av 5, minus 48 px gap) | Captchan ryms? |
 |-----------------|----------------|-------------------------------------------|----------------|
-| 600 px | 525 px | **286 px** | **nej — widgeten är 320 px** |
-| 900 px | 795 px | **448 px** | ja, med 128 px marginal |
+| 600 px | 525 px | **286 px** | **nej — widgeten är 302 px** |
+| 900 px | 795 px | **448 px** | ja, med 146 px marginal |
 
-hCaptcha-widgeten är **320 px bred och går inte att krympa**. Den är sektionens
+> **Rättat tal:** widgeten är **302 px**, inte 320 som jag först skrev. Slutsatsen
+> ändras inte — 286 < 302, så 600 faller fortfarande — men talet ska vara rätt.
+
+hCaptcha-widgeten är **302 px bred och går inte att krympa**. Den är sektionens
 minst eftergivliga element och bestämmer därför var spalterna får uppstå. Vid 600
 hade den spräckt spåret och gett horisontell scroll.
 
@@ -2238,6 +2361,14 @@ Utöver det:
   rad och bekräfta att det andra försöket inte avvisas på en förbrukad token.
 - **Platshållarnas kontrast** mot fältbakgrunden: minst 4,5:1. Mät, anta inte —
   `--color-text-dim` ger 3,64 och hade fallit.
+- **Den renderade sidan innehåller exakt de sektioner som står i `sections.js`, i
+  samma ordning.** Mät utdata, inte markup. Kontrollen fångar både en post utan
+  komponent och en komponent som renderas i fel ordning — den ersätter en statisk
+  grind som hade behövt läsa `App.jsx` som text.
+- **`aria-current` täcker alla fem sektionerna**, inklusive den nya, och hero
+  observeras fortfarande utan att ha en navlänk. **Mät om vilken sektion som vinner
+  vid sidans maxrullning** — ordningen har ändrats, och det tidigare utfallet
+  (projekt slog kontakt) gällde en annan sidstruktur.
 - **Logga-länken har ett tillgängligt namn vid samtliga bredder.** Mät med
   tillgänglighetsträdet, inte genom att läsa markup. Detta är projektets enda
   signal med en enda bärare — se distinktionsregistret.
@@ -2289,6 +2420,7 @@ Utöver det:
 | `src/components/ProjectCard.jsx` | `function ProjectCard({ project })` | Tar hela project-objektet. Renderar `url`/`repoUrl` endast när de inte är `null`. |
 | `src/components/Contact.jsx` | `function Contact()` | Läser `contact`. Renderar e-posten som `mailto:`-länk, `contact.links.filter(l => l.url !== null)`, och `<ContactForm />`. Inga adresser eller URL:er hårdkodade. |
 | `src/components/ContactForm.jsx` | `function ContactForm()` | Läser `contact.form`. Äger de fyra tillstånden, valideringen och statusraden. **Projektets första komponent med `useState`** — tre fältvärden, ett tillstånd, ett felobjekt. Se "Kontaktformuläret". |
+| `src/components/About.jsx` | `function About()` | Läser `about.paragraphs` och renderar ett `<p>` per stycke, `max-width: var(--measure)`. Rubriken kommer från `sections.js`. Ingen text i komponenten. |
 | `src/components/Footer.jsx` | `function Footer()` | `<footer>` med namn och årtal. Inget `id`, inget navmål. |
 
 Alla komponenter är funktionskomponenter utan `useState`/`useEffect` i paket 1–6.
@@ -2478,13 +2610,24 @@ alltså skills, projects och contact. Det blir exakt tre linjer, en mellan varje
 par. Det är ordagrant vad Jelal bad om, utan ett hårdkodat undantag för hero och
 utan att regeln behöver känna till något id.
 
-| Gräns | Linje kommer från |
-|-------|-------------------|
-| header → hero | headerns egen `border-bottom` |
-| hero → skills | `section[id] + section[id]` |
-| skills → projects | `section[id] + section[id]` |
-| projects → contact | `section[id] + section[id]` |
-| contact → footer | footerns egen `border-top` |
+| Gräns | Linje kommer från | Ritas i |
+|-------|-------------------|---------|
+| header → hero | headerns egen `border-bottom` | `--color-header-border` |
+| hero → projekt | `section[id] + section[id]` | mörk yta, 1,38:1 |
+| projekt → kompetenser | `section[id] + section[id]` | **ljus yta**, 1,413:1 |
+| kompetenser → om mig | `section[id] + section[id]` | mörk yta, 1,38:1 |
+| om mig → kontakt | `section[id] + section[id]` | mörk yta, 1,38:1 |
+| kontakt → footer | footerns egen `border-top` | mörk yta |
+
+**Regeln håller oförändrad med fem sektioner — fyra linjer i stället för tre.**
+Linjen hör till den **andra** syskonsektionen och ärver därför den sektionens
+`--color-border`, så varje linje ritas automatiskt i sin egen ytas ton.
+
+Gränsen **kompetenser → om mig** är den som byter karaktär: där möter vitt mörkt,
+och linjen tillhör den mörka sektionen. Den ligger alltså som en mörk hårfin linje
+med vitt ovanför och mörkt under. Det spelar ingen roll — färgsteget mellan vitt
+och `#0B0B0C` är omkring 17,9:1 och gör hela arbetet. Linjen varken stör eller
+behövs där, och att den finns är billigare än ett id-specifikt undantag.
 
 **Footern dubbleras inte.** `<footer>` är ingen `section[id]`, så syskonregeln
 träffar den inte. Dess befintliga `border-top` står kvar och ger linjen mellan
@@ -2819,6 +2962,22 @@ bedöma:
 | 2 × `gap` 16 px | 32 |
 | **Navet behöver** | **~211** |
 | **Marginal** | **~38** |
+
+> **En fjärde navlänk 2026-10-07: "Om mig".** Budgeten hade enligt byggarens
+> mätning **66,84 px ledigt** med tre länkar. En fjärde kostar etiketten plus ett
+> `gap` på 16 px — "Om mig" är sju tecken och landar vid 14 px grad på omkring
+> 50 px, alltså **cirka 66 px totalt**.
+>
+> **Det är inom en pixel från taket, och det får inte avgöras av min uppskattning.**
+> Byggaren mäter. Ryms den inte är åtgärden att sänka navets grad till
+> `--text-xs` under 600 px — **inte** att korta Jelals etikett. Storleken är
+> presentation, etiketten är innehåll.
+>
+> Felläget är ändå tryggt: `flex-wrap: nowrap` gör ett överskridande till
+> horisontell scroll, som golvkontrollen fångar. Det är regeln som gör sitt jobb.
+>
+> **Navet är nu sidans trängsta element vid 360 px. En femte länk ryms inte**, och
+> det är värt att veta innan någon föreslår en.
 
 > **Rättat.** Tabellen räknade tidigare med 16 px sidmarginal och landade på 328 px
 > spaltbredd och ~57 px marginal. `--content-padding` är
@@ -3333,6 +3492,7 @@ Skriptet kontrollerar:
 | `skills.js` | paket 4 | Se "Validering av skills" nedan — korsreferens mot källistorna, unika namn, `filled` boolean, unika grupp-id, `title` finns, varje grupp ≥ 1 skill |
 | `projects.js` | **paket 5** | `id` unika, `id`/`title`/`description` finns, `tech` är en array |
 | `contact.js` | **paket 6** | `email` finns, varje `links`-post har `label`, och `form.endpoint`, `form.accessKey`, `form.hcaptchaSiteKey` är icke-tomma strängar |
+| `about.js` | **vid omordningen** | `paragraphs` är en icke-tom array av icke-tomma strängar |
 
 Felmeddelanden skrivs på svenska, namnger filen och det värde som är fel, och
 skriptet avslutas med nollskild kod. Inga nya beroenden — ren Node.
@@ -3368,6 +3528,10 @@ contact.js: form.accessKey saknas eller är tom
 contact.js: form.endpoint saknas eller är tom
 contact.js: form.hcaptchaSiteKey saknas eller är tom
 
+about.js: paragraphs saknas eller är inte en array
+about.js: paragraphs är tom
+about.js: stycke 2 är tomt
+
 Valideringen hittade 3 fel. Bygget avbryts.
 ```
 
@@ -3383,7 +3547,7 @@ Vid godkänd körning skrivs en rad, så att det syns att kontrollen faktiskt k�
 och inte bara teg:
 
 ```
-Validering OK: 3 sektioner, 18 grupper, 307 skills (265 ifyllda, 42 dämpade).
+Validering OK: 4 sektioner, 18 grupper, 307 skills (265 ifyllda, 42 dämpade).
 ```
 
 Den raden är inte kosmetisk. En validering som är tyst när allt är bra går inte
@@ -4258,6 +4422,26 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   läge **kör valideringen och flyttar fokus till första felande fält**, vilket är
   bättre än båda utgångspunkterna — en knapp som inte går att trycka på berättar
   aldrig varför. (påverkat av lärdom: ja)
+- **Sidans ordning blir hero → projekt → kompetenser → om mig → kontakt** — Jelals
+  val 2026-10-07, med hans eget skäl: kompetenssektionen är 2338 px hög och
+  projekten låg bakom den. (påverkat av lärdom: nej)
+- **`App.jsx` mappar över `sections` och slår upp komponenten** — ordningen bodde
+  på två ställen, och **den här ändringen är precis det fall där de glider isär**.
+  Uppslaget är konfiguration, inte logik, så regeln om att `App.jsx` saknar logik
+  står kvar. Den kvarvarande tvåställeskopplingen görs mekanisk genom att den
+  renderade sidan jämförs mot `sections.js` — en statisk grind hade behövt läsa
+  `App.jsx` som text. **Mät utdata, inte källkod.** (påverkat av lärdom: ja)
+- **Om mig-texten ligger i `src/data/about.js`, inte i komponenten** — `GUIDE.md`
+  har ett avsnitt "Texter som inte ligger i `src/data/`", och **den listan ska bli
+  kortare, inte längre**. En array av stycken i stället för en sträng med
+  radbrytningar: annars krävs delningslogik i en komponent som ska vara
+  presentation. Formen inbjuder inte till tillväxt — Jelal sa "en liten sektion",
+  och det är specifikation. (påverkat av lärdom: ja)
+- **Den ljusa ytan ligger kvar på Kompetenser, men placeringen läggs fram** — tre
+  alternativ med sin rytm. Att två mörka sektioner hamnar i rad är ingen defekt,
+  och det ska sägas så att ingen tror att något är trasigt. Noterat att alternativ
+  C ligger närmast Jelals eget skäl till flytten, utan att jag förordar det.
+  (påverkat av lärdom: ja — utseendeval läggs fram)
 - **Kontaktsektionen blir tvåspaltig, och DOM-ordningen byts med den** — Jelals val
   2026-10-07. Att bara flytta visuellt med grid-placering avfärdades: det hade
   gjort tangentbordsordningen olik den visuella, vilket varit en mätt
@@ -4633,6 +4817,9 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   Hans beslut, men det ska vara ett beslut.
 - **Feltexten har fått tillägget "eller mejla qaiumi@hotmail.com direkt"** och
   avviker därmed från Jelals formulering. Ska läggas fram.
+- **Om mig-sektionens innehåll** — Jelal ska säga vad som ska stå. Byggaren hittar
+  inte på text om honom.
+- **Den ljusa ytans placering efter omordningen** — A, B eller C. Byggt som A.
 - **Länkspaltens `h3` "Kontaktuppgifter"** är min text, inte Jelals. Ska godkännas.
 - **Länkarna hamnar under formuläret på mobil** efter tvåspaltsflytten. Följden ska
   läggas fram för Jelal — han har sannolikt bara sett bred skärm.

@@ -1,0 +1,34 @@
+/* Sektionen "Om mig". Sektionsramen (<section id>, <h2>) och sidomarginalen
+ * kommer från <Section> respektive global.css - modulen får ALDRIG sätta
+ * padding-inline (ARKITEKTUR.md, "Var sidmarginalen bor").
+ *
+ * Sektionen ligger på --color-bg, alltså den mörka ytan. Ingen .surface-light
+ * här - den ljusa ytan hör till Kompetenser och ingenting annat.
+ *
+ * Modulen är avsiktligt kort. Sektionen är en rubrik och några stycken text;
+ * behöver den mer än detta är det inte längre den lilla sektion Jelal bad om. */
+
+/* max-width: var(--measure) är arkitektens utskrivna deklaration
+ * (ARKITEKTUR.md, "src/data/about.js - Om mig": "Rendering: <p> per post,
+ * max-width: var(--measure)").
+ *
+ * Måttet sitter på STYCKET och inte på ett omslag. Då behövs ingen extra div,
+ * och varje stycke bryter på samma radlängd oavsett hur många de är.
+ *
+ * Färg och grad följer sidans övriga brödtext i en sektion - jämför .intro i
+ * Hero.module.css och .empty i Projects.module.css. Avståndet mellan stycken
+ * sätts här eftersom global.css nollställer all marginal. */
+.paragraph {
+  max-width: var(--measure);
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+}
+
+/* Syskonselektorn, inte margin-bottom på varje stycke: då hade det sista
+ * stycket burit luft under sig som adderats till sektionens padding-block, och
+ * avståndet ner till nästa sektions linje blivit större än upp till rubriken.
+ * Samma skäl som .status:empty i ContactForm.module.css - luft ska uppstå av
+ * att det finns något att skilja, inte av att ett element finns. */
+.paragraph + .paragraph {
+  margin-top: var(--space-5);
+}

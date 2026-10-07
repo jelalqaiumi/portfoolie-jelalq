@@ -149,11 +149,22 @@ function Header() {
             width="96"
             height="72"
           />
-          {/* Under 600 px döljs namnet visuellt men INTE semantiskt - länken
-              måste ha ett tillgängligt namn även på den smalaste skärmen. */}
-          <span className={`visually-hidden-until-sm ${styles.logoName}`}>
-            Jelal Qaiumi
-          </span>
+          {/* ⚠️ TA INTE BORT DENNA SPAN. Den ser ut som död markup - texten är
+              visuellt dold i alla bredder sedan Jelal bad om det 2026-10-07 -
+              men den är det ENDA som ger logga-länken ett tillgängligt namn.
+              Utan den annonseras sidans andra fokuserbara element som bara
+              "länk", eftersom ikonen har alt="" + aria-hidden.
+
+              Det är projektets enda enbärarsignal, och därför den enda plats
+              där en borttagning som ser ofarlig ut gör en mätbar skada.
+
+              Varför visuellt dold text och inte aria-label: aria-label
+              degraderar till INGENTING om något går fel, medan dold text
+              degraderar till SYNLIG text om CSS inte laddas. En namnlös länk är
+              ett sämre felläge än ett namn som syns.
+
+              Beslutat i ARKITEKTUR.md, "Namnet döljs i alla bredder". */}
+          <span className="visually-hidden">Jelal Qaiumi</span>
         </a>
         <nav aria-label="Huvudnavigering">
           <ul className={styles.navList}>

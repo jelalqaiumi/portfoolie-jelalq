@@ -502,7 +502,7 @@ ens vid 70 tecken. Det var paket 3:s första grid som gjorde skillnaden, och
 body { overflow-wrap: anywhere; }
 
 /* 1b. De få ställen som INTE får brytas säger det själva */
-.navList, .navLink, .logoName { white-space: nowrap; }
+.navList, .navLink { white-space: nowrap; }   /* .logoName utgår — visuellt dold */
 
 /* 2. varje grid-container, utan undantag — hygien, inte garanti */
 grid-template-columns: minmax(0, 1fr);                      /* inte 1fr */
@@ -2136,6 +2136,12 @@ Utöver det:
   rad och bekräfta att det andra försöket inte avvisas på en förbrukad token.
 - **Platshållarnas kontrast** mot fältbakgrunden: minst 4,5:1. Mät, anta inte —
   `--color-text-dim` ger 3,64 och hade fallit.
+- **Logga-länken har ett tillgängligt namn vid samtliga bredder.** Mät med
+  tillgänglighetsträdet, inte genom att läsa markup. Detta är projektets enda
+  signal med en enda bärare — se distinktionsregistret.
+- **Logga-länkens träffyta är minst 44 × 44 px.** Mät den renderade rektangeln.
+  Den krympte när den synliga texten togs bort, och det är den sortens försämring
+  som inte får något larm att gå.
 - **Asterisken och ett felmeddelande ska stå samtidigt synliga som accenten** —
   knappen eller fokusringen i samma vy. Bekräfta okulärt att de inte läses som
   samma färg. Kvoterna säger att de är olika; bara ögat kan säga att skillnaden
@@ -2442,14 +2448,16 @@ namnet.
 |----------|--------|
 | Ikonens storlek | **48 × 36 px** — se "Ikonens optiska storlek" nedan. `height: 36px; width: auto;` i CSS, och `width`/`height` på `<img>` satta till filens egna mått så att ingen layout shift uppstår |
 | Ikonens `sizes` | **`sizes="48px"`** tillsammans med `srcset`. Utan `sizes` antar webbläsaren `100vw` och hämtar alltid den största filen — det är inte ett påhitt utan en nödvändig följd av att `srcset` anges i bredder |
-| Avstånd ikon → text | `var(--space-3)` (12 px), via `gap` på länkens flexrad |
-| Namnets typsnittsgrad | `var(--text-base)` (1 rem) |
-| Namnets vikt | ~~`var(--weight-medium)`~~ **UPPHÄVT** — alltid 400. ~~Skiljs från navlänkarna med färg.~~ **Även färgen är upphävd**, se "Headern är enfärgad". |
-| Namnets teckenavstånd | `0.04em` — ekar lockupens vida spärrning utan att bli en pastisch |
-| Namnets färg | `var(--color-text)`. **Ingen orange.** Accenten hör till pills och fokus, och loggans eget monogram bär redan orangen. |
-| Radbrytning | `white-space: nowrap`. Namnet får aldrig brytas till två rader i en 64 px hög header. |
+| Länkens träffyta | **48 × 44 px** via `padding-block: 4px`. Se "Följderna av att namnet försvinner". |
+| ~~Avstånd ikon → text~~ | **UTGÅR** — ingen synlig text att hålla avstånd till |
+| ~~Namnets grad, vikt, spärrning, färg, radbrytning~~ | **UTGÅR.** Namnet är visuellt dolt i alla bredder; visuella regler på klippt text har ingen verkan och är död CSS. Se "Namnet döljs i alla bredder". |
 
 #### Headern är enfärgad — beslutat 2026-10-05
+
+> **Efterskrift 2026-10-07.** Hela detta avsnitt handlar om hur namnet skulle
+> skiljas från navlänkarna. **Frågan är nu utan föremål** — namnet syns inte
+> längre, se "Namnet döljs i alla bredder". Avsnittet står kvar som bakgrund till
+> varför navlänkarna är vita, vilket fortfarande gäller.
 
 Jelal vill ha navlänkarna vita: *"där uppe där det står kompetenser, projekt och
 kontakt gör de till vitt så de syns ännu bättre."* Navlänkarna får
@@ -4123,6 +4131,20 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   läge **kör valideringen och flyttar fokus till första felande fält**, vilket är
   bättre än båda utgångspunkterna — en knapp som inte går att trycka på berättar
   aldrig varför. (påverkat av lärdom: ja)
+- **Namnet bredvid märket döljs i alla bredder, men tas inte ur DOM** — Jelals val
+  2026-10-07. `.visually-hidden-until-sm` blir `.visually-hidden`. `aria-label`
+  avfärdades trots att mitt gamla skäl mot den fallit: **`aria-label` degraderar
+  till ingenting om något går fel, medan visuellt dold text degraderar till synlig
+  text om CSS inte laddas.** En namnlös länk är ett sämre felläge än ett synligt
+  namn. Vald väg upphäver ingenting och återanvänder en primitiv som redan är mätt.
+  (påverkat av lärdom: ja)
+- **Träffytan kompenseras till 48 × 44 px med `padding-block: 4px`** — länkens box
+  var tidigare ikon plus text och är nu bara ikonen, 48 × 36, vilket faller under
+  WCAG 2.5.5. **Det är den sortens försämring som smyger in när något tas bort:
+  ingen mätning går sönder och ingenting larmar.** (påverkat av lärdom: ja)
+- **Det frigjorda utrymmet på bred skärm lämnas tomt** — Jelal bad om att ta bort
+  en text, inte att göra om headern. Att passa på att omfördela utrymmet vore en
+  andra ändring han inte bett om. (påverkat av lärdom: nej)
 - ~~**Asterisken blir orange, inte röd**~~ **UPPHÄVT av Jelal 2026-10-07: röd.**
   `--color-error: #F85149`, 5,87:1 mot `--color-bg`. **Regeln "orange är enda
   accentfärgen" är inte bruten** — det röda är ingen accent utan formulärets

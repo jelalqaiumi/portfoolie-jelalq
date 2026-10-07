@@ -63,8 +63,21 @@
 .logoLink {
   display: flex;
   align-items: center;
-  gap: var(--space-3); /* 12 px mellan ikon och namn */
+  gap: var(--space-3);
   flex-shrink: 0;
+
+  /* TRÄFFYTAN. Länkens box var tidigare ikon PLUS den synliga texten. När
+   * namnet blev visuellt dolt 2026-10-07 krympte boxen till enbart ikonen,
+   * 48 x 36 px - över WCAG 2.5.8:s 24 x 24 men UNDER 2.5.5:s 44 x 44.
+   *
+   * 4 px över och under ger 36 + 8 = 44. Bakgrunden är genomskinlig, så det
+   * syns inte; träffytan blir 48 x 44.
+   *
+   * Det här är den sortens försämring som smyger in när något tas bort: ingen
+   * mätning går sönder, inget larmar, bygget är grönt och kontrasterna står -
+   * knappen blir bara lite svårare att träffa för den som har skakiga händer.
+   * Ta inte bort raden med motiveringen att den inte syns. */
+  padding-block: 4px;
 }
 
 /* Det tajta märket renderas på HÖJD, inte på en kvadratisk ruta: 36 px i en
@@ -77,25 +90,17 @@
   flex-shrink: 0;
 }
 
-/* Namnet som riktig text, inte bild. Ingen orange: accenten hör till pills och
- * fokus, och monogrammet bredvid bär redan orangen.
- * Döljningen under 600 px ligger på .visually-hidden-until-sm i global.css. */
-/* Vikten är borta eftersom teckensnittet bara har en (ARKITEKTUR.md,
- * "Typsnittet"). Lägg inte tillbaka font-weight här.
+/* Här låg .logoName. BORTTAGEN 2026-10-07 när namnet blev visuellt dolt i alla
+ * bredder: font-size, letter-spacing, color och white-space har ingen
+ * observerbar effekt på text som är klippt till 1 px av .visually-hidden, och
+ * en deklaration utan effekt är död CSS.
  *
- * Namnet skiljdes en tid från navlänkarna med färg, men sedan Jelal valde
- * ljusa navlänkar 2026-10-05 har båda --color-text. De skiljs nu bara av grad
- * (--text-base mot --text-sm) och spärrning (0.04em mot normal). Hur namnet
- * ska skiljas ut är en öppen fråga hos arkitekten - påstå inte här att färgen
- * gör det. */
-.logoName {
-  font-size: var(--text-base);
-  letter-spacing: 0.04em;
-  /* UTTRYCKLIGT UNDANTAG från `overflow-wrap: anywhere` på body: namnet får
-   * aldrig brytas till två rader i en header med låst höjd. */
-  white-space: nowrap;
-  color: var(--color-text);
-}
+ * Klassen togs bort HELT, inte bara tömd. En tom regel stryks av minifieraren -
+ * uppmätt: den försvann ur byggd CSS, och då blir styles.logoName undefined och
+ * klassattributet "visually-hidden undefined". Det är skräp i markupen.
+ *
+ * Döljningen ligger nu enbart på .visually-hidden i global.css. Visas namnet
+ * någon gång igen skapas klassen på nytt, med värden som passar det läget. */
 
 /* flex-wrap: nowrap, ALDRIG wrap. Beslutat i ARKITEKTUR.md, "Navigeringen på
  * smal skärm - förebyggande regel, inte en felrättning".
@@ -140,10 +145,9 @@
    * Jelal att den är för dämpad är rent vitt ett eget beslut, inte en genväg
    * här.
    *
-   * FÖLJD som arkitekten äger: namnet i headern skiljdes från länkarna med
-   * just denna färgskillnad, sedan vikten försvann. Nu har de samma ton. Hur
-   * namnet ska skiljas ut i stället avgörs av arkitekten - rör inte .logoName
-   * härifrån. */
+   * Frågan om hur namnet skulle skiljas ut från navlänkarna är sedan
+   * 2026-10-07 inte längre en fråga: namnet är visuellt dolt i alla bredder, så
+   * det finns ingen synlig text att skilja från. */
   color: var(--color-text);
   font-size: var(--text-sm);
 

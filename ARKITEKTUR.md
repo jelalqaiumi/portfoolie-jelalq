@@ -48,7 +48,7 @@ fynd.
 | `frontend-och-webb` (grupp-id) | `webbutveckling-och-fullstack` | ↑ |
 | `verktyg-och-versionshantering` (grupp-id) | `git-och-versionshantering` | ↑ |
 | `kvalitet-och-arbetssatt` (grupp-id) | `testning-och-kvalitetssakring` / `kodkvalitet-och-arkitektur` | ↑ |
-| "exakt 93 skills" som grind | unika namn + korsreferens mot källistorna | "Validering av skills" |
+| "exakt 93 skills" som grind | strukturgrindarna i A1; **ingen** korsreferens, inget antal grindas | "A1 — Grinden för `skills.js` är strukturell" |
 | `308 poster` / `258 filled` | **307** / **257** | "Förväntat antal: 307" |
 | "HTTP-raden är sidans längsta sträng" | `React Native-komponentbaserad utveckling` (40) | "360 px — den längsta strängen" |
 | "ca 1200 px på desktop" / "ca 2500 px på mobil" | 2410 px vid 1280, **6634 px vid 360** | "Layout — omdimensionerad" |
@@ -91,6 +91,16 @@ fynd.
 | `exakt tre linjer` / `de tre linjerna` (om sektionsavgränsarna) | en linje per par av renderade `section[id]`; antalet skrivs inte i prosa | "Sektionsavgränsare" |
 | `ca 12,2:1` / `ca 5,6:1` (hero:s textkvoter som överslag) | uppmätt **12,226:1** och **5,567:1** mot `--color-bg-top` | "A5 — Knappstilarna" |
 | citattecknen runt ingressen eller "Om mig"-texten som innehåll | de är uppdragsfilens avgränsare | "A14 — Citattecknen i `UPPDRAG-2026-10-07.md`" |
+| `window.innerHeight - 64` (som nämnare i mätserien) | nämnaren **mäts**: vyporthöjden minus headerns uppmätta rektangel | "A16 — Höjdkvoten har EN formel" |
+| `0,75` / `676 / 900` (heros höjdkvot före K) | **0,918** vid 1280 × 800, **0,809** vid 1280 × 900 — mot mätseriens nämnare | ↑ |
+| två kvoter i samma mätrad (mot vyporten **och** mot vyporten minus headern) | exakt **en** kvot per mätrad; kvoten mot hela vyporten redovisas inte | ↑ |
+| bandet 0,80–1,15 som krav under 900 px bredd | bandet gäller **från 900 px**; under brytpunkten gäller bara knapparnas underkant | ↑ |
+| `filled: false` / `{ name: 'React', filled: false }` (som formatexempel) | `{ name: 'React (Hooks, Context)' },` | "A17 — Detta stycke motsade A2" |
+| "byter `false` mot `true`" (om hur Jelal redigerar) | han söker namnet och rättar, flyttar eller raderar raden | ↑ |
+| `93 handskrivna strängar` / `93 skills` (som antal i prosa) | inget antal i prosa; 9 grupper och 53 namn som UPPLYSNING | A1 + A17 |
+| "uppdragstexten i scratchpad-filen" / "uppdragstexten är inte en fil i repot" | `UPPDRAG-2026-10-07.md` i projektroten (`5c62ac4`) | "A18 — scratchpad-filen är upphävd" (i A1) |
+| `1 stycke i Om mig (1 länkfras, 0 pekar på ett projekt som finns)` (i OK-raden) | antalet är databeroende; länkfras-upplysningen införs i paket F | "A19 — OK-raden är ett FORMAT" |
+| OK-raden med teckentalet **sist** | teckentalet står **först**, `summary.push`-ordningen från paket 4 | ↑ |
 
 Jag skriver in nya rader här varje gång jag upphäver något. Raderna tas aldrig
 bort — en tom tabell går inte att skilja från en obevakad.
@@ -120,6 +130,21 @@ beslut står på den plats där det gamla beslutet stod, enligt konventionen ova
 | A13 | `.hero`-blocket (hero fyller första skärmen) genomförs i **ett eget paket K**, mellan B och C | "A13 — blocket genomförs i ett eget paket K" (i "A5 … Hero fyller första skärmen på dator") | **K**, och K blockerar C |
 | A14 | Citattecknen i uppdragsfilen är avgränsare, inte innehåll — gäller ingressen OCH "Om mig" | "A14 — Citattecknen i `UPPDRAG-2026-10-07.md` är avgränsare" | F (B är redan rätt byggt) |
 | A15 | Varje Jelal-ägd text i en komponent står som namngiven konstant, aldrig som JSX-literal | "A15 — Varje text Jelal äger står som en namngiven konstant" (i "A5") | E, F (B är redan rätt byggt) |
+| A16 | Heros höjdkvot har **en** formel (nämnaren mäts), och bandet gäller bara från 900 px bredd | "A16 — Höjdkvoten har EN formel" (i "A5 … Mätserien") | **C** (låste C fram till detta beslut) |
+| A17 | Stycket om nästlad struktur rättat: `filled`-formatexemplet och antalet stryks; en rad per skill står fast | "A17 — Detta stycke motsade A2" (i "`src/data/skills.js`") | inget — D är redan rätt byggt |
+| A18 | Engångsjämförelsen görs mot `UPPDRAG-2026-10-07.md` i repot, aldrig mot en scratchpad-sökväg | "A18 — scratchpad-filen är upphävd" (i A1, punkt 2) | inget — D är redan rätt byggt |
+| A19 | OK-raden är ett format och en UPPLYSNING; teckentalet står först, Om mig-delen ägs av F | "A19 — OK-raden är ett FORMAT" (i A1) | inget — D är redan rätt byggt; F äger Om mig-delen |
+| A20 | `OPEN-KEY`-grinden (tre delgrindar, utskrivna) bärs av ett eget paket **efter LEVERANS och G**, inte av D och inte av J | "A20 — `OPEN-KEY`-grinden" (i "Validering av datafilerna") | inget pågående paket; **ett nytt paket efter LEVERANS** (`PLAN.md` äger bokstaven) |
+| A21 | Grupp utan `id`: en rad med postens plats, resten av gruppen hoppas över, kompetenserna räknas inte | "A21 — En grupp utan `id`" (i A1) | inget — D är redan rätt byggt |
+
+**A16–A21 tillkom 2026-10-08 efter att paket D och K lämnade tillbaka sex
+punkter.** Fyra av dem (A17, A18, A19, A21) är rättelser av **mina egna** stycken,
+där byggaren hade följt det senast daterade beslutet och **rapporterat
+motsägelsen i stället för att tolka den** — exakt det `LARDOMAR.md` kräver. De
+kräver därför ingen ändring i koden. **A16 är det enda som låste ett paket: C
+kunde inte starta förrän höjdkvoten hade en enda formel.** A20 pekar ut ett paket
+efter LEVERANS och lägger ingenting på något pågående paket. Varje rättelse står
+på det gamla beslutets ursprungliga plats, inte som en motsägelse längre ner.
 
 **A13–A15 tillkom 2026-10-08 efter att paket B lämnade tillbaka tre punkter.**
 Två av dem bekräftar det byggaren redan gjort i `4defa9f` (A14, A15) och kräver
@@ -987,32 +1012,52 @@ Regler som byggaren måste följa:
   skrivs om i paket D, i samma ändring.** Ett löfte i en fil Jelal redigerar får
   aldrig vara osant (`LARDOMAR.md` 2026-10-05).
 
-#### Nästlad struktur, inte platt lista med kategorifält
+#### Nästlad struktur, inte platt lista med kategorifält — formatregeln rättad av A17
 
 **Beslut: nästlad.** Kategorin är `skillGroups`-postens plats i trädet, inte ett
 värde på varje skill.
 
 Det avgörande skälet är **inte** läsbarhet utan felläge. En platt lista hade krävt
-ett `category: 'frontend'`-fält per post, alltså 93 handskrivna strängar som var
-och en måste matcha en kategoridefinition. En felstavning där ger antingen en
-skill som tyst försvinner eller en spök-kategori som tyst dyker upp — exakt den
-sortens tysta fel som detta projekt redan har sex nedtecknade exempel på. I den
-nästlade formen är en skill i en kategori **därför att den står där**, och det går
-inte att placera den i en kategori som inte finns.
+ett `category: 'frontend'`-fält per post, alltså en handskriven sträng per
+kompetens som var och en måste matcha en kategoridefinition. En felstavning där
+ger antingen en skill som tyst försvinner eller en spök-kategori som tyst dyker
+upp — exakt den sortens tysta fel som detta projekt redan har flera nedtecknade
+exempel på. I den nästlade formen är en skill i en kategori **därför att den står
+där**, och det går inte att placera den i en kategori som inte finns.
 
 Invändningen mot nästlat är att det är svårare att söka i en lång fil. Den faller
 på en formateringsregel:
 
-> **En skill per rad, och `filled` på samma rad som `name`:**
-> `{ name: 'React', filled: false },`
+> **En skill per rad, och hela posten på den raden:**
+> `{ name: 'React (Hooks, Context)' },`
 
-Då räcker Ctrl+F på namnet för att hamna på exakt den rad som ska ändras. Jelal
-behöver aldrig förstå strukturen — han söker, byter `false` mot `true`, sparar.
-Filens ordning följer dessutom sidans ordning, så listan och sidan går att ha
-sida vid sida.
+Då räcker Ctrl+F på namnet för att hamna på exakt den rad som ska ändras — Jelal
+söker namnet och rättar stavningen, flyttar raden till en annan grupp eller
+raderar den. Han behöver aldrig förstå strukturen. Filens ordning följer dessutom
+sidans ordning, så listan och sidan går att ha sida vid sida.
 
 Byggaren ska **inte** formatera om filen till flerradiga objekt, och inte låta en
 formaterare bryta raderna.
+
+##### A17 — Detta stycke motsade A2 och är rättat här, inte längre ner — beslutat 2026-10-08
+
+Stycket skrev till och med 2026-10-08 ut `{ name: 'React', filled: false },` som
+bindande format, kallade `filled` på samma rad som `name` för den regel som räddar
+läsbarheten, och instruerade Jelal att "söka, byta `false` mot `true`, spara". Det
+angav också ett antal handskrivna strängar. **Allt tre är upphävt:** `filled` är
+borta ur typedef, data och grind (**A2**), och antal skrivs inte i prosa (**A1**).
+
+**Byggaren i paket D följde A2 och rapporterade motsägelsen i stället för att
+tolka den. Det var rätt** — `LARDOMAR.md` har tre poster om motsatsen, och regeln
+säger uttryckligen att det senast daterade gäller och att motsägelsen lämnas
+tillbaka till mig. Felet var mitt: **ett nytt beslut ska ändra varje äldre stycke
+om samma sak i samma redigering**, och A2 lades till utan att detta stycke rördes.
+Rättelsen står därför här, på beslutets ursprungliga plats, och inte som en
+motsägelse längre ner i dokumentet.
+
+Formatregeln i sig står fast: **en rad per skill**, hela posten på raden. Den
+regeln hängde aldrig på att `filled` fanns — den hänger på att Ctrl+F landar på
+den rad som ska ändras.
 
 ### Kompetenssektionen görs om från grunden — beslutat av Jelal 2026-10-07
 
@@ -3382,11 +3427,18 @@ texterna, knapparna, rollkommentaren och `<title>`; paket C **mäter** kravet.
 Byggaren byggde därför inte blocket, och det var rätt — ett paket bygger inte
 utanför sin egen uppräkning.
 
-**Följden är uppmätt och kravet faller som läget är:** hero är 676 px på en
-vyport på 900 px, alltså **0,75** mot mätserierad 5:s band **0,80–1,15**, och
-`min-height` finns inte någonstans i `Hero.module.css`. Mobilsidan av kravet
-håller redan utan blocket (0,93 vid 390 × 844, båda knapparnas underkant på
-387 px).
+**Följden är uppmätt:** `min-height` fanns inte någonstans i `Hero.module.css`,
+och hero var 676 px — **0,918** mot mätserierad 5:s nämnare vid 1280 × 800 och
+**0,809** vid 1280 × 900, alltså **inne** i bandet 0,80–1,15. Mobilsidan av kravet
+håller redan utan blocket (båda knapparnas underkant på 387 px vid 390 × 844).
+
+**Mitt tidigare tal här — "0,75", räknat som `676 / 900` — är upphävt**, se
+**A16** ovan: det var kvoten mot hela vyporten, inte mot mätseriens nämnare.
+**Rätt skäl till att paketet finns är därför inte en fälld mätning utan att
+blocket var en utskriven deklaration som låg i inget pakets "Ingår"** — och ett
+beslut i detta dokument får bara lämnas ogenomfört genom att jag skriver om
+punkten (`LARDOMAR.md` 2026-10-02). K var rätt att bygga, och efter K är kvoten
+1,000 vid både 1280 × 800 och 1280 × 900.
 
 **Beslut: ett eget paket, `K`.** Tre vägar fanns och två är stängda:
 
@@ -3422,8 +3474,73 @@ Varje rad mäts på **elementens egna rektanglar** (`getBoundingClientRect()`), 
 | 2 | Samma mätning vid 600 × 640, 900 × 700, 1280 × 800, 1600 × 900 | Samma villkor. Serien gör att en framtida brytpunkt inte kan smyga sönder kravet |
 | 3 | `section#hero .inner` `scrollWidth` mot `clientWidth` vid 360 px | Lika. Mätt mot **hero:s egen behållare**, inte mot sidan — slack absorberar fel, och absorberade fel larmar inte |
 | 4 | Samma, med `verksamhetsutvecklingsprojektledningsarbete` (43 tecken) programmatiskt insatt i `h1`, rollraden, ingressen **och båda knapptexterna** | Lika. En synteststräng, inte dagens text: dagens text bevisar ingenting om morgondagens. **Den gamla listans längsta strängar är inte längre måttet** |
-| 5 | `section#hero` höjd vid 1280 × 800 | Mellan **0,80 och 1,15 ×** `(window.innerHeight - 64)`. Talet skrivs i överlämningen |
+| 5 | `section#hero` höjd vid **1280 × 800** och **1280 × 900** | Kvoten `hero.getBoundingClientRect().height / (window.innerHeight - headerHöjd)` ligger mellan **0,80 och 1,15** i båda fallen. `headerHöjd` mäts i samma körning på `header`-elementets egen rektangel. **Exakt en kvot per rad** — kvoten mot hela vyporten är inget kriterium och redovisas inte. Formeln och bandets giltighetsområde är avgjorda i **A16** nedan |
 | 6 | Negativ kontroll | Tvinga fram ett överskridande genom den smalaste selektor som träffar det som prövas, redovisa **vilket element** som bar avvikelsen (`scrollWidth` plus elementet med största `right`), kontrollera `querySelectorAll(sel).length`, och visa att larmet upphörde när injektionen togs bort |
+
+##### A16 — Höjdkvoten har EN formel, och bandet gäller bara från 900 px — beslutat 2026-10-08
+
+Paket D och K lämnade tillbaka att bandet mättes på två oförenliga sätt: mätserien
+rad 5 skrev nämnaren `(window.innerHeight - 64)`, medan A13 nedan räknade
+`676 / 900` — alltså mot hela vyporten. Byggaren redovisade **båda** kvoterna i
+varje mätrad i stället för att välja, och det är inte försiktighet: två kvoter
+intill varandra lämnar valet till läsaren, och det är precis så de två läsningarna
+kunde leva sida vid sida i fyra mätrader. **Detta avgör det.**
+
+**Del 1 — formeln, och ingen annan:**
+
+```js
+const hero = document.querySelector('section#hero');
+const headerHojd = document.querySelector('header').getBoundingClientRect().height;
+const kvot = hero.getBoundingClientRect().height / (window.innerHeight - headerHojd);
+```
+
+- **Nämnaren är vyporten minus headern.** `.hero`-blockets `min-height` ÄR
+  `calc(100svh - var(--header-height))`, så kravets naturliga värde är **1,00** och
+  bandet 0,80–1,15 ligger symmetriskt kring det. Mot hela vyporten kan kvoten
+  aldrig nå 1,00 så länge headern tar plats — ett band kring 1,00 mot hela
+  vyporten hade grindat en omöjlighet.
+- **Nämnaren mäts, den skrivs inte.** `64` är värdet på `--header-height` och får
+  aldrig stå som konstant i formeln: headerns höjd har redan en gång varit
+  definierad på två oberoende ställen (`LARDOMAR.md` 2026-10-02). Headern är låst
+  till tokenet (`height: var(--header-height)`), så den uppmätta höjden **ska**
+  vara 64 px — det skrivs ut som en **GRIND** i samma mätrad, och fäller om den
+  avviker från tokenvärdet.
+- **En kvot per rad.** Kvoten mot hela vyporten är inte ett kriterium, är inte ett
+  jämförelsetal och redovisas inte alls. Står två kvoter i en mätrad är mätraden
+  fel skriven, inte generös.
+- **Vilken LEGITIM ändring får fälla raden:** ingen. Ändras `--header-height`
+  följer nämnaren med av sig själv — det är hela skälet till att den mäts.
+
+**Rättelse av mitt eget tal i A13 nedan.** Under den nu enda formeln var kvoten
+**före** paket K **0,918** vid 1280 × 800 (mätseriens egen föreskrivna vyport) och
+**0,809** vid 1280 × 900 — **båda inne i bandet**. Läst bokstavligt föll rad 5
+alltså aldrig vid den vyport den föreskriver. Talet `0,75` var `676 / 900`, alltså
+den andra läsningen, och är upphävt. **Paket K:s skäl är att en utskriven
+deklaration i A5 låg i inget pakets "Ingår"** (`LARDOMAR.md` 2026-10-02: ett
+beslut får bara lämnas ogenomfört genom att jag skriver om punkten) — inte en
+fälld mätning. K var alltså rätt att bygga, och efter K är kvoten **1,000** vid
+både 1280 × 800 och 1280 × 900.
+
+**Del 2 — bandet gäller från 900 px bredd, och ingen annanstans.** `899 × 700`
+ligger utanför bandet (hero högre än vyporten) och det är **inte ett fynd**:
+
+- Blocket som bär golvet är `@media (min-width: 900px)`. Under 900 px finns inget
+  höjdgolv, **avsiktligt**: ett golv på mobilhöjden tvingar fram tomrum på en låg
+  telefon och motverkar uppdragets hårdaste krav. A5 skriver bandet "på dator", och
+  **dator = från 900 px**, samma brytpunkt som blocket.
+- Under 900 px är kravet uteslutande mätserierad **1 och 2** — båda knapparnas
+  underkant inom vyporten. Vid 899 × 700 är den uppmätt till **418,984 ≤ 700**, och
+  utfallet är **oförändrat av K**. Hero får vara högre än vyporten där; det är
+  enspaltsläget som gör den hög, och sidan rullar.
+- **Mätserien får därför inte utvidgas med en höjdrad under 900 px.** Vill någon
+  ha ett höjdkrav strax under brytpunkten är det ett nytt beslut av mig, med ett
+  eget paket som genomför det — aldrig en rad som C lägger till under mätningen.
+- **Och inte utvidgas uppåt heller.** Kravet är rad 5:s **två** vyportar,
+  1280 × 800 och 1280 × 900. Bandets giltighetsområde ("från 900 px") säger var ett
+  framtida höjdkrav **får** bo, inte att C ska mäta fler vyportar. C mäter exakt de
+  sex raderna; en sjunde rad är ett beslut av mig, inte ett initiativ under
+  mätningen. Knapparnas underkant mäts däremot vid alla åtta vyportarna i rad 1
+  och 2, inklusive 900 × 700 — det är en annan mätning än höjdkvoten.
 
 #### Vad som får vika, i denna ordning, och bara om mätningen kräver det
 
@@ -4597,10 +4714,11 @@ föll bort när **307 rader plockades ur två källistor för hand**. Mekanismen
 rätt för det problemet: det fanns två listor, och grinden jämförde dem.
 
 **Vad problemet är nu:** 53 namn som Jelal har **kurerat själv i ett uttryckligt
-uppdrag**. Det finns ingen andra lista att jämföra mot — uppdragstexten är inte en
-fil i repot, och hans källistor är inte längre vad han vill visa. Ett bortfall kan
-därför inte upptäckas genom jämförelse. Det kan bara upptäckas **en gång**, när
-listan skrivs in.
+uppdrag**. Det finns ingen andra, **oberoende** lista att jämföra mot:
+`UPPDRAG-2026-10-07.md` **är** normen och inte en andra mätpunkt, och hans
+källistor är inte längre vad han vill visa. Ett bortfall kan därför inte upptäckas
+genom löpande jämförelse mellan två listor. Det kan bara upptäckas **en gång**,
+när listan skrivs in.
 
 **Beslut, i tre delar:**
 
@@ -4612,10 +4730,19 @@ repot som historik och **läses inte av något skript** (se "`skills.txt` och
 
 **2. Engångsjämförelsen flyttas till paket D och är inte en grind.** Att de nio
 grupperna och de 53 punkterna står tecken för tecken som i uppdraget verifieras
-**maskinellt en gång**, i paket D, mot uppdragstexten i scratchpad-filen. Det är
-skillnaden som gör hela beslutet: en engångsverifiering får vara exakt mot ett
-innehåll, en permanent grind får aldrig vara det, eftersom innehållet är Jelals
-att ändra i morgon.
+**maskinellt en gång**, i paket D, mot **`UPPDRAG-2026-10-07.md` i projektroten**
+(incheckad `5c62ac4`) — aldrig mot en scratchpad-sökväg, och
+verifieringsraden anger filnamnet. Det är skillnaden som gör hela beslutet: en
+engångsverifiering får vara exakt mot ett innehåll, en permanent grind får aldrig
+vara det, eftersom innehållet är Jelals att ändra i morgon.
+
+**A18 — "scratchpad-filen" i punkt 2 är upphävd — beslutat 2026-10-08.** Punkten
+skrevs innan **A12** var uppfyllt, när texten bara fanns utanför repot. I dag
+ligger den i repot (`cp` + sha256-verifierad, `5c62ac4`), och `PLAN.md` kräver
+uttryckligen att varje sådan jämförelse görs mot repots fil. **Byggaren i paket D
+jämförde mot repots fil och gjorde rätt**; min formulering var överspelad, och den
+är rättad här på sin ursprungliga plats. En scratchpad-sökväg får aldrig vara norm
+för en verifiering: den är sessionslokal och går inte att pröva om av granskaren.
 
 **3. Det som står kvar är strukturgrindar — invarianter som ingen legitim
 redigering bryter.** Exakt dessa, och inga andra:
@@ -4634,23 +4761,168 @@ redigering bryter.** Exakt dessa, och inga andra:
 | **Okänt fält på en grupp** | `skills.js: okänt fält på grupp (id "backend", fält "icon") - tillåtna fält är id, title, skills` | Ingen. Fångar också en återinförd ikon, se A3 |
 | Teckengrinden (oförändrad) | `skills.js: tecken utanför teckensnittets delmängd (...)` | Ingen |
 
+##### A21 — En grupp utan `id`: en rad, postens plats, och resten av gruppen hoppas över — beslutat 2026-10-08
+
+Meddelandetabellen ovan namnger varje grupp med sitt `id`. En grupp **utan** `id`
+kan därför inte bära något av de id-nycklade meddelandena, och tabellen sa inget
+om det fallet. Paket D följde mönstret i `checkSections`. **Jag bekräftar
+byggarens lösning, och den är nu beslutad här:**
+
+1. Grinden fäller med **postens plats**, inte med ett påhittat id:
+   `skills.js: grupp saknar obligatoriskt fält (post N, fält "id")`, där `N` är
+   gruppens 1-baserade plats i `skillGroups`.
+2. **Resten av den gruppen hoppas över** (`continue`). Följden är avsiktlig: en
+   grupp utan `id` ger **en** rad i stället för flera, och varje id-nycklat
+   meddelande i hela skriptet bär därmed alltid ett **verkligt** id. Ett meddelande
+   som säger `(id "undefined")` är värre än inget meddelande.
+3. **Gruppens kompetenser räknas inte in i upplysningen.** En fälld eller
+   bortfiltrerad post får aldrig räknas (`LARDOMAR.md` 2026-10-05), och
+   komponenten hoppar över posten ändå. Samma gäller en grupp som fälls på `title`
+   eller på tom `skills`: upplysningen räknar bara grupper som passerat **samtliga**
+   gruppgrindar, och bara kompetenserna i dem.
+4. **Namnen i den överhoppade gruppen deltar inte i unikhetskontrollen i den
+   körningen.** Det är en följd jag tar ställning till och accepterar: filen är
+   ogiltig, körningen slutar med kod 1, och den åtgärd meddelandet föreskriver
+   (skriv ett `id`) tar in gruppen i varje kontroll vid nästa körning. En grind ska
+   inte stapla följdfel på en post som redan är fälld — följdfel lär läsaren att
+   läsa bort larm.
+5. **Skippningen gäller bara `id`.** Saknar gruppen `title` men har `id` fälls den
+   raden och kontrollen går **vidare in** i gruppens skills, eftersom de
+   meddelandena kan bära id:t. Jelal ska se alla fel han kan rätta i ett svep.
+
 **Antal grindas inte, varken totalt eller per grupp.** Antalet grupper och
 antalet skills skrivs som **UPPLYSNING** i OK-raden, och upplysningen räknar bara
 poster som faktiskt renderas (`LARDOMAR.md` 2026-10-05: en fälld eller
-bortfiltrerad post får aldrig räknas med). Ny OK-rad:
+bortfiltrerad post får aldrig räknas med).
+
+##### A19 — OK-raden är ett FORMAT, inte en sträng som matchas tecken för tecken — beslutat 2026-10-08
+
+Paket D lämnade tillbaka att min tidigare utskrivna OK-rad inte gick att uppfylla
+tecken för tecken. **Byggaren har rätt, och dess faktiska rad är godkänd som den
+står.** Raden nedan är **utfallet av körningen i paket D**, inte en sträng att
+matcha mot: talen är uppmätta värden och ändras med datan.
 
 ```
-Validering OK: 4 sektioner, 9 grupper, 53 kompetenser, 0 projekt, 1 stycke i Om mig (1 länkfras, 0 pekar på ett projekt som finns), 2 kontaktlänkar, 225 tecken i teckensnittet (387 deklarerade).
+Validering OK: 225 tecken i teckensnittet (387 deklarerade), 4 sektioner, 9 grupper, 53 kompetenser, 0 projekt, 3 stycken i Om mig, 2 kontaktlänkar.
 ```
 
-Antalen ovan är **förväntade värden, inte grindar**. Avviker ett tal rapporteras
-det — det justeras inte bort.
+Tre regler, som gör frågan avgjord en gång för alla:
+
+1. **Ordningen är `summary.push`-anropens ordning, och den flyttas inte.**
+   `FONT_COVERAGE` beräknas före `ACTIVE`-loopen — beslutat i paket 4 och orört —
+   därför står teckentalet **först**. Min gamla rad hade teckentalet sist och var
+   därmed en beskrivning av en kodordning som inte finns. **En omflyttning av
+   `summary.push` rör varje datafils utskrift och ligger utanför D:** den vore ett
+   eget beslut av mig, inte ett genomförande, och behövs inte.
+2. **A1 äger bara skills-delen av raden:** `9 grupper, 53 kompetenser`. Den är
+   bindande som **förväntat värde**, inte som grind, och byggaren i D har den
+   exakt. `4 sektioner`, `0 projekt` och `2 kontaktlänkar` ägs av sina egna
+   avsnitt; `4 sektioner` saknades i min gamla rad och det var mitt fel, inte
+   byggarens.
+3. **Om mig-delen ägs av paket F (A4)**, inte av D. Antalet stycken är
+   **databeroende** och får aldrig stå som en literal här — `3 stycken` i dag är
+   lika rätt som `1 stycke` efter F, beroende på vad datan innehåller. Tillägget
+   `(N länkfraser, M pekar på ett projekt som finns)` är en **upplysning som införs
+   i paket F om den införs**, eftersom länkfrasen är A4:s mekanism. D ska inte
+   skriva den.
+
+Hela raden är **en UPPLYSNING**, aldrig en grind: inget tal i den fäller något.
+Avviker ett tal från det förväntade **rapporteras** det — det justeras inte bort,
+och raden skrivs inte om för att talet ska stämma.
 
 **De gamla felmeddelandena utgår** och får inte stå kvar som döda strängar:
 `namn ur <fil> saknas och är inte sammanslaget`, `sammanslagning pekar på ett
 namn som inte finns`, `namnet är sammanslaget och får inte stå som egen post`,
 `namnet finns varken i skills.txt eller skills-full.txt`, `filled måste vara true
 eller false`.
+
+#### A20 — `OPEN-KEY`-grinden: vilket paket som bär den — beslutat 2026-10-08
+
+`LARDOMAR.md` 2026-10-05, märkt **ÅTERKOMMANDE (3+)**, kräver en grind i
+`scripts/validate-data.mjs` på `OPEN-KEY`-nyckelord och på fraserna
+"ARKITEKTUR.md säger/anger/nämner" och "tar inte ställning" **inuti en
+markering**. **Paket D uppfann ingen grind och lämnade tillbaka. Det var rätt** —
+A1 säger "exakt dessa elva, och inga andra", och en byggare som uppfinner en
+tolfte grind har tagit ett arkitektbeslut i kod.
+
+**Läget, uppmätt av mig 2026-10-08:**
+
+| Vad | Tal |
+|-----|-----|
+| `OPEN-KEY`-rader i hela projektet | **0** |
+| `EJ I ARKITEKTUR`-markeringar i `scripts/validate-data.mjs` | 8 (rad 61, 68, 233, 275, 312, 356, 378, 564 — samtliga om `sections.js`, `projects.js`, `about.js`, `contact.js` och `ACTIVE`, **ingen** om skills, alltså orörda av D) |
+| `EJ I ARKITEKTUR`-markeringar i `src/` | 19 vid min mätning, varav **exakt fyra i hero-filerna** (`Hero.jsx` två, `Hero.module.css` två) som rundan vid LEVERANS ska avgöra. **Talet är rörligt:** paket E pågår och skriver om Skills-filerna, så paketet räknar om det själv i stället för att lita på denna rad |
+| De förbjudna fraserna **inuti** en markering | **0** |
+| De förbjudna fraserna **utanför** en markering | 7 — `src/data/about.js:31`, `src/components/Projects.jsx:9`, `src/components/ProjectCard.module.css:39` och fyra rader i `scripts/optimize-images.mjs` |
+
+De åtta markeringarna i `validate-data.mjs` formulerar **frågan** ("vad
+meddelandet ska lyda när exporten är borta") och innehåller ingen av de förbjudna
+fraserna — grepen visar det. De sju träffarna ovan ligger i vanliga
+kommentarsblock, inte i markeringar, och grindas därför inte av denna grind.
+
+**Beslut: grinden bärs varken av D eller av J, utan av ett eget paket EFTER
+LEVERANS och efter G — samma paket som genomför beslutsrundan för heros fyra
+markeringar.** Fyra skäl:
+
+1. **Grindens enda del med tänder kräver en rad i varje befintlig markering.** Med
+   noll nyckelord i projektet kontrollerar nyckelordsgrinden ingenting; den måste
+   alltså paras med att varje öppen markering får sin `OPEN-KEY`-rad. Det rör
+   hero-filerna, och **A13 förbjuder K och varje paket före LEVERANS att röra
+   dem**. Grinden kan därför inte komma före rundan utan att tvinga fram ett
+   registrerat felläge.
+2. **En grind som inte kan fälla är sämre än ingen grind** (`LARDOMAR.md`
+   2026-10-05). Införd i dag, utan nyckelord, hade den tigit i varje körning och
+   sett ut som ett skydd.
+3. **En ny grind i `build`-kedjan ger varje annat pakets verifiering ett rött
+   bygge som inte hör till det.** Det är exakt skälet till att J körs sist av
+   byggpaketen, och J:s innehåll är redan bindande rad för rad — det utvidgas inte
+   här.
+4. **Inte paket D.** A1:s elva grindar är grindar på **innehållet i `skills.js`**.
+   Denna grind läser ingen datafil alls: den läser `src/`, `scripts/` och
+   `ARKITEKTUR.md`. Den räknas alltså inte in bland de elva och motsäger inte A1 —
+   men den hör inte heller hemma i ett datapaket.
+
+**Grindens exakta innehåll, så att paketet inte behöver gissa.** Tre delgrindar i
+`scripts/validate-data.mjs`, efter datakontrollerna och före OK-raden. Varje rad
+märks `GRIND:` och varje meddelande följer formatet `<fil>:<rad>: <vad som är
+fel>`:
+
+| # | Villkor som fäller | Meddelande |
+|---|--------------------|------------|
+| G1 | Ett kommentarsblock innehåller `EJ I ARKITEKTUR` men saknar raden `OPEN-KEY: <nyckelord>` | `<fil>:<rad>: EJ I ARKITEKTUR-markering saknar rad OPEN-KEY: <nyckelord>` |
+| G2 | Ett nyckelord ur en `OPEN-KEY`-rad förekommer i `ARKITEKTUR.md` | `<fil>:<rad>: OPEN-KEY "<nyckelord>" finns i ARKITEKTUR.md - frågan är besvarad, ta bort markeringen i samma ändring som beslutet genomförs` |
+| G3 | Inuti ett block med `EJ I ARKITEKTUR` står "ARKITEKTUR.md säger", "ARKITEKTUR.md anger", "ARKITEKTUR.md nämner" eller "tar inte ställning" | `<fil>:<rad>: markeringen beskriver vad ARKITEKTUR.md säger - skriv bara frågan` |
+
+- **Sökmängd:** `src/` och `scripts/`, rekursivt. Aldrig `node_modules/` eller
+  `dist/`. `ARKITEKTUR.md` läses enbart av G2, och enbart som söktext.
+- **G2 jämför skiftesokänsligt och på hela ord.** Nyckelordet ska vara minst fyra
+  tecken och skrivas så att det inte kan dyka upp i löpande text av annan
+  anledning — formen är `<filnamn utan ändelse>-<frågan i två ord>`, med bindestreck
+  och utan å, ä, ö. Ett nyckelord som `grid` hade fällt på varje omnämnande av
+  grid och är därmed fel valt, inte strängt.
+- **Jag skriver medvetet inget exempel på ett nyckelord i detta dokument.** Ett
+  nyckelord som står här fäller G2 i samma stund markeringen får sin rad — det är
+  grindens hela mekanik, och den gäller också mig.
+- **Vilken LEGITIM ändring får fälla respektive delgrind:** G1 — ingen; den åtgärd
+  meddelandet föreskriver (lägg till raden) får den att tiga. G2 — ingen; att
+  nyckelordet dyker upp i `ARKITEKTUR.md` **är** felet, och den föreskrivna
+  åtgärden (ta bort markeringen) får den att tiga. G3 — ingen.
+- **Tre indata ska redovisas för varje delgrind:** korrekt kod (tyst), en
+  framtvingad överträdelse (larm, med fil och rad utskriven), och den åtgärd
+  meddelandet föreskriver (tyst igen).
+
+**Vad paketet gör i samma svep:** sätter `OPEN-KEY`-raden på varje markering som
+fortfarande är öppen, och **tar bort** de markeringar vars fråga rundan vid
+LEVERANS besvarar — i samma ändring som beslutet genomförs. Inga värden ändras.
+
+**Vad som INTE ingår:** de sju fraserna utanför markeringar. De är ett eget fynd
+för granskaren (`about.js:31` skrivs dessutom om i paket F), och grinden fäller
+inte på dem eftersom den bara läser inuti markeringar. Att vidga G3 till all
+kommentarstext är ett nytt beslut som ingen har fattat.
+
+**Bokstaven på paketet ägs av `PLAN.md`,** inte av mig: A–H, J och K är tagna och
+`I` undviks, så nästa fria är **L**. Jag pekar ut behovet, innehållet och platsen
+i ordningen — projektledaren skriver in paketet.
 
 #### A9 — Kommentarer som räknar upp tokens: en grind som fångar borttagningen, inte uppräkningen
 
@@ -6141,6 +6413,55 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   om. Ingen `EJ I ARKITEKTUR`-markering ska sättas på kodstruktur. (påverkat av
   lärdom: **ja** — 2026-10-05 ÅTERKOMMANDE om markeringen, och 2026-10-05 om att
   mäta artefakten)
+
+**A16–A21, beslutade 2026-10-08 efter att paket D och K lämnade tillbaka sex
+punkter:**
+
+- **A16: höjdkvoten får en formel, nämnaren mäts, och bandet gäller bara från
+  900 px** — jag hade skrivit kravet på två sätt (`(window.innerHeight - 64)` i
+  mätserien, `676 / 900` i A13), och byggaren redovisade båda kvoterna i varje
+  mätrad i stället för att välja. Det var rätt av byggaren och fel av mig: två
+  kvoter intill varandra lämnar valet till läsaren. Rättelsen visade också att
+  kravet **aldrig föll** vid mätseriens egen vyport — K:s rätta skäl är ett
+  ogenomfört beslut, inte en fälld mätning, och mitt tal 0,75 är upphävt. Nämnaren
+  mäts i stället för att skrivas, så att den inte kan driva isär från
+  `--header-height`. (påverkat av lärdom: **ja** — 2026-10-02 "headerns höjd är
+  definierad på två oberoende ställen", och 2026-10-05 "en invariant som bara står
+  i prosa")
+- **A17: stycket om nästlad struktur rättas på sin egen plats** — det skrev
+  `filled: false` som bindande format och instruerade Jelal att byta `false` mot
+  `true`, tre veckor efter att A2 tog bort fältet. Byggaren följde A2 och
+  rapporterade motsägelsen i stället för att tolka den. Felet är mitt och av exakt
+  den sort filen har tre poster om: ett nytt beslut måste ändra varje äldre stycke
+  om samma sak i samma redigering. (påverkat av lärdom: **ja** — 2026-10-02 och
+  2026-10-05 ÅTERFALL om överspelade stycken som står kvar)
+- **A18: engångsjämförelsen görs mot repots fil, inte mot en scratchpad** — min
+  formulering överlevde A12:s genomförande. En scratchpad-sökväg kan inte prövas om
+  av granskaren, alltså kan den inte vara norm. (påverkat av lärdom: **ja** —
+  2026-10-05 "mät artefakten", i formen: mät mot något som finns kvar)
+- **A19: OK-raden är ett format och en upplysning, inte en sträng** — jag skrev ut
+  en rad som inte gick att uppfylla tecken för tecken: teckentalet beräknas före
+  `ACTIVE`-loopen och står därför först, `4 sektioner` saknades i min rad, och
+  Om mig-delen hör till paket F. Byggaren flyttade inte `summary.push`, eftersom det
+  låg utanför paketet — rätt. En utskriven exempelrad som beskriver en kodordning
+  som inte finns är samma felläge som en kommentar som bär ett upphävt värde.
+  (påverkat av lärdom: **ja** — 2026-10-02 om `GRIND:`/`UPPLYSNING:`, och
+  2026-10-05 om att inte räkna fällda poster)
+- **A20: `OPEN-KEY`-grinden bärs av ett paket efter LEVERANS, inte av D och inte av
+  J** — grindens enda del med tänder kräver en rad i varje öppen markering, och
+  hero-filerna får inte röras före beslutsrundan. Med noll nyckelord i projektet
+  hade grinden dessutom tigit i varje körning och sett ut som ett skydd. Jag skriver
+  ut alla tre delgrindarna, deras meddelanden och deras legitima fällningsfall, men
+  **inget nyckelord** — ett nyckelord i detta dokument fäller grinden i samma stund
+  markeringen får sin rad. (påverkat av lärdom: **ja** — 2026-10-05 ÅTERKOMMANDE om
+  markeringen, och 2026-10-05 "en grind som fälls av fel skäl")
+- **A21: en grupp utan `id` ger en rad med postens plats, och resten hoppas över** —
+  byggarens lösning bekräftad. Varje id-nycklat meddelande bär då alltid ett
+  verkligt id, gruppens kompetenser räknas inte i upplysningen, och skriptet staplar
+  inga följdfel på en post som redan är fälld. Priset — namnen i den gruppen deltar
+  inte i unikhetskontrollen den körningen — står utskrivet i stället för att
+  förbigås. (påverkat av lärdom: **ja** — 2026-10-05 "en sektion utan `id` passerar
+  tyst och räknas med i OK-raden")
 
 ## Öppna punkter som INTE är arkitektens att besluta
 

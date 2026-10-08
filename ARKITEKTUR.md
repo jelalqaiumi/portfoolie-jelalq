@@ -58,9 +58,69 @@ fynd.
 | `.brandName` som klassnamn | `.logoName` | headerns uppbyggnad |
 | `R > G` (tröskel) | `R - G >= 30` | blockdetekteringen |
 | `palette: true` | `compressionLevel: 9` ensamt | utdatafiler för ikonen |
+| `SKILL_SOURCES` / korsreferens mot `skills.txt` | strukturgrindar utan källista | "A1 — Grinden för `skills.js` är strukturell" |
+| `MERGED` (tabellen i `validate-data.mjs`) | utgår helt, inga sammanslagningar | ↑ |
+| "en grind på gruppernas id och ordning" | ordningen verifieras EN gång i paket D | ↑ |
+| `namn ur skills-full.txt saknas` (felmeddelande) | meddelandetabellen i A1 | ↑ |
+| `filled måste vara true eller false` (felmeddelande) | `okänt fält på skill` | ↑ |
+| `filled` (fält på en skill) | fältet är borttaget | "A2 — `filled`, den orange fyllningen och teckenförklaringen" |
+| `De orange har jag arbetat med.` | ingen teckenförklaring alls | ↑ |
+| `LEGEND` (konstant i `Skills.jsx`) | ↑ | ↑ |
+| `SkillPill` (fil, komponent, import) | `SkillChip` | "A6 — Kortet, chipset och rutnätet" |
+| `.pill` / `.filled` / `.outline` (klassnamn) | `.chip`, ett enda utseende | ↑ |
+| `.groups` / `.group` / `.groupTitle` / `.pills` / `.legend` | `.grid` / `.card` / `.cardTitle` / `.chips` | ↑ |
+| `columns: 1` / `columns: 2` / `columns: 3` / `columns: 4` | kortrutnät 3/2/1 med `minmax(0, 1fr)` | ↑ |
+| `break-inside: avoid` (i Skills) | utgår med flerkolumnlayouten | ↑ |
+| `307` / `257` / `270` / `18 grupper` (antal skills) | inget antal grindas; 9 grupper, 53 namn som UPPLYSNING | A1 + A6 |
+| `React Native-komponentbaserad utveckling` (längsta sträng) | mäts ur datan, teststräng i A5 | "A5 — Hero: knapparna, mätserien och 360 px" |
+| `Klient–server-kommunikation` (längsta token) | ↑ | ↑ |
+| "Inga fält för bild, rubriknivåer eller länkar" (om `about.js`) | `link`-fältet finns, bild finns inte | "A4 — Hem och Ekonomi som länk" |
+| "Innehållet är en öppen punkt" (om Om mig-texten) | texten är Jelals, given 2026-10-07 | ↑ |
+| `UTKAST - TEXT SOM JELAL SKA GODKÄNNA` (i `about.js`, `Hero.jsx`) | texterna är Jelals egna | A4 + A7 |
+| `Fullstackutvecklare` (som rollrad eller i `<title>`) | `Systemutvecklare · Fullstack` | "A7 — Rollraden" |
+| "ta bort systemutvecklare längst upp" | uppdraget 2026-10-07 återinför ordet | ↑ |
+| "Jelal bytte den från Systemutvecklare" (kommentar i `Hero.jsx`) | invariantkommentaren i A7 | ↑ |
+| `introDraft` (konstant i `Hero.jsx`) | `intro`, Jelals exakta ingress som EN sträng | "A5 — Hero: knapparna, mätserien och 360 px" |
+| `--color-border` som knappram i hero | `--color-text-muted` (1,00:1 mot `--color-bg-top`) | ↑ |
+| "platshållare för länkarna" (GitHub/LinkedIn i hero) | inga ikonlänkar i hero | "A10 — Inga ikonlänkar i hero" |
+| "lugn in-animation" som beställd | ingen animation, uppdragets egen regel | "A11 — Ingen animation införs" |
+| `--color-text-dim` | `--color-text-muted`; tokenet är borttaget | "A8 — Footerns kontrast" |
+| "Footer, metadata, ej ifyllda pills" (tokenets användning) | ↑ | ↑ |
+| uppräkningen av fem tokens i `.surface-light` (i `Projects.jsx`/`Skills.jsx`) | konsekvensen, utan lista | "A9 — Kommentarer som räknar upp tokens" |
+| de 18 gamla gruppubrikerna, t.ex. `React Native — komponenter och API:er`, `Säker webbutveckling`, `Kodkvalitet och arkitektur` | de nio grupperna i "Kompetenssektionen görs om från grunden" | A1 + A6 |
 
 Jag skriver in nya rader här varje gång jag upphäver något. Raderna tas aldrig
 bort — en tom tabell går inte att skilja från en obevakad.
+
+---
+
+## Paket A — besluten för innehållsuppdraget 2026-10-08, och var de står
+
+Dokumentet är stort. Detta är enda stället som listar paket A:s beslut; varje
+beslut står på den plats där det gamla beslutet stod, enligt konventionen ovan.
+**Ingen byggare behöver läsa dokumentet uppifrån och ner.**
+
+| # | Beslut | Avsnitt | Blockerar paket |
+|---|--------|---------|-----------------|
+| A1 | Grinden för `skills.js` blir strukturell; korsreferensen och `MERGED` utgår | "A1 — Grinden för `skills.js` är strukturell" (i "Validering av datafilerna") | D |
+| A2 | `filled`, den orange fyllningen och teckenförklaringen tas bort | "A2 — `filled`, den orange fyllningen och teckenförklaringen" (i "`src/data/skills.js`") | D, E |
+| A3 | Inga ikoner, inget nytt beroende | "A3 — Inga ikoner" | E |
+| A4 | "Hem och Ekonomi" som länk, båda lägena, via `about.link` | "A4 — Hem och Ekonomi som länk" (i "`src/data/about.js`") | F |
+| A5 | Heros två knappar, stilarna och mätserien | "A5 — Hero: knapparna, mätserien och 360 px" | B, C |
+| A6 | Kortet, chipset och rutnätet 3/2/1 | "A6 — Kortet, chipset och rutnätet" (i "Skills — rendering") | E |
+| A7 | Rollraden `Systemutvecklare · Fullstack` och `<title>` | "A7 — Rollraden" | B |
+| A8 | Footerns kontrast: `--color-text-dim` tas bort | "A8 — Footerns kontrast" (i "Färger") | eget paket |
+| A9 | Grind mot kvarglömda tokenreferenser; grinden mot uppräknande kommentarer avfärdad | "A9 — Kommentarer som räknar upp tokens" | eget paket |
+| A10 | Inga ikonlänkar i hero — inte GitHub, inte LinkedIn | "A10 — Inga ikonlänkar i hero" | B |
+| A11 | Ingen animation införs | "A11 — Ingen animation införs" | E |
+| A12 | Uppdragstexten måste in i repot innan paket B startar | "A12 — Uppdragstexten måste bo i repot" | B, D, F |
+
+**Teckentäckningen (punkt 8 i uppdraget till mig) behövde inget beslut:** varje
+tecken uppdragets nya texter innehåller finns i
+`src/styles/fonts/didact-gothic-latin-400.woff2` — uppmätt 2026-10-08 ur filens
+`cmap`, inklusive `U+00B7` i rollraden, `#`, `/`, `+` och parenteserna.
+Teckengrinden körs ändå om i paket B och D mot de strängar byggaren faktiskt
+skriver; mätningen gällde de strängar jag kunde läsa.
 
 ---
 
@@ -74,7 +134,10 @@ Portfoolie-Jelalq/
 ├─ ARKITEKTUR.md                  Detta dokument
 ├─ BRIEF.md / PLAN.md / skills.txt
 ├─ scripts/
-│  └─ optimize-images.mjs         Engångsskript (paket 2). Körs manuellt, ingår INTE i build.
+│  ├─ optimize-images.mjs         Engångsskript (paket 2). Körs manuellt, ingår INTE i build.
+│  ├─ validate-data.mjs           Grindar src/data/. Första steget i build.
+│  ├─ font-coverage.mjs           Läser cmap ur woff2-filen. Anropas av validate-data.mjs.
+│  └─ validate-tokens.mjs         Grindar att varje --color-*-referens finns i tokens.css (A9). I build.
 ├─ assets-source/                 KÄLLBILDER. Publiceras ALDRIG — ligger utanför public/.
 │  ├─ logo.png                    ORIGINAL 1254x1254 — läses, skrivs aldrig över
 │  └─ profile.jpg                 ORIGINAL 4688x5051 — läses, skrivs aldrig över
@@ -222,7 +285,7 @@ Mörk bas rakt igenom, i loggans nästan-svarta ton. Orange är enda accenten.
 | `--color-border` | `#2A2A2E` | Hårfina avgränsare, outline-pills |
 | `--color-text` | `#EDEDEF` | Brödtext och rubriker. Även profilbildens vita streck — se "Det vita strecket" för varför ingen separat vit token införs. |
 | `--color-text-muted` | `#A1A1A8` | Sekundär text, intro, grupprubriker i skills. **Inte** navlänkarna — se "Headern är enfärgad". |
-| `--color-text-dim` | `#6E6E76` | Footer, metadata, ej ifyllda pills |
+| ~~`--color-text-dim`~~ | ~~`#6E6E76`~~ | **BORTTAGET 2026-10-08.** Föll på WCAG AA: 3,893:1 mot `--color-bg` där kravet är 4,5:1. Footern använder `--color-text-muted`. Se "A8 — Footerns kontrast" nedan. |
 | `--color-accent` | `#FC6F03` | **Enda accentfärgen.** Ifyllda pills, länkhover, fokusring, streck |
 | `--color-accent-hover` | `#FD9140` | Hover/aktivt läge på accentytor. Samma kulör, ljushet 50 % → 62 %. |
 | ~~`--color-accent-soft`~~ | — | **BORTTAGET.** Noll användningar i `src/`. Infördes "vid behov" — alltså utan behov. Se noten under tabellen. |
@@ -232,7 +295,61 @@ Mörk bas rakt igenom, i loggans nästan-svarta ton. Orange är enda accenten.
 | `--color-error` | `#F85149` | **Formulärets uppmärksamhetsfärg**: obligatorisk-asterisken och felmeddelandena. 5,87:1 mot `--color-bg`. Binds om i `.surface-light` till `#C0271E`. Jelals beslut 2026-10-07 — se "Asterisken är röd". |
 | `--color-field-border` | `#606068` | Ram på formulärfält. **3,16:1** mot `--color-bg` — WCAG 1.4.11 kräver 3:1 för gränssnittskomponenters avgränsning, och `--color-border` (1,38:1) duger inte. |
 
-> **Två token har tagits bort av samma skäl, och det skälet är värt att minnas.**
+### A8 — Footerns kontrast: `--color-text-dim` tas bort — beslutat 2026-10-08
+
+Uppmätt (`LARDOMAR.md` 2026-10-08, incheckat som `ee67b2e`):
+`Footer.module.css:20` sätter `color: var(--color-text-dim)` på text i
+`--text-sm` (14 px) mot `--color-bg`. **3,893:1 mot AA-kravet 4,5:1** — ett brott
+mot WCAG 1.4.3. Tröskeln 3,0:1 gäller bara stor text (≥ 24 px, eller ≥ 18,66 px
+fet) och är inte tillämplig; teckensnittet har dessutom bara vikt 400, så "fet"
+finns inte som utväg någonstans i projektet.
+
+| Token | Värde | Kvot mot `--color-bg` | Utfall |
+|-------|-------|----------------------|--------|
+| `--color-text` | `#EDEDEF` | 16,827:1 | OK |
+| `--color-text-muted` | `#A1A1A8` | 7,662:1 | OK |
+| `--color-text-dim` | `#6E6E76` | **3,893:1** | **FALLER** |
+
+**Beslut: footern använder `--color-text-muted`, och `--color-text-dim` tas bort
+ur `:root`.**
+
+Två vägar fanns. Den avfärdade först: **höja värdet.** Lägsta ton som räcker med
+`#6E6E76`:s karakteristik behållen är `#797981` (4,558:1) — 0,058 marginal, mindre
+än projektet accepterat någon annanstans. Kandidater med marginal fanns
+(`#8A8A92` 5,744:1, `#909098` 6,210:1, `#95959D` 6,618:1, `#9A9AA2` 7,043:1), men
+de leder alla till **ett token vars namn fortfarande säger `dim`** och vars enda
+konsument är en rad i footern. Och det är just namnet som är rotorsaken: lärdomen
+säger att tokenet fick ligga kvar genom varje tidigare kontrastmätning därför att
+namnet förklarade sitt eget låga värde. Ett nytt hexvärde lämnar den mekanismen
+kvar, laddad.
+
+Den valda vägen tar bort mekanismen: **tokenet vars namn var skälet försvinner ur
+projektet.** `--color-text-muted` är enda läsaren efter detta, uppmätt 7,662:1,
+och footern skiljs redan från sidan av sin `border-top` och av `--text-sm` — den
+behöver inte en tredje svagare ton för att läsas som underordnad. Kostnaden är
+verklig och skrivs ut: **footern får samma ton som annan dämpad text och tappar
+sin egen nivå i texthierarkin.** Behövs en tredje nivå någon gång införs den av en
+komponent som har ett krav, med kvoten mätt först — inte i väntan på en.
+
+**Fyra följdändringar, alla i samma ändring** (`LARDOMAR.md` 2026-10-08: en
+borttagning är inte klar förrän `grep` på tokennamnet är gjord och redovisad):
+
+| Fil | Åtgärd |
+|-----|--------|
+| `src/components/Footer.module.css:20` | `color: var(--color-text-muted);` |
+| `src/styles/tokens.css:95` | Deklarationen tas bort |
+| `src/styles/tokens.css:219-226` | Kommentarsblocket om den borttagna `.surface-light`-ombindningen tas bort — det beskriver ett token som inte finns |
+| `src/components/ContactForm.module.css:90` | Kommentaren namnger `--color-text-dim` som det avfärdade alternativet. Skrivs om utan tokennamnet: fältets hjälptext ligger på `--color-surface` och kvoten är kravet |
+
+**Och varje `--color-text*`-token bär sin uppmätta kvot i `tokens.css`** efter
+detta, i formen `/* <token> mot <bakgrund>: X,XXX:1 — AA <normal|stor> */`, mot
+**varje** bakgrund det faktiskt används mot. Det är lärdomens bindande regel, och
+den gäller också de ytor A5 och A6 inför: `--color-text` mot `--color-surface`
+(chips) och mot `--color-bg-top` (konturknappens text).
+
+> **Två token har tagits bort för att de saknade konsument, och det skälet är värt
+> att minnas.** (`--color-text-dim` är ett tredje borttaget token, men av ett annat
+> skäl — se A8 ovan: det hade en konsument och en otillräcklig kvot.)
 > `--color-surface-raised` ("hover på kort") och `--color-accent-soft` ("vid
 > behov") hade båda noll konsumenter. Ingen av dem kom ur ett krav — de kom ur att
 > jag föreställde mig en framtida användning. **Ett token ska införas av en
@@ -778,47 +895,71 @@ gäller utan undantag.
 
 ### `src/data/skills.js` — skills
 
-Form **och** kategoriindelning är nu beslutade. Se "Skills — kategoriindelning"
-längre ner för de 18 grupperna, de 56 gamla posternas placering och hur dubbletter
-och nära-dubbletter avgörs.
+Formen är omgjord 2026-10-08 (beslut **A2**). Kategoriindelningen är de nio
+grupperna i "Kompetenssektionen görs om från grunden".
 
 ```js
 /**
  * @typedef {Object} Skill
- * @property {string}  name    Visas som text i pillen. Unikt i HELA filen (används som React-key).
- * @property {boolean} filled  true = behärskar → ORANGE fylld pill. false = dämpad outline-pill.
+ * @property {string} name   OBLIGATORISK. Visas som text i chipset. Unikt i HELA filen (React-key).
  *
  * @typedef {Object} SkillGroup
- * @property {string}  id      Unikt, gemener, a-z0-9-. Används som React-key och rubrik-id.
- * @property {string}  title   Svensk kategorirubrik
- * @property {Skill[]} skills  Minst en skill
+ * @property {string}  id      OBLIGATORISK. Unikt, gemener, bara a-z0-9-. React-key och rubrik-id.
+ * @property {string}  title   OBLIGATORISK. Svensk gruppubrik.
+ * @property {Skill[]} skills  OBLIGATORISK. Minst en post.
  */
-export const skillGroups = [ /* fylls i paket 4 */ ];
+export const skillGroups = [ /* de nio grupperna, skrivs i paket D */ ];
 ```
 
-Ett **skill-post ser exakt ut så här**, inget mer:
+En **skill-post ser exakt ut så här**, inget mer:
 
 ```js
-{ name: "React", filled: false }
+{ name: 'React (Hooks, Context)' },
 ```
+
+#### A2 — `filled`, den orange fyllningen och teckenförklaringen, beslutat 2026-10-08
+
+**`filled` TAS BORT. Det får inte stå kvar, inte ens med en kommentar om ett
+framtida paket.** Den nya listan har ingen ifylld/dämpad-dimension — allt i den är
+sådant Jelal kan — och ett fält utan verkan är död data (`LARDOMAR.md`
+2026-10-02). Det finns inget framtida paket som läser det.
+
+Följderna, alla tre beslutade här och genomförda i paket D och E:
+
+| Vad | Beslut |
+|-----|--------|
+| `filled` på varje skill | **Borta** ur typedef, ur datan och ur grinden. Ett kvarglömt `filled` fälls av grinden "okänt fält på skill" i A1 |
+| Chipsets två tillstånd (orange fylld / dämpad outline) | **Ett enda tillstånd.** Chipset ser likadant ut för varje post |
+| Raden `De orange har jag arbetat med.` | **Borta.** `LEGEND`-konstanten, `<p className={styles.legend}>` och `.legend`-regeln tas bort i samma ändring. En teckenförklaring som förklarar en skillnad som inte finns är inte neutral, den är vilseledande |
+| `--color-accent` i kompetenssektionen | **Används inte där längre.** Orange bor kvar i fokusringen, headerns märke, formulärknappen och heros primärknapp (A5) |
+| `--color-on-accent` | **Står kvar.** Heros primärknapp är dess konsument efter detta (A5). Ta inte bort tokenet med hänvisning till att de fyllda chipsen försvann |
+
+**De 270 markeringarna försvinner.** Det är Jelals att godkänna, inte mitt — det
+står som öppen punkt i `PLAN.md`. Mekanismen är min, och den är: inget halvt läge.
+Att behålla `filled` "i väntan på" en framtida återinföring hade gett ett fält som
+inte renderar något, alltså exakt den döda datan som posten 2026-10-02 handlar om.
+Listan ligger kvar i git-historiken.
 
 Regler som byggaren måste följa:
 
-- Inga andra fält. Ingen nivå, inget procenttal, ingen ikon, ingen sorteringsvikt.
-  Briefen förbjuder uttryckligen nivåangivelser.
-- Varje namn ska stavas **tecken för tecken** som i källistorna `skills.txt` och
-  `skills-full.txt` — inklusive parenteser, bindestreck och versaler.
-  `JavaScript (ES6+)`, `HTTP-metoder (GET, POST, PUT, DELETE)`,
-  `expo vector-icons` (mellanslag, inte bindestreck), `Trådsäkerhet (lock)` och
-  `Klient–server-kommunikation` (tankstreck, inte bindestreck) är de som är
-  lättast att råka städa i. Det är Jelals lista, inte vår.
-- **Inget fast totalantal.** Se "Validering av skills" — summan är en upplysning,
-  och korsreferensen mot källistorna är grinden.
-- `filled` sätts enligt BRIEF.md:s beslut 2026-10-03: namn ur `skills-full.txt`
-  är `true`, de 50 som bara finns i `skills.txt` är `false`.
-- Att markera ett skill som ifyllt = ändra `false` till `true` på en rad i denna
-  fil. Ingen komponentfil får behöva röras. Det är paketets hela verifiering.
-- Filen inleds med en kommentar på svenska som förklarar just detta.
+- **Inga andra fält.** Ingen nivå, inget procenttal, ingen ikon, ingen
+  sorteringsvikt, ingen `filled`. Uppdraget förbjuder uttryckligen nivåmätare, och
+  grinden i A1 fäller varje okänt fält.
+- Varje namn skrivs **tecken för tecken som i Jelals uppdrag 2026-10-07** —
+  inklusive parenteser, snedstreck, plus och versaler. `JavaScript (ES6+)`,
+  `Swagger/OpenAPI`, `CSS (Grid, Flexbox, responsiv design)`, `MFA (TOTP)`,
+  `CI/CD-pipelines (YAML)` och `Hotmodellering (STRIDE)` är de som är lättast att
+  råka städa i. Det är Jelals lista, inte vår. **Källistorna `skills.txt` och
+  `skills-full.txt` är INTE längre stavningsnorm** — där står `Swagger` och
+  `Testdriven utveckling (TDD)`, och den som "rättar" efter dem bryter uppdraget.
+- **Inget fast totalantal.** Se A1: antalet är en upplysning, strukturen är
+  grinden.
+- En skill per rad, `{ name: '...' },`, så att Ctrl+F på namnet hamnar på den rad
+  som ska ändras. Byggaren formaterar inte om filen till flerradiga objekt.
+- Filen inleds med en kommentar på svenska som förklarar just detta. **Den gamla
+  kommentaren lovar saker om 307 poster och om att ändra `false` till `true` — den
+  skrivs om i paket D, i samma ändring.** Ett löfte i en fil Jelal redigerar får
+  aldrig vara osant (`LARDOMAR.md` 2026-10-05).
 
 #### Nästlad struktur, inte platt lista med kategorifält
 
@@ -912,12 +1053,16 @@ lista i stället för två försvinner den mekanismen, och ett hårdkodat antal 
 uttryckligen bortvalt sedan tidigare — det fallerar av fel skäl så fort han ändrar
 något.
 
-**Ersättning: en grind på gruppernas id och ordning.**
-
-Nio grupper, exakt de nio id:na ovan, i exakt den ordningen. Det är en struktur
-**Jelal har bestämt**, inte ett antal som driver. Grinden slår bara till om någon
-råkar byta ordning, stava ett id fel eller tappa en hel grupp — vilket är de fel
-som faktiskt kan smyga sig in när nio kort skrivs av för hand.
+> **~~Ersättning: en grind på gruppernas id och ordning.~~ UPPHÄVT 2026-10-08,
+> samma dag jag skrev den.** Nio namngivna id i en fastlåst ordning är
+> **innehåll**, inte struktur. Lägger Jelal till en tiondegrupp, byter ordning
+> eller döper om en grupp — tre ändringar han äger — fäller grinden bygget på helt
+> korrekt data, och det är exakt det fel som gjorde korsreferensen oanvändbar.
+> Jag upprepade felet jag just rättade, en nivå upp.
+>
+> Ordningen och de nio id:na verifieras i stället **en gång**, maskinellt, i
+> paket D mot uppdragstexten. Gällande grind står i **"A1 — Grinden för
+> `skills.js` är strukturell"**, i avsnittet "Validering av datafilerna".
 
 Kvar gäller också: varje namn unikt i hela filen, varje grupp minst en post, varje
 grupp har `title`.
@@ -969,15 +1114,33 @@ Lösta i förväg, och skrivna här så att ingen försöker igen:
 | "lugn in-animation om sidan redan använder animationer" | Sidan gör inte det, och specifikationen säger då själv "annars ingen". **Ingen animation.** |
 | "kontrollera även undersidor" | **Det finns inga.** Sidan är en enda |
 
-#### Inga ikoner
+#### A3 — Inga ikoner, bekräftat som beslut 2026-10-08
 
 Premissen var fel — projektet har noll ikonberoenden, och det är ett medvetet
 läge: jag har avvisat ikonbibliotek tidigare med motiveringen att inga ikoner är
-beställda.
+beställda. Uppmätt 2026-10-08: körtidsberoendena är `react`, `react-dom` och
+`@hcaptcha/react-hcaptcha`. **"Ikonbiblioteket som redan finns i projektet" finns
+inte.**
 
 Alternativet vore nio inline-SVG:er att rita, namnge och underhålla. **Och de
 skulle tillföra mindre än orden de står bredvid** — "Arbetssätt" och "Testning och
 kvalitet" är begrepp utan självklar bild, och en gissad symbol är sämre än ingen.
+
+**Beslut: inga ikoner. Tre vägar är stängda, alla tre uttryckligen:**
+
+| Väg | Varför stängd |
+|-----|---------------|
+| Nytt körtidsberoende (`react-icons`, `lucide-react`, `@heroicons`) | Det vore projektets första beroende tillagt för utseendets skull. Linjen "minsta möjliga antal beroenden" har hållit genom åtta paket, och ett ikonbibliotek för nio dekorativa symboler är inte skälet att bryta den. Byggaren får **inte** lägga till det, och `package.json` jämförs före och efter paket E |
+| Nio egna inline-SVG:er | Nio symboler att rita, namnge, underhålla och tillgänglighetsmärka — för att säga samma sak som rubriken redan säger. Fyra av nio grupper (Arbetssätt, Testning och kvalitet, AI i utveckling, DevOps) har ingen självklar bild |
+| Emoji eller ett tecken i ett `::before` | En emoji renderas i systemets eget teckensnitt, utanför både Didact Gothic och teckengrinden, och ser olika ut i varje operativsystem. Ett dingbat-tecken finns inte i delmängden |
+
+**Kortets rubrikrad innehåller alltså bara `h3`-texten.** Inget `<svg>`, inget
+`aria-hidden`-span, inget `::before`-innehåll, och inget `icon`-fält i
+`skills.js` — grinden i A1 fäller ett sådant fält som okänt.
+
+Detta är en **avvikelse från uppdragets bokstav** och ska sägas vid LEVERANS, inte
+döljas: Jelal bad om "en liten ikon" per kort. Vill han ha dem är det ett eget
+beslut och ett eget paket, och då ritar vi dem själva — beroendet läggs inte till.
 
 ### Skills — kategoriindelning
 
@@ -1604,7 +1767,106 @@ skiljer alternativen åt ska man säga det, så att den som väljer vet att det 
 
 ### Skills — rendering
 
-#### Pillarnas två tillstånd
+> **UPPHÄVT I SIN HELHET 2026-10-08** — allt i detta avsnitt och dess fyra
+> underavsnitt ("Pillarnas två tillstånd", "Layout — omdimensionerad för 307
+> pills", "360 px — den längsta strängen", "Teckenförklaring — vänd, nu när orange
+> är regeln"). Det beskriver 307 pills i 18 grupper med två tillstånd, en
+> flerkolumnlayout och en teckenförklaring. **Bygg inget efter det.** Gällande
+> rendering står i "A6 — Kortet, chipset och rutnätet" nedan; `filled` och
+> teckenförklaringen är avgjorda i A2. Avsnittet står kvar som historik över hur
+> den gamla listan renderades.
+
+#### A6 — Kortet, chipset och rutnätet, beslutat 2026-10-08
+
+Ett kort per grupp, `h3` som rubrik, kompetenserna som chips i en riktig
+`<ul>`/`<li>`. **Dessa deklarationer är bindande tecken för tecken**
+(`LARDOMAR.md` 2026-10-05: ett grannvärde är en tyst omröstning om beslutet).
+Byggaren svarar på var och en med `fil:rad` i överlämningen.
+
+`Skills.module.css` — klassnamnen byts, de gamla finns i tabellen över förbjudna
+strängar:
+
+```css
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (min-width: 600px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 900px) {
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.card {
+  padding: var(--space-5);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.cardTitle {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-4);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+```
+
+`SkillChip.module.css` — **en enda klass, ett enda utseende** (A2):
+
+```css
+.chip {
+  padding: var(--space-1) var(--space-3);
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  max-width: 100%;
+}
+```
+
+Punkt för punkt, varför:
+
+- **3/2/1 ligger på 900 och 600 px**, projektets befintliga brytpunkter ur
+  `tokens.css`. Inga nya tal: uppdraget säger dator/surfplatta/mobil, och de tre
+  lägena finns redan definierade.
+- **`minmax(0, 1fr)`, aldrig bara `1fr`** — i alla tre lägena, inklusive
+  enspaltsläget. Regeln har bitit två gånger och är ett registrerat återfall.
+- **`align-items: start`** är mekanismen som gör att ett kort inte sträcks av sin
+  granne. **Vaktraderna `align-content: flex-start` / `align-items: flex-start`
+  följer INTE med till `.chips`.** De gick inte att få att larma i den layout de
+  stod i (`LARDOMAR.md` 2026-10-05), och i den nya layouten är det rutnätets
+  `align-items: start` som bär saken — den går att mäta: korthöjd oberoende av
+  grannens. En rad som inte går att belägga skrivs inte av.
+- **Chipset har ingen `white-space: nowrap` och `max-width: 100%`.** Höjden är fri
+  här, så radbrytning är ofarlig, medan utebliven radbrytning ger horisontell
+  scroll. Välj det felläge som syns.
+- **Graden höjs från `--text-xs` till `--text-sm`.** 12 px valdes för att det var
+  den enda åtgärd som bet linjärt på drygt 300 pills. Med 53 chips i nio kort
+  finns inte det skälet kvar, och 14 px är läsbart.
+- **Kortets rubrik är `--text-lg`, inte `h3`:s globala `--text-xl`.** Nio rubriker
+  i ett rutnät ska inte konkurrera med sektionens `h2`. Ingen `text-transform`,
+  ingen `letter-spacing`, ingen `--color-text-muted`: uppdraget säger "rubrik", och
+  den gamla lilla versala dämpade rubriken hörde till en lista med 18 grupper.
+- **Ingen `transition` och ingen `animation` i Skills-filerna** (A11).
+
+Kontraster som ska **mätas** i paket E och skrivas in enligt `LARDOMAR.md`
+2026-10-08. Mina framräknade förväntningar, inte beslutet: chipsets text
+`--color-text` mot `--color-surface` ca **15,4:1**, kortets yta
+`--color-surface` mot `--color-bg` 1,07:1 (dekorativ, kortet skiljs av sin ram).
+Avviker en mätning från förväntan rapporteras det, det justeras inte bort.
+
+#### Pillarnas två tillstånd — ~~gällande~~ UPPHÄVT 2026-10-08, se A2 och A6
 
 | Tillstånd | Utseende |
 |-----------|----------|
@@ -1627,7 +1889,7 @@ pills, och 12 px är fortfarande läsbart för en etikett på ett till tre ord.
 Pillarna är inte interaktiva. Ingen hover, ingen länk, ingen `title`-attribut,
 inget `tabindex`. De är text, inte kontroller.
 
-#### Layout — omdimensionerad för 307 pills
+#### Layout — omdimensionerad för 307 pills — ~~gällande~~ UPPHÄVT 2026-10-08, se A6
 
 Den tidigare layouten dimensionerades för 93 och gav 1 kolumn vid 360, 2 vid 900,
 3 vid 1200+. Med 307 pills hade sektionen blivit betydligt högre på desktop.
@@ -1720,7 +1982,11 @@ Semantik: varje grupp är en `<ul>` med `<li>` per pill. En lista ska vara en
 lista — skärmläsaren annonserar antalet, vilket är den enda "räkning" sidan
 behöver.
 
-#### 360 px — den längsta strängen
+#### 360 px — den längsta strängen — ~~gällande~~ UPPHÄVT 2026-10-08, se A5
+
+> Talen nedan (40 och 27 tecken, `React Native-komponentbaserad utveckling`,
+> `Klient–server-kommunikation`) kommer ur den gamla listan och finns inte på
+> sidan efter paket D. Gällande teststräng står i A5.
 
 > **Rättat.** Jag skrev att `HTTP-metoder (GET, POST, PUT, DELETE)` fortfarande är
 > sidans längsta sträng. Det stämmer inte sedan den nya listan kom in.
@@ -1761,7 +2027,10 @@ Att `overflow-wrap: anywhere` ligger på `body` gör att även dessa bryts — m
 Verifieringen vid 360 px görs med just den strängen, inte med kort
 platshållartext, enligt `LARDOMAR.md`.
 
-#### Teckenförklaring — vänd, nu när orange är regeln
+#### Teckenförklaring — vänd, nu när orange är regeln — ~~gällande~~ UPPHÄVT 2026-10-08, se A2
+
+> **Det finns ingen teckenförklaring efter paket E.** Raden förklarade skillnaden
+> mellan ifylld och dämpad, och den skillnaden finns inte i den nya listan.
 
 Förhållandet har kastats om. Tidigare var alla 93 dämpade och orange fanns inte;
 nu är **de allra flesta orange och det dämpade är undantaget**. En text som säger
@@ -1921,15 +2190,106 @@ Ny sektion, beslutad av Jelal 2026-10-07. Han sa **"en liten sektion"**, och det
 
 ```js
 /**
+ * @typedef {Object} AboutLink
+ * @property {string} phrase     OBLIGATORISK när link finns. Måste förekomma EXAKT en gång i något stycke.
+ * @property {string} projectId  OBLIGATORISK när link finns. Ett id ur projects.js. Finns projektet inte
+ *                               renderas frasen som vanlig text - ingen länk, inget trasigt ankare.
+ *
  * @typedef {Object} About
- * @property {string[]} paragraphs  OBLIGATORISK. Ett stycke per post. Minst ett.
+ * @property {string[]}       paragraphs  OBLIGATORISK. Ett stycke per post. Minst ett.
+ * @property {AboutLink|null} link        OBLIGATORISK som fält, får vara null. null = ingen länk i texten.
  */
 export const about = {
   paragraphs: [
-    // Jelals text. 1–3 stycken.
+    // Jelals text, ett stycke per post.
   ],
+  link: null,
 };
 ```
+
+#### A4 — "Hem och Ekonomi" som länk, båda lägena, beslutat 2026-10-08
+
+Uppdraget säger att frasen **"Hem och Ekonomi" i texten ska vara en länk som
+scrollar till projektet**. Två saker i premissen stämmer inte med koden, och båda
+är uppmätta:
+
+1. **`projects` är en tom array.** Det finns inget projekt och alltså inget id att
+   peka på. En ankarlänk till ett id som inte finns är precis det mönster
+   arkitekturen redan förbjudit för logga-länken: *ingenting som pekar på eller
+   utger sig för att vara en sektion får finnas utan att sektionen står i datan.*
+2. **"längre ner på sidan" är fel riktning.** Sidans ordning är Jelals egen,
+   beslutad 2026-10-07: hero, projekt, kompetenser, **om mig**, kontakt. Projektet
+   ligger alltså **ovanför** Om mig. Länken fungerar — den scrollar uppåt.
+   **Sektionsordningen ändras INTE** för att uppdragets formulering ska stämma;
+   ordningen är hans beslut och uppdraget beskriver en sida han inte har framför
+   sig. Texten på sidan säger ingenting om riktning, så ingenting ljuger. Det är
+   en rad vid LEVERANS, inte en ändring.
+
+**Beslut: ett fält i datan, inte en markering i texten, och inget hårdkodat i
+komponenten.**
+
+```jsx
+/* About.jsx, det bindande mönstret - inte en implementation */
+const target = about?.link;
+const linked = target != null && projects.some(
+  (project) => isComplete(project) && project.id === target.projectId,
+);
+/* För varje stycke: linked && stycket innehåller target.phrase exakt en gång
+ * -> [före, <a href={'#' + target.projectId}>{target.phrase}</a>, efter]
+ * I ALLA andra fall -> stycket oförändrat. */
+```
+
+| Läge | Vad som renderas |
+|------|------------------|
+| Projektet finns **inte** (i dag) | Hela stycket som vanlig text. Frasen "Hem och Ekonomi" syns, men är inte klickbar. **Ingen `href` alls** |
+| Projektet finns (när Jelal lägger in det) | Samma stycke, samma tecken, med frasen som `<a href="#hem-och-ekonomi">` |
+
+**Länken tänds av sig själv. Ingen text redigeras om, ingen rad kommenteras in.**
+
+Varför ett fält i datan och inte de tre alternativen:
+
+| Avfärdat | Varför |
+|----------|--------|
+| Frasen skriven i `About.jsx` och sökt i texten | Då står samma sträng på två ställen, i två filer. Skriver Jelal om stycket försvinner länken **tyst** — exakt felläget från 2026-10-02 (`hero` på tre ställen) |
+| En markering i texten, `[Hem och Ekonomi](hem-och-ekonomi)` | Inför ett eget mikrospråk i `src/data/`, som är beslutat att innehålla **ren data**, och kräver en parser plus ett undantag i teckengrinden: hakparenteserna renderas aldrig men skulle mätas mot teckensnittets delmängd. En grind som larmar på ett tecken ingen ser är en grind som lärs bort |
+| HTML i datan (`dangerouslySetInnerHTML`) | Nej. Aldrig i detta projekt |
+| Länk till `#projects` i stället | Den skulle alltid vara klickbar och landa på tomma läget "Än är listan tom". En länk som ser ut att gå till ett projekt och går till ett tomrum är sämre än ingen länk |
+
+**Målets id ligger på kortet.** `ProjectCard` sätter `id={project.id}` på kortets
+`<li>`, och kortet får samma scroll-marginal som sektionerna, med **samma uttryck
+ur samma token** så att de två inte kan driva isär:
+
+```css
+/* ProjectCard.module.css */
+.card { scroll-margin-top: calc(var(--header-height) + var(--space-4)); }
+```
+
+Utan den landar kortet under den klibbande headern. Regeln i `global.css` träffar
+bara `section[id]` och ska **inte** breddas till `[id]` — den hade då fångat
+`main#main` och varje framtida id.
+
+**Grind i `validate-data.mjs` (`about.js`), och exakt vad den inte gör:**
+
+| Grind | Meddelande |
+|-------|-----------|
+| `link` är `null` eller ett objekt | `about.js: link måste vara null eller ett objekt med phrase och projectId` |
+| `phrase` icke-tom text när `link` finns | `about.js: link.phrase saknas eller är tom` |
+| `projectId` matchar `/^[a-z0-9-]+$/` | `about.js: link.projectId får bara innehålla a-z, 0-9 och bindestreck (fick "Hem och Ekonomi")` |
+| `phrase` förekommer **exakt en gång** över alla stycken | `about.js: link.phrase förekommer N gånger i texten, ska vara exakt en (”Hem och Ekonomi”)` |
+
+**Att projektet finns grindas INTE.** Att `projectId` pekar på ett projekt som
+ännu inte är inlagt är det **normala, korrekta** läget i dag, och en grind på det
+hade fällt bygget på korrekt data — samma fel som A1 handlar om. Det skrivs som
+UPPLYSNING i OK-raden i stället:
+
+```
+Om mig: 1 stycke, 1 länkfras (0 pekar på ett projekt som finns)
+```
+
+**Vilken legitim ändring får fälla grinden?** Att skriva om texten så att frasen
+försvinner medan `link` står kvar. Meddelandet säger då vad som ska göras — sätt
+`link: null` eller skriv tillbaka frasen — och **den åtgärden får grinden att
+tiga**. Det är kravet från `LARDOMAR.md` 2026-10-05, prövat med tre indata.
 
 **Texten ligger i `src/data/`, inte i komponenten.** Hero-texten bor i sin
 komponent, och `GUIDE.md` har därför ett avsnitt "Texter som inte ligger i
@@ -1945,14 +2305,28 @@ redigera i stället för ett textblock där radbrytningarna är osynliga.
 Rendering: `<p>` per post, `max-width: var(--measure)`. Rubriken kommer från
 `sections.js` (`Om mig`) som för alla andra sektioner.
 
-**Formen inbjuder inte till tillväxt.** Inga fält för bild, rubriknivåer eller
-länkar. Behövs något av det är det ett eget beslut, och då är det inte längre en
-liten sektion.
+**Formen inbjuder inte till tillväxt.** ~~Inga fält för bild, rubriknivåer eller
+länkar.~~ **Ändrat 2026-10-08:** formen har vuxit med **exakt ett** fält, `link`,
+därför att uppdraget beställer en länk inne i texten (A4). Det är ett eget beslut,
+taget här, med en verklig konsument. Inga fält för bild och inga rubriknivåer —
+och nästa fält kräver ett nytt beslut på samma sätt.
 
-Validering: `paragraphs` är en icke-tom array av icke-tomma strängar.
+**Ingen bild i Om mig.** Uppdraget säger "behåll befintlig bild och layout i
+sektionen". **Det finns ingen bild att behålla** — sektionen har aldrig haft en,
+och `about.js` har bara haft `paragraphs`. Att lägga till en bild är alltså inte
+ett "behåll" utan ett nytt beslut, och det tas inte i detta uppdrag: det kräver en
+bildkälla Jelal inte har gett, en plats i `assets-source/`, en körning av
+bildskriptet och ett layoutbeslut. **Står kvar som Jelals öppna punkt.**
 
-> **Innehållet är en öppen punkt.** Jelal ska säga vad som ska stå. Byggaren
-> hittar inte på text om honom.
+Validering: `paragraphs` är en icke-tom array av icke-tomma strängar, plus
+`link`-grindarna i A4.
+
+> ~~**Innehållet är en öppen punkt.** Jelal ska säga vad som ska stå.~~
+> **BESVARAT 2026-10-07/08:** Jelal har skrivit texten ordagrant i sitt uppdrag.
+> Den skrivs in tecken för tecken i paket F, som **ett** stycke — texten är ett
+> sammanhängande block i uppdraget, och att dela den i tre vore att hitta på
+> styckeindelning. `UTKAST`-kommentaren i `about.js` blir falsk i samma stund och
+> tas bort i samma ändring.
 
 ### `src/data/contact.js` — kontaktuppgifter (paket 6)
 
@@ -2612,14 +2986,14 @@ Utöver det:
 | `src/App.jsx` | `function App()` | Renderar `<Header />`, `<main>` med `<Hero />` följt av `sections.map(...)` som slår upp komponenten i `SECTION_COMPONENTS`, och `<Footer />`. Uppslaget är konfiguration, inte logik — se "`sections.js` blir åter enda källan". |
 | `src/components/Header.jsx` | `function Header()` | Sticky header. JQ-märket (`logo-mark-tight-96/192.png`, `alt=""` + `aria-hidden="true"`) plus namnet som HTML-text, tillsammans **en** länk till `HERO_ID`, utan platta eller ram runt märket. Headerbandet är grått (`--color-bg-top`). Navlänkar genereras från hela `sections`. Tar inga props. Detaljerna står i "Headerns uppbyggnad" — den som bara läser denna rad har inte hela beslutet. |
 | `src/components/Section.jsx` | `function Section({ id, title, children, className })` | Återanvänd ram för skills/projects/contact. Renderar `<section id={id}>` med `<h2>{title}</h2>` och innehållet. `className` är valfri och läggs till efter modulens egen klass. Används **inte** av Hero. |
-| `src/components/Hero.jsx` | `function Hero()` | Renderar sin egen `<section id="hero">` med `<h1>`, titel, intro och profilbilden. Egen, eftersom hero har `h1` och ingen `h2`-rubrik. |
-| `src/components/Skills.jsx` | `function Skills()` | Läser `skillGroups` från `src/data/skills.js`. Renderar grupper och pills. Innehåller ingen skill-data. |
-| `src/components/SkillPill.jsx` | `function SkillPill({ name, filled })` | Renderar en `<li>` med pill. `filled === true` → orange fylld, mörk text. `filled === false` → outline mot mörk botten. Ren presentation, inget state. |
-| `src/components/Projects.jsx` | `function Projects()` | Läser `projects`. `projects.length === 0` → tomt läge på svenska. Annars en lista av `<ProjectCard />`. |
-| `src/components/ProjectCard.jsx` | `function ProjectCard({ project })` | Tar hela project-objektet. Renderar `url`/`repoUrl` endast när de inte är `null`. |
+| `src/components/Hero.jsx` | `function Hero()` | Renderar sin egen `<section id="hero">` med `<h1>`, rollrad, ingress, **de två knapparna** (A5) och profilbilden. Egen, eftersom hero har `h1` och ingen `h2`-rubrik. Knapparnas mål hämtas ur `PROJECTS_ID` och `CONTACT_ID` — aldrig som literal. |
+| `src/components/Skills.jsx` | `function Skills()` | Läser `skillGroups` från `src/data/skills.js`. Renderar **ett kort per grupp** med `h3` och en `<ul>` av `<SkillChip />` (A6). Ingen teckenförklaring, ingen skill-data i filen. |
+| `src/components/SkillChip.jsx` | `function SkillChip({ name })` | Renderar en `<li className={styles.chip}>` med namnet. **Ett enda utseende** (A2). Ren presentation, inget state. Hette `SkillPill.jsx` före 2026-10-08. |
+| `src/components/Projects.jsx` | `function Projects()` | Läser `projects`. Inga kompletta poster → tomt läge på svenska. Annars en lista av `<ProjectCard />`. Importerar `isComplete` ur `ProjectCard.jsx`. |
+| `src/components/ProjectCard.jsx` | `function ProjectCard({ project })` plus `export function isComplete(project)` | Tar hela project-objektet. Renderar `url`/`repoUrl` endast när de inte är `null`. Sätter `id={project.id}` på kortet (A4) så att Om mig-länken har ett mål. **`isComplete` är en namngiven export** — kortets krav på en post bor hos kortet, och både `Projects.jsx` och `About.jsx` läser samma predikat i stället för två kopior som kan glida isär. |
 | `src/components/Contact.jsx` | `function Contact()` | Läser `contact`. Renderar e-posten som `mailto:`-länk, `contact.links.filter(l => l.url !== null)`, och `<ContactForm />`. Inga adresser eller URL:er hårdkodade. |
 | `src/components/ContactForm.jsx` | `function ContactForm()` | Läser `contact.form`. Äger de fyra tillstånden, valideringen och statusraden. **Projektets första komponent med `useState`** — tre fältvärden, ett tillstånd, ett felobjekt. Se "Kontaktformuläret". |
-| `src/components/About.jsx` | `function About()` | Läser `about.paragraphs` och renderar ett `<p>` per stycke, `max-width: var(--measure)`. Rubriken kommer från `sections.js`. Ingen text i komponenten. |
+| `src/components/About.jsx` | `function About()` | Läser `about.paragraphs` och renderar ett `<p>` per stycke, `max-width: var(--measure)`. Rubriken kommer från `sections.js`. Ingen text i komponenten. Äger dessutom **länkläget** i A4: `about.link` + `isComplete` ur `ProjectCard.jsx` avgör om frasen blir en `<a>` eller vanlig text. |
 | `src/components/Footer.jsx` | `function Footer()` | `<footer>` med namn och årtal. Inget `id`, inget navmål. |
 
 Alla komponenter är funktionskomponenter utan `useState`/`useEffect` i paket 1–6.
@@ -2784,6 +3158,272 @@ rapportera båda. Ser cirkeln ut som en fläck snarare än ett porträtt är rä
 åtgärd att **sänka tonplattans opacitet** så att fotot behåller mer av sitt eget
 omfång — inte att ändra bakgrunden Jelal just valt, och inte att göra strecket
 tjockare.
+
+### A5 — Hero: knapparna, mätserien och 360 px — beslutat 2026-10-08
+
+Uppdraget lägger till **två knappar** i hero och ställer två mätbara krav: "hero
+ska fylla ungefär första skärmen på dator" och "knapparna ska synas utan scroll på
+mobil". Det senare är uppdragets hårdaste krav, och därför är det ett eget paket
+(C) med en **mätserie** — inte en mening i någon annans verifiering
+(`LARDOMAR.md` 2026-10-05: går ett "får aldrig" att mäta är mätningen beslutet och
+prosan bara förklaringen).
+
+#### Vad knapparna är
+
+**Två `<a>`-element, inte `<button>`.** De navigerar till en sektion på samma sida;
+det är en länk. `<button>` hade krävt JS för att göra något, och
+`scroll-behavior: smooth` i `global.css` gör redan scrollningen mjuk, med
+`prefers-reduced-motion`-undantag. **Ingen `scrollIntoView`, ingen scrollhanterare,
+ingen ny JS alls.**
+
+| Ordning | Text (exakt ur uppdraget) | Mål | Stil |
+|---------|---------------------------|-----|------|
+| 1 | `Se mina projekt` | `PROJECTS_ID` | primär, fylld |
+| 2 | `Kontakta mig` | `CONTACT_ID` | sekundär, kontur |
+
+Målen hämtas ur de **namngivna konstanterna** i `sections.js`. Ett sektions-id får
+aldrig stå som literal i en `.jsx`-fil (`LARDOMAR.md` 2026-10-02). Uppdragets
+`#projekt` och `#kontakt` uppfylls som **funktion**, inte som sträng: id:na är
+`projects` och `contact` och byts inte — navet, `aria-current`-observern,
+sektionsavgränsarna och varje befintlig länk hänger på dem.
+
+#### Knappstilarna — bindande deklarationer
+
+De bygger på **det som redan finns**: formulärets `.button` har sedan paket 6 den
+fyllda orangen med `--color-on-accent`, och den paret är sidans "primära
+handling". Deklarationerna skrivs ändå ut i `Hero.module.css`, för
+`ContactForm.module.css` tillhör en `<button>` med tre tillstånd (`data-muted`,
+`Skickar …`) som hero inte har. **Ingen tredje global klass införs** — den dörren
+är stängd i "Headerns logotyp", och den gäller.
+
+```css
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.actionPrimary {
+  padding: var(--space-3) var(--space-5);
+  background-color: var(--color-accent);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--color-on-accent);
+  font-size: var(--text-base);
+  transition: background-color var(--transition);
+}
+
+.actionPrimary:hover {
+  background-color: var(--color-accent-hover);
+}
+
+.actionSecondary {
+  padding: var(--space-3) var(--space-5);
+  background-color: transparent;
+  border: 1px solid var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: var(--text-base);
+  transition: border-color var(--transition);
+}
+
+.actionSecondary:hover {
+  border-color: var(--color-text);
+}
+```
+
+- **`flex-wrap: wrap` är hela mobilhanteringen.** "Staplade på mobil" kräver ingen
+  brytpunkt: knapparna radbryter av sig själva när de inte får plats på 309 px
+  användbar bredd. En brytpunkt hade varit ett andra tal att hålla i synk med
+  texternas längd.
+- **`border: 1px solid transparent` på den primära** så att de två knapparna får
+  **exakt samma höjd**. Samma skäl som den gamla ifyllda pillen hade, och det är
+  det enda som överlever av den regeln.
+- **Konturknappens ram är `--color-text-muted`, INTE `--color-border`.** Hero
+  ligger på `--color-bg-top` (`#2A2A2E`) och `--color-border` har **samma
+  hexvärde** — ramen hade mätt 1,00:1 mot sin egen bakgrund, alltså en osynlig
+  kant. Det är exakt samma fel som headerns kant hade innan
+  `--color-header-border` infördes. En knapps ram är en gränssnittskomponents
+  avgränsning och omfattas av WCAG 1.4.11:s **3:1**.
+- **Hover rör sig bort från underlaget** i båda fallen — den etablerade regeln.
+
+Framräknade kvoter mot hero:s `#2A2A2E`, som **ska mätas** i paket B/C och skrivas
+in enligt `LARDOMAR.md` 2026-10-08 (mina tal är förväntan, inte beslut):
+primärytan `--color-accent` ca **5,05:1** (1.4.11 ✓), dess text
+`--color-on-accent` på orange ca **6,9:1** (1.4.3 ✓), konturramen
+`--color-text-muted` ca **5,6:1** (1.4.11 ✓), konturtexten `--color-text` ca
+**12,2:1** (1.4.3 ✓). Fokusringen är oförändrat orange och mätte 5,047:1 mot samma
+grå band när skip-länken byggdes.
+
+#### Var knapparna står i DOM
+
+Inuti `.text`-gridden, **efter ingressen**, som ett eget element:
+`h1` → rollrad → ingress → `.actions`. Då ärver de `.text { gap: var(--space-4) }`
+och behöver ingen egen marginal. Profilbilden ligger kvar **efter** texten i DOM,
+alltså under den på mobil och vid sidan från 900 px — det är redan uppdragets
+önskade ordning och ingenting behöver flyttas.
+
+**Ingressen skrivs som EN sträng**, inte som två med `+`. Nuvarande kod
+konkatenerar, och en konkatenering är det enklaste sättet att tappa ett mellanslag
+mitt i en text som ska vara exakt.
+
+#### Heros `EJ I ARKITEKTUR`-markeringar — vilka som är besvarade nu
+
+Två av dem blir besvarade av detta beslut, eftersom A5 bygger på dem. De tas bort
+i samma ändring som genomförandet (`LARDOMAR.md` 2026-10-05, ÅTERKOMMANDE):
+
+| Markering | Status |
+|-----------|--------|
+| `.text`-gridden: de inre avstånden | **BESLUTAT:** `gap: var(--space-4)`. Knapparnas avstånd till ingressen kommer därifrån och ska inte sättas separat |
+| `.text`: hur rollraden skiljs från ingressen | **BESLUTAT:** med **färg**, `--color-text` mot `--color-text-muted`, inte med en fjärde typografisk nivå. Vikt går inte att använda — teckensnittet har en enda |
+| `.inner`: layoutmekanism och spårbredder | **BESLUTAT för `.hero`** (gridden i A5 ovan). För `.inner` står de två lika breda spåren från 900 px kvar som byggarens val, **ännu obesvarad av arkitekten** |
+| `IMAGE_SIZES`-värdet | Ännu obesvarad av arkitekten |
+| Profilbildens `alt`-text | Ännu obesvarad av arkitekten |
+| `contrast(1.05)` i gråskalan | Ännu obesvarad av arkitekten |
+
+#### Hero fyller första skärmen på dator
+
+```css
+@media (min-width: 900px) {
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+    min-height: calc(100vh - var(--header-height));
+    min-height: calc(100svh - var(--header-height));
+  }
+}
+```
+
+- **Bara från 900 px.** Ett golv på mobilhöjden hade tvingat fram tomrum på en låg
+  telefon, alltså motverkat det andra kravet.
+- **`minmax(0, 1fr)` även här.** `.hero` blir en grid-container, och regeln gäller
+  varje grid-container utan undantag — ett registrerat återfall.
+- **Två `min-height`-rader i den ordningen.** `100svh` vinner där den stöds,
+  `100vh` är reserven. Det är en reservkedja, inte en dubblett.
+- **`--header-height`, samma token som `scroll-margin-top`**, så att de inte kan
+  driva isär. Headern har låst höjd till samma token.
+
+#### Mätserien — detta ÄR kravet (paket C)
+
+Varje rad mäts på **elementens egna rektanglar** (`getBoundingClientRect()`), med
+**bevisad vyport**, aldrig genom att titta på sidan.
+
+| # | Mätning | Villkor |
+|---|---------|---------|
+| 1 | Båda knappelementens `bottom` vid 360 × 640, 360 × 667, 360 × 740, 390 × 844 | `bottom <= window.innerHeight` i **samtliga** fall. 640 är golvet och får inte utelämnas för en bekvämare höjd |
+| 2 | Samma mätning vid 600 × 640, 900 × 700, 1280 × 800, 1600 × 900 | Samma villkor. Serien gör att en framtida brytpunkt inte kan smyga sönder kravet |
+| 3 | `section#hero .inner` `scrollWidth` mot `clientWidth` vid 360 px | Lika. Mätt mot **hero:s egen behållare**, inte mot sidan — slack absorberar fel, och absorberade fel larmar inte |
+| 4 | Samma, med `verksamhetsutvecklingsprojektledningsarbete` (43 tecken) programmatiskt insatt i `h1`, rollraden, ingressen **och båda knapptexterna** | Lika. En synteststräng, inte dagens text: dagens text bevisar ingenting om morgondagens. **Den gamla listans längsta strängar är inte längre måttet** |
+| 5 | `section#hero` höjd vid 1280 × 800 | Mellan **0,80 och 1,15 ×** `(window.innerHeight - 64)`. Talet skrivs i överlämningen |
+| 6 | Negativ kontroll | Tvinga fram ett överskridande genom den smalaste selektor som träffar det som prövas, redovisa **vilket element** som bar avvikelsen (`scrollWidth` plus elementet med största `right`), kontrollera `querySelectorAll(sel).length`, och visa att larmet upphörde när injektionen togs bort |
+
+#### Vad som får vika, i denna ordning, och bara om mätningen kräver det
+
+Mina överslag säger att allt ryms vid 360 × 640 utan åtgärd (summerat ca 478 px
+från dokumentets överkant till knapparnas underkant). **Mätningen avgör, inte
+överslaget.** Behövs en åtgärd tas de i exakt denna ordning, och varje steg
+redovisas:
+
+1. `.hero { padding-block: var(--space-6); }` **under 600 px**, som undantag från
+   `global.css`. Modulen får röra `padding-block` på sin egen sektionsrot —
+   förbudet gäller `padding-inline`, som är sidomarginalen.
+2. Ingressens grad från `--text-lg` till `--text-base` **under 600 px**. Det är
+   hero:s egen grad, inte sidans typografi.
+3. Stopp. **Texterna kortas aldrig** — de är Jelals exakta ord. Profilbilden tas
+   inte bort och krymps inte, och dess tak (360/420 px) och den icke-avtagande
+   serien står fast.
+
+### A7 — Rollraden: `Systemutvecklare · Fullstack` — beslutat 2026-10-08
+
+**Uppdraget gäller.** Jelal sa 2026-10-07, tidigare samma vecka, "ta bort
+systemutvecklare längst upp och ersätt det med Fullstackutvecklare". Uppdraget är
+**nyare och uttryckligt**, och skriver ut raden ordagrant. Hans senaste ord
+vinner.
+
+```js
+const role = 'Systemutvecklare · Fullstack';
+```
+
+**Mittpunkten är `U+00B7`**, och den **finns** i
+`src/styles/fonts/didact-gothic-latin-400.woff2` — uppmätt 2026-10-08 ur filens
+`cmap`, inte ur `unicode-range` (`LARDOMAR.md` 2026-10-05: mät artefakten). Ingen
+reservlösning behövs, och raden skrivs som uppdraget anger. Teckengrinden körs
+ändå om i paket B när de exakta strängarna står i koden — jag har mätt de tecken
+jag kunde läsa, inte de tecken byggaren faktiskt skriver.
+
+**`<title>` i `index.html` följer med i samma ändring.** Den lyder i dag
+`Jelal Qaiumi — Fullstackutvecklare`. Ny text:
+`Jelal Qaiumi — Systemutvecklare · Fullstack`. Tankstrecket `—` behålls som
+avgränsare mellan namn och roll; mittpunkten hör till rollen.
+
+**Den daterade kommentaren i `Hero.jsx` skrivs om, inte uppdateras.** Den säger i
+dag att Jelal *bytte bort* "Systemutvecklare" och att raden därför inte härleds ur
+`BRIEF.md`. Efter detta beslut är påståendet falskt, och en kommentar som berättar
+en historik blir falsk varje gång historiken får ett nytt kapitel
+(`LARDOMAR.md` 2026-10-05, registrerat återfall). Den ersätts med **invarianten**:
+
+```js
+/* Rollraden är Jelals egna ord och bara hans att ändra. Samma sträng står i
+ * <title> i index.html - ändras den här ändras den där, i samma redigering. */
+```
+
+Ingen årtalsstämpel, ingen uppräkning av vad han sagt tidigare, ingen hänvisning
+till vad `BRIEF.md` säger. Hela omsvängningen är nedtecknad **här**, och det är
+den enda plats som ska bära den.
+
+**Detta är en medveten omsvängning och ska sägas vid LEVERANS**, inte smygas in.
+`PLAN.md` har den som en egen punkt.
+
+### A10 — Inga ikonlänkar i hero: inte GitHub, inte LinkedIn — beslutat 2026-10-08
+
+Uppdraget listar dem som **valfria** ("platshållare för länkarna"), och valfritt
+betyder att det går att avstå.
+
+- **GitHub återinförs inte.** Jelal har sagt "Ta bort github", och `contact.js`
+  har `url: null` med en daterad kommentar. Ett uppdrag som nämner GitHub i en
+  valfri punkt upphäver inte ett uttryckligt borttagande.
+- **LinkedIn läggs inte till i hero.** Länken finns redan i kontaktsektionen, dit
+  heros andra knapp går. En andra väg till samma adress, 400 px ovanför den
+  första, tillför inget — och "platshållare för länkarna" betyder en länk utan
+  mål, vilket är det mönster arkitekturen förbjudit genomgående.
+
+**Avstår vi, och Jelal ber om den, är det en avgränsad ändring:** en `<a>` i
+`.actions`-raden med adressen ur `contact.links`, aldrig som literal. Det står som
+öppen punkt i `PLAN.md`.
+
+### A11 — Ingen animation införs — avtryck 2026-10-08
+
+Uppdraget säger: *"Lugn in-animation när sektionen scrollas in, **om sidan redan
+använder animationer. Annars ingen.**"* Uppmätt: sidan har **två
+färgövergångar på 150 ms** (`a { transition: color }` och formulärknappens
+bakgrund) och **noll** in-animationer. Uppdragets egen regel ger därmed **ingen
+animation**, och det är ett avtryck, inte ett val.
+
+Avtrycket finns för att en framtida läsare annars ser "lugn in-animation" i
+uppdraget och tror att den saknas av slarv.
+
+Konkret, så att ingen behöver tolka:
+
+| Tillåtet | Inte tillåtet |
+|----------|---------------|
+| `transition` på **hover** i A5:s två knappar, med `var(--transition)` — samma 150 ms som sidans övriga två | Varje `@keyframes`, varje `animation`, varje `transition` som utlöses av att ett element kommer in i vyn |
+| | `IntersectionObserver` för utseende. Observern i projektet finns för `aria-current` och rör inget utseende |
+| | `transition` eller `animation` i Skills-filerna. Paket E:s grep-räkning gäller **just de filerna** och ska inte läsas som ett förbud mot heros hover-övergångar |
+
+### A12 — Uppdragstexten måste bo i repot, inte i en scratchpad — beslutat 2026-10-08
+
+Fyra verifieringspunkter (B1, D1, F1 och engångsjämförelsen i A1) jämför koden
+**tecken för tecken mot uppdragstexten**. Den texten ligger i dag bara i en
+sessionsbunden scratchpad-fil, som försvinner. Då finns ingen norm kvar att mäta
+mot nästa gång någon undrar om en sträng är rätt, och "exakt som Jelal skrev" blir
+ett minne.
+
+**Beslut: uppdragstexten läggs in i repot innan paket B startar**, ordagrant och
+oformaterad. `BRIEF.md` är **inte min fil att ändra** — det är projektledarens
+åtgärd, och den blockerar B, D och F. Varje jämförelse görs mot den filen, aldrig
+mot en scratchpad-sökväg, och varje verifieringsrad i överlämningen anger vilken
+fil den jämförde mot.
 
 ### Sektionsavgränsare — beslutat av Jelal 2026-10-03
 
@@ -3722,10 +4362,10 @@ Skriptet kontrollerar:
 | Fil | Aktiveras i | Kontroll |
 |-----|-------------|----------|
 | `sections.js` | paket 4 | `id` unika (`new Set(ids).size === ids.length`), `label` finns på **alla** poster, `HERO_ID` förekommer **inte** i listan |
-| `skills.js` | paket 4 | Se "Validering av skills" nedan — korsreferens mot källistorna, unika namn, `filled` boolean, unika grupp-id, `title` finns, varje grupp ≥ 1 skill |
+| `skills.js` | paket 4, omgjord i paket D | Se **"A1 — Grinden för `skills.js` är strukturell"** nedan. Ingen korsreferens, inget antal, inget `filled` — struktur, unikhet, slug-format och okända fält |
 | `projects.js` | **paket 5** | `id` unika, `id`/`title`/`description` finns, `tech` är en array |
 | `contact.js` | **paket 6** | `email` finns, varje `links`-post har `label`, och `form.endpoint`, `form.accessKey`, `form.hcaptchaSiteKey` är icke-tomma strängar |
-| `about.js` | **vid omordningen** | `paragraphs` är en icke-tom array av icke-tomma strängar |
+| `about.js` | vid omordningen, utökad i paket F | `paragraphs` är en icke-tom array av icke-tomma strängar, plus de fyra `link`-grindarna i **A4** |
 
 Felmeddelanden skrivs på svenska, namnger filen och det värde som är fel, och
 skriptet avslutas med nollskild kod. Inga nya beroenden — ren Node.
@@ -3786,13 +4426,165 @@ Validering OK: 4 sektioner, 18 grupper, 307 skills (265 ifyllda, 42 dämpade).
 Den raden är inte kosmetisk. En validering som är tyst när allt är bra går inte
 att skilja från en som inte kördes alls.
 
-#### Validering av skills — korsreferens i stället för ett fast tal
+#### A1 — Grinden för `skills.js` är strukturell, beslutat 2026-10-08
+
+Detta är det mest blockerande beslutet i paket A. **Uppmätt 2026-10-08: 17 av
+uppdragets 53 namn fäller bygget**, och inget av dem är påhittat eller felstavat —
+varje enda är en rimlig omskrivning eller sammanslagning av namn som finns i
+källistorna (`Swagger/OpenAPI` mot `Swagger`, `TDD` mot
+`Testdriven utveckling (TDD)`, `Git och GitHub` mot `Git` + `GitHub`, och så
+vidare). Grinden fälls alltså av en **legitim** ändring, och `LARDOMAR.md`
+2026-10-05 säger att en sådan grind ska göras om, inte kringgås.
+
+**Vad korsreferensen skyddade mot:** att något Jelal hade sagt att han kan tyst
+föll bort när **307 rader plockades ur två källistor för hand**. Mekanismen var
+rätt för det problemet: det fanns två listor, och grinden jämförde dem.
+
+**Vad problemet är nu:** 53 namn som Jelal har **kurerat själv i ett uttryckligt
+uppdrag**. Det finns ingen andra lista att jämföra mot — uppdragstexten är inte en
+fil i repot, och hans källistor är inte längre vad han vill visa. Ett bortfall kan
+därför inte upptäckas genom jämförelse. Det kan bara upptäckas **en gång**, när
+listan skrivs in.
+
+**Beslut, i tre delar:**
+
+**1. Korsreferensen utgår helt.** `SKILL_SOURCES`, `readSkillSource()` och hela
+`MERGED`-tabellen tas bort ur `scripts/validate-data.mjs`, tillsammans med de
+fyra grindar som läser dem. `skills.txt` och `skills-full.txt` ligger kvar i
+repot som historik och **läses inte av något skript** (se "`skills.txt` och
+`skills-full.txt` — historik, inte källa").
+
+**2. Engångsjämförelsen flyttas till paket D och är inte en grind.** Att de nio
+grupperna och de 53 punkterna står tecken för tecken som i uppdraget verifieras
+**maskinellt en gång**, i paket D, mot uppdragstexten i scratchpad-filen. Det är
+skillnaden som gör hela beslutet: en engångsverifiering får vara exakt mot ett
+innehåll, en permanent grind får aldrig vara det, eftersom innehållet är Jelals
+att ändra i morgon.
+
+**3. Det som står kvar är strukturgrindar — invarianter som ingen legitim
+redigering bryter.** Exakt dessa, och inga andra:
+
+| Grind | Meddelande | Vilken LEGITIM ändring får fälla den |
+|-------|-----------|--------------------------------------|
+| `skillGroups` är en array | `skills.js: skillGroups saknas eller är inte en array` | Ingen |
+| Grupp har `id`, icke-tom text | `skills.js: grupp saknar obligatoriskt fält (post N, fält "id")` | Ingen |
+| Grupp-`id` matchar `/^[a-z0-9-]+$/` | `skills.js: grupp-id får bara innehålla a-z, 0-9 och bindestreck (id "AI i utveckling")` | Ingen — id:t blir ett `h3`-ankare, och blanksteg eller versaler ger ett ankare som inte går att länka till. Den åtgärd meddelandet föreskriver får grinden att tiga |
+| Grupp-`id` unikt | `skills.js: grupp-id förekommer mer än en gång ("backend")` | Ingen — id:t är React-nyckel |
+| Grupp har `title`, icke-tom text | `skills.js: grupp saknar title (id "backend")` | Ingen |
+| Grupp har minst en skill | `skills.js: grupp saknar skills eller är tom (id "backend")` | Ingen — en rubrik utan innehåll |
+| Skill har `name`, icke-tom text | `skills.js: skill saknar name (grupp "backend", post 4)` | Ingen |
+| Skill-`name` unikt i HELA filen | `skills.js: skill-namnet förekommer mer än en gång ("React")` | Ingen — namnet är React-nyckel |
+| **Okänt fält på en skill** | `skills.js: okänt fält på skill ("React", fält "filled") - tillåtet fält är endast name` | Ingen. Detta är grinden som fångar en kvarglömd rad ur den gamla listan, och den enda som ersätter något av korsreferensens skydd |
+| **Okänt fält på en grupp** | `skills.js: okänt fält på grupp (id "backend", fält "icon") - tillåtna fält är id, title, skills` | Ingen. Fångar också en återinförd ikon, se A3 |
+| Teckengrinden (oförändrad) | `skills.js: tecken utanför teckensnittets delmängd (...)` | Ingen |
+
+**Antal grindas inte, varken totalt eller per grupp.** Antalet grupper och
+antalet skills skrivs som **UPPLYSNING** i OK-raden, och upplysningen räknar bara
+poster som faktiskt renderas (`LARDOMAR.md` 2026-10-05: en fälld eller
+bortfiltrerad post får aldrig räknas med). Ny OK-rad:
+
+```
+Validering OK: 4 sektioner, 9 grupper, 53 kompetenser, 0 projekt, 1 stycke i Om mig (1 länkfras, 0 pekar på ett projekt som finns), 2 kontaktlänkar, 225 tecken i teckensnittet (387 deklarerade).
+```
+
+Antalen ovan är **förväntade värden, inte grindar**. Avviker ett tal rapporteras
+det — det justeras inte bort.
+
+**De gamla felmeddelandena utgår** och får inte stå kvar som döda strängar:
+`namn ur <fil> saknas och är inte sammanslaget`, `sammanslagning pekar på ett
+namn som inte finns`, `namnet är sammanslaget och får inte stå som egen post`,
+`namnet finns varken i skills.txt eller skills-full.txt`, `filled måste vara true
+eller false`.
+
+#### A9 — Kommentarer som räknar upp tokens: en grind som fångar borttagningen, inte uppräkningen
+
+Beslutat 2026-10-08. Bakgrunden är `LARDOMAR.md`-posten från samma dag, märkt
+**ÅTERKOMMANDE (3+)** med uppmaningen att göra om felet till ett automatiskt test:
+`Projects.jsx:51` och `Skills.jsx:68` räknar båda upp fem tokens som ombundna i
+`.surface-light`, och ett av de fem (`--color-text-dim`) binds inte om längre.
+
+**Del 1 — de två kommentarerna rättas, oberoende av grinden.**
+
+| Fil | Åtgärd |
+|-----|--------|
+| `Projects.jsx:51` | Uppräkningen av de fem tokennamnen stryks. Ersätts av konsekvensen: *"Klassen binder om flera ärvda färgtokens för allt inuti sektionen — uppräkningen står i `.surface-light` i `tokens.css` och ska bara stå där."* |
+| `Skills.jsx:68` | Hela stycket om `surface-light` utgår. Det är historik om en yta som flyttades, i en fil som skrivs om från grunden i paket E, och det uppmanar dessutom nästa läsare att fatta ett beslut på fel underlag |
+
+**Del 2 — grinden. Jag inför EN och avfärdar den som efterfrågades.**
+
+**Avfärdat: en grind som fäller bygget när en kommentar räknar upp tokens ur ett
+annat block.** Jag har prövat tre formuleringar och ingen håller:
+
+| Formulering | Varför den inte håller |
+|-------------|------------------------|
+| "Högst ett `--color-*`-namn per kommentar utanför `tokens.css`" | Fäller en helt legitim kommentar som motiverar ett val genom att ställa två tokens mot varandra — `ContactForm.module.css:90` gör precis det, korrekt. En grind som fäller korrekt kod lär sin läsare att larm betyder "något är konstigt med grinden" |
+| "Högst N namn", N = 3 eller 4 | Ett tröskeltal utan härledning. Det är samma konstruktion som det hårdkodade `93`, och det fälls eller släpper igenom beroende på hur någon råkar formulera sig |
+| "Namn i samma kommentar som `surface-light` måste vara deklarerade i det blocket" | Fäller satsen *"X binds medvetet INTE om här"*, som är en sann och nyttig kommentar. Enda utvägen vore en undantagsmarkering i kommentaren, och lärdomen 2026-10-05 säger att ett undantag inte är en lösning |
+
+**Grundskälet:** uppräkningen är ett *stilproblem* i en text, och det går inte att
+skilja en felaktig uppräkning från en riktig jämförelse utan att läsa meningen.
+Det är en granskaruppgift, inte en maskinuppgift.
+
+**Infört i stället: en grind på kvarglömda tokenreferenser.**
+`scripts/validate-tokens.mjs`, kopplad in i `build` efter `validate-data.mjs` —
+scriptet och raden i `package.json` läggs till i samma paket, enligt regeln från
+2026-10-02:
+
+```json
+"validate:tokens": "node scripts/validate-tokens.mjs",
+"build": "node scripts/validate-data.mjs && node scripts/validate-tokens.mjs && vite build"
+```
+
+> Varje `--color-*`-namn som förekommer i `src/**/*.{css,jsx,js}` eller
+> `scripts/*.mjs` måste vara **deklarerat i `tokens.css`** (i `:root` eller i
+> `.surface-light`). `tokens.css` själv undantas från sökningen, eftersom det är
+> där uppräkningen får bo — det är lärdomens egen regel.
+>
+> `validate-tokens.mjs: tokenet finns inte i tokens.css ("--color-text-dim" i src/components/ContactForm.module.css)`
+
+Varför den är rätt grind:
+
+- **Den fångar det som faktiskt gick fel i alla tre återfallen: en borttagning som
+  lämnade en referens kvar.** Kommentaren blev falsk därför att något togs bort på
+  ett ställe medan två andra filer talade om det.
+- **Den har inget tröskeltal och ingen tolkning.** Ett namn finns eller finns
+  inte.
+- **Den kan inte larma falskt.** Vilken legitim ändring får fälla den? *Att byta
+  namn på eller ta bort ett token utan att röra dess referenser* — vilket inte är
+  en legitim ändring. Läggs tokenet till i `tokens.css` först tiger grinden. Den
+  åtgärd meddelandet föreskriver får den att tiga, vilket är kravet från
+  2026-10-05.
+- **Den bevisar sig själv i samma leverans.** A8 tar bort `--color-text-dim`, och
+  grinden **ska** då fälla bygget på `ContactForm.module.css:90` till dess att den
+  kommentaren är omskriven. Det är en negativ kontroll som inte behöver
+  konstrueras: redovisa larmet, vilken fil och rad som bar det, och att det
+  upphörde när kommentaren rättades.
+- **Den fångar inte uppräkningen i `Projects.jsx`**, och det ska stå utskrivet.
+  Alla fem namn där finns i `tokens.css`. Uppräkningen rättas av del 1 ovan, av en
+  människa, och nästa gång samma fel uppstår fångas det bara om det handlar om ett
+  **borttaget** namn. Den halvan är inte automatiserad, och det är ett medvetet
+  avstånd mellan vad lärdomen ber om och vad som går att bygga.
+
+**A8 och A9 ligger INTE i paket B–F.** De rör `Footer.module.css`, `tokens.css`,
+`ContactForm.module.css` och `Projects.jsx` — filer som Jelals innehållsuppdrag
+inte nämner. De ska ligga i ett **eget paket**, numrerat av projektledaren. Blandas
+de in i paket E går det inte att läsa ut vilken ändring som bar vilket fynd, och
+uppdragets egen rad "Resten av portfolion är oförändrad" blir omätbar.
+(`Skills.jsx`-kommentaren i del 1 är undantaget: den filen skrivs om i paket E
+ändå, och stycket ska inte skrivas av till den nya filen.)
+
+> #### UPPHÄVT — korsreferens i stället för ett fast tal
+>
+> Allt nedan i detta underavsnitt gällde den gamla listan på 307 poster plockade
+> ur två källistor. **Bygg inget efter det.** Gällande beslut står i "A1 — Grinden
+> för `skills.js` är strukturell" ovan.
 
 Ett hårdkodat `93` var rätt när listan var frusen. Nu växer den, och **ett tal som
 måste ändras varje gång Jelal lägger till en kompetens är en grind som kommer att
 fallera av fel skäl.** Den lär oss att ignorera den.
 
-**Beslut: totalantalet är en upplysning. Grinden är korsreferens mot källistorna.**
+**~~Beslut: totalantalet är en upplysning. Grinden är korsreferens mot
+källistorna.~~ UPPHÄVT 2026-10-08.**
 
 Skriptet läser `skills.txt` och `skills-full.txt` — de ligger i repot och är
 Jelals egna — och kontrollerar:
@@ -5091,7 +5883,104 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
 
 ---
 
+### Beslutslogg — paket A, innehållsuppdraget 2026-10-08
+
+- **A1: skills-grinden blir strukturell, korsreferensen utgår** — uppmätt fällde
+  den 17 av 53 kurerade namn, och inget av dem var fel. En grind som larmar på
+  korrekt indata lär sin läsare att ignorera den. Det som ersätter den är
+  invarianter ingen legitim redigering bryter, plus en engångsjämförelse mot
+  uppdragstexten i paket D. (påverkat av lärdom: **ja** — 2026-10-05 "en grind som
+  fälls av fel skäl", och 2026-10-05 "ett fält som en typedef märker OBLIGATORISK
+  ska ha en egen grind")
+- **A1b: jag upphävde min egen ordningsgrind från 2026-10-07 samma vecka den
+  skrevs** — nio namngivna id i fastlåst ordning är innehåll, inte struktur, och
+  hade fällt bygget den dag Jelal lägger till en tiondegrupp. Jag upprepade felet
+  jag just rättade, en nivå upp. (påverkat av lärdom: **ja** — samma post)
+- **A2: `filled` tas bort helt, inte bevaras "för framtiden"** — fältet har ingen
+  dimension att bära i den nya listan, och data utan verkan är död data. Att det
+  skulle kunna behövas igen är inte ett skäl: då återinförs det av en komponent som
+  behöver det. (påverkat av lärdom: **ja** — 2026-10-02 "hero-posten i
+  `sections.js` är död data")
+- **A3: inga ikoner, och inget nytt beroende** — uppdragets premiss om ett
+  befintligt ikonbibliotek är osann, och nio gissade symboler säger mindre än
+  rubrikerna de står bredvid. Avvikelsen från uppdragets bokstav läggs fram, den
+  döljs inte. (påverkat av lärdom: nej — men den etablerade linjen om minsta antal
+  beroenden är äldre än dokumentet)
+- **A4: Om mig-länken styrs av ett fält i datan, inte av en fras i komponenten** —
+  en fras skriven på två ställen tappar länken tyst när Jelal skriver om stycket,
+  och en markering i texten hade infört ett mikrospråk i `src/data/` plus ett
+  undantag i teckengrinden. Länken tänds av sig själv när projektet läggs in.
+  (påverkat av lärdom: **ja** — 2026-10-02 "sektions-id:t `hero` står skrivet på
+  tre ställen" och 2026-10-02 "en länk får bara renderas om sektionen finns i
+  datan")
+- **A5: knapparnas krav skrivs som en mätserie, inte som en mening** — "syns utan
+  scroll på mobil" mäts på elementens egna rektanglar vid 360 × 640 och sju andra
+  vyportar, mot hero:s egen behållare. Och konturknappens ram blev
+  `--color-text-muted`, för `--color-border` har samma hexvärde som hero:s
+  bakgrund och hade mätt 1,00:1. (påverkat av lärdom: **ja** — 2026-10-05 "en
+  invariant som bara står i prosa försvaras av att någon läser den", och
+  2026-10-08 om tokennamn som motivering)
+- **A6: kortrutnätet 3/2/1 med `minmax(0, 1fr)` i alla tre lägena, och vaktraderna
+  följer inte med** — de gick inte att få att larma i den layout de stod i, och i
+  den nya bär rutnätets `align-items: start` saken mätbart. En rad som inte går att
+  belägga skrivs inte av. (påverkat av lärdom: **ja** — 2026-10-02 ÅTERFALL om
+  grid och min-content, och 2026-10-05 om vaktrader)
+- **A7: `Systemutvecklare · Fullstack`, och den daterade kommentaren skrivs om till
+  en invariant** — uppdraget är nyare än hans tidigare instruktion och vinner. En
+  kommentar som berättar historik blir falsk varje gång historiken får ett nytt
+  kapitel. (påverkat av lärdom: **ja** — 2026-10-05 ÅTERFALL om kommentarer som
+  bär påståenden dokumentet tagit tillbaka)
+- **A8: `--color-text-dim` tas bort i stället för att få ett nytt hexvärde** —
+  3,893:1 mot AA:s 4,5. Ett högre värde hade lämnat kvar ett token vars namn
+  förklarar sitt eget låga värde, och det var rotorsaken. Kostnaden — footern
+  tappar sin egen nivå i texthierarkin — skrivs ut i stället för att förnekas.
+  (påverkat av lärdom: **ja** — 2026-10-08 om footerns kontrast)
+- **A9: jag avfärdar grinden mot uppräknande kommentarer och inför en grind mot
+  kvarglömda tokenreferenser i stället** — uppräkningen går inte att skilja från en
+  riktig jämförelse utan att läsa meningen, och varje formulering jag prövade fällde
+  antingen korrekt kod eller krävde ett tröskeltal. Den grind jag inför fångar det
+  som faktiskt gick fel alla tre gångerna: en borttagning som lämnade en referens
+  kvar. Att den inte täcker hela lärdomen står utskrivet. (påverkat av lärdom:
+  **ja** — 2026-10-08 ÅTERKOMMANDE, och 2026-10-05 om grindar som larmar fel)
+- **A10: inga ikonlänkar i hero** — GitHub är uttryckligen borttagen av Jelal, och
+  en andra väg till samma LinkedIn-adress 400 px ovanför den första tillför inget.
+  "Platshållare för länkarna" är en länk utan mål. (påverkat av lärdom: nej)
+- **A11: ingen animation** — uppdragets egen regel ger noll, eftersom sidan bara har
+  två färgövergångar på 150 ms. Avtrycket finns för att nästa läsare inte ska tro
+  att animationen saknas av slarv. Heros hover-övergångar är inte en in-animation
+  och får inte läsas bort av paket E:s grep-räkning. (påverkat av lärdom: nej)
+- **A12: uppdragstexten måste in i repot innan paket B startar** — fyra
+  verifieringspunkter jämför tecken för tecken mot en fil som försvinner med
+  sessionen. Projektledarens åtgärd, och den blockerar B, D och F. (påverkat av
+  lärdom: **ja** — 2026-10-05 "mät artefakten, inte deklarationen", i dess
+  allmänna form: mät mot något som finns kvar)
+
 ## Öppna punkter som INTE är arkitektens att besluta
+
+**Nya 2026-10-08, ur paket A:**
+
+- **Att de 270 markerade kompetenserna försvinner.** Jelal markerade dem över många
+  omgångar. Den nya listan har ingen sådan dimension, så `filled` tas bort (A2).
+  Mekanismen är min, att arbetet kastas är hans att godkänna. Listan finns kvar i
+  git-historiken.
+- **Inga ikoner på korten** (A3), trots att uppdraget ber om en per kort. Premissen
+  om ett befintligt ikonbibliotek var osann, och alternativet är nio gissade
+  symboler eller ett nytt beroende. Vill han ha dem är det ett eget paket.
+- **Rollraden `Systemutvecklare · Fullstack`** (A7) är en medveten omsvängning mot
+  hans egen tidigare instruktion. Vi följer uppdraget, men det ska sägas högt.
+- **Ingen LinkedIn-ikon i hero** (A10). Avstår om han inte ber om den.
+- **Ingen bild i Om mig.** Uppdraget säger "behåll befintlig bild" — det finns
+  ingen. Att införa en är ett nytt beslut och ett eget paket.
+- **Projektet Hem och Ekonomi.** Innehållet är hans att ge; ingen agent hämtar det
+  någon annanstans ifrån. Länken i Om mig tänds av sig själv den dag posten finns i
+  `projects.js` med samma id (A4).
+- **"Längre ner på sidan" stämmer inte med hans egen sektionsordning** — projektet
+  ligger ovanför Om mig. Ordningen är hans beslut från 2026-10-07 och ändras inte
+  av oss.
+- **Chipsen blir neutrala i stället för orange** — en synlig förändring han inte
+  bett om. Hans specifikation säger "chips" utan att nämna färg.
+
+**Äldre punkter:**
 
 - **LinkedIn-adressen är härledd, inte verifierad.** LinkedIn svarar HTTP 999 på
   automatiska anrop, så den gick varken att bekräfta eller avfärda. Jelal klickar
@@ -5105,8 +5994,8 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   Hans beslut, men det ska vara ett beslut.
 - **Feltexten har fått tillägget "eller mejla qaiumi@hotmail.com direkt"** och
   avviker därmed från Jelals formulering. Ska läggas fram.
-- **Om mig-sektionens innehåll** — Jelal ska säga vad som ska stå. Byggaren hittar
-  inte på text om honom.
+- ~~**Om mig-sektionens innehåll**~~ — **BESVARAD 2026-10-07:** Jelal har skrivit
+  texten ordagrant i sitt uppdrag. Skrivs in i paket F, tecken för tecken.
 - **Den ljusa ytans placering efter omordningen** — A, B eller C. Byggt som A.
 - **Länkspaltens `h3` "Kontaktuppgifter"** är min text, inte Jelals. Ska godkännas.
 - **Länkarna hamnar under formuläret på mobil** efter tvåspaltsflytten. Följden ska
@@ -5117,11 +6006,10 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   ett meddelande landat i inkorgen.
 - **Domänbegränsning hos Web3Forms** får slås på först när sidan ligger live, och
   då som ett eget beslut — den slår ut `localhost`.
-- **Sammanslagningen av `HTTP-metoder` + `GET` + `POST` + `PUT`** till den gamla
-  fullständiga strängen är det enda stället där tre av Jelals poster tas bort utan
-  att vara rena stavningsvarianter. Gäller tills han säger annat; säger han nej är
-  ändringen fyra rader i `MERGED`.
-- **Teckenförklaringens andra mening** gör ett påstående om Jelals förhållande till
-  de dämpade. Den ska godkännas av honom.
-- **Hero-texten** (intro på svenska) formuleras i paket 3 och godkänns av Jelal
-  vid Leverans 1.
+- ~~**Sammanslagningen av `HTTP-metoder` + `GET` + `POST` + `PUT`**~~ —
+  **FÖRFALLEN 2026-10-08:** `MERGED` finns inte längre, och ingen av posterna står
+  på sidan. Se A1.
+- ~~**Teckenförklaringens andra mening**~~ — **FÖRFALLEN 2026-10-08:** det finns
+  ingen teckenförklaring. Se A2.
+- ~~**Hero-texten** (intro på svenska)~~ — **BESVARAD 2026-10-07:** ingressen står
+  ordagrant i uppdraget och ersätter byggarens utkast. Se A5.

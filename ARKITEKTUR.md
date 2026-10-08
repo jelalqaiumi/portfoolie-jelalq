@@ -88,6 +88,9 @@ fynd.
 | "Footer, metadata, ej ifyllda pills" (tokenets användning) | ↑ | ↑ |
 | uppräkningen av fem tokens i `.surface-light` (i `Projects.jsx`/`Skills.jsx`) | konsekvensen, utan lista | "A9 — Kommentarer som räknar upp tokens" |
 | de 18 gamla gruppubrikerna, t.ex. `React Native — komponenter och API:er`, `Säker webbutveckling`, `Kodkvalitet och arkitektur` | de nio grupperna i "Kompetenssektionen görs om från grunden" | A1 + A6 |
+| `exakt tre linjer` / `de tre linjerna` (om sektionsavgränsarna) | en linje per par av renderade `section[id]`; antalet skrivs inte i prosa | "Sektionsavgränsare" |
+| `ca 12,2:1` / `ca 5,6:1` (hero:s textkvoter som överslag) | uppmätt **12,226:1** och **5,567:1** mot `--color-bg-top` | "A5 — Knappstilarna" |
+| citattecknen runt ingressen eller "Om mig"-texten som innehåll | de är uppdragsfilens avgränsare | "A14 — Citattecknen i `UPPDRAG-2026-10-07.md`" |
 
 Jag skriver in nya rader här varje gång jag upphäver något. Raderna tas aldrig
 bort — en tom tabell går inte att skilja från en obevakad.
@@ -114,6 +117,15 @@ beslut står på den plats där det gamla beslutet stod, enligt konventionen ova
 | A10 | Inga ikonlänkar i hero — inte GitHub, inte LinkedIn | "A10 — Inga ikonlänkar i hero" | B |
 | A11 | Ingen animation införs | "A11 — Ingen animation införs" | E |
 | A12 | Uppdragstexten måste in i repot innan paket B startar | "A12 — Uppdragstexten måste bo i repot" | B, D, F |
+| A13 | `.hero`-blocket (hero fyller första skärmen) genomförs i **ett eget paket K**, mellan B och C | "A13 — blocket genomförs i ett eget paket K" (i "A5 … Hero fyller första skärmen på dator") | **K**, och K blockerar C |
+| A14 | Citattecknen i uppdragsfilen är avgränsare, inte innehåll — gäller ingressen OCH "Om mig" | "A14 — Citattecknen i `UPPDRAG-2026-10-07.md` är avgränsare" | F (B är redan rätt byggt) |
+| A15 | Varje Jelal-ägd text i en komponent står som namngiven konstant, aldrig som JSX-literal | "A15 — Varje text Jelal äger står som en namngiven konstant" (i "A5") | E, F (B är redan rätt byggt) |
+
+**A13–A15 tillkom 2026-10-08 efter att paket B lämnade tillbaka tre punkter.**
+Två av dem bekräftar det byggaren redan gjort i `4defa9f` (A14, A15) och kräver
+alltså ingen ändring i hero; den tredje (A13) är ett bygge som inget paket bar.
+Numreringen fortsätter på A-serien därför att `PLAN.md` säger att arkitektens
+nummer används överallt — de är beslut i samma uppdrag, inte ett nytt uppdrag.
 
 **Teckentäckningen (punkt 8 i uppdraget till mig) behövde inget beslut:** varje
 tecken uppdragets nya texter innehåller finns i
@@ -346,6 +358,20 @@ detta, i formen `/* <token> mot <bakgrund>: X,XXX:1 — AA <normal|stor> */`, mo
 **varje** bakgrund det faktiskt används mot. Det är lärdomens bindande regel, och
 den gäller också de ytor A5 och A6 inför: `--color-text` mot `--color-surface`
 (chips) och mot `--color-bg-top` (konturknappens text).
+
+**Två av dem är redan uppmätta — av paket B, i webbläsaren, mot hero:s yta.** De
+skrivs in i `tokens.css` av **paket J**, som äger filen; paket B mätte dem och
+lämnade dem här, vilket var rätt eftersom `tokens.css` inte ligger i B.
+Deklarationerna, som ska stå tecken för tecken:
+
+```css
+/* --color-text mot --color-bg-top: 12,226:1 — AA normal */
+/* --color-text-muted mot --color-bg-top: 5,567:1 — AA normal */
+```
+
+Kvoten för `--color-text` mot `--color-surface` (chipsen) mäts i **paket E** och
+förs in av J på samma sätt. Saknas en mätning när J körs är raden inte
+byggarens att uppskatta — den hämtas ur det paket som äger ytan.
 
 > **Två token har tagits bort för att de saknade konsument, och det skälet är värt
 > att minnas.** (`--color-text-dim` är ett tredje borttaget token, men av ett annat
@@ -2327,6 +2353,10 @@ Validering: `paragraphs` är en icke-tom array av icke-tomma strängar, plus
 > sammanhängande block i uppdraget, och att dela den i tre vore att hitta på
 > styckeindelning. `UTKAST`-kommentaren i `about.js` blir falsk i samma stund och
 > tas bort i samma ändring.
+>
+> **Citattecknen runt texten följer inte med in i datan** — de är uppdragsfilens
+> avgränsare, avgjort i **A14**. Paket F tolkar alltså inte frågan, den är redan
+> avgjord.
 
 ### `src/data/contact.js` — kontaktuppgifter (paket 6)
 
@@ -3247,13 +3277,23 @@ handling". Deklarationerna skrivs ändå ut i `Hero.module.css`, för
   avgränsning och omfattas av WCAG 1.4.11:s **3:1**.
 - **Hover rör sig bort från underlaget** i båda fallen — den etablerade regeln.
 
-Framräknade kvoter mot hero:s `#2A2A2E`, som **ska mätas** i paket B/C och skrivas
-in enligt `LARDOMAR.md` 2026-10-08 (mina tal är förväntan, inte beslut):
-primärytan `--color-accent` ca **5,05:1** (1.4.11 ✓), dess text
-`--color-on-accent` på orange ca **6,9:1** (1.4.3 ✓), konturramen
-`--color-text-muted` ca **5,6:1** (1.4.11 ✓), konturtexten `--color-text` ca
-**12,2:1** (1.4.3 ✓). Fokusringen är oförändrat orange och mätte 5,047:1 mot samma
-grå band när skip-länken byggdes.
+Kvoterna mot hero:s `#2A2A2E` är **uppmätta i paket B** (åtta mätningar, störst
+avvikelse 0,046 från mina överslag, och ingen avvikelse ändrar ett utfall — mina
+tal var förväntan, mätningen är det som gäller):
+
+| Par | Uppmätt | Krav |
+|-----|---------|------|
+| `--color-text` mot `--color-bg-top` | **12,226:1** | 1.4.3 normal 4,5:1 ✓ |
+| `--color-text-muted` mot `--color-bg-top` | **5,567:1** | 1.4.3 normal ✓, 1.4.11 ram 3:1 ✓ |
+| `--color-border` mot `--color-bg-top` | **1,000:1** | Bekräftar att en ram i `--color-border` är osynlig på hero — därför konturknappens ram är `--color-text-muted` |
+
+De två **textkvoterna skrivs in i `tokens.css`** i lärdomens format
+(`/* <token> mot <bakgrund>: X,XXX:1 — AA normal */`) — det hör till **paket J**,
+som äger filen, och talen finns nu att föra in därifrån. Paket B mätte dem men
+skrev dem inte in, och det var rätt: `tokens.css` ligger inte i B.
+
+Fokusringen är oförändrat orange och mätte 5,047:1 mot samma grå band när
+skip-länken byggdes.
 
 #### Var knapparna står i DOM
 
@@ -3266,6 +3306,37 @@ alltså under den på mobil och vid sidan från 900 px — det är redan uppdrag
 **Ingressen skrivs som EN sträng**, inte som två med `+`. Nuvarande kod
 konkatenerar, och en konkatenering är det enklaste sättet att tappa ett mellanslag
 mitt i en text som ska vara exakt.
+
+#### A15 — Varje text Jelal äger står som en namngiven konstant, inte som JSX-literal — beslutat 2026-10-08
+
+Byggaren lade knapptexterna som `primaryActionText` och `secondaryActionText` i
+`Hero.jsx`, intill `name`, `role` och `intro`. **Formen är rätt och blir regel.**
+Namnen är bindande precis som de står — de byts inte, eftersom en omdöpning av en
+incheckad fil inte ger något mätbart.
+
+```js
+const primaryActionText = 'Se mina projekt';
+const secondaryActionText = 'Kontakta mig';
+```
+
+**Skälet är verifieringspunkten, inte smaken.** B1, D1, F1 och A1:s
+engångsjämförelse är maskinella jämförelser mot `UPPDRAG-2026-10-07.md`. Står två
+av heros fem Jelal-ägda strängar som JSX-literaler täcker den jämförelsen tre av
+fem, och de två som faller utanför är de som uppdraget dessutom skriver med
+citattecken — alltså just de strängar A14 behövde avgöras för. En
+verifieringspunkt som bara räcker till en del av det den uttalar sig om är samma
+felläge som teckengrinden hade: den mäter det som var lätt att läsa.
+
+**Regeln, för B, E, F och varje framtida paket:** en text som är Jelals egna ord
+och som bor i en komponent (inte i `src/data/`) står som en modulnivåkonstant med
+ett namn, med invariantkommentaren ovanför, och renderas som `{konstanten}`.
+Ingen Jelal-ägd text skrivs som literal i JSX. Texter som bor i `src/data/` är
+redan maskinellt jämförbara och berörs inte.
+
+**Ingen `EJ I ARKITEKTUR`-markering skulle ha satts, och byggarens skäl är rätt:**
+markeringen är för öppna frågor om utseende och värden, inte för kodstruktur. Och
+från och med detta beslut vore den dessutom förbjuden — en besvarad fråga får
+ingen markering (`LARDOMAR.md` 2026-10-05, ÅTERKOMMANDE).
 
 #### Heros `EJ I ARKITEKTUR`-markeringar — vilka som är besvarade nu
 
@@ -3303,6 +3374,42 @@ i samma ändring som genomförandet (`LARDOMAR.md` 2026-10-05, ÅTERKOMMANDE):
   `100vh` är reserven. Det är en reservkedja, inte en dubblett.
 - **`--header-height`, samma token som `scroll-margin-top`**, så att de inte kan
   driva isär. Headern har låst höjd till samma token.
+
+##### A13 — blocket genomförs i ett eget paket K, inte i B och inte i C — beslutat 2026-10-08
+
+Blocket ovan låg i inget paket. `PLAN.md`:s "Ingår" för paket B räknar upp
+texterna, knapparna, rollkommentaren och `<title>`; paket C **mäter** kravet.
+Byggaren byggde därför inte blocket, och det var rätt — ett paket bygger inte
+utanför sin egen uppräkning.
+
+**Följden är uppmätt och kravet faller som läget är:** hero är 676 px på en
+vyport på 900 px, alltså **0,75** mot mätserierad 5:s band **0,80–1,15**, och
+`min-height` finns inte någonstans i `Hero.module.css`. Mobilsidan av kravet
+håller redan utan blocket (0,93 vid 390 × 844, båda knapparnas underkant på
+387 px).
+
+**Beslut: ett eget paket, `K`.** Tre vägar fanns och två är stängda:
+
+| Väg | Varför inte |
+|-----|-------------|
+| Paket C | C är grinden. En grind som mäter sitt eget bygge är ingen grind — projektets regel, och den gäller utan undantag |
+| Paket B återöppnas | B är levererat och incheckat som `4defa9f`. "Paket B klart" skulle då betyda två olika saker beroende på datum, och det är precis det felläge `LARDOMAR.md` registrerat tre gånger: ett dokument eller en kommentar som beskriver ett tillstånd som hunnit bytas. Ett levererat paket får inte få nytt innehåll |
+| **Eget paket K** | **Valt.** Ett bygge, en incheckning, en betydelse. K ligger mellan B och C och **blockerar C** |
+
+Bokstaven: A–H och J är tagna, `I` undviks av samma skäl som `PLAN.md` anger.
+Alltså **K**.
+
+**K:s omfattning — exakt detta och inget mer:** `@media (min-width: 900px)`-blocket
+ovan, skrivet tecken för tecken i `Hero.module.css`, båda `min-height`-raderna i
+den ordningen. Ingenting annat i hero rörs: inga texter, inga knappstilar (de är
+genomförda i B med 19 av 19 deklarationer identiska), ingen av de fyra kvarvarande
+`EJ I ARKITEKTUR`-markeringarna i hero-filerna — de är ännu obesvarade av mig och
+ska stå kvar orörda.
+
+**Fallerar en mätning i C går fyndet tillbaka till K.** A5:s ordning för vad som
+får vika (`padding-block`, sedan ingressens grad, sedan stopp) är ett
+**genomförande** och genomförs därför i K, aldrig av C. C mäter, redovisar och
+lämnar tillbaka. Det är samma gräns som gjorde detta beslut nödvändigt.
 
 #### Mätserien — detta ÄR kravet (paket C)
 
@@ -3425,6 +3532,47 @@ oformaterad. `BRIEF.md` är **inte min fil att ändra** — det är projektledar
 mot en scratchpad-sökväg, och varje verifieringsrad i överlämningen anger vilken
 fil den jämförde mot.
 
+### A14 — Citattecknen i `UPPDRAG-2026-10-07.md` är avgränsare, inte innehåll — beslutat 2026-10-08
+
+Fyra verifieringspunkter jämför **tecken för tecken** mot uppdragsfilen. Då måste
+det stå skrivet vilka tecken i filen som är text och vilka som är filens egen
+notation, annars avgörs varje jämförelse av vem som läser den.
+
+**Beslut, som en mekanisk regel:** ett `U+0022` först i en citerad text som
+avslutas av ett `U+0022`, där paret omsluter **hela** strängen, är en
+**avgränsare och ingår inte i texten**. Ett citattecken **inuti** strängen är
+innehåll och skrivs av.
+
+**Svaret på båda frågorna är därmed nej:**
+
+| Sträng | Renderas med citattecken? |
+|--------|---------------------------|
+| Heros ingress (uppdragets rad 22) | **Nej.** Byggarens rendering i `4defa9f` är rätt och ska inte ändras |
+| "Om mig"-texten (uppdragets rad 43, paket F) | **Nej.** Samma regel, avgjord nu och inte i paket F |
+
+Tre skäl, och det tredje är det bindande:
+
+1. **Filen använder samma notation för knapptexterna** (`"Se mina projekt"
+   (primär, fylld)`), där citattecknen omöjligt kan vara innehåll — en knapp som
+   renderar sina egna citattecken är ingen knapp. Samma notation i samma fil kan
+   inte betyda två saker.
+2. **Namnet och rollraden står utan citattecken** på raderna intill ingressen. Hade
+   citattecknen varit innehåll skulle ingressen vara den enda av tre
+   hero-strängar som bär dem — en skillnad uppdraget inte nämner någonstans.
+3. **Vore de innehåll är de dessutom fel tecken.** Svensk brödtext citeras med
+   `”` (`U+201D`), inte med ASCII-dubbelfnutt. Ett stycke som öppnar med `"` är
+   inte en designavsikt, det är en notation.
+
+**"Inga stavfel. Texterna ska vara exakt som ovan." gäller fullt ut** — den gäller
+bokstäverna, interpunktionen och mellanslagen inne i strängen, inte filens
+avgränsare. Byggarens tecken-för-tecken-kontroll av ingressen (enbart `U+0020` som
+blanksteg, inga dubbla mellanslag) är alltså godkänd som den står.
+
+**Är ett fall otydligt är det inte byggarens att tolka.** En sträng där paret inte
+omsluter hela texten, eller där det står ett ensamt citattecken, lämnas tillbaka
+hit. Regeln ovan ska kunna tillämpas utan bedömning; kan den inte det är det ett
+nytt beslut.
+
 ### Sektionsavgränsare — beslutat av Jelal 2026-10-03
 
 Jelals ord: *"mellan varje sektion dra en liten och tunn streck så man ser vart
@@ -3444,10 +3592,17 @@ första sektionen och ligger direkt under headern, som redan har en
 `border-bottom`. En regel på alla sektioner hade gett två linjer med bara
 headerns höjd emellan — en dubbellinje precis där blicken landar först.
 
-`section[id] + section[id]` träffar varje sektion **som följer på en annan**,
-alltså skills, projects och contact. Det blir exakt tre linjer, en mellan varje
-par. Det är ordagrant vad Jelal bad om, utan ett hårdkodat undantag för hero och
-utan att regeln behöver känna till något id.
+`section[id] + section[id]` träffar varje sektion **som följer på en annan**, och
+ger därmed **en linje mellan varje par av renderade sektioner** — hero undantaget,
+eftersom den är först. Det är ordagrant vad Jelal bad om, utan ett hårdkodat
+undantag för hero och utan att regeln behöver känna till något id.
+
+**Antalet står inte skrivet här, och ska inte skrivas någonstans i prosa.** Det är
+alltid `antalet renderade section[id]` minus ett, och varje plats som i stället
+skriver ut en siffra blir falsk nästa gång en sektion tillkommer — vilket redan
+hänt: sidan renderar i dag **fem** `section[id]`, alltså **fyra** linjer, medan
+äldre texter säger tre. Tabellen nedan räknar upp gränserna, och den är den enda
+uppräkningen.
 
 | Gräns | Linje kommer från | Ritas i |
 |-------|-------------------|---------|
@@ -3458,9 +3613,10 @@ utan att regeln behöver känna till något id.
 | om mig → kontakt | `section[id] + section[id]` | mörk yta, 1,38:1 |
 | kontakt → footer | footerns egen `border-top` | mörk yta |
 
-**Regeln håller oförändrad med fem sektioner — fyra linjer i stället för tre.**
-Linjen hör till den **andra** syskonsektionen och ärver därför den sektionens
-`--color-border`, så varje linje ritas automatiskt i sin egen ytas ton.
+**Regeln håller oförändrad när antalet sektioner ändras**, och behöver därför inte
+skrivas om när en sektion tillkommer eller faller bort. Linjen hör till den
+**andra** syskonsektionen och ärver därför den sektionens `--color-border`, så
+varje linje ritas automatiskt i sin egen ytas ton.
 
 Gränsen **kompetenser → om mig** är den som byter karaktär: där möter vitt mörkt,
 och linjen tillhör den mörka sektionen. Den ligger alltså som en mörk hårfin linje
@@ -4944,6 +5100,11 @@ Skapa inga tomma filer i förväg.
 | 5 | `src/data/projects.js`, `Projects.jsx` + modul, `ProjectCard.jsx` + modul, **`'projects'` aktiveras i `ACTIVE`** |
 | 6 | `src/data/contact.js`, `Contact.jsx` + modul, `ContactForm.jsx` + modul, `--color-field-border` i `tokens.css`, **`'contact'` aktiveras i `ACTIVE`** |
 
+**Tabellen gäller paket 1–6, bygget av sidan.** Innehållsuppdragets paket (B–K)
+skapar bara två filer — `SkillChip.jsx` + modul i E och `scripts/validate-tokens.mjs`
+i J — och ändrar i övrigt befintliga filer. Vilket paket som äger vilken ändring
+står i "Paket A"-tabellen högst upp, inte här.
+
 ---
 
 ## Bildoptimering (beslut för paket 2)
@@ -5954,6 +6115,32 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   sessionen. Projektledarens åtgärd, och den blockerar B, D och F. (påverkat av
   lärdom: **ja** — 2026-10-05 "mät artefakten, inte deklarationen", i dess
   allmänna form: mät mot något som finns kvar)
+
+**A13–A15, beslutade 2026-10-08 efter att paket B lämnade tillbaka tre punkter:**
+
+- **A13: `.hero`-blocket får ett eget paket K, och paket C rör det inte** — mitt
+  eget beslut i A5 låg i inget pakets "Ingår", och byggaren gjorde rätt i att inte
+  bygga utanför sitt paket. Jag lade det inte i C, eftersom en grind som mäter sitt
+  eget bygge inte är en grind, och inte i ett återöppnat B, eftersom "paket B
+  klart" då skulle betyda två saker beroende på datum. Felet är mitt: ett beslut i
+  ARKITEKTUR.md utan ett paket är ett beslut som inte blir av. **Lärdomen framåt:
+  varje CSS-block jag skriver ut ska namnge det paket som genomför det, i samma
+  stycke.** (påverkat av lärdom: **ja** — 2026-10-02 "tre av sju bindande beslut i
+  rättelselistan saknas i koden", och 2026-10-05 om grindar som fälls eller tiger
+  av fel skäl)
+- **A14: citattecknen i uppdragsfilen är avgränsare, inte innehåll** — svaret är
+  nej för både ingressen och "Om mig", och det skrevs som en mekanisk regel
+  (omslutande par = notation, inre tecken = innehåll) just för att nästa jämförelse
+  ska vara en regel och inte en bedömning. Byggaren läste rätt; det saknade var ett
+  beslut, inte en rättelse. (påverkat av lärdom: **ja** — 2026-10-05 "mät
+  artefakten, inte deklarationen": en norm som kräver tolkning är ingen norm)
+- **A15: Jelals texter står som namngivna konstanter, aldrig som JSX-literaler** —
+  byggarens form behålls och blir regel, med namnen oförändrade. Skälet är
+  mätbarhet: en tecken-för-tecken-jämförelse som bara når tre av fem strängar är
+  samma felläge som en grind som mäter det lätta i stället för det den uttalar sig
+  om. Ingen `EJ I ARKITEKTUR`-markering ska sättas på kodstruktur. (påverkat av
+  lärdom: **ja** — 2026-10-05 ÅTERKOMMANDE om markeringen, och 2026-10-05 om att
+  mäta artefakten)
 
 ## Öppna punkter som INTE är arkitektens att besluta
 

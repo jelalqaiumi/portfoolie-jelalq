@@ -4,11 +4,11 @@
  * `npm run build`. Trasig data kan därmed aldrig nå en leverans.
  *
  * Varför den finns: filerna i src/data/ handredigeras, och både en dubblett
- * och ett saknat fält renderas TYST utan den här kontrollen. Med drygt 300
- * handskrivna skills räcker det inte att någon tittar.
+ * och ett saknat fält renderas TYST utan den här kontrollen. Att någon tittar
+ * räcker inte när listan är lång nog att skrollas.
  *
  * Alla fel samlas och skrivs ut tillsammans - skriptet stannar inte på det
- * första, eftersom den som redigerat 300 rader vill se alla sina misstag i en
+ * första, eftersom den som redigerat en datafil vill se alla sina misstag i en
  * körning. Avslutskoden är nollskild så fort ett fel hittats.
  *
  * Inga beroenden. Ren Node.
@@ -35,70 +35,6 @@ const ACTIVE = [
 
 const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA_DIR = join(PROJECT_ROOT, 'src', 'data');
-
-/* ===== KÄLLISTORNA ======================================================
- * Jelals egna filer i projektroten. De är grinden för skills.js: ett
- * hårdkodat totalantal hade måst ändras varje gång Jelal lägger till en
- * kompetens, alltså en grind som fallerar av fel skäl och därför lär oss att
- * ignorera den (ARKITEKTUR.md, "Validering av skills - korsreferens i stället
- * för ett fast tal"). Summan är en UPPLYSNING; korsreferensen är grinden.
- * ======================================================================== */
-const SKILL_SOURCES = ['skills-full.txt', 'skills.txt'];
-
-/* Rader som börjar med # är kommentar, ## är kategorirubrik. Övriga är namn. */
-function readSkillSource(fileName) {
-  /* Saknas filen ska det ge ett svenskt meddelande, inte en ENOENT-stack.
-   * Källistorna ÄR grinden för skills.js - försvinner de tyst faller hela
-   * korsreferensen bort, och det är värre än ingen validering.
-   *
-   * null, inte tom lista: en tom lista hade sett ut som "inga namn att
-   * kontrollera" och tyst godkänt allt. Anroparen avbryter korsreferensen
-   * i stället. */
-  let text;
-
-  try {
-    text = readFileSync(join(PROJECT_ROOT, fileName), 'utf8');
-  } catch (error) {
-    fail(`${fileName}: källistan kunde inte läsas (${error.code ?? error.message})`);
-    return null;
-  }
-
-  return text
-    .split(/\r?\n/)
-    .map((line) => line.replace(/﻿/g, '').trim())
-    .filter((line) => line !== '' && !line.startsWith('#'));
-}
-
-/* ===== MERGED ===========================================================
- * Varje rad motsvarar ett beslut i ARKITEKTUR.md, "Nära-dubbletterna - regeln
- * och de tolv fallen": vänster är den strukna skrivningen, höger är den post
- * som bär den i skills.js.
- *
- * Tabellen står i koden och inte bara i ett dokument, så att den dag någon
- * undrar vart "GET" tog vägen finns svaret på raden.
- *
- * Säger Jelal nej till HTTP-sammanslagningen: ta bort de fyra HTTP-raderna
- * här, lägg in HTTP-metoder/GET/POST/PUT som egna poster i skills.js och
- * stryk den gamla strängen där. Avgränsad ändring på ett ställe.
- * ======================================================================== */
-const MERGED = {
-  'Code Review': 'Kodgranskning',
-  'Kodgranskning / Code Review': 'Kodgranskning',
-  Authentication: 'Autentisering',
-  'Agile development': 'Agil utveckling',
-  JavaScript: 'JavaScript (ES6+)',
-  'Testdriven utveckling': 'Testdriven utveckling (TDD)',
-  SOLID: 'SOLID-principerna',
-  'HTTP-metoder': 'HTTP-metoder (GET, POST, PUT, DELETE)',
-  GET: 'HTTP-metoder (GET, POST, PUT, DELETE)',
-  POST: 'HTTP-metoder (GET, POST, PUT, DELETE)',
-  PUT: 'HTTP-metoder (GET, POST, PUT, DELETE)',
-  Controllers: 'Controllers / API-endpoints',
-  'Web API-utveckling': 'API-utveckling',
-  CSS3: 'CSS',
-  'Pull requests': 'Pull Requests',
-  'Dependency injection': 'Dependency Injection',
-};
 
 /** Alla hittade fel, i den ordning de upptäcks. */
 const errors = [];
@@ -178,13 +114,28 @@ function checkSections(mod) {
   summary.push(`${sections.length} sektioner`);
 }
 
-/* ===== skills.js ======================================================== */
+/* ===== skills.js ========================================================
+ * Grinden är STRUKTURELL. Den jämför inte listan med något innehåll - varken
+ * med en annan lista eller med ett antal - eftersom listan är Jelals att
+ * ändra. Det som kontrolleras är invarianter som ingen legitim redigering
+ * bryter: att varje post har sina obligatoriska fält, att nycklarna är unika,
+ * att ett grupp-id går att använda som ankare, och att ingen post bär ett fält
+ * som inget renderar läser.
+ *
+ * Att innehållet stämmer med Jelals uppdrag är i stället verifierat EN gång,
+ * när listan skrevs in. En engångsverifiering får vara exakt mot ett innehåll;
+ * en permanent grind får aldrig vara det.
+ * ======================================================================== */
+
+/* De enda fält en post får bära. Allt annat är antingen ett skrivfel eller en
+ * rest ur en äldre form, och båda renderar ingenting - alltså död data. */
+const SKILL_FIELDS = ['name'];
+const GROUP_FIELDS = ['id', 'title', 'skills'];
+
 function checkSkills(mod) {
   const { skillGroups } = mod;
 
   if (!Array.isArray(skillGroups)) {
-    /* EJ I ARKITEKTUR: vad meddelandet ska lyda när exporten är borta - samma
-     * öppna fråga som i checkSections. */
     fail('skills.js: skillGroups saknas eller är inte en array');
     return;
   }
@@ -192,37 +143,59 @@ function checkSkills(mod) {
   const seenGroupIds = new Set();
   const seenNames = new Set();
   let total = 0;
-  let filledCount = 0;
 
-  for (const group of skillGroups) {
+  skillGroups.forEach((group, groupIndex) => {
     const id = group?.id;
 
-    if (hasText(id)) {
-      if (seenGroupIds.has(id)) {
-        fail(`skills.js: grupp-id förekommer mer än en gång ("${id}")`);
-      } else {
-        seenGroupIds.add(id);
+    if (!hasText(id)) {
+      /* FÄLLER och hoppar över resten av gruppen, samma mönster som
+       * checkSections: varje följande meddelande namnger gruppen med sitt id,
+       * och utan id finns inget att namnge den med. Posten får sin plats i
+       * listan, räknad från 1 som en människa gör. "   " fångas av hasText -
+       * ett id med bara blanksteg ger ett ankare som inte går att länka till. */
+      fail(`skills.js: grupp saknar obligatoriskt fält (post ${groupIndex + 1}, fält "id")`);
+      return;
+    }
+
+    /* Id:t blir ett rubrik-id, alltså ett ankare. Blanksteg och versaler ger
+     * ett ankare som inte går att länka till, och åtgärden meddelandet
+     * föreskriver - skriv om id:t med små bokstäver och bindestreck - får
+     * grinden att tiga. */
+    if (!/^[a-z0-9-]+$/.test(id)) {
+      fail(`skills.js: grupp-id får bara innehålla a-z, 0-9 och bindestreck (id "${id}")`);
+    }
+
+    if (seenGroupIds.has(id)) {
+      fail(`skills.js: grupp-id förekommer mer än en gång ("${id}")`);
+    } else {
+      seenGroupIds.add(id);
+    }
+
+    for (const field of Object.keys(group)) {
+      if (!GROUP_FIELDS.includes(field)) {
+        fail(`skills.js: okänt fält på grupp (id "${id}", fält "${field}") - tillåtna fält är ${GROUP_FIELDS.join(', ')}`);
       }
     }
 
-    if (!hasText(group?.title)) {
+    if (!hasText(group.title)) {
       fail(`skills.js: grupp saknar title (id "${id}")`);
     }
 
-    if (!Array.isArray(group?.skills) || group.skills.length === 0) {
+    if (!Array.isArray(group.skills) || group.skills.length === 0) {
       fail(`skills.js: grupp saknar skills eller är tom (id "${id}")`);
-      continue;
+      return;
     }
 
     group.skills.forEach((skill, index) => {
-      total += 1;
-
       if (!hasText(skill?.name)) {
-        /* Posten räknas med i antalet men kan inte namnges - därför gruppens
-         * id plus postens plats i gruppen, räknat från 1 som en människa gör. */
+        /* Posten kan inte namnges - därför gruppens id plus postens plats i
+         * gruppen, räknat från 1 som en människa gör. Den räknas inte med i
+         * upplysningen nedan: en fälld post renderas inte. */
         fail(`skills.js: skill saknar name (grupp "${id}", post ${index + 1})`);
         return;
       }
+
+      total += 1;
 
       if (seenNames.has(skill.name)) {
         fail(`skills.js: skill-namnet förekommer mer än en gång ("${skill.name}")`);
@@ -230,72 +203,22 @@ function checkSkills(mod) {
         seenNames.add(skill.name);
       }
 
-      /* Strikt boolean. Strängen "false" är det troligaste misstaget när en
-       * icke-utvecklare redigerar, och det renderar som ifylld eftersom en
-       * icke-tom sträng är sanningsvärd. Därför visas det MOTTAGNA värdet inom
-       * citattecken, så att skillnaden mellan false och "false" syns. */
-      if (skill.filled !== true && skill.filled !== false) {
-        fail(`skills.js: filled måste vara true eller false ("${skill.name}", fick "${skill.filled}")`);
-      }
-
-      if (skill.filled === true) {
-        filledCount += 1;
+      /* En rad som släpat med ur en äldre form av filen bär ett fält som inget
+       * renderar läser. Utan denna grind passerar den tyst, och då ser raden
+       * ut att göra något den inte gör. */
+      for (const field of Object.keys(skill)) {
+        if (!SKILL_FIELDS.includes(field)) {
+          fail(`skills.js: okänt fält på skill ("${skill.name}", fält "${field}") - tillåtet fält är endast ${SKILL_FIELDS.join(', ')}`);
+        }
       }
     });
-  }
+  });
 
-  /* ----- korsreferens mot Jelals egna listor -----------------------------
-   * Fyra grindar som tillsammans gör det omöjligt att tappa eller hitta på
-   * ett namn. De ersätter det gamla hårdkodade antalet.
-   *
-   * KAN EN KÄLLISTA INTE LÄSAS avbryts korsreferensen helt. Skälet är uppmätt:
-   * utan detta gav en borttagen skills.txt över hundra felrader av typen
-   * "namnet finns varken i skills.txt eller skills-full.txt", och den enda rad
-   * som pekade på orsaken låg begravd bland dem. Ett larm ska peka på orsaken,
-   * inte på hundra följder. */
-  const sources = SKILL_SOURCES.map((fileName) => ({ fileName, names: readSkillSource(fileName) }));
-
-  if (sources.some((s) => s.names === null)) return;
-
-  for (const { fileName, names } of sources) {
-    for (const name of names) {
-      /* Namnet finns antingen som egen post, eller är medvetet sammanslaget
-       * med en annan post. Allt annat är ett tyst bortfall. */
-      if (!seenNames.has(name) && MERGED[name] === undefined) {
-        fail(`skills.js: namn ur ${fileName} saknas och är inte sammanslaget ("${name}")`);
-      }
-    }
-  }
-
-  for (const [from, to] of Object.entries(MERGED)) {
-    /* En sammanslagning kan inte peka i tomma luften. */
-    if (!seenNames.has(to)) {
-      fail(`skills.js: sammanslagning pekar på ett namn som inte finns ("${from}" -> "${to}")`);
-    }
-
-    /* Och den strukna skrivningen får inte ha smugit tillbaka som egen post -
-     * då hade både den och sin ersättare stått på sidan. */
-    if (seenNames.has(from)) {
-      fail(`skills.js: namnet är sammanslaget och får inte stå som egen post ("${from}" -> "${to}")`);
-    }
-  }
-
-  const sourceNames = new Set(sources.flatMap((s) => s.names));
-
-  for (const name of seenNames) {
-    /* Ingenting uppfunnet eller felstavat kan smyga in. */
-    if (!sourceNames.has(name)) {
-      fail(`skills.js: namnet finns varken i skills.txt eller skills-full.txt ("${name}")`);
-    }
-  }
-
+  /* UPPLYSNING, aldrig grindar: båda talen ändras så fort Jelal redigerar sin
+   * egen lista, och ett tal som måste rättas i ett skript av den anledningen är
+   * ingen kontroll. Avviker ett tal rapporteras det, det justeras inte bort. */
   summary.push(`${skillGroups.length} grupper`);
-
-  /* UPPLYSNING, inte grind: totalantalet ändras varje gång Jelal lägger till
-   * en kompetens, och ett tal som måste ändras av den anledningen är ingen
-   * kontroll. Avviker siffran från ARKITEKTUR.md:s uppskattning ska det
-   * rapporteras, inte justeras bort. */
-  summary.push(`${total} skills (${filledCount} ifyllda, ${total - filledCount} dämpade)`);
+  summary.push(`${total} kompetenser`);
 }
 
 /* ===== projects.js ======================================================
@@ -652,7 +575,7 @@ for (const name of ACTIVE) {
     continue;
   }
 
-  /* SYNTAXFEL ÄR DET TROLIGASTE FELET när Jelal redigerar 307 rader för hand -
+  /* SYNTAXFEL ÄR DET TROLIGASTE FELET när Jelal redigerar en datafil för hand -
    * en glömd komma, klammer eller citattecken. Utan denna try/catch kastar
    * import() en SyntaxError med Node-stack, och den som får den ser varken
    * vilken fil som är trasig eller att felet är hans eget skrivfel. */

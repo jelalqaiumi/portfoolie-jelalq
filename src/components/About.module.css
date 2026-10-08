@@ -24,6 +24,25 @@
   font-size: var(--text-base);
 }
 
+/* EJ I ARKITEKTUR: hur en länk inne i brödtexten ska se ut.
+ * OPEN-KEY: about-inline-link
+ *
+ * Invarianterna utseendet måste hålla, oavsett vad som beslutas:
+ *   - färg ensam får inte vara det som skiljer länken från texten runt den
+ *     (WCAG 1.4.1), därför understrykningen;
+ *   - hovern rör sig bort från underlaget, inte mot det;
+ *   - graden sätts inte alls - en länk mitt i ett stycke ska ha styckets grad,
+ *     annars hoppar radhöjden på just den raden. */
+.link {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.link:hover {
+  color: var(--color-accent-hover);
+}
+
 /* Syskonselektorn, inte margin-bottom på varje stycke: då hade det sista
  * stycket burit luft under sig som adderats till sektionens padding-block, och
  * avståndet ner till nästa sektions linje blivit större än upp till rubriken.

@@ -1,5 +1,5 @@
 import Section from './Section.jsx';
-import ProjectCard from './ProjectCard.jsx';
+import ProjectCard, { isComplete } from './ProjectCard.jsx';
 import { projects } from '../data/projects.js';
 import { sections, PROJECTS_ID } from '../data/sections.js';
 import styles from './Projects.module.css';
@@ -14,20 +14,10 @@ import styles from './Projects.module.css';
  * ======================================================================== */
 const EMPTY_TEXT = 'Här lägger jag upp projekt jag har byggt. Än är listan tom.';
 
-/* Obligatoriskt textfält ur src/data/: ett fält med bara blanksteg är lika
- * tomt som ett som saknas (LARDOMAR.md 2026-10-02). Samma uttryck används i
- * scripts/validate-data.mjs. */
-function hasText(value) {
-  return typeof value === 'string' && value.trim() !== '';
-}
-
-/* En post måste ha id, title OCH description för att bli ett kort. Annars
- * renderas ingenting för den - hellre inget kort än ett med tom rubrik
- * (ARKITEKTUR.md, rättelse 3). Filtret ligger här, i komponenten som läser
- * datan, så att React-nyckeln id aldrig kan bli undefined. */
-function isComplete(project) {
-  return hasText(project?.id) && hasText(project?.title) && hasText(project?.description);
-}
+/* isComplete importeras ur ProjectCard.jsx och definieras inte här: villkoret
+ * är kortets eget krav på en post, och samma predikat avgör i About.jsx om
+ * länkens mål kommer att renderas. Filtret garanterar dessutom att
+ * React-nyckeln id aldrig kan bli undefined. */
 
 function Projects() {
   /* Rubriken och id:t hämtas ur sections.js, som är enda sanningskällan för

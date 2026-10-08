@@ -33,6 +33,15 @@
    * kortet smalare än sin egen text vill vara. Det är Jelals val: han höll
    * fast vid kort sida vid sida även när han sett att de krymper. */
   max-width: calc(var(--measure) + var(--space-5) * 2);
+
+  /* Kortet är ett ankarmål: ett id på kortet måste landa under den klibbande
+   * headern, inte bakom den. Uttrycket är ORDAGRANT det som global.css
+   * använder för section[id] - samma token, samma calc - så att ett byte av
+   * headerns höjd flyttar båda eller ingen.
+   *
+   * Regeln i global.css får INTE breddas från section[id] till [id]: den hade
+   * då fångat main#main och varje framtida id. */
+  scroll-margin-top: calc(var(--header-height) + var(--space-4));
 }
 
 /* Graden kommer från h3 i global.css (--text-xl), som är just det

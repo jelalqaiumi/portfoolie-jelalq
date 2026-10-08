@@ -260,10 +260,20 @@ function checkProjects(mod) {
       seenIds.add(id);
     }
 
+    let complete = true;
+
     for (const field of ['title', 'description']) {
       if (!hasText(project?.[field])) {
         fail(`projects.js: projekt saknar obligatoriskt fält (id "${id}", fält "${field}")`);
+        complete = false;
       }
+    }
+
+    /* Samma tre fält som isComplete i ProjectCard.jsx kräver. En post som
+     * saknar något av dem renderas inte, och är alltså inget mål att länka
+     * till. */
+    if (complete) {
+      renderedProjectIds.add(id);
     }
 
     if (!Array.isArray(project?.tech)) {
@@ -290,6 +300,13 @@ function checkProjects(mod) {
 
   summary.push(`${projects.length} projekt`);
 }
+
+/* Id:na på de projekt som faktiskt blir ett kort på sidan. Fylls av
+ * checkProjects, läses av checkAbout för dess UPPLYSNING om länkens mål.
+ * Ordningen i ACTIVE garanterar att projects är kontrollerad först; står about
+ * före projects blir talet 0 utan att något larmar, och därför läser ingen
+ * GRIND detta - bara upplysningsraden. */
+const renderedProjectIds = new Set();
 
 /* ===== about.js =========================================================
  * Aktiverad 2026-10-07, tillsammans med datafilen. Tre steg hör ihop: raden i
@@ -342,7 +359,80 @@ function checkAbout(mod) {
     }
   });
 
-  summary.push(`${about.paragraphs.length} stycken i Om mig`);
+  checkAboutLink(about);
+}
+
+/* ===== about.link =======================================================
+ * De fyra grindarna på länkfrasen.
+ *
+ * VILKEN LEGITIM ÄNDRING FÅR FÄLLA DEM? Att skriva om texten så att frasen
+ * försvinner medan link står kvar. Meddelandet säger då vad läget är, och
+ * båda åtgärderna - sätt link: null, eller skriv tillbaka frasen - får
+ * grinden att tiga. Det är kravet i LARDOMAR.md 2026-10-05.
+ *
+ * ATT PROJEKTET FINNS GRINDAS INTE. Att projectId pekar på ett projekt som
+ * ännu inte är inlagt är det normala, korrekta läget: frasen renderas då som
+ * vanlig text utan href, och en grind på det hade fällt bygget på korrekt
+ * data. Talet skrivs som UPPLYSNING i OK-raden i stället.
+ * ======================================================================== */
+function checkAboutLink(about) {
+  const { link } = about;
+  const paragraphs = Array.isArray(about.paragraphs) ? about.paragraphs.filter(hasText) : [];
+
+  if (link === null || link === undefined) {
+    /* Fältet får vara null - då finns ingen länk i texten. Det är ett giltigt
+     * läge och inget att rapportera som en länkfras. */
+    summary.push(`Om mig: ${styckeOrd(paragraphs.length)}, 0 länkfraser`);
+    return;
+  }
+
+  if (typeof link !== 'object' || Array.isArray(link)) {
+    fail('about.js: link måste vara null eller ett objekt med phrase och projectId');
+    return;
+  }
+
+  if (!hasText(link.phrase)) {
+    fail('about.js: link.phrase saknas eller är tom');
+  }
+
+  if (typeof link.projectId !== 'string' || !/^[a-z0-9-]+$/.test(link.projectId)) {
+    /* Det troligaste misstaget är att skriva frasen en gång till i stället för
+     * projektets id, därför visas värdet som faktiskt stod där. */
+    fail(`about.js: link.projectId får bara innehålla a-z, 0-9 och bindestreck (fick "${link.projectId}")`);
+  }
+
+  if (hasText(link.phrase)) {
+    const occurrences = paragraphs.reduce((total, paragraph) => total + countOccurrences(paragraph, link.phrase), 0);
+
+    if (occurrences !== 1) {
+      fail(`about.js: link.phrase förekommer ${occurrences} gånger i texten, ska vara exakt en (”${link.phrase}”)`);
+    }
+  }
+
+  const pointsAtRendered = typeof link.projectId === 'string' && renderedProjectIds.has(link.projectId) ? 1 : 0;
+
+  summary.push(`Om mig: ${styckeOrd(paragraphs.length)}, 1 länkfras (${pointsAtRendered} pekar på ett projekt som finns)`);
+}
+
+/* "1 stycke" men "2 stycken". Ett tal följt av fel ordform läser som ett fel i
+ * utskriften, och OK-raden är det enda stället där valideringen syns när allt
+ * är rätt. */
+function styckeOrd(count) {
+  return count === 1 ? '1 stycke' : `${count} stycken`;
+}
+
+/* Räknar förekomster utan överlappning. String.prototype.split hade varit
+ * kortare men bygger en array av hela texten för att returnera ett tal. */
+function countOccurrences(haystack, needle) {
+  let count = 0;
+  let from = 0;
+
+  for (;;) {
+    const at = haystack.indexOf(needle, from);
+    if (at < 0) return count;
+    count += 1;
+    from = at + needle.length;
+  }
 }
 
 /* ===== contact.js =======================================================

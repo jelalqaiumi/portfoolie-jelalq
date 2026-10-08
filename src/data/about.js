@@ -11,7 +11,7 @@
  * Lägg till ett stycke: skriv en ny rad i listan. Ta bort ett: radera raden.
  * Minst ett stycke måste finnas, annars fäller valideringen bygget.
  *
- * FORMEN SKA INTE VÄXA. Det finns inga fält för bild, rubriker eller länkar,
+ * FORMEN SKA INTE VÄXA. Det finns inget fält för bild och inga rubriknivåer,
  * och det är avsiktligt: Jelal sa "en liten sektion", och det behandlas som
  * specifikation. Behövs något av det är det ett eget beslut, och då är det inte
  * längre en liten sektion.
@@ -21,34 +21,42 @@
  */
 
 /**
+ * @typedef {Object} AboutLink
+ * @property {string} phrase     OBLIGATORISK när link finns. Måste förekomma EXAKT en gång i något stycke.
+ * @property {string} projectId  OBLIGATORISK när link finns. Ett id ur projects.js. Finns projektet inte
+ *                               renderas frasen som vanlig text - ingen länk, inget trasigt ankare.
+ *
  * @typedef {Object} About
- * @property {string[]} paragraphs  OBLIGATORISK. Ett stycke per post. Minst ett.
- *                                  Varje post måste innehålla text.
+ * @property {string[]}       paragraphs  OBLIGATORISK. Ett stycke per post. Minst ett.
+ * @property {AboutLink|null} link        OBLIGATORISK som fält, får vara null. null = ingen länk i texten.
  */
 
-/* ===== UTKAST - TEXT SOM JELAL SKA GODKÄNNA ELLER ERSÄTTA =================
- *
- * ARKITEKTUR.md säger att innehållet är en öppen punkt och att Jelal ska säga
- * vad som ska stå. Han har inte skrivit någon text än, så detta är byggarens
- * utkast, härlett ur BRIEF.md (systemutvecklare, React/Vite-stacken, "ren CSS,
- * inget UI-ramverk") och ur hans egna kompetenslistor: grupperna "API och
- * backend", "Testning och kvalitetssäkring", "Kodkvalitet och arkitektur",
- * "Säker webbutveckling" och "Autentisering och kryptering".
- *
- * MEDVETET INTE MED, samma hållning som hero-introt:
- *   - superlativ och värdeord om egen förmåga
- *   - varje påstående om antal år, antal projekt eller omfattning av
- *     erfarenhet - det finns inget underlag för sådana i materialet
- *   - allt om arbetsgivare, utbildning eller ort, som inte står någonstans
- *
- * BYT UT STRÄNGARNA NEDAN. Hela texten är tre rader i denna fil.
- * ========================================================================= */
+/* TEXTEN ÄR DIN EGEN, ordagrant som du skrev den i uppdraget 2026-10-07. Den
+ * är skriven av tecken för tecken ur den filen och jämförs maskinellt mot den -
+ * skriver du om stycket är det ditt eget beslut, men då stämmer det inte längre
+ * med uppdragsfilen. */
 
 /** @type {About} */
 export const about = {
   paragraphs: [
-    'Jag arbetar med hela kedjan i en applikation: gränssnittet i webbläsaren, API:et mellan klient och server, och databasen under det. På serversidan är det C#, .NET och ASP.NET Core. I klienten React för webb och React Native för mobil.',
-    'Det jag lägger vikt vid är att koden går att läsa och ändra av någon annan än den som skrev den. Enhetstester, tydlig ansvarsfördelning och granskade ändringar hör till arbetet, inte till efterarbetet. Samma sak gäller säkerhet: autentisering, hantering av nycklar och de brister OWASP listar är sådant jag tar höjd för medan jag bygger.',
-    'Den här sidan är byggd i React och Vite med egen CSS, utan UI-ramverk.',
+    'Jag är systemutvecklare och gillar att bygga system som gör vardagen enklare. Det roligaste med utveckling är problemlösningen: när något krånglar gräver jag tills jag förstår varför och hittar en lösning som håller. Ett exempel är Hem och Ekonomi, en webb- och mobilapp för hushållets ekonomi som jag byggt med C#/.NET, React och React Native. Jag är i början av min karriär och utmanar mig gärna med nya saker för att växa. Jag bor i Motala och är öppen för att flytta för rätt tjänst.',
   ],
+
+  /* EN LÄNK INNE I TEXTEN, utan att texten innehåller någon markering.
+   *
+   * phrase är den text som ska bli klickbar. Den måste förekomma exakt en gång
+   * i styckena ovan, annars fäller valideringen bygget och säger varför.
+   *
+   * projectId är id:t på projektet i projects.js som länken ska hoppa till.
+   *
+   * SÅ LÄNGE PROJEKTET INTE FINNS I projects.js renderas frasen som vanlig
+   * text - ingen länk, och inget ankare som pekar på något som inte finns.
+   * Lägger du in projektet med detta id tänds länken av sig själv, och varken
+   * denna fil eller någon komponent behöver ändras.
+   *
+   * Vill du ingen länk alls: skriv  link: null,  och frasen blir vanlig text. */
+  link: {
+    phrase: 'Hem och Ekonomi',
+    projectId: 'hem-och-ekonomi',
+  },
 };

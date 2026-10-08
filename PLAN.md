@@ -1,108 +1,130 @@
-# Plan: Bygga en personlig portfolio-webbplats för Jelal Qaiumi i React + Vite, levererad i små verifierbara steg
+# Plan: Byt innehållet i hero, "Om mig" och "Kompetenser" enligt Jelals uppdrag 2026-10-07, utan att röra sidans design eller övriga sektioner
 
-Reviderad 2026-10-02 efter granskningen av paket 1. Paket 2 är delat i **2A** och
-**2B**, och paket 4 har utökats med ett valideringsskript. Övriga nummer är
-oförändrade — se "Varför numreringen inte ändras" nedan.
+Skriven 2026-10-08. **Detta är ett tillägg till en redan levererad sida**, inte ett
+nytt projekt. Den gamla planen (paket 1–8, bygget av sidan) är genomförd och
+ersätts av denna. Numreringen nedan är ny och börjar om på A för att inte krocka
+med de referenser till "paket 1–8" som står i `ARKITEKTUR.md` och `LARDOMAR.md`.
 
-## Lärdomar som gäller här
-
-`LARDOMAR.md` finns nu och innehåller sju poster. Varje "Regel framåt" är bindande.
-Dessa påverkar planen konkret:
-
-- **Fynd 7 — ett script som pekar på en fil som inte finns.** Ett npm-script läggs
-  till i samma paket som filen det anropar, och varje script i `package.json` körs
-  en gång innan paketet lämnas. → `sharp`, `scripts/optimize-images.mjs` och
-  scriptraden `optimize:images` ligger alla tre i **2A**. Samma regel gör att
-  `validate-data.mjs` i paket 4 blir ett ordningsproblem — se den öppna punkten
-  under paket 4.
-- **Fynd 4 — headerns höjd har två oberoende sanningar.** Efter varje ändring i
-  `Header.jsx`/`Header.module.css` ska renderad headerhöjd mätas och vara exakt
-  `--header-height`. → Obligatoriskt verifieringssteg i **2B**, som bygger om
-  headern.
-- **Fynd 1 — sektions-id som bokstavlig sträng i `.jsx`.** → Verifieras i 2B
-  (logga-länken till hero) och i varje paket som lägger till en `.jsx`.
-- **Fynd 6 — beslut som saknas i arkitekturen uppfinns tyst i koden.** Varje värde
-  byggaren väljer utan stöd i `ARKITEKTUR.md` märks `/* EJ I ARKITEKTUR: ... */`
-  och listas i överlämningen; granskaren söker på strängen. → Står som sista
-  verifieringspunkt i **varje** paket härifrån.
-- **Fynd 3 — saknade eller dubbla fält går igenom tyst.** → Grunden till att paket
-  4 nu också bär ett valideringsskript, och till att dess verifiering ska visa att
-  skriptet faktiskt fäller trasig data.
-- **Fynd 5 — 360 px-golvet ska verifieras med sidans längsta faktiska sträng.** →
-  Gäller paket 4 (längsta skill-namnet är raden `HTTP-metoder (GET, POST, PUT,
-  DELETE)`) och paket 7. Aldrig med kort platshållartext.
-- **Fynd 2 — sidans `<h1>` får aldrig läsas ur `label`, och en platshållarrubrik
-  ska innehålla riktig rubriktext.** → Gäller paket 3, och ligger bakom en öppen
-  punkt jag flaggar där.
-- **Mönstret i `ARKITEKTUR.md`: tre antaganden om `logo.png`, tre gånger fel vid
-  mätning.** Ett felaktigt antagande om en bild ger tyst fel utdata som passerar
-  alla kontroller. → Därför ska bildskripten i 2A och 2B **skriva ut sina
-  framräknade värden**, och avvikelse mot arkitekturens förväntade utfall ska
-  stoppa paketet, inte justeras för hand.
+Uppdraget står ordagrant i scratchpad-filen `uppdrag-ordagrant.md`. **Texterna i
+uppdraget är exakta och får aldrig skrivas om** — Jelal skriver "Inga stavfel.
+Texterna ska vara exakt som ovan."
 
 ---
 
-## Mina två ställningstaganden
+## Först: fyra saker i uppdraget som INTE går att göra som skrivet
 
-### 1. Paket 2 delas — 2A profilbilden, 2B ikonen och headern
+Jag planerar inte runt dessa i tysthet. De ska avgöras, inte tolkas i koden.
 
-**Ja, det ska delas.** Paketet bär nu fyra artefakter och två helt olika sorters
-kontroll:
+1. **"Använd ikonbiblioteket som redan finns i projektet."** Det finns inget
+   ikonbibliotek. Körtidsberoendena är `react`, `react-dom` och
+   `@hcaptcha/react-hcaptcha`. Premissen är osann, och att lägga till ett
+   bibliotek är ett nytt teknikval — arkitektens, inte byggarens. Paket A avgör
+   det.
+2. **"#projekt" och "#kontakt".** Sektionernas id är `projects` och `contact`.
+   Id:na får inte bytas: navet, `aria-current`-observern och varje befintlig
+   länk hänger på dem. Vi uppfyller uppdragets **funktion** (knapparna scrollar
+   till rätt sektion), inte dess bokstavliga strängar.
+3. **Länken "Hem och Ekonomi" till "projektet längre ner på sidan".** Två fel i
+   premissen: `src/data/projects.js` är tom, så det finns inget projekt och
+   inget `#hem-och-ekonomi` att peka på — och Om mig ligger **efter** projekten i
+   sidans ordning (hero, projekt, kompetenser, om mig, kontakt), så länken skulle
+   gå uppåt, inte "längre ner". Projektinnehållet är **Jelals att ge**. Ingen
+   agent hämtar det någon annanstans ifrån: Jelal har sagt "stop. gör inget
+   sånt" när hans GitHub-repo slogs upp utan att han bett om det.
+4. **"Behåll befintlig bild och layout i sektionen" (Om mig).** Om mig har ingen
+   bild. `src/data/about.js` har bara ett fält, `paragraphs`, och datafilens egen
+   kommentar säger att formen inte ska växa, med Jelals "en liten sektion" som
+   skäl. Det finns alltså ingen bild att behålla, och att lägga till en är ett
+   nytt beslut — inte ett "behåll".
 
-- Att krympa ett foto verifieras genom att **mäta** — filstorlek, pixelmått, och
-  att hjässan inte är avskuren.
-- Att härleda en ikon med alfakanal och bygga om headern verifieras genom att
-  **titta och navigera** — ingen fyrkant mot bakgrunden, mjuka kanter, läsbar
-  textnod, mätt headerhöjd, fungerande tillgängligt namn på 360 px.
+Därtill en femte punkt som avgör sig själv och bara behöver ett avtryck:
+**"Lugn in-animation ... om sidan redan använder animationer. Annars ingen."**
+Sidan har två färgövergångar på 150 ms och inga in-animationer. Uppdragets egen
+regel ger därmed **ingen animation**. Och **"scrollar mjukt"** kräver ingen JS:
+`global.css` har redan `scroll-behavior: smooth` med `prefers-reduced-motion`-
+undantag. En vanlig ankarlänk räcker.
 
-Planens styrka har varit att ett paket går att verifiera i ett svep. Det här är
-två svep med olika felkällor: 2A faller på beskärningskoordinater och kompression,
-2B på alfaberäkningen och på headerns tillgänglighet. Lägger vi dem i samma paket
-får granskaren fyra artefakter att bedöma på en gång — exakt den situation som gav
-sju fynd i paket 1.
+---
 
-Delningen krockar inte med fynd 7: `sharp`, skriptfilen och scriptraden tillkommer
-samtidigt i 2A, och 2A kör scriptet. 2B **utökar** samma skriptfil med ett
-utdatasteg och kör det igen. Regeln håller i båda paketen.
+## Lärdomar som gäller här
 
-Kopplingen ikon → header behålls däremot ihop i 2B. Headern kan inte byta till
-monogrammet förrän monogrammet finns, och en ikon som ingen använder går inte att
-verifiera. Det är ett svep.
+Varje "Regel framåt" i `LARDOMAR.md` är bindande. Dessa påverkar denna plan
+konkret, i klartext:
 
-### 2. Leverans 1 ligger kvar efter paket 3 — men får en avgränsad frågeställning
+- **2026-10-02, Navigering: sektions-id som bokstavlig sträng i `.jsx`.** Heros
+  två knappar är nya länkar till sektioner. De ska hämta id:t ur `sections.js`
+  namngivna konstanter — ett sektions-id får aldrig stå som literal i en
+  `.jsx`-fil. → Verifieringspunkt i paket B.
+- **2026-10-02, Navigering: en länk till ett sektions-id får bara renderas om
+  sektionen finns i datan.** → Detta är hela svårigheten i Om mig-länken
+  (paket F). En ankarlänk till ett `#hem-och-ekonomi` som inte finns är exakt det
+  mönster arkitekturen redan förbjudit.
+- **2026-10-02 (ÅTERFALL), CSS: 360 px-golvet sprack genom hero-gridden.**
+  `overflow-wrap: break-word` minskar inte min-content-bredden; ett grid-spår bär
+  min-content som sitt automatiska minimum. Regeln kräver `minmax(0, 1fr)` på
+  behållaren **och** `anywhere` på texten, och att golvet verifieras genom att
+  programmatiskt sätta in projektets längsta sträng — aldrig genom att titta på
+  sidan. → Gäller paket C och E, som båda rör grid.
+- **2026-10-05, Grindar: en grind som fälls av fel skäl lär oss att ignorera
+  den.** `scripts/validate-data.mjs` korsrefererar varje skill-namn mot
+  `skills.txt` och `skills-full.txt`, och grindar antalet 307 och antalet
+  ifyllda. Den nya listan på nio grupper kommer att fälla den grinden — av en
+  helt legitim ändring. Grinden måste göras om, inte kringgås. → Blockerar
+  paket D och är en arkitektpunkt i A.
+- **2026-10-05, Validering: mät artefakten, inte deklarationen.** Teckengrinden
+  läser `cmap` ur woff2-filen. Den nya rollraden innehåller ett mittpunktstecken
+  och de nya skill-namnen innehåller tecken sidan aldrig haft. Finns glyfen inte
+  i filen renderas ordet i reservtypsnittet. → Mätpunkt i paket B och D.
+- **2026-10-05 (ÅTERKOMMANDE 3+), Process: `EJ I ARKITEKTUR`-markeringar står
+  kvar på frågor arkitekturen avgjort.** Hero.jsx och Skills-filerna bär sådana
+  markeringar i dag. Varje paket avslutas med att läsa varje markering i de
+  berörda filerna mot `ARKITEKTUR.md` och ta bort de besvarade i samma ändring.
+- **2026-10-05 (ÅTERFALL), Kodkommentarer bär påståenden dokumentet tagit
+  tillbaka.** `Hero.jsx` har en daterad kommentar om att Jelal bytt bort
+  "Systemutvecklare"; uppdraget är nyare och återinför ordet. `Skills.module.css`
+  och `SkillPill.module.css` bär talet 307 och en felaktig "längsta strängen".
+  Lämnas de kvar blir de falska i samma stund paketen är klara. → Egna
+  verifieringspunkter i B, D och E. En kommentar ska bära invarianten, inte
+  värdet.
+- **2026-10-05, CSS: beslutade deklarationer genomfördes med grannvärden.** Står
+  ett värde utskrivet som en deklaration i `ARKITEKTUR.md` ska koden innehålla
+  exakt det, tecken för tecken, och byggaren besvarar varje sådan punkt med
+  `fil:rad` i överlämningen.
+- **2026-10-05, Arkitektur: en invariant som bara står i prosa försvaras av att
+  någon läser den.** Går ett "får aldrig" att mäta är mätningen beslutet. →
+  Därför är "knapparna syns utan scroll på mobil" ett eget paket (C) med en
+  mätserie, inte en mening i ett annat pakets verifiering.
+- **2026-10-05, Verifiering: ett larm är inte ett kvitto förrän man vet vad som
+  larmade.** Varje negativ kontroll ska redovisa att den larmade, vilket element
+  som bar avvikelsen, och att larmet upphörde när injektionen togs bort.
+- **2026-10-02 + 2026-10-05 (ÅTERFALL), Process: arbetsträdet var inte fryst
+  under granskningen.** Filen `GRANSKNING-PAGAR` skapas i projektroten innan
+  granskaren startas och raderas först när rapporten är levererad. Byggaren och
+  arkitekten kontrollerar att den inte finns innan de ändrar något under `src/`,
+  `scripts/`, `dist/` eller `ARKITEKTUR.md`.
+- **2026-10-02, Datadrivet: data utan verkan är död data.** Tappar `filled` sin
+  betydelse ska fältet tas bort eller få en kommentar om vilket framtida paket
+  som läser det — inte ligga kvar utan verkan. → Arkitektpunkt i A, genomförs i D
+  och E.
+- **2026-10-05, Vaktrader går inte att få att larma.** `Skills.module.css` bär
+  rader som påstås hålla pillens höjd men som inte gick att få att larma i
+  nuvarande layout. Paket E byter layouten till kort. Flyttas en sådan rad med
+  ska den tvingas fallera på nytt i den nya layouten, annars skrivs kommentaren
+  om till "förebyggande, ingen uppmätt effekt".
+- **2026-10-02 + 2026-10-05, Verktyg och samordning: påstå aldrig att en server
+  är startad eller stoppad utifrån startkommandots utdata.** Mät porten med
+  `netstat` och klistra in raden, eller dess frånvaro. Starta aldrig en server i
+  förgrunden; avsluta via PID på porten.
+- **2026-10-05, Mätning: mät aldrig `dist/` utan att binda det till källan.**
+  Bygg om omedelbart före mätningen.
 
-**Den flyttas inte.** Leverans 1 finns för att fånga smakfrågor om **tonen**, och
-tonen bor i hero: gråskalan, den grå tonplattan, typografin i namnet och
-introtexten. Headern är synlig redan i paket 1 och förbättras i 2B, men en header
-ensam ger inte Jelal något att tycka till om i den frågan. Arkitekturen har
-dessutom medvetet lagt gråskalan i CSS i stället för att baka in den i bildfilerna,
-just för att synpunkter vid Leverans 1 ska kunna hanteras utan att någon bild
-genereras om. Det beslutet förutsätter att hero finns när vi frågar.
-
-Det som däremot behöver skärpas är **vad vi frågar om**. Flera beslut är redan
-tagna av Jelal själv eller uppmätta ur loggan, och om de tas upp igen vid
-Leverans 1 raseras arbete utan att något blir bättre:
-
-| Öppet för synpunkt vid Leverans 1 | Stängt — tas inte upp igen |
-|---|---|
-| Hero-introtexten | Monogram + HTML-text i headern (Jelals beslut (b), 2026-10-02) |
-| Gråskalans och tonplattans styrka | Accentfärgen `#FC6F03` (uppmätt ur loggan, inte avläst) |
-| Profilbildens beskärning | Mörk bas |
-| Namnets grad och spärrning i headern | E-posten i klartext (Jelals uttryckliga beslut) |
-| Kantlinjen under headern | Att skills inte får nivåangivelser |
-
-**Konsekvens för ordningen:** 2B måste vara klart före Leverans 1. Lockupen i
-44 px får inte stå kvar när Jelal tittar, eftersom headern är det första som möter
-blicken. Är ikonen inte klar i 2B flyttas ombyggnaden till paket 3, men inte
-längre.
-
-### Varför numreringen inte ändras
-
-`ARKITEKTUR.md` (1149 rader) och `LARDOMAR.md` refererar till paket 2 till 7 på en
-mängd ställen, bland annat i tabellen över vilka filer som skapas i vilket paket.
-Skulle jag skjuta paket 3–8 ett steg framåt blir varje sådan referens tyst fel i
-ett dokument byggaren följer bokstavligt — samma klass av fel som fynd 7. Därför
-`2A`/`2B` i stället för omnumrering. Nio verifieringssvep, åtta nummer.
+**Processnot (Jelals preferens, från projektets minne):** granska hårt vid
+leverans, inte efter varje litet paket — Jelal vill se något körbart innan tunga
+granskningsloopar. Jag tolkar det så här: varje paket avslutas med byggarens egen
+verifieringslista (den står utskriven per paket nedan) och `npm run build`, men
+den fulla granskningen körs vid **LEVERANS** efter paket F. Paket G är
+granskarens. Det här avviker från CLAUDE.md:s "kör alltid granskare efter varje
+paket" och är därför något Jelal får säga nej till — det står som en öppen punkt.
 
 ---
 
@@ -110,310 +132,384 @@ ett dokument byggaren följer bokstavligt — samma klass av fel som fynd 7. Dä
 
 | # | Uppgift | Agent | Klar när |
 |---|---------|-------|----------|
-| 1 | Arkitekturbeslut + körbart skelett med header, nav och tomma sektioner | arkitekt → byggare | **Pågår** — rättat efter sju fynd, andra granskningen inväntas |
-| 2A | Profilbilden optimeras: `sharp` + bildskriptet + sex profilvarianter | byggare | De sex filerna finns under sina tak, beskärningen sitter, originalen orörda |
-| 2B | Monogram-ikon med genomskinlig botten + headern byggs om till ikon + HTML-text | byggare | Ingen fyrkant mot någon bakgrund, headern visar monogram + markerbar text, höjden är exakt 64 px |
-| 3 | Hero-sektion med namn, titel, intro och profilbild med grått lager | byggare | Hero ser färdig ut på 360 px och på desktop, bilden är gråtonad enligt briefen |
-| — | **LEVERANS 1 — visa för Jelal, hämta synpunkter på det som står som öppet ovan** | projektledare | Jelal har sett paket 1–3 i webbläsaren och sagt ja eller begärt ändring |
-| 4 | Skills: datafil med alla 93 + pills + `validate-data.mjs` inkopplat i `build` | arkitekt → byggare | 93 pills syns, ett skill kan tändas på ETT ställe, och skriptet fäller trasig data |
-| 5 | Projektsektion förberedd men tom, datadriven | arkitekt → byggare | Tomt läge syns, ett testprojekt dyker upp som kort, valideringen täcker filen |
-| 6 | Kontaktsektion + footer | byggare | E-post som `mailto:` i klartext, tomma länkar renderas inte, valideringen täcker filen |
-| 7 | Responsiv genomgång, tillgänglighet, `<noscript>`, skip-länk, `aria-current` | byggare | Ingen horisontell scroll från 360 px, hela sidan navigerbar med tangentbord, `npm run build` går igenom |
-| 8 | README + guide för hur Jelal fyller i skills, projekt och kontaktlänkar | dokumentator | En utomstående kan följa guiden utan att öppna en komponentfil |
+| A | Arkitektbesluten: ikoner, `filled`/orange/teckenförklaring, kortrutnätet, knappstilarna, rollraden, Om mig-länkens två lägen, och vad som händer med skills-grindarna i `validate-data.mjs` | arkitekt | Varje punkt i listan nedan står som ett beslut i `ARKITEKTUR.md`, varje överspelat stycke är ändrat eller märkt `UPPHÄVT` på sin ursprungliga plats, och de nya förbjudna strängarna är införda i tabellen |
+| B | Hero: namn, rollrad, ingress och de två knapparna — exakta texter | byggare | De tre texterna står tecken för tecken som i uppdraget, knapparna scrollar till projekt respektive kontakt, sidan har exakt ett `h1`, inget sektions-id står som literal i `.jsx` |
+| C | **Mobilgrinden:** knapparna ska synas utan scroll på 360 px, och hero ska fylla ungefär första skärmen på dator | byggare | En mätserie visar att båda knapparnas underkant ligger inom vyporten på de uppmätta höjderna, och mätningen är skriven som ett upprepbart kriterium, inte som en iakttagelse |
+| D | Kompetensdatan: `src/data/skills.js` byts till de nio grupperna, och skills-grindarna i `validate-data.mjs` görs om enligt beslut A | byggare | De nio grupperna och alla punkter står exakt som i uppdraget, `validate:data` tiger på korrekt data och larmar på trasig, och den gamla 307-listan finns inte kvar i någon datafil |
+| E | Kompetensrenderingen: ett kort per grupp med `h3` och chips i `ul`/`li`, rutnät 3/2/1, ikonbeslutet genomfört, ingen animation | byggare | Nio kort, 3 per rad på dator, 2 på surfplatta, 1 på mobil, ingen nivåmätare, inget 360 px-överskridande mätt mot kortets egen behållare |
+| F | "Om mig": den exakta texten, och "Hem och Ekonomi" i det läge beslut A ger | byggare | Texten står tecken för tecken som i uppdraget, och ingen länk pekar på ett id som inte finns |
+| — | **LEVERANS — visa sidan för Jelal och hämta svar på de öppna punkterna** | projektledare | Jelal har sett hero, Om mig och Kompetenser i webbläsaren |
+| G | Hård granskning av A–F, plus genomsökning efter rester av den gamla listan och efter kommentarer som blivit falska | granskare | Fynden nedtecknade i `LARDOMAR.md`, `GRANSKNING-PAGAR` skapad före start och raderad efter rapport |
+| H | Dokumentation: hur Jelal ändrar de nio grupperna, plus listan över ändrade och borttagna filer som uppdraget beställer | dokumentator | En utomstående kan lägga till en kompetens utan att öppna en komponentfil, och fil-listan är komplett |
 
-Granskaren körs efter **varje** avslutat paket, inklusive efter 2A och efter 2B
-separat. Den är inte ett eget paket i tabellen eftersom den alltid gäller.
+### Beroenden — vad som är blockerat och vad som kan byggas direkt
+
+| Paket | Status |
+|---|---|
+| A | Kan startas direkt. Blockerar allt annat. |
+| B | **Delvis blockerat av A** — rollraden (punkt 3 i A) och knappstilarna (punkt 4). Namnet och ingressen kunde byggas direkt, men de är tre rader i samma fil och ska inte delas i två paket. |
+| C | Blockerat av B. Mäter det B byggt. |
+| D | **Blockerat av A** — grindarna (punkt 7) och `filled`-fältets framtid (punkt 2). Utan beslutet fäller `validate:data` bygget på helt korrekt data. |
+| E | **Blockerat av A** — ikonerna (punkt 1), rutnätet (punkt 5), teckenförklaringen (punkt 2). Blockerat av D, eftersom renderingen läser datan. |
+| F | **Blockerat av A** — punkt 6. Textens tre stycken är givna och kunde skrivas direkt; länken kan inte. |
+| G | Blockerat av F och av LEVERANS. |
+| H | Blockerat av G. |
+
+**Inget paket utom A kan börja utan arkitektbeslut.** Det är inte en brist i
+planen — det är följden av att tre av uppdragets premisser inte stämmer med
+koden, och lärdomen från 2026-10-02 säger uttryckligen att beslut som saknas i
+`ARKITEKTUR.md` i stället uppfinns i koden, där ingen letar efter dem.
 
 ---
 
-### Paket 2A — Profilbilden
-**Förutsättning:** Paket 1 godkänt i den andra granskningen. Inte dessförinnan.
+## Paket A — Arkitektbesluten
 
-**Ingår:**
-- `sharp` som devDependency, `scripts/optimize-images.mjs` och scriptraden
-  `optimize:images` — alla tre samtidigt, enligt fynd 7.
-- De sex profilvarianterna enligt arkitekturens tabell.
-- **Beskärningsbedömningen.** Arkitekturen säger själv att `left: 584` / `top: 0`
-  är ett utgångsläge räknat på bildens mått, inte en mätning av var ansiktet
-  sitter. Byggaren ska titta på resultatet, justera vid behov och skriva de
-  slutliga värdena som kommentar i skriptet.
+**Agent:** arkitekt. **Förutsättning:** ingen.
 
-**Ingår INTE:** Monogram-ikonen och headern (2B). Gråskalan och tonplattan — de är
-CSS och hör till paket 3, medvetet, så att tonen kan justeras efter Leverans 1 utan
-att en bild genereras om. `.visually-hidden` (2B). `<noscript>` (paket 7). Och
-**ingen temporär `<img>` i `App.jsx` för att kunna titta på bilden** — hero är
-paket 3. En asset-leverans verifieras genom att filen öppnas, inte genom att något
-provisoriskt läggs på sidan.
+Nio punkter ska avgöras. Varje punkt ska stå som ett beslut i `ARKITEKTUR.md`, på
+den plats där det gamla beslutet står, enligt dokumentets egen konvention i
+"Upphävda beslut".
+
+1. **Ikonerna.** Uppdraget vill en liten ikon per kort och hänvisar till ett
+   ikonbibliotek som inte finns. Avgör: eget inline-SVG, eller inga ikoner.
+   Ett nytt körtidsberoende är ett teknikval som bryter projektets etablerade
+   linje om minsta antal beroenden, och det är arkitektens att ta eller avstå.
+2. **`filled`, den orange fyllningen och teckenförklaringen.** Den nya listan har
+   ingen ifylld/dämpad-skillnad: allt i den är sådant Jelal kan. Raden "De orange
+   har jag arbetat med." förklarar då en skillnad som inte längre finns, och
+   `SkillPill`s `filled`-prop blir död data. Avgör vad som händer med fältet,
+   färgen och raden. Att Jelals 270 markeringar försvinner är hans att godkänna
+   (se Öppna punkter) — mekanismen är din.
+3. **Rollraden.** Uppdraget säger `Systemutvecklare · Fullstack`. Jelal sa
+   tidigare uttryckligen "ta bort systemutvecklare längst upp", och `Hero.jsx`
+   bär en daterad kommentar om just det. Uppdraget är nyare och uttryckligt, så
+   det gäller. Avgör hur den daterade kommentaren skrivs om så att nästa läsare
+   inte tror att den gamla regeln står kvar, och bekräfta att samma sträng i
+   `<title>` i `index.html` följs åt.
+4. **Knappstilarna.** "Primär, fylld" och "sekundär, kontur" är två nya visuella
+   komponenter. Avgör om de bygger på något som redan finns i projektet eller
+   blir nytt, och skriv ut deklarationerna — lärdomen från 2026-10-05 gör en
+   utskriven deklaration bindande tecken för tecken.
+5. **Kortrutnätet 3/2/1.** Avgör brytpunkterna och skriv ut behållarens
+   deklaration. Den återkommande 360 px-lärdomen kräver `minmax(0, 1fr)`-formen
+   på varje grid som bär text, och den ska stå i beslutet och inte uppfinnas i
+   CSS:en.
+6. **Om mig-länken, båda lägena.** Besluta hur stycket renderas **innan**
+   projektet finns och hur det blir en länk **automatiskt** när Jelal lägger in
+   projektet — samma text i båda lägena, ingen manuell omredigering. Ingen länk
+   får peka på ett id som inte finns.
+7. **Skills-grindarna i `validate-data.mjs`.** Korsreferensen mot `skills.txt`
+   och `skills-full.txt` och antalsgrindarna kommer att fällas av den nya listan.
+   Lärdomen från 2026-10-05 säger att en grind som fälls av en legitim ändring är
+   felkonstruerad och ska göras om, inte dokumenteras med ett undantag. Avgör vad
+   grinden ska kontrollera i stället, och vad som händer med de två källistorna.
+   Innan en grind behålls ska det stå skrivet vilken legitim ändring som får fälla
+   den.
+8. **Teckentäckningen.** Rollradens mittpunktstecken och de nya skill-namnen
+   innehåller tecken sidan aldrig haft. Avgör ingenting på deklarationen — kräv
+   mätning mot woff2-filens `cmap` i paket B och D.
+9. **Avtrycket att ingen animation ska införas**, med uppdragets egen formulering
+   som skäl. Utan avtryck kommer en framtida läsare att se "lugn in-animation" i
+   uppdraget och tro att den saknas.
+
+**Klar när:** varje punkt står som beslut; varje överspelat stycke är ändrat
+eller märkt `UPPHÄVT` på sin ursprungliga plats; de strängar som nu blir
+felaktiga är införda i tabellen över förbjudna strängar — minst talen `307` och
+`257`/`270`, de 18 gruppnamnen, teckenförklaringens text och den gamla rollraden,
+om besluten gör dem överspelade.
+
+---
+
+## Paket B — Hero: texterna och knapparna
+
+**Agent:** byggare. **Förutsättning:** A klart.
+
+**Ingår:** namnet som `h1`, rollraden, ingressen och de två knapparna, med
+uppdragets exakta texter. Knapparna hämtar sina mål ur `sections.js` namngivna
+konstanter. Omskrivningen av den daterade rollkommentaren enligt beslut A3, och
+`<title>` i `index.html` om beslutet säger det.
+
+**Ingår INTE:** profilbildens storlek och placering (paket C), GitHub- och
+LinkedIn-ikonlänkar (valfritt i uppdraget, och GitHub är uttryckligen borttagen
+av Jelal — se Öppna punkter), någon animation, någon JS-scrollning.
 
 **Verifiering:**
-1. `npm run optimize:images` går igenom och skriver ut sina framräknade värden.
-2. Varje script i `package.json` körs en gång — inget faller på en saknad fil (fynd 7).
-3. De sex filerna finns, har exakt de angivna pixelmåtten, och var och en ligger
-   under sitt tak. Uppmätta storlekar listas i överlämningen.
-4. `public/assets/profile.jpg` och `logo.png` är oförändrade — jämför storlek och
-   ändringsdatum före och efter.
-5. Öppna `profile-800` i hero-storlek: hjässan är inte avskuren, ansiktet sitter
-   nära övre tredjedelen, motivet är inte ur centrum i sidled. Justerade
-   `left`/`top` står som kommentar i skriptet.
-6. Ingen EXIF följer med ut.
-7. `EJ I ARKITEKTUR`-sökning gjord, träffarna listade i överlämningen (fynd 6).
+1. De tre texterna jämförs **tecken för tecken** mot uppdraget, maskinellt — inte
+   genom att läsas. Ingen omskrivning, ingen ändrad interpunktion.
+2. Sidan har exakt ett `h1`, och det innehåller namnet.
+3. `grep` efter sektions-id som literaler i `.jsx` ger inga träffar utanför
+   kommentarer.
+4. Båda knapparna leder till ett id som finns i `sections.js`, och klick landar
+   under den sticky headern utan att rubriken skyms.
+5. Varje tecken i de nya strängarna finns i woff2-filens `cmap` — mätt på filen,
+   inte på `unicode-range`. Mittpunktstecknet i rollraden är det som mest troligt
+   saknas.
+6. `npm run build` och `npm run validate:data` går igenom.
+7. Varje `EJ I ARKITEKTUR`-markering i `Hero.jsx` läses mot `ARKITEKTUR.md`; de
+   besvarade tas bort i samma ändring, de kvarvarande redovisas med meningen
+   "ännu obesvarad av arkitekten".
+8. Kommentarsblocken i `Hero.jsx` lästa om: ingen kommentar bär längre ett
+   påstående som blivit falskt av detta paket.
 
 ---
 
-### Paket 2B — Monogram-ikonen och headern
-**Förutsättning:** 2A godkänt, så att skriptfilen finns och är känd att fungera.
+## Paket C — Mobilgrinden: knapparna utan scroll
 
-**Ingår:**
-- Ikonsteget i **samma** `scripts/optimize-images.mjs`: beskärningen med de
-  uppmätta värdena, alfa-steget som ger genomskinlig botten, och nedskalningen —
-  i arkitekturens ordning, alfa räknat på fullt underlag före `resize`.
-- `logo-mark-32.png`, `logo-mark-96.png`, `logo-mark-192.png`.
-- `.visually-hidden` i `global.css`.
-- **Ombyggnaden av headern** till ikon + namnet som riktig HTML-text — den kända
-  skulden från paket 1. `Header.jsx` + `Header.module.css`.
-- Favicon-referensen i `index.html` byts från lockupen till `logo-mark-32.png`.
-  *(Arkitekturens filtabell för paket 2 nämner inte `index.html`. Byggaren märker
-  ändringen enligt fynd 6 och listar den, så att arkitekten kan ta in den.)*
+**Agent:** byggare. **Förutsättning:** B klart.
 
-**Ingår INTE:** Profilbilden (2A). Hero (paket 3). Skip-länk, `aria-current`,
-`<noscript>` och mobil nav-toggle — allt det är paket 7 och ska inte smyga in här,
-även om 2B råkar vara i närheten av headern. Ingen ny färg, ingen `.ico`, ingen
-`<picture>` för ikonen.
+Detta är uppdragets hårdaste krav och därför ett eget paket. Hero ska rymma namn,
+rollrad, ingress, två knappar **och** en rund profilbild — på 360 px bredd, där
+den användbara spaltbredden är 309 px enligt arkitekturens egen mätning.
+
+**Ingår:** att avgöra vad som faktiskt ryms och vad som får vika på mobil, inom
+ramen för beslut A, och att skriva kravet som en **mätserie** i stället för som en
+mening. Lärdomen från 2026-10-05 är tydlig: går ett "får aldrig" att mäta är
+mätningen beslutet och prosan bara förklaringen.
+
+**Ingår INTE:** att ändra texterna för att få plats — de är exakta. Att ta bort
+profilbilden utan att det står som ett beslut. Att byta typsnittsgrader på hela
+sidan.
+
+**Klar när:**
+1. Båda knappelementens underkant ligger inom vyporten vid 360 px bredd på de
+   höjder som mäts — den lägsta rimliga telefonhöjden ska ingå, inte bara en
+   bekväm. Mätt på elementens egna rektanglar, aldrig genom att titta på sidan.
+2. Mätningen är icke-avtagande över en serie bredder, så att en framtida
+   brytpunkt inte kan smyga sönder den — samma form som cirkelns monotonikontroll
+   i arkitekturen.
+3. Överskridanden mäts mot **hero:s egen behållare**, inte mot sidan: slack
+   absorberar fel, och absorberade fel larmar inte.
+4. Inget 360 px-överskridande med projektets längsta sträng programmatiskt
+   insatt i varje textelement i hero — den återkommande grid-lärdomen.
+5. "Hero fyller ungefär första skärmen på dator" mätt på en desktopbredd, med
+   talet skrivet i överlämningen.
+6. En negativ kontroll som visar att mätningen faktiskt kan larma: tvinga fram
+   ett överskridande, redovisa vilket element som bar det, och visa att larmet
+   upphörde när injektionen togs bort.
+
+---
+
+## Paket D — Kompetensdatan
+
+**Agent:** byggare. **Förutsättning:** A klart, särskilt punkt 2 och 7.
+
+**Ingår:** `src/data/skills.js` byts till de nio grupperna med uppdragets exakta
+punkter i uppdragets ordning. Grindarna i `scripts/validate-data.mjs` görs om
+enligt beslut A7. Datafilens kommentar skrivs om — den lovar i dag saker om 307
+poster och om ifyllda skills som inte längre är sanna, och lärdomen från
+2026-10-05 säger att ett löfte i en fil Jelal redigerar aldrig får vara osant.
+
+**Ingår INTE:** renderingen (paket E). Att hitta på en grupp eller en punkt som
+inte står i uppdraget. Att behålla en enda post ur den gamla listan "för
+säkerhets skull" — uppdraget säger att den ska tas bort helt, och den finns kvar i
+git-historiken.
 
 **Verifiering:**
-1. Skriptets utskrift stämmer **exakt** med arkitekturens förväntade utfall: bbox
-   x 323..914 / y 338..779, två oranga block hittade, högsta blocket valt,
-   beskärning `left=283 top=223 width=672 height=672`. **Avviker något tal — stanna
-   och lämna tillbaka. Justera inte talen för hand.**
-2. De tre ikonfilerna finns, har rätt mått, är PNG **med** alfakanal, och ligger
-   under sina tak.
-3. Öppna ikonen mot sidans bakgrund **och** mot en klart avvikande ton, t.ex. vit.
-   Ingen fyrkant syns i någondera. Kanterna är mjuka, inte taggiga. Syns en
-   fyrkant är alfan fel; är kanterna taggiga har `resize` skett före alfa-steget.
-4. I webbläsaren: headern visar monogrammet plus "Jelal Qaiumi" som riktig text —
-   markera texten med muspekaren för att bekräfta att det är en textnod och inte
-   en bild. Ikon och namn är **en** länk till hero.
-5. **Mät renderad headerhöjd — den ska vara exakt `--header-height`** (fynd 4,
-   obligatorisk eftersom `Header.jsx`/`Header.module.css` ändrats).
-6. På 360 px: namnet är visuellt dolt men länken har fortfarande ett tillgängligt
-   namn — kontrollera i tillgänglighetsträdet att det läses som "Jelal Qaiumi",
-   exakt en gång. Ingen horisontell scroll. På 600 px och uppåt syns namnet.
-7. Fliken i webbläsaren visar monogrammet, utan mörk kvadrat runt om.
-8. Sektions-id-sökningen i `.jsx` ger inga träffar utanför kommentarer — logga-
-   länken använder konstanten, inte strängen (fynd 1).
-9. Varje script i `package.json` körs en gång. `EJ I ARKITEKTUR` listat (fynd 6, 7).
-10. `logo.png` och `profile.jpg` fortfarande oförändrade.
+1. De nio gruppnamnen och varje punkt jämförs **tecken för tecken** mot
+   uppdraget, maskinellt.
+2. Ordningen är uppdragets ordning, både på grupperna och inom varje grupp.
+3. `npm run validate:data` tiger på den korrekta datan.
+4. Den görs om till en grind som larmar: pröva varje obligatoriskt fält med tre
+   värden — borttaget, tom sträng och bara blanksteg — i en kopia i
+   scratch-katalogen. Lämna aldrig trasig data kvar.
+5. Den åtgärd ett felmeddelande föreskriver ska få grinden att **tiga**. Gör den
+   inte det är grinden trasig, inte sträng.
+6. Varje tecken i de nya namnen finns i woff2-filens `cmap`, mätt på filen.
+7. `npm run build` går igenom, och misslyckas med medvetet trasig data.
+8. Ingen förekomst av den gamla listan kvar i någon fil under `src/data/`.
 
 ---
 
-### Paket 3 — Hero
-**Förutsättning:** 2B godkänt. Lockupen är borta ur headern.
+## Paket E — Kompetensrenderingen
 
-**Öppen punkt som arkitekten behöver bekräfta innan paketet startar:**
-`ARKITEKTUR.md` säger på ett ställe att hero-posten tappar `label` helt
-(alternativ C), och på ett annat — i avsnittet "Bekräftat från paket 1" — att
-hero-platshållarens `<h1>` renderar `label` ur `sections.js`, alltså "Start", och
-att det är rätt som platshållare. De två kan inte båda gälla, och det senare
-krockar dessutom med fynd 2:s regel att en platshållarrubrik ska innehålla riktig
-rubriktext. Frågan kan redan vara avgjord i rättningen av paket 1; är den inte det
-ska den redas ut av arkitekten, inte i koden.
+**Agent:** byggare. **Förutsättning:** D klart.
 
-**Ingår:** Namn som `<h1>` skrivet i `Hero.jsx`, titel, kort intro på svenska, och
-profilbilden med gråskala plus grå tonplatta i CSS. Generösa marginaler.
+**Ingår:** ett kort per grupp med gruppnamnet som `h3` och kompetenserna som
+chips i en riktig `ul`/`li`. Rutnätet 3/2/1 enligt beslut A5. Ikonbeslutet A1
+genomfört. Teckenförklaringen och den orange fyllningen enligt beslut A2.
 
-**Ingår INTE:** Skills, projekt, kontakt. Ingen animation eller scroll-effekt — det
-är inte beställt och arkitekturen har uttryckligen inget `--transition` för det.
+**Ingår INTE:** animation (uppdragets egen regel ger ingen). Nivåmätare, procent
+eller stapel — uttryckligen förbjudet i uppdraget. Sökruta, filter, räknare.
+Ändringar i andra sektioners CSS.
 
 **Verifiering:**
-1. Öppna sidan i 360 px och i desktopbredd. Ingen horisontell scroll.
-2. Bilden är tydligt gråtonad, texten läsbar mot underlaget, inget överlappar.
-3. Webbläsaren laddar **exakt en** bildfil — kontrollera i nätverkspanelen att inte
-   både WebP och JPEG hämtas.
-4. `<img>` har explicita `width`/`height` — ingen layout shift vid laddning.
-5. Sidans `<h1>` innehåller Jelals namn, inte ett navord. Det finns exakt ett `h1`.
-6. `EJ I ARKITEKTUR` listat. Introtexten flaggas i överlämningen som text Jelal
-   ska godkänna.
-
-**Efter detta paket: LEVERANS 1.** Stanna. Visa sidan för Jelal och ställ frågorna
-i tabellen "Öppet för synpunkt" ovan — inte en öppen "vad tycker du", som bjuder in
-till att riva upp det som är stängt.
+1. Nio kort renderas. 3 per rad på dator, 2 på surfplatta, 1 på mobil — mätt på
+   kortens rektanglar vid brytpunkterna och strax under dem.
+2. Varje `h3` ligger under sidans enda `h1` och under sektionens `h2` i
+   rubriknivå — ingen nivå hoppas över.
+3. Chipsen ligger i `ul`/`li`. Ett chip utan namn renderar inget element, inte ett
+   tomt.
+4. 360 px-golvet: projektets längsta sträng programmatiskt insatt i ett chip och
+   i en gruppubrik, mätt mot **kortets egen behållare**. Grid-lärdomen gäller
+   fullt ut här — detta är en ny grid.
+5. Ingen `transition` eller `animation` tillkommen. `grep` visar samma antal som
+   före paketet.
+6. Kontrasten mätt på chipsen mot den yta de faktiskt ligger på, inte den de låg
+   på förut.
+7. Vaktraderna i `.pills`: varje rad som bär en kommentar om att den är nödvändig
+   tvingas fallera på nytt i den **nya** layouten. Går ingen skillnad att mäta
+   skrivs kommentaren om till "förebyggande, ingen uppmätt effekt i nuvarande
+   layout".
+8. Kommentarerna i `Skills.module.css` och `SkillPill.module.css` lästa om: talet
+   307 och påståendet om "längsta strängen" är borta, och ingen kommentar
+   upprepar ett värde som står någon annanstans.
+9. `EJ I ARKITEKTUR`-markeringarna i Skills-filerna lästa mot `ARKITEKTUR.md`,
+   besvarade borttagna i samma ändring.
+10. `npm run build` går igenom.
 
 ---
 
-### Paket 4 — Skills + datavalidering
-**Förutsättning:** Leverans 1 godkänd av Jelal.
+## Paket F — "Om mig"
 
-**Öppen punkt som måste vara avgjord av arkitekten innan paketet startar:**
-`validate-data.mjs` ska enligt arkitekturen kontrollera fyra datafiler, men
-`projects.js` skapas först i paket 5 och `contact.js` i paket 6. Fynd 7 förbjuder
-uttryckligen ett script som faller på en fil som inte finns — och det är precis det
-felet som redan inträffat en gång med `optimize:images`. Mekanismen är arkitektens
-beslut; jag konstaterar bara att den måste vara bestämd innan paketet startar, och
-att **paket 5 och 6 i så fall får ett tillägg: att aktivera sin respektive
-kontroll.** Det står i deras omfattning nedan.
+**Agent:** byggare. **Förutsättning:** A klart, särskilt punkt 6.
 
-**Ingår:**
-- Arkitekten beslutar kategoriindelningen av de 93 skillsen. Formen är redan
-  beslutad: `{ name, filled }`, inget mer.
-- Byggaren lägger in alla 93 namn stavade exakt som i `skills.txt`, alla med
-  `filled: false`, plus renderingen: orange fylld pill med mörk text för ifylld,
-  outline-pill för ej ifylld. Kompakt kolumnlayout.
-- `scripts/validate-data.mjs`, scriptraden `validate:data`, och inkopplingen i
-  `build` — alla tre samtidigt.
+**Ingår:** uppdragets exakta text i `src/data/about.js`, och "Hem och Ekonomi" i
+det läge beslut A6 ger.
 
-**Ingår INTE:** Att markera några skills som ifyllda — det gör Jelal. Ingen sökruta,
-inga filter, ingen nivå- eller procentangivelse, ingen ikon, ingen sorteringsvikt.
+**Ingår INTE:** att lägga till en bild i sektionen — det finns ingen att behålla,
+och att införa en är ett nytt beslut, inte ett "behåll". Att hitta på innehåll om
+projektet Hem och Ekonomi. Att hitta på något om Jelals bakgrund utöver textens
+egna ord: texten säger att han bor i Motala och är i början av sin karriär, och
+**inget mer om hans bakgrund får läggas till någonstans på sidan**.
 
 **Verifiering:**
-1. Räkna pills på den renderade sidan — exakt 93, alla dämpade.
-2. Ändra ett enda skill till `true`, spara, se pillen bli orange. Bekräfta att
-   **endast** `skills.js` ändrats — ingen komponentfil rörd. Ändra tillbaka.
-3. `npm run validate:data` går igenom på de riktiga filerna.
-4. **Skriptet ska fälla trasig data, inte bara finnas.** Bryt datan medvetet, en
-   sak i taget, i en kopia i scratch-katalogen: dubblerat skill-namn, 92 skills,
-   94 skills, `filled` som sträng, två grupper med samma `id`, grupp utan `title`,
-   dubblerat sektions-`id`, sektion utan `label`. Varje fall ska ge nollskild
-   avslutskod och ett svenskt felmeddelande som namnger filen och värdet.
-   Återställ och bekräfta att det går igenom igen. **Lämna aldrig trasig data kvar.**
-5. `npm run build` ska **misslyckas** med trasig data och lyckas med återställd —
-   det är beviset på att inkopplingen i `build` sitter, inte bara att scriptet finns.
-6. Ett skill utan `name` renderar inget element alls, inte en tom pill (fynd 3).
-7. 360 px-kontroll med sidans längsta faktiska skill-namn, raden
-   `HTTP-metoder (GET, POST, PUT, DELETE)` — aldrig med kort platshållartext (fynd 5).
-8. Skills-sektionen dominerar inte sidan på någon bredd.
-9. Varje script i `package.json` körs en gång. `EJ I ARKITEKTUR` listat.
+1. Texten jämförs **tecken för tecken** mot uppdraget, maskinellt. Den är en
+   sammanhängande text; om den delas i stycken får inget tecken ändras.
+2. Ingen `href` på sidan pekar på ett id som inte finns i den renderade markupen
+   — kontrollerat mekaniskt, inte genom att klicka.
+3. Det motsatta läget provas också: lägg in ett testprojekt med det id beslutet
+   anger, och bekräfta att länken dyker upp **utan** att texten redigeras. Ta
+   bort testprojektet och bekräfta att länken försvinner utan att en trasig
+   `href` lämnas kvar.
+4. `npm run build` och `npm run validate:data` går igenom.
+5. Kommentaren i `about.js` lästs om: den beskriver i dag texten som ett
+   byggarutkast som Jelal ska ersätta. Efter detta paket är texten Jelals egen,
+   och kommentaren blir falsk om den står kvar.
+
+**Efter detta paket: LEVERANS.** Stanna. Visa sidan för Jelal och ställ de öppna
+frågorna nedan — inte en öppen "vad tycker du", som bjuder in till att riva upp
+det som är avgjort.
 
 ---
 
-### Paket 5 — Projektsektion (förberedd, tom)
-**Förutsättning:** Paket 4 klart och granskat.
+## Paket G — Granskningen
 
-**Ingår:** `projects.js` som tom array, datadriven sektion med tomt läge på svenska,
-projektkort. **Plus: aktivera `projects.js`-kontrollen i `validate-data.mjs`** enligt
-den öppna punkten i paket 4.
+**Agent:** granskare. **Förutsättning:** LEVERANS genomförd.
 
-**Ingår INTE:** Riktiga projekt, projektbilder, detaljsidor, filtrering, årtal,
-"featured"-flagga. Projekten kommer senare och ska inte gissas fram.
+**Ingår:** `GRANSKNING-PAGAR` skapas i projektroten **innan** granskaren startas
+och raderas först när rapporten är levererad. Ändringslistan med datum tas vid
+start och vid slut; skiljer de sig är granskningen ogiltig för de filerna.
+Därtill, utöver den vanliga genomgången:
 
-**Verifiering:**
-1. Tomt läge syns med rubrik och svensk text.
-2. Lägg in ett påhittat testprojekt → ett kort renderas med titel, beskrivning och
-   tech-etiketter. Ta bort det → tomt läge tillbaka.
-3. Ett projekt utan `id`, `title` eller `description` hoppas över helt (fynd 3), och
-   `validate:data` fäller det. `url`/`repoUrl` som `null` renderar ingen länk.
-4. **Inget `<footer>`-element inuti ett projektkort** — arkitekturen varnar att den
-   globala sidmarginalregeln då ger kortet oväntad sidomarginal.
-5. 360 px-kontroll med en lång projekttitel, inte en kort.
-6. `npm run build` går igenom. `EJ I ARKITEKTUR` listat.
-
----
-
-### Paket 6 — Kontakt + footer
-**Förutsättning:** Paket 5 klart och granskat.
-
-**Ingår:** `contact.js` med e-posten i klartext och GitHub/LinkedIn som `url: null`,
-kontaktsektionen, och footern. **Plus: aktivera `contact.js`-kontrollen i
-`validate-data.mjs`.**
-
-**Ingår INTE:** Kontaktformulär, backend, e-posttjänst, karta. Ingen obfuskering av
-e-posten — det är Jelals uttryckliga beslut, taget med insikt om skräppostrisken.
-**Byggaren gissar inte en GitHub- eller LinkedIn-URL.**
-
-**Verifiering:**
-1. Navlänken till kontakt scrollar dit och rubriken hamnar inte under den sticky
-   headern.
-2. E-posten syns i klartext och `mailto:`-länken öppnar e-postklienten.
-3. De två länkarna med `url: null` renderas **inte alls** — ingen grå ikon, inget
-   "kommer snart", inget `href="#"`. Byt en `null` mot en URL → länken dyker upp.
-   Byt tillbaka.
-4. Footern ligger i botten utan glapp på både kort och lång sida.
-5. `npm run build` går igenom. `EJ I ARKITEKTUR` listat.
+1. Genomsökning efter **rester av den gamla listan** överallt: komponenter,
+   datafiler, kommentarer, `skills.txt`, `skills-full.txt`, grindarna och
+   `dist/`. Uppdraget nämner undersidor — sidan är ensidig, så det är trivialt
+   uppfyllt, men det ska stå att det kontrollerats.
+2. Arkitekturens tabell över förbjudna strängar körd mot `src/` och `scripts/`,
+   inte bara mot `ARKITEKTUR.md`.
+3. Varje `EJ I ARKITEKTUR`-markering läst mot `ARKITEKTUR.md`, inte räknad.
+4. `dist/` mätt bara i samma körning som ett ombyggt bygge, med byggkommandot och
+   tidsstämpeln för senast ändrade fil under `src/` i rapporten.
+5. Startas någon server: porten mäts med `netstat` före start och efter stopp, och
+   raden klistras in.
 
 ---
 
-### Paket 7 — Responsiv genomgång och robusthet
-**Förutsättning:** Paket 6 klart och granskat. Alla sektioner finns.
+## Paket H — Dokumentationen
 
-**Ingår:** Genomgång på 360 px, 600, 900 och 1200. Mobil navigation. `<noscript>`
-med arkitekturens exakta text. Skip-länk till `<main>`. `aria-current` på
-navlänken till sektionen i vy — projektets första `useEffect`, och ett medvetet
-val, inte något som smugit in tidigare. Tangentbordsnavigering, fokusmarkeringar,
-alt-texter, kontraster.
+**Agent:** dokumentator. **Förutsättning:** G klart och fynden åtgärdade.
 
-**Ingår INTE:** Nya sektioner, nytt innehåll, omdesign. Deploy.
+**Ingår:** guiden uppdateras till de nio grupperna — hur Jelal lägger till,
+ändrar och tar bort en kompetens eller en grupp, och vad som gäller för
+`filled`-fältet efter beslut A2. Plus **listan över ändrade och borttagna filer**
+som uppdraget uttryckligen beställer.
 
-**Verifiering:**
-1. Alla fyra bredder, ingen horisontell scroll någonstans — testat med sidans
-   längsta faktiska strängar (fynd 5).
-2. Hela sidan navigerbar med endast tangentbord, fokus alltid synligt, skip-länken
-   är första fokuserbara elementet och blir synlig vid fokus.
-3. Slå av JavaScript → `<noscript>`-texten visas, ordagrant som i arkitekturen.
-4. Renderad headerhöjd fortfarande exakt `--header-height` efter eventuella
-   header-ändringar (fynd 4).
-5. `npm run build` och `npm run preview` går igenom, och den byggda sidan beter sig
-   som utvecklingsversionen.
-6. `EJ I ARKITEKTUR` listat.
+**Verifiering:** följ guiden ordagrant — lägg till en kompetens och en grupp,
+utan att öppna en komponentfil — och kör `npm run validate:data` efteråt. Går det
+inte är guiden eller arkitekturen fel, och paketet lämnas tillbaka.
 
 ---
 
-### Paket 8 — Dokumentation
-**Förutsättning:** Paket 7 klart och granskat.
+## Öppet — och vems det är att svara
 
-**Ingår:** README med start, bygge och vad `validate:data` respektive
-`optimize:images` gör. Guide på svenska: "så markerar du ett skill som ifyllt",
-"så lägger du till ett projekt", "så fyller du i din GitHub- och LinkedIn-länk".
+### Jelals, och ingen annans
 
-**Ingår INTE:** Deploy-instruktioner för en värdtjänst som inte är vald. Ingen
-API-dokumentation — det finns inget API.
+1. **Projektinnehållet till Hem och Ekonomi.** Ingen agent hämtar det någon
+   annanstans ifrån. Jelal har sagt "stop. gör inget sånt" när hans GitHub-repo
+   slogs upp utan att han bett om det. Planen förutsätter att projektet **inte
+   finns ännu**, och paket F bygger båda lägena så att länken tänds av sig själv
+   när han lägger in det.
+2. **Att de 270 markerade kompetenserna försvinner.** Han markerade dem över många
+   omgångar. Den nya listan har ingen sådan skillnad, så markeringarna upphör att
+   betyda något. Arkitekten beslutar mekanismen; att arbetet kastas är hans att
+   godkänna. Listan finns kvar i git-historiken.
+3. **Rollraden.** Uppdraget säger `Systemutvecklare · Fullstack`. Han sa tidigare
+   uttryckligen att "systemutvecklare" skulle bort från toppen. Uppdraget är
+   nyare och uttryckligt, så vi följer det — men det är värt en rad vid
+   LEVERANS, eftersom det är en medveten omsvängning och inte ett misstag.
+4. **LinkedIn-ikonen under knapparna.** Uppdraget listar den som **valfri**.
+   GitHub återinförs inte: han har sagt "Ta bort github", och `contact.js` har
+   `url: null` med en daterad kommentar. Frågan är bara om en LinkedIn-ikon i
+   hero tillför något utöver länken som redan står i kontaktsektionen. Vi avstår
+   om han inte ber om den.
+5. **Bild i Om mig.** Uppdraget säger "behåll befintlig bild" — det finns ingen.
+   Vill han ha en är det ett nytt beslut och ett eget paket.
+6. **Granskningsrytmen.** Jag har lagt den hårda granskningen vid LEVERANS i
+   stället för efter varje paket, enligt hans tidigare önskemål om att se något
+   körbart först. Det avviker från CLAUDE.md. Säger han nej körs granskaren efter
+   varje paket i stället.
 
-**Verifiering:** Följ guiden ordagrant: tänd ett skill, lägg till ett projekt, fyll
-i en länk — utan att öppna någon komponentfil. Kör `npm run validate:data` efteråt
-och se att den går igenom. Går något av detta inte är guiden eller arkitekturen
-fel, och paketet lämnas tillbaka.
+### Arkitektens
+
+Punkt 1–9 i paket A. Ingen av dem är byggarens att avgöra i koden, och ingen av
+dem är Jelals: de är följder av premisser i uppdraget som inte stämmer med
+projektets kod och etablerade linje.
 
 ---
 
 ## Risker
 
-- **Ett felaktigt antagande om en bildfil ger tyst fel utdata.** Det har redan
-  hänt tre gånger med `logo.png` — accentfärgen, beskärningsgränsen och
-  bottenfärgen. Varje gång fångades det av att någon mätte, aldrig av att bygget
-  larmade. Märks tidigt genom att skripten i 2A och 2B skriver ut sina framräknade
-  värden och att avvikelse mot arkitekturens förväntade utfall **stoppar** paketet.
-- **Alfa-steget görs i fel ordning.** Sker `resize` före alfaberäkningen trappas
-  kanterna. Märks tidigt genom att ikonen öppnas mot två olika bakgrunder i 2B —
-  fyrkant betyder fel alfa, taggiga kanter betyder fel ordning.
-- **Headerns höjd glider efter ombyggnaden.** Ikon plus textnod är nytt innehåll i
-  headern, och fynd 4 visar att höjden har haft två sanningar. Märks tidigt genom
-  att renderad höjd mäts i 2B, inte genom att ankarhoppen ser ungefär rätt ut.
-- **`validate-data.mjs` faller på filer som inte finns än.** Skriptet skapas i
-  paket 4 men kontrollerar filer från paket 5 och 6, och det är inkopplat i
-  `build` — så felet skulle slå ut hela byggnationen. Samma fel som redan
-  inträffat med `optimize:images`. Märks tidigt genom att den öppna punkten måste
-  vara avgjord **innan** paket 4 startar, och genom att varje script körs före
-  överlämning.
-- **Valideringsskriptet finns men fäller ingenting.** Ett script som bara skriver
-  "OK" är värre än inget, för det invaggar i trygghet. Märks tidigt genom att
-  verifieringen kräver att varje enskild kontroll demonstreras på medvetet trasig
-  data i scratch-katalogen.
-- **Skills-datan hamnar fel.** Om kategorier eller tillstånd bakas in i
-  komponentkod kan Jelal inte fylla i själv, och briefens viktigaste krav är
-  missat. Märks tidigt genom verifieringen i paket 4: tänd ett skill och bekräfta
-  att bara `skills.js` ändrats.
-- **93 pills dominerar sidan.** Märks tidigt vid visuell kontroll på 360 px med
-  det längsta faktiska skill-namnet.
-- **2B drar in paket 7:s tillgänglighetsarbete.** Skip-länk och `aria-current`
-  ligger nära headern och lockar. Märks tidigt genom att "ingår INTE" i 2B namnger
-  dem, och genom att en `useEffect` före paket 7 ska betraktas som ett fynd.
-- **Leverans 1 river upp det som är stängt.** Monogram-valet, accentfärgen och den
-  mörka basen är beslutade av Jelal eller uppmätta. Motmedel: tabellen över öppet
-  och stängt presenteras tillsammans med sidan, i stället för en öppen fråga.
-- **`ARKITEKTUR.md` motsäger sig själv på två ställen** — hero-postens `label`, och
-  avsnittet om bildoptimering som fortfarande säger "Loggan rörs inte — den är
-  redan liten nog enligt PLAN.md" trots att samma dokument beslutar att en
-  monogram-ikon ska härledas ur den. Byggaren följer dokumentet bokstavligt, så en
-  motsägelse blir ett godtyckligt val i koden. Märks tidigt genom att båda är
-  flaggade här och ska redas ut av arkitekten, inte av byggaren.
-- **Scope-glidning.** "Resten fixar vi med vägen" kan bli att allt byggs samtidigt
-  och inget blir verifierat. Motmedel: stopp-punkten efter paket 3 står kvar, och
-  granskaren körs efter 2A och 2B var för sig.
+- **`validate:data` fäller bygget på helt korrekt data.** Korsreferensen mot
+  `skills.txt` och `skills-full.txt` plus antalsgrindarna är byggda för den gamla
+  listan. Det här är den risk som mest sannolikt stoppar arbetet, och den slår på
+  hela `build`, inte bara på datafilen. **Märks tidigt** genom att beslut A7 måste
+  vara fattat innan paket D börjar, och genom att paket D kräver att grinden tiger
+  på korrekt data innan något annat verifieras.
+- **360 px-golvet spricker genom den nya kortgridden.** Det har redan hänt en
+  gång genom hero-gridden, och posten är ett registrerat återfall. Paket E inför
+  projektets nästa grid och paket C ändrar hero:s. **Märks tidigt** genom att
+  golvet mäts med programmatiskt insatt längsta sträng mot kortets egen
+  behållare, inte genom att sidan ser hel ut.
+- **Knapparna får inte plats utan att något viker.** Hero ska rymma fem element
+  på 309 px användbar bredd och en låg telefonhöjd. Den frestande utvägen är att
+  korta texterna — de är exakta och får inte röras. **Märks tidigt** genom att
+  paket C är eget, mäts på elementens rektanglar, och har ett "ingår INTE" som
+  namnger just den utvägen.
+- **Ett tecken i de nya strängarna saknas i teckensnittsfilen.** Rollradens
+  mittpunkt är den mest troliga. Följden är en synlig skarv mitt i en rad, och
+  den nuvarande teckengrinden mäter deklarationen och inte filen, så den kan
+  släppa igenom det. **Märks tidigt** genom mätning mot `cmap` i både B och D.
+- **En trasig ankarlänk i Om mig.** Texten ska innehålla en länk till ett projekt
+  som inte finns. En länk som ser klickbar ut och inte gör något är precis det
+  arkitekturen förbjudit. **Märks tidigt** genom att paket F kräver en mekanisk
+  kontroll att ingen `href` pekar på ett saknat id, och genom att båda lägena
+  provas.
+- **Kommentarer som blir falska i samma stund paketet är klart.** Minst fem
+  kommentarsblock beskriver i dag ett tillstånd som dessa paket ändrar: rollen i
+  `Hero.jsx`, utkastmarkeringen i `about.js`, teckenförklaringen i `Skills.jsx`,
+  talet 307 och "längsta strängen" i Skills-filerna. Posten är ett registrerat
+  återfall. **Märks tidigt** genom att varje paket har en egen punkt om att läsa
+  om kommentarsblocken, och genom att granskaren kör de förbjudna strängarna mot
+  `src/`.
+- **Arbetsträdet ändras under granskningen.** Har hänt två gånger, senast med
+  åtta filer under en halvtimme. **Märks tidigt** genom `GRANSKNING-PAGAR` och
+  ändringslistan med datum vid start och slut.
+- **Scope-glidning in i övriga sektioner.** Uppdraget säger "Resten av portfolion
+  är oförändrad", men paket E rör Skills-CSS:en som delar tokens med projekten,
+  och paket C rör hero:s layout. **Märks tidigt** genom att varje pakets "ingår
+  INTE" namnger det, och genom att granskaren jämför renderad markup för
+  projekt-, kontakt- och footer-sektionerna före och efter.
+- **Ett nytt beroende smyger in för ikonernas skull.** Uppdraget ber om det i
+  klartext, och det är den enklaste vägen. **Märks tidigt** genom att beslut A1
+  måste finnas skrivet innan paket E börjar, och genom att `package.json`
+  jämförs före och efter varje paket.

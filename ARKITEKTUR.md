@@ -3,8 +3,10 @@
 Gäller projektet **Portfolio för Jelal Qaiumi** (React + Vite, ren CSS, mörk bas
 med orange som enda accentfärg).
 
-Underlag: `BRIEF.md`, `PLAN.md`, `skills.txt` (93) och `skills-full.txt` (292
-poster, 267 unika), `assets-source/logo.png`
+Underlag: `BRIEF.md`, `PLAN.md`, `UPPDRAG-2026-10-07.md`, `assets-source/logo.png`
+och — ~~`skills.txt` (93) och `skills-full.txt` (292 poster, 267 unika)~~ **UPPHÄVT
+2026-10-08 av A1: båda filerna är historik och är inte underlag för något beslut
+och inte källa för någon grind. Genomfört i paket D.**
 och — sedan granskningen av paket 1 — `LARDOMAR.md`, vars "Regel framåt" är
 bindande. Se avsnittet "Rättelser efter granskningen av paket 1".
 
@@ -49,7 +51,7 @@ fynd.
 | `verktyg-och-versionshantering` (grupp-id) | `git-och-versionshantering` | ↑ |
 | `kvalitet-och-arbetssatt` (grupp-id) | `testning-och-kvalitetssakring` / `kodkvalitet-och-arkitektur` | ↑ |
 | "exakt 93 skills" som grind | strukturgrindarna i A1; **ingen** korsreferens, inget antal grindas | "A1 — Grinden för `skills.js` är strukturell" |
-| `308 poster` / `258 filled` | **307** / **257** | "Förväntat antal: 307" |
+| `308 poster` / `258 filled` | ~~**307** / **257**~~ — **även ersättningen är upphävd:** inget antal grindas och inget antal står i prosa | A1 + A19 (raden skrevs när "Förväntat antal: 307" var gällande) |
 | "HTTP-raden är sidans längsta sträng" | `React Native-komponentbaserad utveckling` (40) | "360 px — den längsta strängen" |
 | "ca 1200 px på desktop" / "ca 2500 px på mobil" | 2410 px vid 1280, **6634 px vid 360** | "Layout — omdimensionerad" |
 | `328` som spaltbredd vid 360 px vyport | **309 px** (5vw = 18, plus rullningslist) | "Diametern" + navets budget |
@@ -101,9 +103,49 @@ fynd.
 | "uppdragstexten i scratchpad-filen" / "uppdragstexten är inte en fil i repot" | `UPPDRAG-2026-10-07.md` i projektroten (`5c62ac4`) | "A18 — scratchpad-filen är upphävd" (i A1) |
 | `1 stycke i Om mig (1 länkfras, 0 pekar på ett projekt som finns)` (i OK-raden) | antalet är databeroende; länkfras-upplysningen införs i paket F | "A19 — OK-raden är ett FORMAT" |
 | OK-raden med teckentalet **sist** | teckentalet står **först**, `summary.push`-ordningen från paket 4 | ↑ |
+| `Validering OK: 4 sektioner, 18 grupper, 307 skills` (hela den gamla OK-raden) | formatet i A19, med uppmätta tal | "A19 — OK-raden är ett FORMAT" |
+| `sammanslagning pekar på ett namn som inte finns` / `namnet är sammanslaget och får inte stå som egen post` (felmeddelanden) | meddelandetabellen i A1 | "A1 — Grinden för `skills.js` är strukturell" |
+| `Antalskontrollen 93` / `93 handskrivna poster` / `93 rader` (som antal i prosa) | inget antal grindas och inget antal står i prosa | A1 + A17 |
+| `filled: true` (som värde på en post i `skills.js`) | fältet är borttaget; inga sammanslagningar, alltså inga `MERGED`-mål | A1 + A2 |
+| `292` / `267` / `56 gamla poster` / `50 filled: false` (antal ur den gamla listan) | nio grupper och 53 namn, inget antal grindas | A1 + A6 |
+| `#D9D9DE` (som ljusa ytans ram eller som avgränsarlinje) | `#CFCFD4` — **1,413:1** mot `#F4F4F6` | "De dämpade pillarna" + noten "`--color-border` på ljus yta efter A2" |
+| "de dämpade pillarnas ram" / "de ifyllda pillarna" som **motivering** för ett tokenvärde | konsumenten är kortets och chipsets ram (A6) | ↑ |
 
 Jag skriver in nya rader här varje gång jag upphäver något. Raderna tas aldrig
 bort — en tom tabell går inte att skilja från en obevakad.
+
+### Märka eller skriva om — kriteriet, så att nästa städning blir likadan
+
+Konventionen ovan ger två utfall, och valet mellan dem har hittills varit en
+bedömning per gång. Här är regeln, formulerad under städpasset 2026-10-08
+(paket M i `PLAN.md`), och den gäller varje framtida städning:
+
+1. **Märkning räcker** när stycket är **historik** — det förklarar hur något en
+   gång var, och ingen läsare kan ta det för en instruktion när märkningen syns.
+   Märkningen sätts då på **styckets egen rubrik eller första rad**, aldrig bara
+   på avsnittet ovanför: läsaren kommer via Ctrl+F på en sträng, inte uppifrån och
+   ner. Ett `###`-avsnitt märkt "UPPHÄVT i sin helhet" räcker alltså **inte** för
+   de `####` som ligger under det — de får var sin märkning.
+2. **Omskrivning krävs** när stycket står där en byggare läser efter **vad som
+   gäller**: en normativ rubrik ("Exakta felmeddelanden"), en kontrolltabell, en
+   utskriven deklaration, en OK-rad. Är hela premissen borta ersätts stycket av
+   **en rad som säger vad som gäller i stället**, och den gamla texten står kvar
+   **under** den raden, märkt. Den gamla texten raderas inte: nästa läsare måste
+   kunna se att frågan en gång var avgjord åt andra hållet.
+3. **Varje märkt eller omskrivet stycke namnger det paket som genomfört
+   beslutet** (A13:s lärdom). Står genomförandet kvar namnges det blockerade
+   paketet i stället.
+4. **Städning fattar inga beslut.** Är ett stycke upphävt men saknar ersättare är
+   det ett **nytt beslut med eget nummer och eget genomförandepaket** — det
+   lämnas tillbaka till `PLAN.md`, det avgörs inte i ett städpass.
+5. **Den text som UPPHÄVER något är inte upphävd text.** En träff på en förbjuden
+   sträng i en mening som säger att strängen **utgår, är borttagen eller fälls av
+   en grind** är kontrollens egen funktion, inte ett fynd — annars hade varje
+   beslut om att ta bort något blivit omöjligt att skriva. Det gäller tre platser:
+   tabellen ovan, det gällande beslutets egen text (t.ex. "`filled` TAS BORT",
+   "`MERGED`-tabellen tas bort", uppräkningen under "Vad som utgår") och ett
+   grindmeddelande som finns **för** att fånga strängen (`okänt fält på skill
+   ("React", fält "filled")`). Allt annat är ett fynd.
 
 ---
 
@@ -639,7 +681,7 @@ andra:
 | (bas) | — | 360–599 px. En kolumn överallt. |
 | sm | `@media (min-width: 600px)` | Två kolumner skills, större hero-typografi |
 | md | `@media (min-width: 900px)` | Hero blir två kolumner (text + bild), nav alltid synlig, tre kolumner skills |
-| lg | `@media (min-width: 1200px)` | Max bredd slår in, fyra kolumner skills |
+| lg | `@media (min-width: 1200px)` | Max bredd slår in. ~~Fyra kolumner skills~~ — **UPPHÄVT av A6:** kompetenserna har kortrutnät 3/2/1 och ingen brytpunkt vid 1200 px. Genomfört i paket E |
 
 Golvet är **360 px utan horisontell scroll**. Se "360 px-golvet och grid" nedan —
 det är tre regler, inte en, och de löser olika saker.
@@ -822,8 +864,9 @@ Allt innehåll som Jelal ska kunna ändra ligger i `src/data/`, **en fil per sak
 
 Beslut: datafilerna är JavaScript-moduler med `export const`.
 
-Motivering: JSON tillåter inga kommentarer och ingen avslutande komma — med 93
-rader att redigera för hand är det precis där en ovan redigerare går sönder, och
+Motivering: JSON tillåter inga kommentarer och ingen avslutande komma — med ~~93~~
+**(antalet är upphävt av A1 och skrivs inte i prosa)** rader att redigera för hand
+är det precis där en ovan redigerare går sönder, och
 felet syns som en kryptisk parse-error. En `.js`-modul tillåter kommentarer som
 förklarar för Jelal vad som ska ändras, överlever en extra komma, och Vites HMR
 laddar om direkt vid spara.
@@ -1219,8 +1262,13 @@ beslut och ett eget paket, och då ritar vi dem själva — beroendet läggs int
 > nära-dubbletterna och korsreferensen mot källistorna gäller inte längre. Se
 > "Kompetenssektionen görs om från grunden" ovan. Avsnittet står kvar som historik
 > över hur den gamla listan hanterades — **bygg inget efter det.**
+>
+> **Städat 2026-10-08 (paket M):** märkningen på denna rubrik räckte inte. Varje
+> `####` nedan bär nu sin **egen** märkning, eftersom läsaren kommer via Ctrl+F på
+> en sträng och inte uppifrån. Genomförandet av det som gäller i stället ligger i
+> **paket D** (datan och grindarna) och **paket E** (renderingen), båda klara.
 
-#### Hur abstraktionsnivån hanteras
+#### Hur abstraktionsnivån hanteras — principen gäller, exemplen är ur den gamla listan
 
 Listan är inte homogen. Den innehåller breda yrkesbegrepp (`Systemutveckling`),
 ramverk (`React`), finkorniga API-ytor (`TouchableOpacity`), arbetssätt
@@ -1231,6 +1279,11 @@ om nivån.
 **Beslut: indelningen är ämnesmässig, men kategorinamnen är valda så att
 abstraktionsnivån framgår av namnet.** Ingen separat nivådimension, inget extra
 fält, ingen rangordning.
+
+**De gruppnamn som nämns som exempel i detta stycke är UPPHÄVDA** — de hör till de
+18 gamla grupperna (se tabellen över förbjudna strängar, raden om de gamla
+gruppubrikerna). Principen att rubriken ska bära abstraktionsnivån står kvar och
+prövas mot den nya listan i styckets sista avsnitt.
 
 Det löser problemet utan att införa något briefen förbjuder. `TouchableOpacity`
 och `FlatList` står under **"React Native — komponenter och API:er"**, och den
@@ -1250,7 +1303,12 @@ Principen sätts på prov av den nya listan, som innehåller både
 där den hör hemma som språkgrundkunskap. Ingen läser den rubriken och tror att
 raden gör anspråk på något annat.
 
-#### Så specificeras indelningen — deltan, inte en ny lista
+#### Så specificeras indelningen — deltan, inte en ny lista — ~~gällande~~ UPPHÄVT 2026-10-08, se A1
+
+> **UPPHÄVT av A1.** `skills-full.txt` och `skills.txt` är inte längre källa för
+> något, och det finns ingen indelning att specificera som delta — den nya listan
+> är sin egen källa. Antalen `292` och `267` är den gamla listans. **Genomfört i
+> paket D.**
 
 `skills-full.txt` **innehåller redan en placering för var och en av sina 292
 poster**. Att skriva av alla 267 namnen hit vore att skapa en andra sanning som
@@ -1260,7 +1318,12 @@ kan glida isär från hans fil, och att införa ~300 tillfällen att stava fel.
 eller löses upp, var de 56 gamla posterna hamnar, och hur varje dubblett och
 nära-dubblett avgörs. **Allt annat behåller Jelals placering ur `skills-full.txt`.**
 
-#### Grupperna — 18 stycken
+#### Grupperna — 18 stycken — ~~gällande~~ UPPHÄVT 2026-10-07, se "Kompetenssektionen görs om från grunden"
+
+> **UPPHÄVT.** Gällande är **nio** grupper med de id och titlar som står i
+> "Kompetenssektionen görs om från grunden" ovan. Varje grupp-id och varje
+> gruppubrik i detta underavsnitt är en **förbjuden sträng** enligt tabellen högst
+> upp. **Genomfört i paket D.**
 
 Jelals 17 kategorier är stommen. Fyra ingrepp görs, vart och ett motiverat:
 
@@ -1311,9 +1374,15 @@ Resultatet, i den ordning de ska stå i datafilen:
 | 17 | `ai-i-utvecklingsarbetet` | AI i utvecklingsarbetet |
 | 18 | `dokumentation-och-kommunikation` | Dokumentation och kommunikation |
 
-#### De 56 gamla posterna — var var och en hamnar
+#### De 56 gamla posterna — var var och en hamnar — ~~gällande~~ UPPHÄVT 2026-10-08, se A1 och A2
 
-Dessa är `filled: false`. Ingen av dem byter namn.
+> **UPPHÄVT.** De 56 posterna kommer ur den gamla listan, som inte längre är
+> källa (A1), och fältet `filled` finns inte (A2). **Genomfört i paket D:**
+> `src/data/skills.js` innehåller nio grupper med uppdragets egna punkter, varje
+> post med `name` som enda fält.
+
+~~Dessa är `filled: false`.~~ **UPPHÄVT av A2** — fältet finns inte. Ingen av dem
+byter namn.
 
 | Grupp | Gamla poster som läggs till |
 |-------|------------------------------|
@@ -1326,15 +1395,23 @@ Dessa är `filled: false`. Ingen av dem byter namn.
 | AI i utvecklingsarbetet | Agentisk AI · AI-orkestrering · Prompt engineering · AI-assisterad kodgranskning · AI-assisterad testgenerering · AI-assisterad dokumentation · Chattbaserad AI-assisterad kodning · Ansvarsfull AI-användning |
 | Dokumentation och kommunikation | Teknisk dokumentation |
 
-Summa: 2+10+5+7+11+6+8+1 = **50 `filled: false`**. De återstående 6 av de 56 är
+~~Summa: 2+10+5+7+11+6+8+1 = **50 `filled: false`**.~~ **UPPHÄVT av A1 och A2** —
+inget antal grindas och fältet finns inte. De återstående 6 av de 56 är
 nära-dubbletter: `JavaScript (ES6+)`, `CSS3`, `Dependency injection`,
 `Pull requests`, `Controllers`, `HTTP-metoder (GET, POST, PUT, DELETE)`.
 
-Av dessa 6 blir **två egna poster med `filled: true`** (`JavaScript (ES6+)` och
-`HTTP-metoder (GET, POST, PUT, DELETE)`, eftersom de är `MERGED`-mål) och **fyra
-stryks helt**. Se "De två `MERGED`-målen" nedan.
+> ~~Av dessa 6 blir **två egna poster med `filled: true`** (`JavaScript (ES6+)` och
+> `HTTP-metoder (GET, POST, PUT, DELETE)`, eftersom de är `MERGED`-mål) och **fyra
+> stryks helt**. Se "De två `MERGED`-målen" nedan.~~
+>
+> **UPPHÄVT av A1 och A2.** Det finns inga sammanslagningar och alltså inga
+> `MERGED`-mål, och `filled` är borta. Ingen av de sex posterna står på sidan.
+> **Genomfört i paket D.**
 
-#### De 25 exakta dubbletterna — en hemvist var
+#### De 25 exakta dubbletterna — en hemvist var — ~~gällande~~ UPPHÄVT 2026-10-07, se A1
+
+> **UPPHÄVT.** Dubblettlösningen gällde två källistor som inte längre är källa.
+> **Genomfört i paket D.**
 
 Regeln: **en kompetens bor i den kategori där den är ämnet, inte där den nämns.**
 
@@ -1353,7 +1430,13 @@ Regeln: **en kompetens bor i den kategori där den är ämnet, inte där den nä
 
 `Code Review` löses i stället som nära-dubblett, se nedan.
 
-#### Nära-dubbletterna — regeln och de tolv fallen
+#### Nära-dubbletterna — regeln och de tolv fallen — ~~gällande~~ UPPHÄVT 2026-10-08, se A1
+
+> **UPPHÄVT.** De tolv fallen uppstod när 307 rader plockades ur två källistor för
+> hand. Med en kurerad lista finns inga nära-dubbletter att avgöra, och ingen av
+> de strukna eller behållna strängarna står på sidan. **Genomfört i paket D.**
+> Regeln i sig (svenskt före engelskt, annars mest information, annars senaste
+> ordet) är ingen gällande grind — den var ett engångsverktyg.
 
 Två skrivningar av samma sak är ett fel, inte två kompetenser. Men vilken form som
 vinner får inte avgöras från fall till fall efter smak, så här är regeln, i
@@ -1395,7 +1478,16 @@ Två fall förtjänar ett ord:
 `Exceptions` mot `Egna exceptions / throw` är **inte** en dubblett — det ena är
 begreppet, det andra att kasta egna. Båda behålls.
 
-#### Förväntat antal: 307
+#### Förväntat antal: 307 — ~~gällande~~ UPPHÄVT 2026-10-08, se A1 och A19
+
+> **Vad som gäller i stället:** **inget antal är ett arkitekturtal och inget antal
+> grindas.** Antalet grupper och kompetenser redovisas som **UPPLYSNING** i
+> valideringens OK-rad, med uppmätta tal — formatet står i "A19 — OK-raden är ett
+> FORMAT". **Genomfört i paket D.**
+>
+> Allt nedan i detta underavsnitt, inklusive talen `307`, `267`, `257` och `12`
+> och hela uträkningen, är **UPPHÄVT** och står kvar som historik över hur den
+> gamla listans summa räknades fram. **Bygg och grinda inget efter det.**
 
 > **Rättat.** Jag skrev först 258 + 50 = 308. Det var fel på två sätt, och
 > byggaren spårade kedjan i stället för att justera bort avvikelsen — precis vad
@@ -1410,7 +1502,7 @@ begreppet, det andra att kasta egna. Båda behålls.
 |------|-------|
 | Unika namn i `skills-full.txt` | 267 |
 | − strukna nära-dubbletter som finns i den listan | −12 |
-| + `MERGED`-mål som bara finns i den gamla listan och därför måste vara egna poster | +2 |
+| + `MERGED`-mål som bara finns i den gamla listan och därför måste vara egna poster (UPPHÄVT, A1 — inga sammanslagningar finns) | +2 |
 | **Summa poster** | **307** |
 
 **Endast totalen 307 är ett arkitekturtal.** Fördelningen mellan ifyllda och
@@ -1434,30 +1526,40 @@ Talet är en **upplysning, inte en grind** — se valideringen. Avviker byggaren
 summa ska den rapporteras, inte justeras bort. Den regeln har nu betalat sig en
 gång.
 
-#### De två `MERGED`-målen ur den gamla listan är egna poster med `filled: true`
+#### De två `MERGED`-målen ur den gamla listan — ~~gällande~~ UPPHÄVT 2026-10-08, se A1 och A2
 
-Dokumentet motsade sig självt här: avsnittet om de 56 gamla posterna sa att de 6
-nära-dubbletterna löses upp "i stället för att läggas till som egna poster", medan
-nära-dubblettabellen gör två av dem till `MERGED`-mål. Ett mål som inte är en post
-bryter grinden "varje `MERGED`-mål finns i `skills.js`".
+**Vad som gäller i stället:** `skills.js` innehåller **nio grupper** med
+uppdragets egna punkter, och **varje post har `name` som enda fält**. Det finns
+ingen sammanslagningstabell, inget `MERGED`-mål och inget `filled` — grinden
+"okänt fält på skill" i **A1** fäller båda om de kommer tillbaka. Ingen av de två
+strängarna nedan står på sidan. **Genomfört i paket D.**
 
-**Byggarens tolkning är rätt och är nu beslutet:**
+Hela stycket nedan är **UPPHÄVT** och står kvar därför att frågan en gång var
+avgjord åt andra hållet: de två posterna *skulle* ha funnits, och de *skulle* ha
+varit ifyllda. Den som läser A2 ska kunna se vad A2 tog bort.
 
-| Post | `filled` | Varför |
-|------|----------|--------|
-| `JavaScript (ES6+)` | `true` | Bär `JavaScript` ur `skills-full.txt` |
-| `HTTP-metoder (GET, POST, PUT, DELETE)` | `true` | Bär `HTTP-metoder`, `GET`, `POST`, `PUT` ur `skills-full.txt` |
+> ~~**Dokumentet motsade sig självt här:** avsnittet om de 56 gamla posterna sa att
+> de 6 nära-dubbletterna löses upp "i stället för att läggas till som egna poster",
+> medan nära-dubblettabellen gör två av dem till `MERGED`-mål. Ett mål som inte är
+> en post bryter grinden "varje `MERGED`-mål finns i `skills.js`".~~
+>
+> ~~**Byggarens tolkning är rätt och är nu beslutet:**~~
+>
+> | Post | `filled` | Varför |
+> |------|----------|--------|
+> | `JavaScript (ES6+)` | ~~`true`~~ | ~~Bär `JavaScript` ur `skills-full.txt`~~ |
+> | `HTTP-metoder (GET, POST, PUT, DELETE)` | ~~`true`~~ | ~~Bär `HTTP-metoder`, `GET`, `POST`, `PUT` ur `skills-full.txt`~~ |
+>
+> ~~`filled: true` därför att strängen bär namn Jelal uttryckligen sagt att han har.
+> Hade de satts `false` skulle en kompetens han äger visas som omarkerad, vilket är
+> sämre än att en gammal sträng råkar bli orange. Att de två **också** fanns i den
+> gamla listan är en tillfällighet i strängvalet, inte ett påstående om hans nivå.~~
+>
+> ~~De övriga 4 av de 6 (`CSS3`, `Dependency injection`, `Pull requests`,
+> `Controllers`) är **inte** poster — deras `MERGED`-mål finns redan i
+> `skills-full.txt`.~~
 
-`filled: true` därför att strängen bär namn Jelal uttryckligen sagt att han har.
-Hade de satts `false` skulle en kompetens han äger visas som omarkerad, vilket är
-sämre än att en gammal sträng råkar bli orange. Att de två **också** fanns i den
-gamla listan är en tillfällighet i strängvalet, inte ett påstående om hans nivå.
-
-De övriga 4 av de 6 (`CSS3`, `Dependency injection`, `Pull requests`,
-`Controllers`) är **inte** poster — deras `MERGED`-mål finns redan i
-`skills-full.txt`.
-
-#### Det som INTE har gjorts
+#### Det som INTE har gjorts — gäller den gamla listan, UPPHÄVD 2026-10-07
 
 Ingen post har omdöpts, omstavats eller fått ändrad versalisering utöver de
 nära-dubbletter som räknas upp ovan. Ingen kategori har tagits bort utan att dess
@@ -1537,7 +1639,12 @@ Klassen bor i **`tokens.css`**, inte i `Skills.module.css`: alla färgvärden i
 projektet ligger i en fil, och en ljus yta är ett sidbegrepp som en annan sektion
 ska kunna återanvända utan att importera skills modul.
 
-#### De dämpade pillarna — härledda ur kvoten, inte ur färgen
+#### De dämpade pillarna — härledda ur kvoten, inte ur färgen — premissen UPPHÄVD 2026-10-08 av A2, men värdena står kvar
+
+> **Läs noten "`--color-border` på ljus yta efter A2" nedan innan du rör ett värde
+> här.** Pillarnas två tillstånd finns inte längre (A2), så **motiveringen** i
+> detta stycke är upphävd. **Värdena i `.surface-light` är det inte** — de har nya
+> konsumenter efter A6. Vilka, och varför inget räknas om, står i noten.
 
 Problemet du pekar på är verkligt: `--color-border` `#2A2A2E` mot vitt blir en
 stark mörk ram, och de dämpade hade dominerat över de ifyllda. En inversion
@@ -1561,7 +1668,60 @@ inte är det.
 > bakgrunden gick från vitt till `#F4F4F6`: samtliga tre tappade sin kvot och
 > fick nya värden.
 
-#### De ifyllda pillarna — accenten ändras inte, och kan inte heller räddas
+##### `--color-border` på ljus yta efter A2 — värdet står kvar, motiveringen byts
+
+Avgjort i städpasset 2026-10-08. **Frågan:** `--color-border: #cfcfd4` i
+`.surface-light` är ett **omräknat** värde, och målkvoten (`#D9D9DE` mot vitt,
+1,4065:1) sattes för **de dämpade pillarnas ram**. Den konsumenten finns inte
+efter A2. Står värdet kvar utan skäl, eller ska det räknas om?
+
+**Beslut: värdet står kvar oförändrat. Det är motiveringen som är upphävd, inte
+talet.** Tre skäl, i ordning:
+
+1. **Konsumenten finns, den har bara bytt namn.** A6 gör `--color-border` till
+   ramen på **kortet** (`.card`) och på **chipset** (`.chip`), båda inuti
+   `.surface-light`. Dessutom ärver sektionsavgränsaren hero → skills samma
+   ombundna token. Tokenet är alltså inte referenslöst — jämför
+   `--color-text-dim`, som **var** det och därför togs bort i A8.
+2. **Målkvoten gäller fortfarande, för samma invariant.** Kvoten valdes för att en
+   ram ska ha **samma upplevda tyngd på båda ytorna** — `#2A2A2E` mot `#0B0B0C` är
+   1,38:1, `#CFCFD4` mot `#F4F4F6` är 1,413:1. Den invarianten är inte knuten till
+   vad ramen sitter på. Att räkna om värdet mot ett nytt mål vore att **ändra ett
+   gällande beslut**, inte att städa ett upphävt.
+3. **WCAG 1.4.11 kräver inte 3:1 här.** Kravet gäller grafiska objekt som behövs
+   för att förstå innehållet. Efter A2 bär chipsets ram **ingen** information:
+   kompetensens namn står som text i ett `<li>` i en `<ul>`, och det finns inget
+   tillstånd kvar som ramen skiljer. Ramen är avgränsning, inte signal. Det är
+   samma åtskillnad som redan motiverar att fokusringen binds om men inte
+   accenten: en **enda** signal måste hålla kontrastkravet, en **redundant** behöver
+   inte. Hade chipset saknat text hade svaret varit motsatt.
+
+**Vad som ändå måste göras, och av vem.** Kommentaren i `src/styles/tokens.css`
+("RAMEN ÄR OMRÄKNAD, INTE OMVALD. Målet är att de dämpade pillarnas underordning
+…") motiverar värdet med en konsument som inte finns. Den är **samma felläge som
+A9 del 1** och faller under den bindande regeln från `LARDOMAR.md` 2026-10-05:
+skriv invarianten, inte ett tillstånd någon annanstans. **Genomförandet ligger
+inte här** — `tokens.css` ägs av **paket J**, och J:s innehåll är enligt `PLAN.md`
+bindande rad för rad och utvidgas inte. Punkten lämnas därför tillbaka till
+projektledaren: antingen en rad till i J, eller **L del 3** där de övriga
+kommentarsrättelserna redan ligger. Invarianten som ska stå i kommentaren är
+*"en ram ska ha samma upplevda tyngd på båda ytorna; kvoten är beslutet, hexvärdet
+är en härledning"* — utan ordet pill.
+
+Samma fråga gäller `--color-text-muted: #4F4F56` (7,40:1) i samma block: den
+kvoten sattes för den dämpade pillens **text** och bärs i dag av annan text på
+ljus yta. Värdet står kvar av samma skäl som ovan — kvoten är målet, konsumenten
+är utbytbar.
+
+#### De ifyllda pillarna — accenten ändras inte, och kan inte heller räddas — premissen UPPHÄVD 2026-10-08 av A2
+
+> **UPPHÄVT som motivering.** Det finns inga ifyllda pillar (A2) och chipsen är
+> neutrala (A6), så orange är inte längre en **yta** i kompetenssektionen. Beslutet
+> att `--color-accent` är `#FC6F03` överallt står kvar, men det avsteg från WCAG
+> 1.4.11 som beskrivs nedan **gäller inte längre i denna sektion** — det bars av
+> den orange pillytan. **Genomfört i paket E** (chipsen är neutrala; kontrasterna
+> mättes där). Talet 2,58:1 gäller fortfarande för varje **annan** orange yta som
+> hamnar på `#F4F4F6`.
 
 Orange `#FC6F03` som **yta** mot den ljusa bakgrunden `#F4F4F6` ger **2,58:1**,
 mot 6,95:1 på mörk botten. Det ligger under WCAG:s 3:1 för grafiska objekt.
@@ -1807,8 +1967,15 @@ Linjen hör till den **andra** syskonsektionen, så den ritas i skills överkant
 
 | Gräns | Linjens färg | Mot | Kontrast |
 |-------|--------------|-----|----------|
-| hero → skills | `#D9D9DE` (ljus yta) | vitt | 1,41:1 |
+| hero → skills | `#CFCFD4` (ljus yta) | `#F4F4F6` | 1,413:1 |
 | skills → projects | `#2A2A2E` (mörk yta) | `#0B0B0C` | 1,38:1 |
+
+> **Rättat 2026-10-08 (städpasset).** Raden sa `#D9D9DE` mot `vitt`, 1,41:1. Båda
+> värdena är upphävda: `#D9D9DE` var ljusa ytans ram **innan** bakgrunden blev
+> `#F4F4F6`, och den räknades då om till `#CFCFD4` ("De dämpade pillarna" nedan).
+> Linjen ärver `.surface-light`-ombindningen och kan därför inte ha ett annat
+> värde än tokenet. Kvoten är oförändrad i praktiken — det var hexvärdet och
+> jämförelseytan som stod fel. Ingen kodändring följer: koden läser tokenet.
 
 Hade jag valt egna tokennamn hade avgränsaren behövt ett specialfall. Nu gör
 ombindningen det automatiskt, och **båda linjerna har samma upplevda tyngd**.
@@ -4609,8 +4776,9 @@ De ska stå kvar tills de finns i detta dokument.
 
 Problemet är verkligt: granskaren hittade att en dubblett av ett sektions-`id` och
 en post utan obligatoriskt fält båda renderas **tyst**, och det var med fyra
-poster. I paket 4 blir det 93 handskrivna poster som Jelal själv redigerar. Att
-lita på att någon tittar räcker inte.
+poster. Datafilerna är handskrivna och Jelal redigerar dem själv — antalet poster
+är hans att ändra och skrivs därför inte här (~~"93 handskrivna poster"~~,
+**UPPHÄVT av A1 och A17**). Att lita på att någon tittar räcker inte.
 
 **Beslut: ett valideringsskript i `scripts/`, inte en modul i `src/data/`.**
 
@@ -4643,24 +4811,38 @@ Skriptet kontrollerar:
 Felmeddelanden skrivs på svenska, namnger filen och det värde som är fel, och
 skriptet avslutas med nollskild kod. Inga nya beroenden — ren Node.
 
-#### Exakta felmeddelanden
+#### Exakta felmeddelanden — skills-delen är UPPHÄVD av A1, se nedan
 
-Formatet är `<fil>: <vad som är fel> (<det felaktiga värdet>)`. Alla fel samlas
-och skrivs ut tillsammans — skriptet stannar **inte** på det första, eftersom den
-som redigerat 93 rader vill se alla sina misstag i en körning.
+**Vad som gäller för `skills.js`:** meddelandetabellen i **"A1 — Grinden för
+`skills.js` är strukturell"**, och ingenting annat. Elva grindar, exakt de som
+står där. **Genomfört i paket D.** Meddelandena för `sections.js`, `projects.js`,
+`contact.js` och `about.js` i detta avsnitt **gäller oförändrat**.
+
+Formatet gäller också oförändrat: `<fil>: <vad som är fel> (<det felaktiga
+värdet>)`. Alla fel samlas och skrivs ut tillsammans — skriptet stannar **inte**
+på det första, eftersom den som redigerat en lång datafil vill se alla sina
+misstag i en körning.
+
+> **UPPHÄVT av A1 2026-10-08 — de fem raderna nedan är inte längre skriptets
+> meddelanden.** De står kvar därför att fyra av dem namnger grindar som en gång
+> var beslutade och som `PLAN.md` uttryckligen kräver att ingen skriver tillbaka
+> som döda strängar. Gällande lydelser står i A1:s tabell.
+>
+> ```
+> skills.js: namn ur skills-full.txt saknas och är inte sammanslaget ("Mocking")
+> skills.js: namn ur skills.txt saknas och är inte sammanslaget ("Flexbox")
+> skills.js: sammanslagning pekar på ett namn som inte finns ("CSS3" -> "CSS")
+> skills.js: namnet finns varken i skills.txt eller skills-full.txt ("Reakt")
+> skills.js: filled måste vara true eller false ("React", fick "false")
+> ```
+>
+> De fem övriga raderna — `skill-namnet förekommer mer än en gång`,
+> `skill saknar name`, `grupp-id förekommer mer än en gång`, `grupp saknar title`
+> och `grupp saknar skills eller är tom` — lever vidare i A1:s tabell, men med
+> **nya exempelvärden** (de gamla exemplen `react-byggstenar` och
+> `webbutveckling-och-fullstack` är upphävda grupp-id).
 
 ```
-skills.js: namn ur skills-full.txt saknas och är inte sammanslaget ("Mocking")
-skills.js: namn ur skills.txt saknas och är inte sammanslaget ("Flexbox")
-skills.js: sammanslagning pekar på ett namn som inte finns ("CSS3" -> "CSS")
-skills.js: namnet finns varken i skills.txt eller skills-full.txt ("Reakt")
-skills.js: skill-namnet förekommer mer än en gång ("React")
-skills.js: skill saknar name (grupp "webbutveckling-och-fullstack", post 4)
-skills.js: filled måste vara true eller false ("React", fick "false")
-skills.js: grupp-id förekommer mer än en gång ("react-byggstenar")
-skills.js: grupp saknar title (id "react-byggstenar")
-skills.js: grupp saknar skills eller är tom (id "react-byggstenar")
-
 sections.js: id förekommer mer än en gång ("skills")
 sections.js: label saknas (id "contact")
 
@@ -4681,20 +4863,32 @@ about.js: stycke 2 är tomt
 Valideringen hittade 3 fel. Bygget avbryts.
 ```
 
-Två saker som är lätta att få fel och därför ska stå uttryckligen:
-
-- **`filled måste vara true eller false`** gäller också strängen `"false"`. Det är
-  det troligaste misstaget när en icke-utvecklare redigerar, och det är ett fel
-  som annars renderar som `true` eftersom en icke-tom sträng är sanningsvärd. Just
-  därför visar meddelandet det mottagna värdet inom citattecken.
-- **Antalskontrollen 93** gäller summan över alla grupper, inte per grupp.
+> **UPPHÄVT av A1 och A2 2026-10-08.** Båda punkterna nedan beskrev grindar som
+> inte finns: `filled` är borta ur datan (A2) och **inget antal grindas** (A1).
+> **Genomfört i paket D.**
+>
+> ~~Två saker som är lätta att få fel och därför ska stå uttryckligen:~~
+>
+> - ~~**`filled måste vara true eller false`** gäller också strängen `"false"`. Det
+>   är det troligaste misstaget när en icke-utvecklare redigerar, och det är ett fel
+>   som annars renderar som `true` eftersom en icke-tom sträng är sanningsvärd. Just
+>   därför visar meddelandet det mottagna värdet inom citattecken.~~
+> - ~~**Antalskontrollen 93** gäller summan över alla grupper, inte per grupp.~~
+>
+> **Det som överlevde av den första punkten** är den allmänna regeln, och den står
+> kvar i A1: ett fällt värde visas **inom citattecken** i meddelandet, så att
+> `"false"` går att skilja från `false`. Regeln hängde aldrig på fältet `filled`.
 
 Vid godkänd körning skrivs en rad, så att det syns att kontrollen faktiskt körts
-och inte bara teg:
+och inte bara teg. **Raden är en UPPLYSNING och ett FORMAT — gällande lydelse och
+de tre reglerna står i "A19 — OK-raden är ett FORMAT", och talen är uppmätta.**
 
-```
-Validering OK: 4 sektioner, 18 grupper, 307 skills (265 ifyllda, 42 dämpade).
-```
+> ~~`Validering OK: 4 sektioner, 18 grupper, 307 skills (265 ifyllda, 42 dämpade).`~~
+>
+> **UPPHÄVT av A1, A2 och A19 2026-10-08.** Raden grindade inget, men den stod
+> utskriven som en sträng, den innehöll två antal som inte längre finns
+> (`18 grupper`, `307 skills`) och en uppdelning i ifyllda och dämpade som
+> upphävdes med `filled`. **Genomfört i paket D.**
 
 Den raden är inte kosmetisk. En validering som är tyst när allt är bra går inte
 att skilja från en som inte kördes alls.
@@ -5007,17 +5201,22 @@ uppdragets egen rad "Resten av portfolion är oförändrad" blir omätbar.
 > ur två källistor. **Bygg inget efter det.** Gällande beslut står i "A1 — Grinden
 > för `skills.js` är strukturell" ovan.
 
-Ett hårdkodat `93` var rätt när listan var frusen. Nu växer den, och **ett tal som
-måste ändras varje gång Jelal lägger till en kompetens är en grind som kommer att
-fallera av fel skäl.** Den lär oss att ignorera den.
+**UPPHÄVT — hela stycket.** Ett hårdkodat `93` var rätt när listan var frusen. Nu
+växer den, och **ett tal som måste ändras varje gång Jelal lägger till en
+kompetens är en grind som kommer att fallera av fel skäl.** Den lär oss att
+ignorera den. (Slutsatsen står kvar som gällande i A1; det är **ersättningen**
+nedan som är upphävd.)
 
 **~~Beslut: totalantalet är en upplysning. Grinden är korsreferens mot
-källistorna.~~ UPPHÄVT 2026-10-08.**
+källistorna.~~ UPPHÄVT 2026-10-08 av A1. Genomfört i paket D.**
 
-Skriptet läser `skills.txt` och `skills-full.txt` — de ligger i repot och är
-Jelals egna — och kontrollerar:
+~~Skriptet läser `skills.txt` och `skills-full.txt` — de ligger i repot och är
+Jelals egna — och kontrollerar:~~ **Det gör det inte. Båda filerna är historik och
+läses av inget skript.**
 
-| Grind | Innebörd |
+**Tabellen nedan är UPPHÄVD i varje rad — ingen av dessa sju grindar finns:**
+
+| Grind (UPPHÄVD) | Innebörd |
 |-------|----------|
 | Varje namn i `skills-full.txt` finns i `skills.js`, **eller** står i `MERGED` | Inget av det Jelal sagt att han har kan tyst falla bort |
 | Varje namn i `skills.txt` finns i `skills.js`, **eller** står i `MERGED` | Detsamma för den gamla listan |
@@ -5027,10 +5226,14 @@ Jelals egna — och kontrollerar:
 | Varje grupp: unikt `id`, `title` finns, minst en skill | |
 | `filled` är `true` eller `false` | Inte strängen `"false"` |
 
-`MERGED` är en uttrycklig tabell i skriptet över varje medvetet struken
-nära-dubblett och vad den ersätts av:
+~~`MERGED` är en uttrycklig tabell i skriptet över varje medvetet struken
+nära-dubblett och vad den ersätts av:~~ **UPPHÄVT av A1 — tabellen är borttagen ur
+`scripts/validate-data.mjs`, tillsammans med de fyra grindar som läste den.
+Genomfört i paket D.**
 
 ```js
+// UPPHÄVT 2026-10-08 av A1. Denna tabell finns INTE i scripts/validate-data.mjs
+// och ska inte skrivas tillbaka. Den står kvar här som historik.
 // Varje rad motsvarar ett beslut i ARKITEKTUR.md, "Nära-dubbletterna".
 const MERGED = {
   'Code Review': 'Kodgranskning',
@@ -5052,15 +5255,19 @@ const MERGED = {
 };
 ```
 
-**Det här är kärnan i beslutet.** Varje struken post står i koden med sin ersättare
-bredvid sig, inte bara i ett dokument. Den dag någon undrar vart `GET` tog vägen
-finns svaret på raden. Och den dag Jelal lägger till en kompetens behöver ingen
-röra en siffra — han lägger till den i `skills-full.txt` och i `skills.js`, och
-grinden säger till om han bara gjorde det ena.
+**UPPHÄVT av A1.** ~~Det här är kärnan i beslutet. Varje struken post står i koden
+med sin ersättare bredvid sig, inte bara i ett dokument. Den dag någon undrar vart
+`GET` tog vägen finns svaret på raden. Och den dag Jelal lägger till en kompetens
+behöver ingen röra en siffra — han lägger till den i `skills-full.txt` och i
+`skills.js`, och grinden säger till om han bara gjorde det ena.~~ Svaret på "vart
+tog `GET` vägen" står i stället i detta dokument och i git-historiken, och
+mekanismen föll på att den fällde 17 av 53 korrekta namn.
 
-Säger Jelal nej till HTTP-sammanslagningen tas de fyra raderna bort ur `MERGED`,
-`GET`/`POST`/`PUT`/`HTTP-metoder` läggs in som egna poster och den gamla strängen
-stryks. Det är en avgränsad ändring på ett ställe.
+**UPPHÄVT av A1.** ~~Säger Jelal nej till HTTP-sammanslagningen tas de fyra raderna
+bort ur `MERGED`, `GET`/`POST`/`PUT`/`HTTP-metoder` läggs in som egna poster och
+den gamla strängen stryks. Det är en avgränsad ändring på ett ställe.~~ Frågan är
+**förfallen** — ingen av posterna står på sidan. Se den sista punkten under
+"Öppna punkter som INTE är arkitektens att besluta".
 
 #### Filer som ännu inte finns — explicit lista, inte tyst överhoppning
 
@@ -5719,16 +5926,19 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   för att upptäckas i tillgänglighetsgenomgången i paket 7. (påverkat av
   lärdom: nej)
 - **Data i `.js`-moduler, inte JSON** — JSON tillåter varken kommentarer eller
-  avslutande komma, och det är den vanligaste fällan när en människa redigerar 93
-  rader för hand. `.js` låter oss skriva instruktionen till Jelal överst i den fil
+  avslutande komma, och det är den vanligaste fällan när en människa redigerar en
+  lång datafil för hand (~~93 rader~~, antalet är upphävt av A1). `.js` låter oss skriva instruktionen till Jelal överst i den fil
   Jelal faktiskt öppnar. (påverkat av lärdom: nej)
 - **`sections.js` som enda källa för både `id` och navlänk** — PLAN.md:s
   verifiering i paket 1 är att varje navlänk scrollar rätt. Två separata listor
   hade gjort det möjligt att stava fel på ett ställe. (påverkat av lärdom: nej)
-- **Skill-posten har exakt två fält, `name` och `filled`** — briefens viktigaste
-  krav är att Jelal ändrar ett tillstånd på ETT ställe. Varje extra fält är ett
-  till ställe att göra fel på, och nivåangivelser är uttryckligen bortvalda i
-  PLAN.md paket 4. (påverkat av lärdom: nej)
+- **~~Skill-posten har exakt två fält, `name` och `filled`~~ — UPPHÄVT 2026-10-08
+  av A2, genomfört i paket D: posten har `name` som ENDA fält.** Skälet nedan
+  gällde ett tillstånd som inte finns längre, men regeln "varje extra fält är ett
+  till ställe att göra fel på" bar A2 lika mycket som den bar detta beslut.
+  ~~Briefens viktigaste krav är att Jelal ändrar ett tillstånd på ETT ställe. Varje
+  extra fält är ett till ställe att göra fel på, och nivåangivelser är uttryckligen
+  bortvalda i PLAN.md paket 4.~~ (påverkat av lärdom: nej)
 - **Project-posten har sex fält, inget mer** — `url` och `repoUrl` är med eftersom
   ett projektkort utan länk är meningslöst för den som ska visa upp något. Bild,
   årtal, kategori och filtrering är medvetet uteslutna: de står inte i planen.
@@ -5784,7 +5994,8 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   mellan `sections.js` och `App.jsx`, och det var att det fanns en enda lista att
   jämföra mot som gjorde fynd 1 upptäckbart. C ger samma skydd utan den kostnaden.
   (påverkat av lärdom: ja — fynd 1 och 2 i `LARDOMAR.md`)
-- **Datavalidering som script i `scripts/`, inkopplat i `build`** — 93
+- **Datavalidering som script i `scripts/`, inkopplat i `build`** — ~~93~~
+  **(antalet upphävt av A1)**
   handredigerade poster utan något som larmar är en fälla, och granskaren visade
   att både dubbletter och saknade fält renderas tyst redan vid fyra poster. En
   modul i `src/data/` avfärdades: den mappen ska innehålla enbart Jelals eget
@@ -5864,9 +6075,11 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   `--color-text` har **ett** jobb, textens färg mot sin yta, och det är samma jobb
   i båda sammanhangen. Till skillnad från `--color-surface-raised`, som bar två
   obesläktade jobb och därför delades. (påverkat av lärdom: ja)
-- **De dämpade pillarnas ljusa värden härleds ur kvoten, inte ur färgen** — ram
-  1,41:1 mot vitt mot 1,38:1 mot mörkt, text 7,40:1 mot ca 7:1. Underordningen blir
-  exakt lika stark på båda ytorna. Samma metod gör att sektionsavgränsaren löser
+- **[Metoden gäller, konsumenten är UPPHÄVD av A2. Se noten "`--color-border` på
+  ljus yta efter A2" — värdena står kvar, pillarna gör det inte.]** **De dämpade
+  pillarnas ljusa värden härleds ur kvoten, inte ur färgen** — ram
+  1,413:1 mot `#F4F4F6` mot 1,38:1 mot mörkt, text 7,40:1 mot ca 7:1. Underordningen
+  blir exakt lika stark på båda ytorna. Samma metod gör att sektionsavgränsaren löser
   sig själv i stället för att behöva ett specialfall. (påverkat av lärdom: nej)
 - **`--color-accent` är `#FC6F03` överallt, trots 2,83:1 mot vitt** — Jelal bad om
   en mörkare variant, fick siffrorna och ångrade sig innan något syntes. Beslutet
@@ -6056,8 +6269,10 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   orangen stått kvar — byggaren hittade det i en **kartläggning av läckage**, inte
   i en mätning av något som brast. Att leta efter vad som kan gå sönder är en annan
   sorts arbete än att verifiera att det inte gjorde det. (påverkat av lärdom: ja)
-- **Fördelningen ifyllda/dämpade är levande data, inte ett arkitekturtal** — bara
-  totalen 307 är strukturell. Antalet ändras varje gång Jelal markerar ett skill,
+- **[UPPHÄVT 2026-10-08 av A1 och A2 — det finns ingen fördelning, och **inget**
+  antal är strukturellt. Genomfört i paket D.]** **Fördelningen ifyllda/dämpade är
+  levande data, inte ett arkitekturtal** — ~~bara
+  totalen 307 är strukturell.~~ Antalet ändras varje gång Jelal markerar ett skill,
   och ett dokument som citerar det blir fel utan att någon gjort något fel.
   (påverkat av lärdom: ja — åtta rättade tal lärde mig att inte skriva ned sådant
   som rör sig)
@@ -6192,27 +6407,34 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   av förbjudna strängar plus konventionen att upphävd text märks `UPPHÄVT`.
   Raderna tas aldrig bort: en tom tabell går inte att skilja från en obevakad.
   (påverkat av lärdom: ja — ÅTERKOMMANDE (3+))
-- **Kategoriindelningen specificeras som delta mot `skills-full.txt`, inte som en
+- **[UPPHÄVT 2026-10-08 av A1 — genomfört i paket D.]** **Kategoriindelningen
+  specificeras som delta mot `skills-full.txt`, inte som en
   avskrift** — Jelals fil innehåller redan en placering för var och en av sina 292
   poster. Att skriva av 267 namn hit hade skapat en andra sanning som kan glida
   isär från hans, plus ~300 tillfällen att stava fel. Bara avvikelserna
   specificeras. (påverkat av lärdom: ja — två sanningar om samma sak)
-- **Fyra ingrepp i Jelals 17 kategorier, inga fler** — `Utvecklingsprocess` löses
+- **[UPPHÄVT 2026-10-07 — de 18 grupperna ersattes av nio. Genomfört i paket D.]**
+  **Fyra ingrepp i Jelals 17 kategorier, inga fler** — `Utvecklingsprocess` löses
   upp (13 av 19 var dubbletter), `Övrigt` löses upp (en portfolio ska inte ha den
   rubriken och posterna hade riktiga hem), `Säker webbutveckling` delas och tar upp
   `Autentisering`, och React/mobil bryts ut i tre grupper. Varje upplöst kategoris
   innehåll har ett namngivet nytt hem. (påverkat av lärdom: nej)
-- **Nära-dubbletter avgörs av en tregradig regel, inte från fall till fall** —
+- **[UPPHÄVT 2026-10-08 av A1 — det finns inga nära-dubbletter att avgöra.
+  Genomfört i paket D.]** **Nära-dubbletter avgörs av en tregradig regel, inte från
+  fall till fall** —
   svenskt före engelskt, annars mest korrekt information, annars nya listan. Utan
   en regel blir tolv enskilda smakbeslut som ingen kan granska. (påverkat av
   lärdom: nej)
-- **Totalantalet skills blir en upplysning, korsreferens mot källistorna blir
+- **[UPPHÄVT 2026-10-08 av A1 — korsreferensen och `MERGED` utgår helt, grinden är
+  strukturell. Genomfört i paket D.]** **Totalantalet skills blir en upplysning,
+  korsreferens mot källistorna blir
   grinden** — ett hårdkodat tal måste ändras varje gång Jelal lägger till en
   kompetens och skulle fallera av fel skäl, vilket lär oss att ignorera det.
   `MERGED`-tabellen i skriptet gör dessutom varje struken nära-dubblett synlig i
   koden med sin ersättare bredvid sig. (påverkat av lärdom: ja — en grind som
   fallerar av fel skäl är värre än ingen)
-- **Flerkolumn i stället för grid för de 18 grupperna** — grid gör alla kolumner
+- **[UPPHÄVT 2026-10-08 av A6 — kortrutnät 3/2/1, inga `columns`. Genomfört i
+  paket E.]** **Flerkolumn i stället för grid för de 18 grupperna** — grid gör alla kolumner
   lika höga som den högsta, och med grupper från 7 till drygt 30 poster ger det
   mycket tomrum. `columns` balanserar höjderna automatiskt, vilket är den enda
   inbyggda mekanism som gör det utan JS. Pillarnas grad sänks till `--text-xs`,
@@ -6233,26 +6455,37 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   modulregler eller ett pseudoelement med negativa marginaler, båda dyrare än den
   estetiska vinsten. (påverkat av lärdom: ja — regeln ligger på ett ställe, som
   sidmarginalen)
-- **Teckenförklaringen vänds** — med de allra flesta orange är det dämpade undantaget,
+- **[UPPHÄVT 2026-10-08 av A2 — det finns ingen teckenförklaring. Genomfört i
+  paket E.]** **Teckenförklaringen vänds** — med de allra flesta orange är det dämpade undantaget,
   och en text om att "listan fylls i efter hand" beskriver inte längre det man ser.
   (påverkat av lärdom: nej)
 - **Skills grupperas nästlat, inte platt med kategorifält** — ett `category`-fält
-  per post hade varit 93 handskrivna strängar som var och en kan stavas fel, och
+  per post hade varit **en handskriven sträng per kompetens** (~~93~~, antalet är
+  upphävt av A1) som var och en kan stavas fel, och
   en felstavning ger en skill som tyst försvinner eller en spök-kategori. Nästlat
   gör kategoritillhörigheten strukturell och därmed omöjlig att stava fel.
-  Sökbarheten löses i stället av formateringsregeln "en skill per rad, `filled` på
-  samma rad som `name`". (påverkat av lärdom: ja — tysta fel i handredigerad data)
-- **Kategorinamnen bär abstraktionsnivån, ingen separat nivådimension** — "React
+  Sökbarheten löses i stället av formateringsregeln "en skill per rad" — ~~`filled`
+  på samma rad som `name`~~, **UPPHÄVT av A2 och A17: posten har bara `name`, och
+  regeln hängde aldrig på att `filled` fanns.** Antalet handskrivna strängar som
+  stod i detta stycke är upphävt av A1. (påverkat av lärdom: ja — tysta fel i
+  handredigerad data)
+- **[Principen gäller. Exemplet är UPPHÄVT: "React Native — komponenter och
+  API:er" är ett av de 18 gamla gruppnamnen, se A6.]** **Kategorinamnen bär
+  abstraktionsnivån, ingen separat nivådimension** — "React
   Native — komponenter och API:er" säger redan vad `TouchableOpacity` är, utan att
   vi behöver rangordna Jelals poster. En uttrycklig nivåindelning hade i praktiken
   varit en nivåangivelse, vilket är bortvalt i både briefen och PLAN.md.
   (påverkat av lärdom: nej)
-- **Pillen får radbryta inuti sig själv, till skillnad från navlänken** — i
+- **[Gäller, men läs "chipset" där det står "pillen" — A6 bytte komponenten och
+  behöll regeln (`max-width: 100%`, ingen `nowrap`). Genomfört i paket E.]**
+  **Pillen får radbryta inuti sig själv, till skillnad från navlänken** — i
   headern är höjden låst, så radbrytning klipper bort innehåll tyst; i
   skills-sektionen är höjden fri, så radbrytning är ofarlig medan utebliven
   radbrytning spräcker 360 px-golvet. Samma underliggande regel i båda fallen:
   **välj det felläge som syns.** (påverkat av lärdom: ja)
-- **Förklarande rad under skills-rubriken, alltid renderad** — med noll ifyllda
+- **[UPPHÄVT 2026-10-08 av A2 — raden är borttagen, det finns inget att förklara.
+  Genomfört i paket E.]** **Förklarande rad under skills-rubriken, alltid
+  renderad** — med noll ifyllda
   visar sektionen 93 dämpade pills och ingenting orange, vilket ser trasigt ut
   snarare än tomt. Raden villkoras **inte** på antalet ifyllda: en rad som
   försvinner av sig själv är ett tyst tillståndsbyte. Den är teckenförklaring, inte

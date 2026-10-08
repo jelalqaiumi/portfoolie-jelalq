@@ -59,13 +59,11 @@
   }
 }
 
-/* EJ I ARKITEKTUR: hur titelraden mellan h1 och introt ska skiljas ut, och
- * vilka de inre avstånden ska vara.
- *
- * Titeln får samma grad som introt och skiljs från det med FÄRG
- * (--color-text mot --color-text-muted) i stället för av en fjärde typografisk
- * nivå. Vikt kan inte användas: teckensnittet har bara en (ARKITEKTUR.md,
- * "Typsnittet"). Ingen orange här - accenten hör till pills och fokus. */
+/* Beslutat i ARKITEKTUR.md, "A5 - Hero: knapparna, mätserien och 360 px":
+ * rollraden skiljs från ingressen med FÄRG och inte med en fjärde typografisk
+ * nivå - vikt går inte att använda, teckensnittet har en enda. Gapet nedan är
+ * gridens enda avståndsregel, och varje barn i .text hämtar sitt avstånd
+ * därifrån i stället för att sätta en egen marginal. */
 .text {
   display: grid;
 
@@ -89,6 +87,65 @@
   font-size: var(--text-lg);
   color: var(--color-text-muted);
   max-width: var(--measure);
+}
+
+/* HEROS TVÅ KNAPPAR. Deklarationerna nedan står utskrivna i ARKITEKTUR.md,
+ * "A5 - Hero: knapparna, mätserien och 360 px", och är bindande tecken för
+ * tecken. Ändra dem inte här - ändra beslutet först.
+ *
+ * INGEN TREDJE GLOBAL KLASS. Formulärets knapp bär samma orange par men är en
+ * <button> med tillstånd hero inte har, så stilen upprepas i denna modul i
+ * stället för att lyftas ut. Dörren till en global knappklass är stängd i
+ * ARKITEKTUR.md, "Headerns logotyp".
+ *
+ * RADBRYTNINGEN ÄR HELA MOBILHANTERINGEN: knapparna staplas när de inte får
+ * plats, utan brytpunkt. En brytpunkt hade varit ett andra tal att hålla i synk
+ * med texternas längd. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+/* INVARIANTEN: de två knapparna har samma höjd. Den primära har därför en
+ * genomskinlig ram av samma tjocklek som den sekundäras synliga - ingen av dem
+ * har en satt höjd, så höjden är innehåll plus padding plus ram, och en knapp
+ * utan ram blir lägre än en med. Det följer av boxmodellen, inte av att någon
+ * kommer ihåg det. Beslutat i ARKITEKTUR.md, A5. */
+.actionPrimary {
+  padding: var(--space-3) var(--space-5);
+  background-color: var(--color-accent);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--color-on-accent);
+  font-size: var(--text-base);
+  transition: background-color var(--transition);
+}
+
+/* Hover rör sig BORT från underlaget, samma riktning som sidans övriga
+ * återkopplingar. */
+.actionPrimary:hover {
+  background-color: var(--color-accent-hover);
+}
+
+/* RAMEN ÄR --color-text-muted, ALDRIG --color-border. --color-border
+ * sammanfaller i dag med hero:s bakgrundston, så den ramen hade saknat kontrast
+ * mot sin egen botten - exakt samma fel som headerns kant hade innan
+ * --color-header-border infördes. En knapps ram är en gränssnittskomponents
+ * avgränsning och omfattas av WCAG 1.4.11; kvoterna står i ARKITEKTUR.md, A5.
+ * Byt den inte till --color-border "för enhetlighetens skull". */
+.actionSecondary {
+  padding: var(--space-3) var(--space-5);
+  background-color: transparent;
+  border: 1px solid var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: var(--text-base);
+  transition: border-color var(--transition);
+}
+
+.actionSecondary:hover {
+  border-color: var(--color-text);
 }
 
 /* Bilden. GRÅSKALA plus en grå tonplatta, båda i CSS och inte inbakade i

@@ -1,33 +1,27 @@
-import { HERO_ID } from '../data/sections.js';
+import { HERO_ID, PROJECTS_ID, CONTACT_ID } from '../data/sections.js';
 import styles from './Hero.module.css';
 
 /* Sidans enda <h1>. Skrivs HÄR och får aldrig läsas ur sections.js "label"
- * (ARKITEKTUR.md, rättelse 2). Namnet kommer ur BRIEF.md. */
+ * (ARKITEKTUR.md, rättelse 2). */
 const name = 'Jelal Qaiumi';
 
-/* Titeln. Jelal bytte den från "Systemutvecklare" 2026-10-07 — den härleds
- * alltså INTE längre ur BRIEF.md, som fortfarande säger systemutvecklare.
- * Hans ord gäller. Samma sträng står i <title> i index.html och de två ska
- * följas åt. */
-const role = 'Fullstackutvecklare';
+/* Rollraden är Jelals egna ord och bara hans att ändra. Samma sträng står i
+ * <title> i index.html - ändras den här ändras den där, i samma redigering. */
+const role = 'Systemutvecklare · Fullstack';
 
-/* ===== UTKAST - TEXT SOM JELAL SKA GODKÄNNA ELLER ERSÄTTA =================
+/* Ingressen är Jelals egna ord och bara hans att ändra.
  *
- * PLAN.md listar introtexten som ÖPPEN vid Leverans 1 och ARKITEKTUR.md
- * ("Öppna punkter som INTE är arkitektens att besluta") säger att den
- * formuleras i paket 3 och godkänns av Jelal. Jelal har inte skrivit någon
- * text, så detta är byggarens utkast, härlett ur BRIEF.md (systemutvecklare,
- * React/Vite-stacken) och skills.txt (Fullstack-utveckling, C#, .NET,
- * ASP.NET Core, REST API, React, React Native).
- *
- * Medvetet INTE med: superlativ, och varje påstående om antal år eller
- * omfattning av erfarenhet - det finns inget underlag för sådana i materialet.
- *
- * Byt ut strängen nedan. Ingen annan fil behöver röras.
- * ========================================================================= */
-const introDraft =
-  'Jag bygger webb- och mobilapplikationer, från gränssnitt till API. ' +
-  'På serversidan arbetar jag med C# och .NET, i klienten med React och React Native.';
+ * EN sträng, aldrig konkatenerad: en konkatenering är det enklaste sättet att
+ * tappa ett mellanslag mitt i en text som ska vara exakt. Beslutat i
+ * ARKITEKTUR.md, "A5 - Hero: knapparna, mätserien och 360 px". */
+const intro =
+  'Jag bygger webb- och mobilappar i React, React Native och .NET, hela vägen från databas till app.';
+
+/* Knapptexterna är också Jelals egna ord. De står som konstanter här, intill de
+ * tre andra texterna, så att varje sträng han äger går att jämföra mot
+ * uppdragsfilen utan att någon behöver läsa JSX. */
+const primaryActionText = 'Se mina projekt';
+const secondaryActionText = 'Kontakta mig';
 
 /* EJ I ARKITEKTUR: vilket sizes-värde profilbilden ska ha.
  *
@@ -55,7 +49,30 @@ function Hero() {
         <div className={styles.text}>
           <h1>{name}</h1>
           <p className={styles.role}>{role}</p>
-          <p className={styles.intro}>{introDraft}</p>
+          <p className={styles.intro}>{intro}</p>
+
+          {/* TVÅ <a>, INTE <button>. Knapparna navigerar till en sektion på
+              samma sida, och det är en länk; en <button> hade krävt JS för att
+              göra något. Den mjuka scrollningen kommer från scroll-behavior i
+              global.css, som redan har sitt undantag för
+              prefers-reduced-motion - ingen scrollhanterare, ingen ny JS.
+
+              Målen hämtas ur de namngivna konstanterna i sections.js. Ett
+              sektions-id får aldrig skrivas av som bokstavlig sträng i en
+              .jsx-fil - då kan länken peka på en sektion som inte finns.
+
+              Ordningen primär före sekundär och båda knapparnas placering
+              efter ingressen är beslutade i ARKITEKTUR.md, "A5 - Hero:
+              knapparna, mätserien och 360 px". Avståndet upp till ingressen
+              kommer ur .text-gridens gap och sätts inte här. */}
+          <div className={styles.actions}>
+            <a className={styles.actionPrimary} href={`#${PROJECTS_ID}`}>
+              {primaryActionText}
+            </a>
+            <a className={styles.actionSecondary} href={`#${CONTACT_ID}`}>
+              {secondaryActionText}
+            </a>
+          </div>
         </div>
 
         {/* Gråskalan och den grå tonplattan ligger i CSS, inte i bildfilen -

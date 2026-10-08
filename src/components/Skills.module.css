@@ -2,95 +2,51 @@
  * <Section> respektive global.css - modulen får ALDRIG sätta padding-inline
  * (ARKITEKTUR.md, "Var sidmarginalen bor"). */
 
-/* Teckenförklaringen under <h2>. Graderna är beslutade i ARKITEKTUR.md,
- * "Teckenförklaring".
+/* KORTRUTNÄTET. Beslutat i ARKITEKTUR.md, "A6 - Kortet, chipset och rutnätet";
+ * deklarationerna i den här filen står där tecken för tecken, och
+ * kolumnantalen ligger på projektets befintliga brytpunkter - inga nya tal.
  *
- * --space-6 under raden skiljer den från första gruppen så att den inte läses
- * som en rubrik. Beslutat i ARKITEKTUR.md, "Avstånden". */
-.legend {
-  font-size: var(--text-base);
-  color: var(--color-text-muted);
-  max-width: var(--measure);
-  margin-bottom: var(--space-6);
-}
-
-/* CSS-FLERKOLUMN, inte grid. Beslutat i ARKITEKTUR.md, "Layout".
+ * minmax(0, 1fr) i ALLA tre lägena, enspaltsläget inräknat, aldrig bara 1fr.
+ * Ett grid-spårs automatiska minimum är min-content, så utan den växer spåret
+ * förbi vyporten så snart innehållet har ett långt obrutet ord. Regeln är ett
+ * registrerat återfall i LARDOMAR.md.
  *
- * Invarianten: de 18 grupperna är olika stora - från 4 poster till drygt 30 -
- * och ett rutnät gör alla kolumner lika höga som den högsta. Flerkolumn
- * balanserar höjderna automatiskt och är den enda inbyggda mekanism som gör
- * det utan JS.
- *
- * Kolumnantalen är EXPLICITA och följer brytpunktstabellen i ARKITEKTUR.md,
- * "Brytpunkter", eftersom `columns` tar ett antal och inte en minimibredd.
- * Då kan antalet inte glida isär från den dokumenterade tabellen. */
-.groups {
-  columns: 1;
-  column-gap: var(--space-6);
+ * align-items: start BÄR KORTETS HÖJD, och det är mätbart i den här layouten:
+ * invarianten är att ett korts höjd beror på enbart dess eget innehåll, aldrig
+ * på grannens i samma rad. Utan raden sträcker rutnätet varje kort till radens
+ * högsta. Mätningen ligger i paketets överlämning, inte här. */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
 }
 
 @media (min-width: 600px) {
-  .groups {
-    columns: 2;
-  }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (min-width: 900px) {
-  .groups {
-    columns: 3;
-  }
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
-@media (min-width: 1200px) {
-  .groups {
-    columns: 4;
-  }
+.card {
+  padding: var(--space-5);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
 }
 
-/* Håller en kategori samman så att dess rubrik aldrig hamnar i en annan kolumn
- * än sina pills. */
-.group {
-  break-inside: avoid;
-  margin-bottom: var(--space-6);
+/* Kortrubriken är en grad lägre än h3:s globala grad, utan versaler, utan
+ * spärrning och utan dämpad färg: nio kortrubriker i ett rutnät ska inte
+ * konkurrera med sektionens egen rubrik. Beslutat i ARKITEKTUR.md, "A6". */
+.cardTitle {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-4);
 }
 
-/* --space-2 mellan rubrik och pills håller dem som en synlig enhet: rubriken
- * ska tillhöra sina pills, inte sväva mellan två grupper. Avståndet MELLAN
- * grupper är --space-6 på .group ovan, alltså fyra gånger större, och det är
- * den skillnaden som gör grupperingen läsbar. Beslutat i ARKITEKTUR.md,
- * "Avstånden". */
-.groupTitle {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
-  margin-bottom: var(--space-2);
-}
-
-.pills {
+.chips {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-
-  /* De två raderna nedan BÄR INTE pillens höjd i den här layouten, och det ska
-   * stå rakt ut: granskaren injicerade `normal` på båda vid tre bredder och
-   * samtliga pills förblev 29,19 px. CSS-flerkolumn ger varje grupp exakt den
-   * höjd dess innehåll kräver, så det finns ingen överskottshöjd att fördela.
-   * Raderna går alltså inte att få att larma, och en kontroll som aldrig kan
-   * larma får inte beskrivas som om den skyddar något.
-   *
-   * De står kvar som FÖREBYGGANDE regel, inte som rättelse av ett fel som
-   * finns nu. Invarianten de upprätthåller när den sätts på prov: en pills höjd
-   * ska bero på enbart dess eget innehåll, padding och ram - aldrig på
-   * containerns utsträckning. Den invarianten bröts mätbart i den tidigare
-   * grid-layouten, där rutnätet gjorde alla grupper i en rad lika höga och
-   * `normal` (= stretch) fördelade överskottet; uppmätt 62,69 px mot 32,39 px i
-   * granngruppen.
-   *
-   * Byts layouten tillbaka till något som ger grupperna gemensam höjd blir
-   * raderna verksamma igen. Till dess är de billiga och verkningslösa. Ta inte
-   * bort dem med motiveringen att de inte gör något i dag - men påstå inte
-   * heller att de gör det. */
-  align-content: flex-start;
-  align-items: flex-start;
 }

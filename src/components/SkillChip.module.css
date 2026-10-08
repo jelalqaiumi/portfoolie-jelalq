@@ -1,0 +1,23 @@
+/* Chipsets enda klass och enda utseende. Beslutat i ARKITEKTUR.md, "A6 -
+ * Kortet, chipset och rutnätet"; deklarationerna nedan står där tecken för
+ * tecken.
+ *
+ * Chipset får radbryta INUTI sig själv: ingen white-space: nowrap, och en
+ * max-width som hindrar det från att bli bredare än sitt kort. Invarianten är
+ * att chipsets höjd är fri, så en radbrytning är ofarlig medan utebliven
+ * radbrytning ger horisontell scroll. Välj det felläge som syns - det är
+ * motsatt regel mot headerns navlänk, där höjden är låst och en radbrytning
+ * därför klipper innehåll tyst.
+ *
+ * Vilken sträng som är längst skrivs INTE här. Den ändras varje gång Jelal
+ * redigerar sin lista, och golvet ska mätas om ur datan - inte läsas ur en
+ * kommentar. */
+.chip {
+  padding: var(--space-1) var(--space-3);
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  max-width: 100%;
+}

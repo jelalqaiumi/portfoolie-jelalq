@@ -976,7 +976,29 @@ beställer; den ska visa paket J:s filer som en egen grupp, eftersom de ligger
 utanför innehållsuppdraget, och paket L:s och M:s som en egen, eftersom de är
 processpaket.
 
-**Två fel i `GUIDE.md` som ska rättas här, så de inte tappas bort:**
+**⚠️ `GUIDE.md` ÄR GENOMGÅENDE UPPHÄVD, INTE "TVÅ FEL".** Uppmätt av arkitekten
+2026-10-08 i paket M. Hela skills-kapitlet beskriver ett arbetsflöde som inte
+finns, och **följer Jelal guiden i dag fäller han bygget**:
+
+- **rad 37:** "18 grupper och 307 kompetenser" — det är 9 grupper och 53.
+- **rad 42–56:** instruerar honom att ändra `filled: false` till `filled: true`.
+  Fältet finns inte efter **A2**, och grind 9 i `validate-data.mjs` fäller bygget
+  på det (`okänt fält på skill`).
+- **rad 64–71:** ber honom skriva in nya kompetenser i `skills-full.txt` och
+  beskriver korsreferensen i båda riktningarna. Korsreferensen är borttagen i
+  **A1**, och källistorna läses inte längre av något skript.
+- **rad 232–235:** dokumenterar tre felmeddelanden som inte längre finns.
+- **rad 257:** beskriver pillen. Komponenten heter `SkillChip` efter **A6** och
+  har ett enda utseende.
+
+Kapitlet ska **skrivas om**, inte lappas.
+
+**KLAR-KRITERIUM FÖR SKILLS-KAPITLET: guiden ska spelas igenom, inte läsas.**
+Varje instruktion utförs i ordning på en riktig kopia av datan, och `npm run
+build` ska vara grön efter varje steg. En guide som bara lästs igenom är inte
+verifierad — det var precis så de sex osanna ställena kunde uppstå.
+
+**Två fel till i `GUIDE.md` som ska rättas här, så de inte tappas bort:**
 
 1. **`GUIDE.md:179` säger "de tre linjerna".** Sidan renderar nu fem
    `section[id]`, alltså **fyra** linjer. Arkitekturens tabell över upphävda

@@ -37,12 +37,13 @@ function Projects() {
        som projekten flyttades upp före kompetenserna. Skälet är hans eget: han
        vill att projekten ska synas.
 
-       ⚠️ KLASSEN BÄR MER ÄN EN BAKGRUND. Den binder om --color-border,
-       --color-text-muted, --color-text-dim, --color-error och --color-focus för
-       allt inuti sektionen - alltså även sektionsavgränsarens ton, kortens ram
-       och fokusringen på kortens länkar. Flyttas den vidare till en annan
-       sektion följer alla fem med. Läs "Ljus yta" i ARKITEKTUR.md innan den
-       rörs; en flytt är inte en bakgrundsändring. */
+       ⚠️ KLASSEN BÄR MER ÄN EN BAKGRUND. Den binder om flera ärvda färgtokens
+       för allt inuti sektionen - alltså även sektionsavgränsarens ton, kortens
+       ram och fokusringen på kortens länkar. Uppräkningen står i
+       .surface-light i tokens.css och ska bara stå där; en kommentar här hade
+       blivit falsk i samma stund blocket ändrades. Flyttas klassen vidare till
+       en annan sektion följer varje ombindning med. Läs "Ljus yta" i
+       ARKITEKTUR.md innan den rörs; en flytt är inte en bakgrundsändring. */
     <Section id={section?.id} title={section?.label} className="surface-light">
       {visible.length === 0 ? (
         /* TOMT LÄGE. En kort rad, aldrig en tom yta. Villkoret står på

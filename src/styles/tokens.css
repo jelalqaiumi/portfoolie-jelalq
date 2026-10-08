@@ -34,7 +34,7 @@
    * ⚠️ SAMMANTRÄFFANDE, INTE KOPPLING: detta token har nu samma hexvärde som
    * --color-border. Slå inte ihop dem och ersätt inte det ena med det andra.
    * Den ena är sidans övre bakgrundsyta, den andra är varje hårfin linje och
-   * outline-pillarnas ram. De ska kunna röra sig oberoende. */
+   * varje ram. De ska kunna röra sig oberoende. */
   --color-bg-top: #2a2a2e;
 
   /* Här låg --color-surface-raised. BORTTAGET 2026-10-05: det hade noll
@@ -90,9 +90,17 @@
    * En mättad #FF0000 är avfärdad: den vibrerar mot nästan svart och läses som
    * larm i stället för som markering. */
   --color-error: #f85149;
+  /* Uppmätta kontrastkvoter, en rad per bakgrund tokenet faktiskt står mot.
+   * Ett tokennamn är ingen motivering för ett kontrastvärde - kvoten är det.
+   * Ändras ett värde här räknas varje rad om; raden tas aldrig bort för att
+   * den är lång. */
+  /* --color-text mot --color-bg-top: 12,226:1 — AA normal */
+  /* --color-text mot --color-surface: 15,736:1 — AA normal */
   --color-text: #ededef;
+
+  /* --color-text-muted mot --color-bg-top: 5,567:1 — AA normal */
+  /* --color-text-muted mot --color-bg: 7,662:1 — AA normal */
   --color-text-muted: #a1a1a8;
-  --color-text-dim: #6e6e76;
   --color-accent: #fc6f03;
   --color-accent-hover: #fd9140;
 
@@ -165,18 +173,18 @@
  * 2026-10-05, se ARKITEKTUR.md "Ljus yta - Kompetenser får vit bakgrund".
  *
  * OMBINDNING, INTE NYA TOKENNAMN. Med --color-text-on-light och liknande hade
- * varje regel i Skills.module.css och SkillPill.module.css behövt byta
- * variabelnamn, och SkillPill hade fått kunskap om ljus botten inbakad i sig.
- * Med ombindning behöver INGEN komponent ändras: pillen frågar efter
- * --color-text-muted och får rätt svar för den yta den står på.
+ * varje regel i varje komponentmodul behövt byta variabelnamn, och komponenten
+ * hade fått kunskap om ljus botten inbakad i sig. Med ombindning behöver INGEN
+ * komponent ändras: den frågar efter --color-text-muted och får rätt svar för
+ * den yta den står på.
  *
  * --color-text betyder ett enda jobb - textens färg mot den yta den står på.
  * Ombindning ger den inte en andra betydelse, den löser in dess enda betydelse
  * mot ett annat underlag. Det är skillnaden mot ett token som bär två
  * obesläktade jobb: ett sådant ska DELAS i två, inte bindas om.
  *
- * DE DÄMPADE PILLARNAS VÄRDEN ÄR HÄRLEDDA UR KVOTEN, inte valda ur en palett.
- * Målet är att underordningen ska vara lika stark på båda ytorna:
+ * VÄRDENA ÄR HÄRLEDDA UR KVOTEN, inte valda ur en palett. Målet är att en ram
+ * och en dämpad text ska ha samma upplevda tyngd på båda ytorna:
  *   ram mot bakgrund   #2A2A2E/mörkt = 1,38:1  ->  #CFCFD4/#F4F4F6 = 1,41:1
  *   text mot bakgrund  #A1A1A8/mörkt = 7,01:1  ->  #55555C/#F4F4F6 = 6,73:1
  *
@@ -192,16 +200,16 @@
  * är orange inte en yta utan LÄNKTEXT. Då gäller 1.4.3 och 4,5:1, och det är
  * ett krav som går att uppfylla. Se ombindningen längre ner i blocket.
  *
- * Pillarna berörs inte: de ligger kvar i kompetenssektionen, som är mörk igen.
- * Uppmätt efter flytten är den ifyllda pillen 6,946:1 mot --color-bg, så det
- * utskrivna avsteget från 1.4.11 har upphört av sig självt.
+ * Kompetenssektionen är mörk igen och bar aldrig med sig något avsteg hit. Det
+ * utskrivna avsteget från 1.4.11 upphörde av sig självt i och med flytten, och
+ * efter 2026-10-08 finns inte längre någon orange yta i den sektionen alls.
  *
  * KVAR SOM GÄLLANDE ur det upphävda stycket: orange är sidans ENDA accentfärg
  * och root-värdet är pixelmätt ur loggan. Jelal återtog en andra, mörkare
  * orange 2026-10-05 ("återgå till den vanliga orange"). Det beslutet gäller
  * fortfarande för DEN MÖRKA YTAN, där märket i den klibbande headern syns
- * samtidigt som pillarna och måste matcha dem. Ombindningen nedan gäller bara
- * inuti en ljus yta, där märket inte är i bild på samma underlag.
+ * samtidigt som sidans övriga orange och måste matcha det. Ombindningen nedan
+ * gäller bara inuti en ljus yta, där märket inte är i bild på samma underlag.
  *
  * --color-bg-top binds om trots att ingen regel i sektionen använder den:
  * den är ärvd, och utan ombindningen hade ett framtida element inuti en ljus
@@ -216,25 +224,20 @@
   --color-text: #0b0b0c;
   --color-text-muted: #4f4f56;
 
-  /* Här låg --color-text-dim: #6e6e76. BORTTAGEN 2026-10-07: värdet var
-   * IDENTISKT med root-värdet, alltså en nolloperation, och tokenets enda
-   * konsument är .footer, som aldrig ligger inuti en ljus yta. En ombindning
-   * som inte binder om något är dött fält - samma regel som fällde
-   * --color-surface-raised och --color-accent-soft.
-   *
-   * Behöver något i en ljus yta tonen: den måste räknas om mot #F4F4F6 först.
-   * Kopiera inte root-värdet tillbaka hit. */
-
-  /* RAMEN ÄR OMRÄKNAD, INTE OMVALD. Målet är att de dämpade pillarnas
-   * underordning ska vara exakt lika stark på båda ytorna, och den kvoten går
-   * sönder av ett bakgrundsbyte:
+  /* RAMEN ÄR OMRÄKNAD, INTE OMVALD. En ram ska ha samma upplevda tyngd på båda
+   * ytorna, och den kvoten går sönder av ett bakgrundsbyte:
    *
    *   #D9D9DE mot vitt      1,4065:1   <- målkvoten, satt mot mörk botten
    *   #D9D9DE mot #F4F4F6   1,280:1    <- för ljus, ramen tappar sin tyngd
    *   #CFCFD4 mot #F4F4F6   1,413:1    <- närmast målet
    *
+   * KONSUMENTERNA BYTTE NAMN 2026-10-08, värdet står kvar. Tokenet bär numera
+   * ramen på kompetenskortet och chipset, och ärvs av sektionsavgränsaren.
+   * Invarianten är densamma som när det räknades fram, och den är inte knuten
+   * till vad ramen sitter på.
+   *
    * Byts bakgrunden igen måste detta värde räknas om på samma sätt. Det är
-   * KVOTEN som är beslutet, inte hexvärdet. */
+   * KVOTEN som är beslutet, hexvärdet är en härledning. */
   --color-border: #cfcfd4;
 
   /* KORTETS EGNA YTA. Rent vitt, inte sektionens brutna vitt: 1,10:1 mot
@@ -258,9 +261,9 @@
    * behandlas olika ser godtyckligt ut men är det inte, och skälet är värt att
    * läsa innan någon "städar" bort skillnaden:
    *
-   *   Pillen       bär sitt budskap med TRE signaler samtidigt - fylld yta,
-   *                mörk text, ingen ram. Sviker kontrasten syns tillståndet
-   *                ändå.
+   *   Accenten     bär aldrig ensam ett budskap. Där den används står samma
+   *                sak också som text eller form, så sviker kontrasten går
+   *                ingen information förlorad.
    *   Fokusringen  är EN enda signal. Sviker kontrasten försvinner
    *                markeringen helt, och tangentbordsanvändaren vet inte var
    *                på sidan den står.
@@ -271,8 +274,8 @@
    * 24,7 grader mot originalets 26,0 - samma orange, mörkare valör.
    *
    * Ringen ligger utanför elementet (outline-offset) och har därför ingen mörk
-   * text inuti sig att ta hänsyn till. Det är varför den tål en mörkare ton
-   * medan pillen inte gör det. */
+   * text inuti sig att ta hänsyn till. Det är varför den tål en mörkare ton än
+   * en fylld yta skulle göra. */
   --color-focus: #c25102;
 
   /* DET RÖDA binds om här också. #F85149 ger bara 2,47:1 mot #F4F4F6 och faller
@@ -316,9 +319,9 @@
    * och visade den mörka bottnen igenom.
    *
    * `color` är dessutom ärvt som ETT INLÖST VÄRDE: h2 ärvde bodys färdiga
-   * #EDEDEF och blev ljus text, medan .legend, .groupTitle och pillarna - som
-   * sätter `color: var(--color-text-muted)` i sina egna regler - plockade upp
-   * ombindningen och blev mörka. Resultatet var ljus rubrik och mörk brödtext
+   * #EDEDEF och blev ljus text, medan varje element som sätter
+   * `color: var(--color-text-muted)` i sin egen regel plockade upp
+   * ombindningen och blev mörkt. Resultatet var ljus rubrik och mörk brödtext
    * på mörk botten, alltså oläsligt.
    *
    * De här två raderna löser in samma två egenskaper en gång till, nu mot de

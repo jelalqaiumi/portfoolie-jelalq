@@ -166,8 +166,8 @@ section[id] {
  * padding-inline. Det är samma uttryck som headerns linje.
  *
  * Färgen är samma token som headern och footern använder. Behöver linjen bli
- * svagare är åtgärden ett eget --color-divider-token, inte ett inline-värde och
- * inte en sänkning av --color-border, som också bär outline-pillarnas ram. */
+ * svagare är åtgärden ett eget token för avgränsaren, inte ett inline-värde och
+ * inte en sänkning av --color-border, som också bär varje annan ram. */
 section[id] + section[id] {
   border-top: 1px solid var(--color-border);
 }

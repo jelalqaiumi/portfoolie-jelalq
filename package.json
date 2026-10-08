@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/validate-data.mjs && vite build",
+    "build": "node scripts/validate-data.mjs && node scripts/validate-tokens.mjs && vite build",
     "preview": "vite preview",
     "lint": "oxlint",
     "optimize:images": "node scripts/optimize-images.mjs",
-    "validate:data": "node scripts/validate-data.mjs"
+    "validate:data": "node scripts/validate-data.mjs",
+    "validate:tokens": "node scripts/validate-tokens.mjs"
   },
   "dependencies": {
     "@hcaptcha/react-hcaptcha": "^2.2.0",

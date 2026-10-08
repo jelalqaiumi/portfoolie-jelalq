@@ -87,10 +87,11 @@
 /* PLATSHÅLLAREN sätts uttryckligen. Webbläsarens standardfärg varierar och är
  * ofta för svag; den måste vara läsbar eftersom den bär en instruktion.
  *
- * --color-text-muted, INTE --color-text-dim: mot fältets botten --color-surface
- * ger muted 6,55:1 medan dim ger 3,64:1 och faller på AA:s 4,5 för liten text.
- * Dim är gjord för footer och metadata mot sidans botten, inte för text i ett
- * fält. Byt inte hit den. */
+ * --color-text-muted mot fältets egen botten --color-surface: uppmätt
+ * 7,166:1, alltså över AA:s 4,5 för liten text. KVOTEN ÄR KRAVET, inte hur
+ * dämpad en ton känns - en platshållare bär en instruktion och får därför inte
+ * en ton som valts för att vara underordnad. Vill någon ha den svagare: mät
+ * mot --color-surface först, inte mot sidans botten. */
 .input::placeholder {
   color: var(--color-text-muted);
   opacity: 1; /* Firefox sänker annars placeholderns opacitet till 0,54 */

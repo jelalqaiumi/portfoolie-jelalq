@@ -296,7 +296,28 @@ function checkProjects(mod) {
         fail(`projects.js: ${field} får inte vara "#" - skriv null när länken saknas (id "${id}")`);
       }
     }
+
+    /* image är valfri. Finns den måste varje variant vara genererad, annars
+     * renderar kortet en trasig bild. Den legitima åtgärden - köra skriptet -
+     * får grinden att tiga. */
+    const image = project?.image;
+    if (image !== null && image !== undefined) {
+      if (!hasText(image)) {
+        fail(`projects.js: image måste vara ett bildnamn eller null (id "${id}")`);
+      } else {
+        for (const width of mod.PROJECT_IMAGE_WIDTHS ?? []) {
+          const file = join(PROJECT_ROOT, 'public', 'assets', 'projects', `${image}-${width}.webp`);
+          if (!existsSync(file)) {
+            fail(`projects.js: bilden ${image}-${width}.webp saknas - lägg ${image}.png i assets-source/projects/ och kör npm run optimize:projects (id "${id}")`);
+          }
+        }
+      }
+    }
   });
+
+  if (!Array.isArray(mod.PROJECT_IMAGE_WIDTHS) || mod.PROJECT_IMAGE_WIDTHS.length === 0) {
+    fail('projects.js: PROJECT_IMAGE_WIDTHS saknas eller är tom');
+  }
 
   summary.push(`${projects.length} projekt`);
 }

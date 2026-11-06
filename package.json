@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "lint": "oxlint",
     "optimize:images": "node scripts/optimize-images.mjs",
+    "optimize:projects": "node scripts/optimize-project-images.mjs",
     "validate:data": "node scripts/validate-data.mjs",
     "validate:tokens": "node scripts/validate-tokens.mjs"
   },

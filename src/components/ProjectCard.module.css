@@ -1,130 +1,180 @@
-/* Projektkortet.
+/* Projektkortet: projektets bild fyller hela kortet, och texten ligger
+ * ovanpå en mörk toning längst ner.
  *
- * EJ I ARKITEKTUR: vilken yta, ram och inre luft kortet ska ha.
- * --color-surface är tokenet för "kort" i färgtabellen, --color-border samma
- * hårfina avgränsare som sidans övriga linjer. Inga lösa tal. */
+ * Kortet är ALLTID mörkt, även inuti .surface-light, och använder därför
+ * bildytans egna färgtokens, som inte binds om där (se tokens.css). Saknas
+ * bild står texten på kortets reservbakgrund i stället. */
 .card {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  min-width: 0;
+  min-height: 36rem;
+  background-color: var(--color-media-fallback);
+  border: 2px solid var(--color-media-fallback);
   border-radius: var(--radius-md);
-  padding: var(--space-5);
+  box-shadow: 6px 6px 0 var(--color-media-accent);
+  transition: transform var(--transition), box-shadow var(--transition);
 
-  /* KORTETS TAK. Härlett, inte valt. Jelal valde mekanism M2 2026-10-05 ur två
-   * uppmätta alternativ - se ARKITEKTUR.md, "Projektkortens bredd".
+  /* KORTETS TAK. Härlett, inte valt - se ARKITEKTUR.md, "Projektkortens
+   * bredd": taket = var(--measure) + kortets vågräta padding x 2. calc() mot
+   * tokenen, ALDRIG ett pixelvärde.
    *
-   *     taket = var(--measure) + kortets vågräta padding x 2
-   *
-   * Framräknat ur sidans egna token: 556,5 + 24 x 2 = 604,5 px.
-   *
-   * calc() mot tokenen, ALDRIG ett pixelvärde: ändras --measure följer taket
-   * med av sig självt. Ett inskrivet tal hade blivit fel i samma stund som
-   * tokenet ändrades, utan att något larmade.
-   *
-   * Varför taket behövs: auto-fit kollapsar tomma spår, så utan tak blir ett
-   * ensamt kort lika brett som hela innehållsytan - uppmätt 1120 px, med
-   * 1070 px långa textrader.
-   *
-   * Varför det ligger HÄR och inte på spåret: ett definit tak på spåret gör
-   * att auto-fit bara räknar fram ETT spår, och korten staplas lodrätt.
-   * Mätningen står i Projects.module.css.
-   *
-   * Taket binder bara i enprojektsläget. Med två eller tre kort är spåret
-   * smalare än taket (uppmätt 548 och 357,3 px vid --content-max), och då är
-   * kortet smalare än sin egen text vill vara. Det är Jelals val: han höll
-   * fast vid kort sida vid sida även när han sett att de krymper. */
-  max-width: calc(var(--measure) + var(--space-5) * 2);
+   * x 0,8: Jelal bad 2026-11-06 om ett kort som är en femtedel smalare. */
+  max-width: calc((var(--measure) + var(--space-5) * 2) * 0.8);
 
-  /* Kortet är ett ankarmål: ett id på kortet måste landa under den klibbande
-   * headern, inte bakom den. Uttrycket är ORDAGRANT det som global.css
-   * använder för section[id] - samma token, samma calc - så att ett byte av
-   * headerns höjd flyttar båda eller ingen.
-   *
-   * Regeln i global.css får INTE breddas från section[id] till [id]: den hade
-   * då fångat main#main och varje framtida id. */
+  /* Kortet är ett ankarmål. Uttrycket är ORDAGRANT det som global.css
+   * använder för section[id], så att ett byte av headerns höjd flyttar båda. */
   scroll-margin-top: calc(var(--header-height) + var(--space-4));
 }
 
-/* Graden kommer från h3 i global.css (--text-xl), som är just det
- * ARKITEKTUR.md anger för projekttitel. Bara avståndet sätts här - reseten
- * nollar marginalerna. */
+.card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 var(--color-media-accent);
+}
+
+.image {
+  /* Bilden ligger i sitt eget 16:10-format upptill, inte beskuren till hela
+   * kortets höjd: skärmdumpar har egen text, och beskuren hade den hamnat
+   * rakt bakom kortets titel. Toningen nedan tar över där bilden slutar. */
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: -2;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top center;
+  transform-origin: top center;
+
+  /* Bildens egen nederkant tonas ut, så att den aldrig slutar i en hård kant
+   * - på smal skärm är bilden lägre än toningen hinner bli mörk. */
+  mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+  transition: transform 400ms ease;
+}
+
+.card:hover .image {
+  transform: scale(1.04);
+}
+
+/* Toningen: bilden syns klart överst och tonar ut i kortets mörka botten
+ * ungefär där bilden slutar. Texten står alltid på den mörka delen. */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--color-media-scrim) 25%,
+    var(--color-media-fallback) 62%,
+    var(--color-media-fallback) 100%
+  );
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 0;
+  width: 100%;
+  padding: var(--space-5);
+  color: var(--color-media-text);
+}
+
+/* Graden höjs från h3:s --text-xl: titeln är kortets rubrik över en bild och
+ * behöver bära den. */
 .title {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight);
+  color: var(--color-media-text);
   margin-bottom: var(--space-3);
+  overflow-wrap: anywhere;
 }
 
 .description {
-  color: var(--color-text-muted);
-
-  /* --measure är tokenet för "Max radlängd för brödtext" i ARKITEKTUR.md:s
-   * typografitabell, och beskrivningen ÄR brödtext. Den behövs här därför att
-   * ett ensamt projekt fyller hela rutnätet: auto-fit kollapsar de tomma
-   * spåren, så det enda kortet blir 1120 px brett vid --content-max (uppmätt).
-   * Utan taket hade beskrivningens rader blivit 1070 px långa. Taket gäller
-   * raden, inte kortet. */
+  color: var(--color-media-text-muted);
   max-width: var(--measure);
+  overflow-wrap: anywhere;
 }
 
-/* EJ I ARKITEKTUR: vilken färg, grad och form teknik-etiketterna ska ha.
- * De följer outline-pillens form i skills, eftersom de är samma sorts sak: ett
- * kort tekniknamn utan interaktion. Etiketterna är inte klickbara och har
- * ingen hover - de är text, inte kontroller. */
 .tech {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
   margin-top: var(--space-4);
 
-  /* BESLUTAD REGEL, inte ett eget val. ARKITEKTUR.md, "Kort i samma rad får
-   * inte sträckas ut": i varje rutnät av kort gäller att innehåll inuti kortet
-   * aldrig får ärva kortets utsträckta höjd. Ett kort blir högt av sin granne,
-   * inte av sitt eget innehåll, och då ska dess etiketter ligga kvar högst upp.
-   *
-   * Mekaniken: .grid gör alla kort i samma rad lika höga, så ett kort med kort
-   * beskrivning får överskottshöjd. I en flerradig flex-container beter sig
-   * `align-content: normal` som `stretch`, och `align-items: normal` sträcker
-   * varje <li> till radens höjd. Felet syns bara mellan kort av olika höjd och
-   * bara på bred skärm - alltså samma felläge som gick oupptäckt i skills.
-   * Städa inte bort dessa två rader. */
+  /* BESLUTAD REGEL (ARKITEKTUR.md, "Kort i samma rad får inte sträckas ut"):
+   * innehåll inuti kortet får aldrig ärva kortets utsträckta höjd. Städa inte
+   * bort dessa två rader. */
   align-content: flex-start;
   align-items: flex-start;
 }
 
 .techItem {
   font-size: var(--text-xs);
-  padding: var(--space-1) var(--space-2);
-  border: 1px solid var(--color-border);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-media-pill-border);
   border-radius: var(--radius-pill);
-  color: var(--color-text-muted);
-
-  /* Etiketten får radbryta inuti sig själv. Ingen white-space: nowrap - höjden
-   * är fri här, så radbrytning är ofarlig medan utebliven radbrytning ger
-   * horisontell scroll och spräcker 360 px-golvet. Samma regel som
-   * skill-pillen (ARKITEKTUR.md, "360 px - den längsta strängen"). */
+  background-color: var(--color-media-pill-bg);
+  color: var(--color-media-text);
   max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
-/* EJ I ARKITEKTUR: vilket utseende och avstånd länkraden ska ha.
- *
- * Att det är en <div> och ALDRIG ett <footer> är däremot beslutat: den globala
- * sidmarginalregeln i global.css träffar elementselektorn footer, så ett
- * <footer> här inne hade fått oväntad vågrät padding (ARKITEKTUR.md, "Var
- * sidmarginalen bor"). */
+/* Länkraden är en <div> och ALDRIG ett <footer>: den globala sidmarginalregeln
+ * träffar elementselektorn footer (ARKITEKTUR.md, "Var sidmarginalen bor"). */
 .links {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-  margin-top: var(--space-4);
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
 }
 
-/* EJ I ARKITEKTUR: vilken färg länkarna ska ha.
- * Orange är tillåtet för länkar enligt kontrastbeslutet i ARKITEKTUR.md,
- * "Färger". Understrykningen gör att länken inte skiljs ut av färg ensam. */
-.link {
-  color: var(--color-accent);
+.button {
+  display: block;
+  text-align: center;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-media-accent);
+  color: var(--color-on-accent);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: background-color var(--transition);
+}
+
+.button:hover {
+  background-color: var(--color-media-accent-hover);
+}
+
+.secondary {
+  align-self: center;
+  color: var(--color-media-text);
   font-size: var(--text-sm);
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
 
-.link:hover {
-  color: var(--color-accent-hover);
+.secondary:hover {
+  color: var(--color-media-accent-hover);
+}
+
+.button:focus-visible,
+.secondary:focus-visible {
+  outline: 2px solid var(--color-media-text);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card:hover,
+  .image,
+  .card:hover .image {
+    transition: none;
+    transform: none;
+  }
 }

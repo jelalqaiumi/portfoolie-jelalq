@@ -110,6 +110,19 @@
   --color-overlay-grey: rgba(32, 32, 36, 0.45);
   --color-focus: #fc6f03;
 
+  /* Projektkortet ligger ovanpå en bild och är alltid mörkt, även inuti
+   * .surface-light. Därför egna tokens som INTE binds om där. Texten står på
+   * den mörkaste delen av toningen (scrim-strong). */
+  --color-media-text: #ffffff;
+  --color-media-text-muted: #d6d6da;
+  --color-media-scrim: rgba(11, 11, 12, 0.35);
+  --color-media-scrim-strong: rgba(11, 11, 12, 0.92);
+  --color-media-fallback: #141416;
+  --color-media-pill-border: rgba(255, 255, 255, 0.45);
+  --color-media-pill-bg: rgba(11, 11, 12, 0.35);
+  --color-media-accent: #fc6f03;
+  --color-media-accent-hover: #fd9140;
+
   /* Spacing - 8 px-rytm, 4 px som finsteg */
   --space-1: 0.25rem;
   --space-2: 0.5rem;

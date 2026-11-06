@@ -1,3 +1,4 @@
+import { PROJECT_IMAGE_WIDTHS } from '../data/projects.js';
 import styles from './ProjectCard.module.css';
 
 /* Obligatoriskt textfält ur src/data/: ett fält med bara blanksteg är lika
@@ -33,7 +34,7 @@ export function isComplete(project) {
  * dokumentstrukturen.
  */
 function ProjectCard({ project }) {
-  const { id, title, description, tech, url, repoUrl } = project;
+  const { id, title, description, tech, url, repoUrl, image } = project;
 
   /* Länkar renderas BARA när de finns. Strikt kontroll mot en icke-tom sträng,
    * inte mot sanningsvärde: null, undefined, tom sträng och enbart blanksteg
@@ -52,9 +53,33 @@ function ProjectCard({ project }) {
    * på det enskilda projektet. Kortets scroll-marginal räknas i modulen ur
    * samma token och samma uttryck som sektionernas i global.css, så att de två
    * inte kan driva isär. */
+  /* Bilden är valfri och följer samma strikta kontroll som länkarna. Den
+   * fyller hela kortet bakom texten, men är ingen länk: knappen nedan är
+   * kortets enda väg ut, så att tangentbord och skärmläsare inte möter samma
+   * mål två gånger. */
+  const hasImage = typeof image === 'string' && image.trim() !== '';
+  const imageSrc = (width) => `/assets/projects/${image}-${width}.webp`;
+
+  /* Knappen visar adressen, t.ex. "awle.se", så att besökaren ser vart den
+   * leder. Går adressen inte att tolka faller texten tillbaka på en etikett. */
+  const urlLabel = hasUrl ? hostnameOf(url) : null;
+
   return (
     <li className={styles.card} id={id}>
-      <article>
+      {hasImage && (
+        <img
+          className={styles.image}
+          src={imageSrc(PROJECT_IMAGE_WIDTHS[0])}
+          srcSet={PROJECT_IMAGE_WIDTHS.map((w) => `${imageSrc(w)} ${w}w`).join(', ')}
+          sizes="(min-width: 640px) 485px, 100vw"
+          width={PROJECT_IMAGE_WIDTHS[0]}
+          height={PROJECT_IMAGE_WIDTHS[0] * 10 / 16}
+          alt={`Startsidan för ${title}`}
+          loading="lazy"
+          decoding="async"
+        />
+      )}
+      <article className={styles.content}>
         {/* h3: h1 är hero, h2 är sektionsrubriken, projekttiteln ligger en
             nivå under den (ARKITEKTUR.md, "Ankarnavigering", punkt 5). */}
         <h3 className={styles.title}>{title}</h3>
@@ -73,22 +98,22 @@ function ProjectCard({ project }) {
           </ul>
         )}
 
-        {/* EJ I ARKITEKTUR: om länkarna ska öppnas i ny flik, och vad
-            etiketterna ska heta.
-            Ny flik valt för att länkarna pekar bort från portfolion och
+        {/* Ny flik, eftersom länkarna pekar bort från portfolion och
             besökaren annars tappar den. rel="noreferrer" följer med
             target="_blank": utan den får målsidan en referrer och tillgång
             till window.opener. */}
         {(hasUrl || hasRepo) && (
           <div className={styles.links}>
             {hasUrl && (
-              <a className={styles.link} href={url} target="_blank" rel="noreferrer">
-                Till projektet
+              <a className={styles.button} href={url} target="_blank" rel="noreferrer">
+                {urlLabel ?? 'Till projektet'} <span aria-hidden="true">↗</span>
+                <span className="visually-hidden"> (öppnas i ny flik)</span>
               </a>
             )}
             {hasRepo && (
-              <a className={styles.link} href={repoUrl} target="_blank" rel="noreferrer">
+              <a className={styles.secondary} href={repoUrl} target="_blank" rel="noreferrer">
                 Kod
+                <span className="visually-hidden"> (öppnas i ny flik)</span>
               </a>
             )}
           </div>
@@ -96,6 +121,15 @@ function ProjectCard({ project }) {
       </article>
     </li>
   );
+}
+
+/* "https://www.awle.se/" -> "awle.se". null om adressen inte går att tolka. */
+function hostnameOf(value) {
+  try {
+    return new URL(value).hostname.replace(/^www\./, '');
+  } catch {
+    return null;
+  }
 }
 
 export default ProjectCard;

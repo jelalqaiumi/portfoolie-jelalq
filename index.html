@@ -15,10 +15,16 @@
     <link rel="icon" type="image/png" sizes="96x96" href="/assets/logo-mark-96.png" />
     <link rel="apple-touch-icon" href="/assets/logo-mark-192.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Rollen efter tankstrecket är samma sträng som "role" i
+    <!-- Rollen efter första mittpunkten är samma sträng som "role" i
          src/data/profile.js. Ändras den där ändras den här, i samma
          redigering. -->
-    <title>Jelal Qaiumi — Systemutvecklare · Fullstack</title>
+    <title>Jelal Qaiumi · Systemutvecklare · Fullstack</title>
+    <!-- Heros bild hämtas innan JavaScript har renderat sidan, eftersom den är
+         det största elementet i första skärmen. imagesrcset och imagesizes ska
+         vara exakt samma som srcSet och sizes på bilden i
+         src/components/Hero.jsx - annars hämtar webbläsaren bilden två gånger.
+         Ändras det ena ändras det andra, i samma redigering. -->
+    <link rel="preload" as="image" type="image/webp" href="/assets/hero/hero-1440.webp" imagesrcset="/assets/hero/hero-960.webp 960w, /assets/hero/hero-1440.webp 1440w, /assets/hero/hero-1672.webp 1672w" imagesizes="(min-width: 900px) 100vw, 178vw" fetchpriority="high" />
   </head>
   <body>
     <!-- Sidan är helt klientrenderad och blir blank utan JavaScript. Det är en
@@ -31,8 +37,8 @@
          bodys ljusa text mot mörk botten. I dev importeras CSS:en ur main.jsx
          och laddas alltså inte - då blir det webbläsarens standard, svart på
          vitt. Båda är läsbara. En inline-färg hade varit sidans enda
-         hårdkodade färg, och en .noscript-klass hade blivit en tredje global
-         klass som ARKITEKTUR.md stängde dörren för. -->
+         hårdkodade färg, och en egen klass för meddelandet hade lagt stil i
+         global.css för ett element som redan är läsbart i båda lägena. -->
     <noscript>
       <p>
         Den här sidan behöver JavaScript för att visas. Slå på JavaScript i

@@ -18,7 +18,7 @@ html {
    * hålls även när overflow är hidden. Beslutat i ARKITEKTUR.md, M10b punkt 3. */
   scrollbar-gutter: stable;
 
-  /* EJ I ARKITEKTUR: ska webbläsarens egen textuppskalning stängas av?
+  /* Webbläsarens egen textuppskalning stängs av. Beslutat i ARKITEKTUR.md: M19 punkt 9.
    *
    * iOS/Safari blåser upp textstorleken i liggande läge. Golvet "360 px utan
    * horisontell scroll" håller inte om webbläsaren skalar upp texten själv. */
@@ -43,10 +43,9 @@ body {
   /* 360 px-GOLVETS GARANT. Beslutat i ARKITEKTUR.md, "360 px-golvet och grid".
    *
    * Ligger på `body` och ärvs av ALLT. Selektorlistan `h1, h2, h3, p, li` är
-   * UPPHÄVD: en uppräkning täcker bara den text vi kan räkna upp i dag, och
-   * varje uppräkning har en lucka. Uppmätt lucka: en 60 tecken lång filsökväg
-   * i ett `<span>` sprack golvet vid 360 px (scrollWidth 398 mot clientWidth
-   * 345) medan båda de dåvarande reglerna var uppfyllda.
+   * UPPHÄVD: en uppräkning täcker bara de element vi räknar upp, och en lång
+   * obruten sträng i ett element utanför listan (till exempel ett `<span>`)
+   * spräckte golvet.
    *
    * `overflow-wrap` är en ärvd egenskap, så en deklaration här täcker varje
    * element som finns nu OCH varje element någon lägger till senare -
@@ -183,6 +182,50 @@ section[id] + section[id] {
   border-width: 0;
 }
 
+/* Scroll-reveal. En global klass, eftersom mekanismen går genom sektioner i
+ * flera moduler. Beslutat i ARKITEKTUR.md, M12 "Animationerna". Komponenten
+ * Reveal.jsx sätter klassen och stegnumret.
+ *
+ * DÖLJANDET ÄR VILLKORAT PÅ ROTENS ATTRIBUT. Utan det, alltså utan
+ * JavaScript, utan IntersectionObserver eller med reducerad rörelse, står
+ * varje element synligt på sin plats. Elementen tar sin plats i layouten även
+ * när de är dolda: bara opacitet och transform ändras.
+ *
+ * Ett element som är ankarmål får aldrig flyttas av reveal, eftersom
+ * webbläsaren räknar hoppet mot den flyttade rutan. Därför flyttas bara
+ * element utan id, och ett element med id tonas bara in. Beslutat i
+ * ARKITEKTUR.md: M12b. */
+.reveal {
+  transition: opacity var(--duration-reveal) var(--ease-out),
+    transform var(--duration-reveal) var(--ease-out);
+  transition-delay: calc(var(--reveal-index) * var(--reveal-stagger));
+}
+
+:root[data-reveal-ready] .reveal:not([data-revealed]) {
+  opacity: 0;
+}
+
+:root[data-reveal-ready] .reveal:not([data-revealed]):not([id]) {
+  transform: translateY(24px);
+}
+
+/* Reducerad rörelse stänger av varje transition och animation på sidan,
+ * länkarnas färgövergång och filtrets faser inräknade, och visar varje
+ * .reveal oavsett attribut. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 /* SKIP-LÄNKEN syns när den får fokus. Beslutat i ARKITEKTUR.md, "Skip-länk och
  * aria-current": den döljs med samma .visually-hidden som headerns namn och
  * blir synlig vid :focus.
@@ -200,8 +243,7 @@ section[id] + section[id] {
  * når den med tangentbord, och :focus-visible är webbläsarens heuristik för
  * när den TROR att markeringen behövs. Här vet vi att den behövs.
  *
- * EJ I ARKITEKTUR: måtten, placeringen och lagernivån. Frågan är hur länken
- * ska se ut och var den ska ligga när den väl syns.
+ * Måtten, placeringen och lagernivån: beslutat i ARKITEKTUR.md, M19 punkt 10.
  *
  * z-index måste vara HÖGRE än --z-header: headern är sticky, och länken ligger
  * före den i DOM, så vid samma lagernivå hade headern målat över den. Det är

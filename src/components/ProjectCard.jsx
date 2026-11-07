@@ -1,6 +1,7 @@
 import { PROJECT_IMAGE_WIDTHS } from '../data/projects.js';
 import { cardIds, projectHref } from '../lib/projectRules.js';
 import typeStyles from '../styles/type.module.css';
+import Reveal from './Reveal.jsx';
 import styles from './ProjectCard.module.css';
 
 /* Ett projektkort. Beslutat i ARKITEKTUR.md: M4 "Kortets markup".
@@ -16,7 +17,7 @@ import styles from './ProjectCard.module.css';
  *
  * INGET <header> eller <footer> här inne: den globala sidmarginalregeln i
  * global.css träffar de elementselektorerna. */
-function ProjectCard({ project }) {
+function ProjectCard({ project, index }) {
   const { slug, title, category, status, description, tech, image } = project;
   const href = projectHref(project);
 
@@ -85,9 +86,13 @@ function ProjectCard({ project }) {
   );
 
   /* slug ligger på <li> som id: en länk till ett projekt ska landa på det
-   * enskilda projektet. */
+   * enskilda projektet. <li> renderas av Reveal (ARKITEKTUR.md, M12), med
+   * modulklassen och id:t kvar, så att ankarmålet och scroll-marginalen följer
+   * med. id:t på detta element gör att det bara tonas i opacitet, så ett
+   * ankarhopp landar rätt (ARKITEKTUR.md, M12b). index är kortets stegnummer
+   * i staggern och sätts av anroparen. */
   return (
-    <li className={styles.item} id={ids.item}>
+    <Reveal as="li" index={index} className={styles.item} id={ids.item}>
       {href !== null ? (
         /* Ny flik, eftersom målet ligger utanför portfolion. rel: utan den får
            målsidan en referrer och tillgång till window.opener. */
@@ -104,7 +109,7 @@ function ProjectCard({ project }) {
       ) : (
         <div className={styles.card}>{content}</div>
       )}
-    </li>
+    </Reveal>
   );
 }
 

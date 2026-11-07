@@ -44,10 +44,9 @@ const READING_BAND = 8;
  *
  * ~~Tidigare regel: den sektion som täckte flest pixlar av vyporten.~~ UPPHÄVD
  * 2026-10-07. Den följde sin egen logik, men logiken var fel: den fungerar bara
- * så länge sektionerna är ungefär lika höga. Uppmätt fel vid scrollY 676, med
- * projektsektionens överkant precis under headern: projects visade 351 px och
- * skills 485, så skills vann. Man klickade "Projekt" och navet lyste
- * "Kompetenser".
+ * så länge sektionerna är ungefär lika höga. Med sektioner av olika höjd vann
+ * den sektion som täckte mest av vyporten, inte den man läste. Man klickade
+ * "Projekt" och navet lyste "Kompetenser".
  *
  * Läsraden är OBEROENDE AV SEKTIONSHÖJD och svarar på det en läsare menar med
  * "var är jag" - det som står överst, inte det som råkar täcka flest pixlar.
@@ -67,6 +66,10 @@ function useCurrentSection(ids) {
   const [currentId, setCurrentId] = useState(null);
 
   useEffect(() => {
+    /* Utan observer markeras ingen länk, och sidan fungerar: inga element
+     * läses och inga lyssnare registreras. Beslutat i ARKITEKTUR.md: M12b. */
+    if (!('IntersectionObserver' in window)) return undefined;
+
     const elements = ids
       .map((id) => document.getElementById(id))
       .filter((el) => el !== null);
@@ -135,7 +138,7 @@ function useCurrentSection(ids) {
       }
 
       /* Itererar ids i SIDANS ordning och låter den SISTA som skär bandet
-       * vinna. Normalt skär bara en sektion ett 8 px-band; de få pixlar där
+       * vinna. Normalt skär bara en sektion det tunna bandet (`READING_BAND`); de få pixlar där
        * två gör det är precis vid en gräns, och då är den senare den man är på
        * väg in i. Ordningen är alltså avgörandet, inte Map-ordningen, som hade
        * berott på i vilken ordning webbläsaren råkade rapportera. */
@@ -150,7 +153,7 @@ function useCurrentSection(ids) {
 
     /* Bandet räknas i pixlar ur vyportens höjd och måste därför byggas om när
      * höjden ändras. rootMargin tar varken calc() eller en blandning av "100 %
-     * minus 64 px", och en procentsats i underkanten hade gett ett band som
+     * minus headerns höjd", och en procentsats i underkanten hade gett ett band som
      * blir NEGATIVT på låga vyporter - alltså ingen skärning alls och ingen
      * markerad länk, tyst. */
     function build() {
@@ -250,12 +253,12 @@ function Header() {
             Beslutat i ARKITEKTUR.md, "Headerns logotyp": loggan är EN länk som
             innehåller två saker - det beskurna JQ-monogrammet som ikon och
             namnet som riktig HTML-text. Lockupen logo.png visas inte längre i
-            headern; dess ordbild var oläslig i 44 px.
+            headern; dess ordbild var oläslig i ikonens storlek.
 
             Ikonen är den TAJTA, icke-kvadratiska varianten (ARKITEKTUR.md,
-            "Ikonens optiska storlek"). width/height är filens egna mått
-            (96 x 72) så att ingen layout shift uppstår; CSS skalar den till
-            36 px höjd, alltså 48 x 36 px på skärmen. Den kvadratiska varianten
+            "Ikonens optiska storlek"). width/height är filens egna mått, så
+            att ingen layout shift uppstår. CSS sätter höjden ("Ikonens
+            optiska storlek"). Den kvadratiska varianten
             används fortfarande där kvadrat KRÄVS: favicon och apple-touch.
 
             Ikonen har alt="" + aria-hidden i ALLA bredder, så att länkens
@@ -267,11 +270,9 @@ function Header() {
             className={styles.logo}
             src="/assets/logo-mark-tight-96.png"
             srcSet="/assets/logo-mark-tight-96.png 96w, /assets/logo-mark-tight-192.png 192w"
-            /* sizes = ikonens CSS-bredd, nu 48px enligt ARKITEKTUR.md,
-               "Ikonens optiska storlek": det är det som får w-beskrivningarna
-               att landa rätt - 1x och 2x behöver 48 respektive 96 px och får
-               96w, 3x-4x behöver 144-192 px och får 192w. Utan sizes antar
-               webbläsaren 100vw och hämtar alltid den största filen. */
+            /* sizes = ikonens CSS-bredd ("Ikonens optiska storlek"). Utan
+               sizes antar webbläsaren 100vw och hämtar alltid den största
+               filen. */
             sizes="48px"
             alt=""
             aria-hidden="true"

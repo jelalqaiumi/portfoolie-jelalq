@@ -3,8 +3,9 @@
  * (ARKITEKTUR.md, "Var sidmarginalen bor"). */
 
 /* KORTRUTNÄTET. Beslutat i ARKITEKTUR.md, "A6 - Kortet, chipset och rutnätet";
- * deklarationerna i den här filen står där tecken för tecken, och
- * kolumnantalen ligger på projektets befintliga brytpunkter - inga nya tal.
+ * rutnätets och kortets deklarationer står där tecken för tecken (kortrubriken
+ * följer M15, se nedan), och kolumnantalen ligger på projektets befintliga
+ * brytpunkter - inga nya tal.
  *
  * minmax(0, 1fr) i ALLA tre lägena, enspaltsläget inräknat, aldrig bara 1fr.
  * Ett grid-spårs automatiska minimum är min-content, så utan den växer spåret
@@ -37,11 +38,11 @@
   border-radius: var(--radius-md);
 }
 
-/* Kortrubriken är en grad lägre än h3:s globala grad, utan versaler, utan
- * spärrning och utan dämpad färg: nio kortrubriker i ett rutnät ska inte
- * konkurrera med sektionens egen rubrik. Beslutat i ARKITEKTUR.md, "A6". */
+/* Kortrubriken får sin textstil från typklassen i JSX, och klassen här bär
+ * bara avståndet till chipsen under. Den får aldrig sätta en egenskap som
+ * typklassen sätter, eftersom buntordningen då avgör vilken som vinner.
+ * Beslutat i ARKITEKTUR.md, M15 och M1 "Hur stilen når elementet". */
 .cardTitle {
-  font-size: var(--text-lg);
   margin-bottom: var(--space-4);
 }
 

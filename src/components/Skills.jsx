@@ -1,15 +1,11 @@
 import Section from './Section.jsx';
 import SkillChip from './SkillChip.jsx';
+import Reveal, { REVEAL_INDEX_MAX } from './Reveal.jsx';
 import { skillGroups } from '../data/skills.js';
+import { renderedSkillGroups } from '../lib/skillRules.js';
 import { sections, SKILLS_ID } from '../data/sections.js';
+import typeStyles from '../styles/type.module.css';
 import styles from './Skills.module.css';
-
-/* Obligatoriskt textfält ur src/data/: ett fält med bara blanksteg är lika
- * tomt som ett som saknas (LARDOMAR.md 2026-10-02). Samma uttryck används i
- * scripts/validate-data.mjs. */
-function hasText(value) {
-  return typeof value === 'string' && value.trim() !== '';
-}
 
 function Skills() {
   /* Rubriken och id:t hämtas ur sections.js, som är enda sanningskällan för
@@ -19,18 +15,11 @@ function Skills() {
    * utan att sektionen står i datan. */
   const section = sections.find((s) => s.id === SKILLS_ID);
 
-  /* Hoppa över ofullständiga poster i stället för att rendera tomma element
-   * (ARKITEKTUR.md, rättelse 3). En grupp utan id/title eller utan kompetenser
-   * renderas inte alls, och en kompetens utan name blir inget chip - inte ett
-   * tomt. Filtret ligger här, i den komponent som läser datan, så att
-   * React-nyckeln name aldrig kan bli undefined. */
-  const groups = skillGroups.filter(
-    (group) =>
-      hasText(group?.id) &&
-      hasText(group?.title) &&
-      Array.isArray(group?.skills) &&
-      group.skills.some((skill) => hasText(skill?.name)),
-  );
+  /* Vilka grupper och kompetenser som renderas avgörs i src/lib/skillRules.js
+   * (ARKITEKTUR.md, M14b), som nyckeltalen också läser. Komponenten renderar det
+   * den får: varje grupp har text i id och title, och varje kompetens har ett
+   * name med text, så React-nyckeln name kan aldrig bli tom. */
+  const groups = renderedSkillGroups(skillGroups);
 
   return (
     /* Ett kort per grupp, gruppnamnet som h3 och kompetenserna som chips i en
@@ -42,22 +31,25 @@ function Skills() {
        ikoner", som också stänger dörren för ett ikonberoende. */
     <Section id={section?.id} title={section?.label}>
       <div className={styles.grid}>
-        {groups.map((group) => (
-          <div className={styles.card} key={group.id}>
-            <h3 className={styles.cardTitle} id={group.id}>
+        {/* Varje kort tonar in med sitt stegnummer, taket ur Reveal.jsx
+            (ARKITEKTUR.md, M12 "Staggern"). */}
+        {groups.map((group, i) => (
+          <Reveal className={styles.card} key={group.id} index={Math.min(i, REVEAL_INDEX_MAX)}>
+            {/* Gruppnamnet i mono-eyebrow-stilen, typklassen först (ARKITEKTUR.md,
+                M15 och M1). Elementet är fortfarande h3, så rubrikordningen
+                ändras inte. */}
+            <h3 className={`${typeStyles.meta} ${styles.cardTitle}`} id={group.id}>
               {group.title}
             </h3>
 
             {/* Varje kort är en riktig lista: skärmläsaren annonserar
                 antalet, vilket är den enda "räkning" sidan behöver. */}
             <ul className={styles.chips}>
-              {group.skills
-                .filter((skill) => hasText(skill?.name))
-                .map((skill) => (
-                  <SkillChip key={skill.name} name={skill.name} />
-                ))}
+              {group.skills.map((skill) => (
+                <SkillChip key={skill.name} name={skill.name} />
+              ))}
             </ul>
-          </div>
+          </Reveal>
         ))}
       </div>
     </Section>

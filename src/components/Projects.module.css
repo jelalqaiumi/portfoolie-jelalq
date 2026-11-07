@@ -2,13 +2,21 @@
  * kommer från <Section> respektive global.css - modulen får ALDRIG sätta
  * padding-inline (ARKITEKTUR.md, "Var sidmarginalen bor"). */
 
-/* EJ I ARKITEKTUR: vilken typografi det tomma läget ska ha.
+/* Beslutat i ARKITEKTUR.md: M19 punkt 8.
  * En lugn förklarande rad direkt under sektionsrubriken som läses som
  * brödtext, inte som rubrik. Alla värden är tokens, inga lösa tal. */
 .empty {
   font-size: var(--text-base);
   color: var(--ink-muted);
   max-width: var(--measure);
+}
+
+/* Beslutat i ARKITEKTUR.md: M11b */
+/* Raden hör till panelen ovanför och står därför närmare den än korten.
+ * Bara marginaler här: typografin kommer från typklassen i JSX. */
+.liveRow {
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-5);
 }
 
 /* Rutnätet 3/2/1. Beslutat i ARKITEKTUR.md: M4 "Rutnätet".
@@ -28,4 +36,41 @@
 
 @media (min-width: 900px) {
   .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Faserna vid filtrering. Beslutat i ARKITEKTUR.md, M12 "In- och uttoning vid
+ * filtrering". Uttoningen är kort och inttoningen längre, och Projects.jsx
+ * byter korten först när uttoningen är klar. Reducerad rörelse stänger av båda
+ * i global.css. */
+.grid {
+  opacity: 1;
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+
+.grid[data-phase='out'] {
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+/* Beslutat i ARKITEKTUR.md: M11b */
+/* Stycket har samma ton som det tomma läget, och knappen står under det.
+ * Knappen är en sekundär åtgärd med samma pill-form och kant som segmenten,
+ * så att den läses som en kontroll och inte som brödtext. */
+.noMatch {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+}
+
+.clear {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-weight: var(--weight-semibold);
 }

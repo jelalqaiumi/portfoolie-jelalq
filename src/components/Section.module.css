@@ -4,6 +4,16 @@
   /* Sidomarginalen kommer från den gemensamma regeln i global.css. */
 }
 
+/* Sektionsetiketten ovanför h2. Textstilen kommer från typklassen i JSX, så
+ * klassen här får inte sätta någon egenskap som typklassen sätter (ARKITEKTUR.md,
+ * M1 "Hur stilen når elementet"). */
+/* Beslutat i ARKITEKTUR.md: M13 */
+/* Etiketten hör till rubriken under sig och står tätare mot den än rubriken
+ * mot innehållet. */
+.label {
+  margin-bottom: var(--space-3);
+}
+
 .title {
   margin-bottom: var(--space-5);
 }

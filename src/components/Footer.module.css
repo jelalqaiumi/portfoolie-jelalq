@@ -1,8 +1,8 @@
 .footer {
-  /* Beslutat i ARKITEKTUR.md, "Sektionsavgränsare": footerns egen border-top
-   * står kvar och bär linjen mellan sista sektionen och footern. <footer> är
-   * ingen section[id], så syskonregeln i global.css träffar den inte och
-   * linjen kan inte dubbleras.
+  /* Avdelaren överst. Beslutat i ARKITEKTUR.md, M16 och "Sektionsavgränsare":
+   * footerns egen border-top bär linjen mellan sista sektionen och footern.
+   * <footer> är ingen section[id], så syskonregeln i global.css träffar den
+   * inte och linjen kan inte dubbleras.
    *
    * Bredd och färg MÅSTE vara identiska med den regeln - annars syns två
    * olika linjetoner på samma sida. */
@@ -16,7 +16,63 @@
   margin-inline: auto;
 }
 
-.text {
+/* Märket med taglinen, och länkkolumnen. Staplade under sm, sida vid sida
+ * från sm. Spåren är minmax(0, ...) och barnen min-width: 0, så att en lång
+ * sträng radbryts i stället för att spräcka golvet; radbrytningen själv ärvs
+ * från body i global.css (LARDOMAR.md 2026-10-02).
+ * Beslutat i ARKITEKTUR.md: M19 punkt 6 */
+.top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (min-width: 600px) {
+  .top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+  }
+}
+
+.brand,
+.column {
+  min-width: 0;
+}
+
+.logo {
+  height: 36px;
+  width: auto;
+}
+
+/* Text: --ink-muted på --bg. Beslutat i ARKITEKTUR.md, M16. */
+.tagline {
+  margin-top: var(--space-3);
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.columnLabel {
+  margin-bottom: var(--space-3);
+}
+
+.links {
+  display: grid;
+  gap: var(--space-2);
+}
+
+/* Beslutat i ARKITEKTUR.md: M19 punkt 6 */
+.link {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.link:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.copyright {
+  margin-top: var(--space-6);
   color: var(--ink-muted);
   font-size: var(--text-sm);
 }

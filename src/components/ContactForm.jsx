@@ -21,7 +21,7 @@ const MESSAGE_MAX = 5000;
  * ======================================================================== */
 const FIELDS = [
   { name: 'name', label: 'Namn', type: 'text', required: true, placeholder: 'Skriv in ditt namn' },
-  { name: 'email', label: 'E-post', type: 'email', required: true, placeholder: 'Skriv in din e-postadress' },
+  { name: 'email', label: 'Mejl', type: 'email', required: true, placeholder: 'Skriv in din mejladress' },
   { name: 'company', label: 'Företag/Organisation', type: 'text', required: false, placeholder: 'Skriv in ditt företag/organisation' },
   { name: 'subject', label: 'Ämne för förfrågan', type: 'text', required: true, placeholder: 'Skriv in ditt ämne för förfrågan' },
   { name: 'message', label: 'Meddelande', type: 'textarea', required: true, placeholder: 'Skriv in ditt meddelande' },
@@ -48,9 +48,9 @@ function validate(values) {
   const parts = email.split('@');
 
   if (email === '') {
-    errors.email = 'Skriv din e-postadress.';
+    errors.email = 'Skriv din mejladress.';
   } else if (parts.length !== 2 || parts[0] === '' || parts[1] === '' || !parts[1].includes('.')) {
-    errors.email = 'Kontrollera e-postadressen. Den ska se ut som namn@exempel.se.';
+    errors.email = 'Kontrollera mejladressen. Den ska se ut som namn@exempel.se.';
   }
 
   if (values.subject.trim() === '') {
@@ -200,7 +200,7 @@ function ContactForm() {
     captcha: 'Bekräfta att du är människa innan du skickar.',
     sending: 'Skickar …',
     sent: 'Tack! Jag återkommer så snart jag kan.',
-    error: `Något gick fel – försök igen, eller mejla ${contact.email} direkt.`,
+    error: `Något gick fel. Försök igen, eller mejla ${contact.email} direkt.`,
   }[state];
 
   return (
@@ -214,7 +214,7 @@ function ContactForm() {
         <span className={styles.required} aria-hidden="true">*</span> obligatoriskt fält
       </p>
 
-      <form className={styles.form} onSubmit={handleSubmit} noValidate aria-busy={sending}>
+      <form onSubmit={handleSubmit} noValidate aria-busy={sending}>
         {FIELDS.map((f) => {
           const invalid = Boolean(errors[f.name]);
 
@@ -278,10 +278,15 @@ function ContactForm() {
         <div className={styles.captcha}>
           {/* reCaptchaCompat={false} så att paketet inte lägger ut globala
               grecaptcha-stubbar - sidan använder ingen reCAPTCHA.
-              Token hamnar i h-captcha-response i kroppen ovan. */}
+              Token hamnar i h-captcha-response i kroppen ovan.
+
+              size="compact": den normala widgeten går inte att krympa och
+              ryms inte i panelen på en smal skärm. Det är en presentationsprop
+              och ändrar ingen formulärlogik (ARKITEKTUR.md, M16). */}
           <HCaptcha
             ref={captchaRef}
             sitekey={contact.form.hcaptchaSiteKey}
+            size="compact"
             reCaptchaCompat={false}
             onVerify={(token) => {
               setCaptchaToken(token);

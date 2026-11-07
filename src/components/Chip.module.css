@@ -1,0 +1,23 @@
+/* Det gemensamma chipset. Beslutat i ARKITEKTUR.md: M15 "Chip.module.css".
+ *
+ * min-height och inte height: ett långt namn får radbryta inuti chipset i
+ * stället för att flöda ut ur det. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-chip);
+  background-color: transparent;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-mono);
+}
+
+button.chip[aria-pressed='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+}

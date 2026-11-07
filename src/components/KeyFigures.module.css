@@ -1,0 +1,35 @@
+/* Nyckeltalsraden i Om mig. Beslutat i ARKITEKTUR.md, M14 "Nyckeltalen".
+ *
+ * Etiketten får sin textstil från typklassen i JSX, så ingen klass här får sätta
+ * en egenskap som typklassen sätter (ARKITEKTUR.md, M1 "Hur stilen når
+ * elementet"). Sidomarginalen kommer från global.css och sätts aldrig här. */
+
+/* Beslutat i ARKITEKTUR.md: M14b */
+/* Invarianten: en flexrad med text, så raden får bryta och varje tal får bli
+ * smalare än sitt innehåll (LARDOMAR.md 2026-10-02, golvet utan horisontell scroll). */
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5) var(--space-7);
+  margin-top: var(--space-7);
+}
+
+/* Siffran står överst på skärmen men efter etiketten i DOM, så att etiketten
+ * läses först (ARKITEKTUR.md, M14). */
+/* Beslutat i ARKITEKTUR.md: M14b */
+.item {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/* Beslutat i ARKITEKTUR.md: M14b */
+/* Invarianten: siffran är ensam på sin rad, så radhöjden avgör bara luften kring
+ * den och ska vara rubrikernas täta radhöjd, inte brödtextens. */
+.value {
+  font-family: var(--font-heading);
+  font-size: var(--text-figure);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+}

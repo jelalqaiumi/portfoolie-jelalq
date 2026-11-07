@@ -1,0 +1,111 @@
+/* Filterpanelen. Beslutat i ARKITEKTUR.md: M11 "Panelens och kontrollernas
+ * deklarationer".
+ *
+ * Panelen och segmentraden är grid respektive flex med text i, så spåret har
+ * minimum 0 och flexraden min-width 0 ("360 px-golvet och grid"). */
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.segments,
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.segment {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 40px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--ink-muted);
+  font: inherit;
+  font-weight: var(--weight-semibold);
+  /* Beslutat i ARKITEKTUR.md: M11b */
+  /* Knappen har fast höjd och en etikett ur datan, så den får aldrig radbryta
+   * och aldrig bli bredare än raden: den krymper, och etiketten klipps med
+   * ellips medan antalet alltid syns. Hela etiketten står kvar i knappens
+   * tillgängliga namn. */
+  max-width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.segment[aria-pressed='true'] {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink-inverse);
+}
+
+.segment:disabled {
+  color: var(--ink-subtle);
+  border-color: var(--line);
+}
+
+/* Beslutat i ARKITEKTUR.md: M11b */
+/* Etiketten är den del som får krympa, antalet krymper aldrig. */
+.label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.count {
+  flex-shrink: 0;
+}
+
+.search {
+  position: relative;
+  min-width: 0;
+}
+
+/* Beslutat i ARKITEKTUR.md: M11b */
+/* Ikonen ligger ovanpå fältets vänstra utfyllnad, lodrätt centrerad, och tar
+ * inte emot klick, så att ett klick på den hamnar i fältet. */
+.search > svg {
+  position: absolute;
+  inset-block: 0;
+  left: var(--space-3);
+  margin-block: auto;
+  color: var(--ink-muted);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  height: 40px;
+  padding: 0 var(--space-4) 0 40px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background-color: var(--bg);
+  color: var(--ink);
+  font: inherit;
+}
+
+/* Beslutat i ARKITEKTUR.md: M11b */
+/* Webbläsarens egen platshållarfärg klarar inte AA mot fältets botten. Samma
+ * token som formulärets platshållare, och full opacitet, eftersom Firefox
+ * annars sänker den. */
+.searchInput::placeholder {
+  color: var(--ink-subtle);
+  opacity: 1;
+}
+
+@media (min-width: 900px) {
+  .panel {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 280px);
+    align-items: start;
+  }
+}

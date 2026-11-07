@@ -39,7 +39,7 @@
 /** @type {About} */
 export const about = {
   paragraphs: [
-    'Jag är systemutvecklare och gillar att bygga system som gör vardagen enklare. Det roligaste med utveckling är problemlösningen: när något krånglar gräver jag tills jag förstår varför och hittar en lösning som håller. Ett exempel är Hem och Ekonomi, en webb- och mobilapp för hushållets ekonomi som jag byggt med C#/.NET, React och React Native. Jag är i början av min karriär och utmanar mig gärna med nya saker för att växa. Jag bor i Motala och är öppen för att flytta för rätt tjänst.',
+    'Jag är systemutvecklare och gillar att bygga system som gör vardagen enklare. Det roligaste med utveckling är problemlösningen: när något krånglar gräver jag tills jag förstår varför och hittar en lösning som håller. Ett exempel är Hem och Ekonomi, en webbapp och mobilapp för hushållets ekonomi som jag byggt med C#/.NET, React och React Native. Jag är i början av min karriär och utmanar mig gärna med nya saker för att växa. Jag bor i Motala och är öppen för att flytta för rätt tjänst.',
   ],
 
   /* EN LÄNK INNE I TEXTEN, utan att texten innehåller någon markering.

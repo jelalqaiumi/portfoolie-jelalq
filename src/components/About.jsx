@@ -1,4 +1,6 @@
 import Section from './Section.jsx';
+import Reveal from './Reveal.jsx';
+import KeyFigures from './KeyFigures.jsx';
 import { isComplete } from '../lib/projectRules.js';
 import { about } from '../data/about.js';
 import { projects } from '../data/projects.js';
@@ -62,8 +64,9 @@ function About() {
 
   return (
     <Section id={section?.id} title={section?.label}>
-      {/* Ett <p> per post, inget omslag. Beslutat i ARKITEKTUR.md,
-          "src/data/about.js - Om mig".
+      {/* Ett <p> per post, och inget omslag med egen stil. Beslutat i
+          ARKITEKTUR.md, "src/data/about.js - Om mig". Det enda omslaget är
+          Reveal (M12), som inte sätter något mått.
 
           Nyckeln är styckets egen text. Det finns inget id att använda, och
           index som nyckel är projektets enda ställe där det hade varit
@@ -71,28 +74,37 @@ function About() {
           bara när Jelal skriver om stycket, vilket är precis när React ska
           montera om det. Skriver han två identiska stycken varnar React i
           utvecklingsläge; det är en synlig påminnelse, inte ett fel på sidan. */}
-      {paragraphs.map((paragraph) => {
-        const parts = linked ? splitOnce(paragraph, target.phrase) : null;
+      {/* Texten tonar in som en enhet (ARKITEKTUR.md, M12). Omslaget har
+          ingen egen stil: måttet sitter kvar på varje stycke. Utan stycken
+          renderas inget omslag. */}
+      {paragraphs.length > 0 && (
+        <Reveal>
+          {paragraphs.map((paragraph) => {
+            const parts = linked ? splitOnce(paragraph, target.phrase) : null;
 
-        return (
-          <p className={styles.paragraph} key={paragraph}>
-            {parts === null ? (
-              paragraph
-            ) : (
-              <>
-                {parts.before}
-                {/* Frasen står INTE i den här filen. Både texten som visas och
-                    slug som länkas hämtas ur datan, så ett omskrivet stycke kan
-                    aldrig tappa länken tyst. */}
-                <a className={styles.link} href={`#${target.projectSlug}`}>
-                  {target.phrase}
-                </a>
-                {parts.after}
-              </>
-            )}
-          </p>
-        );
-      })}
+            return (
+              <p className={styles.paragraph} key={paragraph}>
+                {parts === null ? (
+                  paragraph
+                ) : (
+                  <>
+                    {parts.before}
+                    {/* Frasen står INTE i den här filen. Både texten som visas och
+                        slug som länkas hämtas ur datan, så ett omskrivet stycke kan
+                        aldrig tappa länken tyst. */}
+                    <a className={styles.link} href={`#${target.projectSlug}`}>
+                      {target.phrase}
+                    </a>
+                    {parts.after}
+                  </>
+                )}
+              </p>
+            );
+          })}
+        </Reveal>
+      )}
+      {/* Nyckeltalen står under texten (ARKITEKTUR.md, M14 "Placering"). */}
+      <KeyFigures />
     </Section>
   );
 }

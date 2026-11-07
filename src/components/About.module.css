@@ -23,8 +23,7 @@
   font-size: var(--text-base);
 }
 
-/* EJ I ARKITEKTUR: hur en länk inne i brödtexten ska se ut.
- * OPEN-KEY: about-inline-link
+/* Beslutat i ARKITEKTUR.md: M19 punkt 4
  *
  * Invarianterna utseendet måste hålla, oavsett vad som beslutas:
  *   - färg ensam får inte vara det som skiljer länken från texten runt den

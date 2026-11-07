@@ -1,5 +1,5 @@
 import { HERO_ID, PROJECTS_ID, CONTACT_ID } from '../data/sections.js';
-import { profile } from '../data/profile.js';
+import { profile, HERO_IMAGE_WIDTHS } from '../data/profile.js';
 import styles from './Hero.module.css';
 import typeStyles from '../styles/type.module.css';
 
@@ -12,14 +12,14 @@ const eyebrowText = 'Portfolio';
  * ⚠️ FÖRSLAG - VÄNTAR PÅ JELALS GODKÄNNANDE. Texten är uppdragets exempeltext
  * ("t.ex.") och inte Jelals egna ord. Ingen agent ändrar den utan hans svar;
  * när han svarat byts strängen och denna rad tas bort. */
-const headline = 'Jag bygger webb- och mobilappar, från gränssnitt till API.';
+const headline = 'Jag bygger webbappar och mobilappar, från gränssnitt till API.';
 
 /* Ingressen är Jelals egna ord och bara hans att ändra.
  *
  * EN sträng, aldrig konkatenerad: en konkatenering är det enklaste sättet att
  * tappa ett mellanslag mitt i en text som ska vara exakt. */
 const intro =
-  'Jag bygger webb- och mobilappar i React, React Native och .NET, hela vägen från databas till app.';
+  'Jag bygger webbappar och mobilappar i React, React Native och .NET, hela vägen från databas till app.';
 
 /* Knapptexterna är också Jelals egna ord. De står som konstanter här, intill de
  * andra texterna, så att varje sträng han äger går att jämföra mot
@@ -27,13 +27,15 @@ const intro =
 const primaryActionText = 'Se mina projekt';
 const secondaryActionText = 'Kontakta mig';
 
-/* sizes är cirkelns tak i varje läge: cirkelns renderade bredd når aldrig över
- * taket, så ett större sizes-värde hade bara hämtat en större fil än som visas.
- * Beslutat i ARKITEKTUR.md, "M10 - Hero".
+/* sizes beskriver bildens RITADE bredd, inte lådans: object-fit: cover ritar
+ * bilden bredare än lådan när lådan är smalare än bildens format, och då ska
+ * webbläsaren välja fil efter den bredd som faktiskt ritas. Skälet står i
+ * ARKITEKTUR.md, M10c och M10d.
  *
- * Samma sträng till <source> och <img>: olika sizes på de två hade kunnat få
- * dem att välja olika bredder. */
-const IMAGE_SIZES = '(min-width: 900px) 420px, 360px';
+ * Samma sträng och samma srcset står i preloaden i index.html. Ändras det ena
+ * ändras det andra, i samma redigering - annars hämtas bilden två gånger. */
+const HERO_IMAGE_SIZES = '(min-width: 900px) 100vw, 178vw';
+const heroImageSrc = (width) => `/assets/hero/hero-${width}.webp`;
 
 function Hero() {
   return (
@@ -41,6 +43,27 @@ function Hero() {
      * <h1> och ingen <h2>-rubrik. Sidomarginalen kommer från den gemensamma
      * regeln i global.css - modulen äger bara centreringen i .inner. */
     <section id={HERO_ID} className={styles.hero}>
+      {/* Porträttet är heros profilbild. Gråskalan är inbakad i filerna av
+          bildskriptet, så ingen CSS-filter behövs här.
+
+          Sektionens FÖRSTA barn, så att läsordningen är densamma som den
+          visuella på mobil: porträttet först och rubriken under. alt är
+          informativ: bilden visar vem sidan handlar om.
+
+          loading="eager": bilden är det största elementet i första skärmen och
+          ska hämtas direkt. width och height är källans format, så att ingen
+          layoutförskjutning uppstår. Beslutat i ARKITEKTUR.md, M10c och M10d. */}
+      <img
+        className={styles.backdrop}
+        src={heroImageSrc(HERO_IMAGE_WIDTHS[1])}
+        srcSet={HERO_IMAGE_WIDTHS.map((w) => `${heroImageSrc(w)} ${w}w`).join(', ')}
+        sizes={HERO_IMAGE_SIZES}
+        width="1672"
+        height="941"
+        alt="Porträtt av Jelal Qaiumi"
+        loading="eager"
+        fetchPriority="high"
+      />
       <div className={styles.inner}>
         <div className={styles.text}>
           <p className={typeStyles.eyebrow}>{eyebrowText}</p>
@@ -68,37 +91,6 @@ function Hero() {
               {secondaryActionText}
             </a>
           </div>
-        </div>
-
-        {/* Gråskalan och den grå tonplattan ligger i CSS, inte i bildfilen,
-            så att tonen kan justeras utan att bilderna genereras om.
-            Tonplattan är .media::after i modulen.
-
-            <picture> med en WebP-source och JPEG som fallback: webbläsaren
-            laddar exakt EN fil. width/height är den valda src-filens egna mått
-            så att ingen layout shift uppstår.
-
-            Ingen loading="lazy": porträttet ligger i första skärmen från
-            brytpunkten, och en lat bild där fördröjer det största elementet. */}
-        <div className={styles.media}>
-          <picture>
-            <source
-              type="image/webp"
-              srcSet="/assets/profile/profile-400.webp 400w, /assets/profile/profile-800.webp 800w, /assets/profile/profile-1200.webp 1200w"
-              sizes={IMAGE_SIZES}
-            />
-            <img
-              className={styles.image}
-              src="/assets/profile/profile-800.jpg"
-              srcSet="/assets/profile/profile-400.jpg 400w, /assets/profile/profile-800.jpg 800w, /assets/profile/profile-1200.jpg 1200w"
-              sizes={IMAGE_SIZES}
-              width="800"
-              height="1000"
-              /* Beskrivande alt, eftersom bilden bär information: den visar vem
-               * sidan handlar om. Beslutat i ARKITEKTUR.md, "M10 - Hero". */
-              alt="Porträtt av Jelal Qaiumi"
-            />
-          </picture>
         </div>
       </div>
     </section>

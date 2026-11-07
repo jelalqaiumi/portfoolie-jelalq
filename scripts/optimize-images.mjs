@@ -1,29 +1,25 @@
 /**
- * Engangsskript: skalar ned och komprimerar profilbilden till webbklara varianter.
+ * Engangsskript: genererar heros svartvita bild och monogram-ikonerna.
  *
  *   npm run optimize:images
  *
  * Kors manuellt. Ingar INTE i `npm run build`.
  *
  * KALLBILDERNA ligger i `assets-source/`, UTANFOR public/. De LASES bara och
- * skrivs aldrig over. Att de lag i `public/` var ett strukturfel: public/ ar
- * Vites katalog for filer som kopieras rakt ut i leveransen, sa originalen
- * publicerades anda - 4,40 MB av ett dist/ pa 4,9 MB, utan att nagon kod
- * refererade dem.
+ * skrivs aldrig over. public/ ar Vites katalog for filer som kopieras rakt ut
+ * i leveransen, sa en kallbild dar hade publicerats utan att nagon kod
+ * refererade den.
  *
  * Allt genererat hamnar i `public/assets/` och SKA publiceras.
  *
  * INGENTING SKRIVS TILL DISK INNAN SAMTLIGA GRINDAR PASSERAT. Varje artefakt
  * kodas till en buffert, alla kontroller kors pa bufferten, och forst darefter
  * skrivs filerna i ett svep langst ner. "AVBRYTER" betyder darmed att
- * ingenting andrades. Tidigare lag alla grindar EFTER toFile(): en korning som
- * avbrot lamnade kvar elva filer pa disk, och de tajta headerfilerna skrevs
- * ~110 rader fore den kritiska kontrollen av att ingen pixel med alfa > 0
- * finns nedanfor market.
+ * ingenting andrades.
  *
- * Gratonen och den gra tonplattan bakas medvetet INTE in har - de gors i CSS i
- * paket 3, sa att tonen kan justeras efter Leverans 1 utan att nagon bild
- * behover genereras om.
+ * GRATONEN BAKAS IN i heros filer med sharp grayscale(). Ingen CSS-filter
+ * behovs, och grinden nedan bevisar att varje pixel ar neutral. Skalet star i
+ * ARKITEKTUR.md, M10c.
  *
  * OM UTSKRIFTERNA: varje rad som visar ett uppmatt varde intill ett forvantat
  * ar markt antingen `GRIND:` (foljs av ett fail() om den inte haller) eller
@@ -37,71 +33,35 @@ import sharp from 'sharp';
 import { mkdir, readdir, stat, writeFile } from 'node:fs/promises';
 import { dirname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { HERO_IMAGE_WIDTHS } from '../src/data/profile.js';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 /* Kallbilderna. Utanfor public/, publiceras aldrig, skrivs aldrig over. */
 const ASSETS_SOURCE_DIR = resolve(ROOT, 'assets-source');
-const SOURCE = resolve(ASSETS_SOURCE_DIR, 'profile.jpg');
+const HERO_SOURCE = resolve(ASSETS_SOURCE_DIR, 'hero-portrait.jpg');
 const LOGO_SOURCE = resolve(ASSETS_SOURCE_DIR, 'logo.png');
 
 /** Alla kanda kallor. Varje utdatasokvag provas mot HELA listan. */
-const SOURCES = [SOURCE, LOGO_SOURCE];
+const SOURCES = [HERO_SOURCE, LOGO_SOURCE];
 
-const OUT_DIR = resolve(ROOT, 'public/assets/profile');
+const OUT_DIR = resolve(ROOT, 'public/assets/hero');
 
-/** Forvantade matt efter .rotate(). Avvikelse = avbryt, beskar aldrig blint. */
-const EXPECTED_WIDTH = 4688;
-const EXPECTED_HEIGHT = 5051;
+/** Forvantade matt efter .rotate(). Avvikelse = avbryt. */
+const EXPECTED_WIDTH = 1672;
+const EXPECTED_HEIGHT = 941;
+
+/** Maxstorlek i kB per bredd, enligt ARKITEKTUR.md, M10c. */
+const HERO_SIZE_LIMIT_KB = { 960: 60, 1440: 110, 1672: 140 };
 
 /**
- * Beskarning till 4:5 staende (3520 / 4400 = 0,8 exakt).
- *
- * ARKITEKTUR.md angav `left: 584, top: 0` som UTGANGSLAGE, uttryckligen raknat
- * pa bildens matt och inte pa en matning av var motivet sitter, med instruktion
- * till byggaren att mata resultatet och justera `left`/`top` om motivet inte ar
- * centrerat eller hjassan skars av.
- *
- * MATNING (paket 2A). Nedskalad gratonad kopia av originalet, morka pixlar
- * (ljushet < 100) mot den ljusgra vaggen:
- *
- *   hjassan, forsta morka raden                        y = 630
- *   har/hjassa  y 600-950   horisontellt masscentrum   x = 2013
- *   ansikte     y 950-1650  horisontellt masscentrum   x = 2023
- *   kavaj       y 2400-3800 horisontellt masscentrum   x = 2061
- *   bildens egen mitt                                  x = 2344
- *
- * Motivet sitter alltsa ca 300 px VANSTER om bildens mitt. Rutan left: 584 ar
- * centrerad pa BILDEN, men inte pa MOTIVET. Uppmatt pa de fardiga 400x500-
- * filerna:
- *
- *   left 584 -> morkt masscentrum 42,9 % av bredden, vanster axel mot kanten
- *               (marginal 0 px) - axeln skars av
- *   left 270 -> morkt masscentrum 50,3 % av bredden, marginal 4 px pa bada
- *               sidor - hela motivet ryms
- *
- * JUSTERAT: left 584 -> 270. Det ar den justering ARKITEKTUR.md ber om.
- *
- * `top: 0` BEHALLS oforandrat. Uppmatt pa resultatet: hjassan hamnar 14,2 % ner
- * i bildrutan (ej avskuren) och ogonen pa uttagets ovre tredjedelslinje.
+ * Gransen for "neutral pixel" i avkodad RGB: storsta skillnaden mellan tva
+ * kanaler. Den ar inte noll eftersom webp lagrar fargen i YUV, och
+ * avrundningen tillbaka till RGB kan flytta en kanal nagot steg.
  */
-const CROP = { left: 270, top: 0, width: 3520, height: 4400 };
-
-/** Bredder enligt ARKITEKTUR.md. Hojd = bredd x 1,25 (4:5). */
-const WIDTHS = [400, 800, 1200];
-
-/** Maxstorlek i kB enligt ARKITEKTUR.md:s tabell over utdatafiler. */
-const SIZE_LIMIT_KB = {
-  'profile-400.webp': 25,
-  'profile-800.webp': 70,
-  'profile-1200.webp': 130,
-  'profile-400.jpg': 40,
-  'profile-800.jpg': 110,
-  'profile-1200.jpg': 190,
-};
+const GREY_MAX_CHANNEL_DELTA = 2;
 
 const WEBP_OPTIONS = { quality: 72 };
-const JPEG_OPTIONS = { quality: 78, mozjpeg: true, progressive: true };
 
 function fail(message) {
   console.error('\nAVBRYTER: ' + message + '\n');
@@ -112,8 +72,7 @@ const kB = (bytes) => bytes / 1024;
 
 /**
  * SKYDDSRACKET, som EN funktion som provar varje utdatasokvag mot ALLA kanda
- * kallor. Det stod tidigare skrivet fyra ganger i tre formuleringar, varav en
- * jamforde mot bara den ena kallan.
+ * kallor.
  *
  * Tva saker provas:
  *   1. Sokvagen far inte vara nagon av kallorna (originalet skrivs aldrig over).
@@ -174,171 +133,173 @@ async function readSourceStat(path) {
   return info;
 }
 
-const sourceStat = await readSourceStat(SOURCE);
+/**
+ * Kontrollerar att en kalla ar orord: samma storlek och mtime som fore
+ * korningen. EN funktion for bada kallorna. Skriver ut sin GRIND-rad och
+ * returnerar utfallet; den som anropar faller korningen med sitt eget
+ * samlade meddelande, sa att varje fail()-meddelande star en gang.
+ */
+async function sourceUntouched(path, before, label) {
+  const after = await stat(path);
+  const untouched = after.size === before.size && after.mtimeMs === before.mtimeMs;
+  console.log('  GRIND: ' + label + ' oforandrat : ' + (untouched ? 'ja' : 'NEJ') +
+    '  (' + kB(after.size).toFixed(0) + ' kB, ' + after.mtime.toISOString() + ')');
+  return untouched;
+}
+
+// ===========================================================================
+//  HEROS BILD  (M10c, P5 omgang 4)
+//
+//  `assets-source/hero-portrait.jpg` -> `public/assets/hero/hero-<bredd>.webp`,
+//  en fil per bredd i HERO_IMAGE_WIDTHS, svartvit och hel (ingen beskarning).
+// ===========================================================================
+
+const heroStat = await readSourceStat(HERO_SOURCE);
 
 console.log('=========================================================');
-console.log(' Profilbild -> webbvarianter  (paket 2A)');
+console.log(' Heros bild -> svartvita webp  (M10c)');
 console.log('=========================================================');
-console.log('kalla : ' + SOURCE);
-console.log('        ' + kB(sourceStat.size).toFixed(0) + ' kB, andrad ' + sourceStat.mtime.toISOString());
+console.log('kalla : ' + HERO_SOURCE);
+console.log('        ' + kB(heroStat.size).toFixed(0) + ' kB, andrad ' + heroStat.mtime.toISOString());
 console.log('utdata: ' + OUT_DIR);
 
-// --- 1. .rotate() FORST, sedan las matten ----------------------------------
-// Autorotering efter EXIF maste ske fore beskarningen. Denna bild saknar
-// orienteringsflagga, sa anropet ar en no-op har - men det star kvar som
-// forsvar: med flagga 6 eller 8 hade matten svangt till 5051 x 4688 och
-// beskarningsrutan pekat pa fel del av bilden utan att nagot larmat.
-const rotated = sharp(SOURCE).rotate();
-const meta = await rotated.metadata();
+// --- 1. Matten efter .rotate() ---------------------------------------------
+// Autorotering efter EXIF sker i kedjan nedan. metadata() rapporterar matten
+// FORE rotationen, sa en orientering 5-8 byter bredd och hojd har - annars
+// hade grinden jamfort fel axel.
+const heroMeta = await sharp(HERO_SOURCE).metadata();
+const heroOrientation = heroMeta.orientation ?? 1;
+const heroSwapped = heroOrientation >= 5;
+const heroWidth = heroSwapped ? heroMeta.height : heroMeta.width;
+const heroHeight = heroSwapped ? heroMeta.width : heroMeta.height;
+const heroDimsOk = heroWidth === EXPECTED_WIDTH && heroHeight === EXPECTED_HEIGHT;
 
 console.log('');
 console.log('--- INDATA ---');
-console.log('  format                : ' + meta.format);
-console.log('  matt efter .rotate()  : ' + meta.width + ' x ' + meta.height);
-console.log('  kanaler               : ' + meta.channels);
-console.log('  EXIF-orientering      : ' + (meta.orientation === undefined ? 'ingen flagga (.rotate() = no-op)' : meta.orientation));
-console.log('  EXIF i kallan         : ' + (meta.exif ? 'ja (' + meta.exif.length + ' byte)' : 'nej'));
+console.log('  format                : ' + heroMeta.format);
+console.log('  EXIF-orientering      : ' + heroOrientation);
+console.log('  GRIND: matt efter .rotate() : ' + heroWidth + ' x ' + heroHeight +
+  '   (ska vara ' + EXPECTED_WIDTH + ' x ' + EXPECTED_HEIGHT + ': ' + (heroDimsOk ? 'ja' : 'NEJ') + ')');
 
-// --- 2. Kontrollera matten, beskar aldrig blint ----------------------------
-if (meta.width !== EXPECTED_WIDTH || meta.height !== EXPECTED_HEIGHT) {
+if (!heroDimsOk) {
   fail(
-    'ovantade matt efter .rotate().\n' +
+    'ovantade matt pa heros kalla efter .rotate().\n' +
       '  forvantat: ' + EXPECTED_WIDTH + ' x ' + EXPECTED_HEIGHT + '\n' +
-      '  faktiskt : ' + meta.width + ' x ' + meta.height + '\n' +
-      '  Beskarningskoordinaterna i detta skript ar raknade pa de forvantade\n' +
-      '  matten. Mat om motivet och uppdatera CROP i stallet for att kora vidare.',
+      '  faktiskt : ' + heroWidth + ' x ' + heroHeight + '\n' +
+      '  Bildformatet star ocksa som width/height i Hero.jsx. Ar kallan bytt ska\n' +
+      '  besluten i ARKITEKTUR.md, M10c, ses over forst.',
   );
 }
 
-// --- 3. Beskarningen, kontrollerad mot bildens matt ------------------------
-const right = CROP.left + CROP.width;
-const bottom = CROP.top + CROP.height;
-const ratio = CROP.width / CROP.height;
+// --- 2. Bredderna ----------------------------------------------------------
+const widthsAreIntegers = HERO_IMAGE_WIDTHS.every((w) => Number.isInteger(w) && w > 0);
+const widthsAscending = HERO_IMAGE_WIDTHS.every((w, i) => i === 0 || w > HERO_IMAGE_WIDTHS[i - 1]);
+const widthsWithinSource = Math.max(...HERO_IMAGE_WIDTHS) <= EXPECTED_WIDTH;
+const widthsOk =
+  HERO_IMAGE_WIDTHS.length > 0 && widthsAreIntegers && widthsAscending && widthsWithinSource;
+console.log('  GRIND: HERO_IMAGE_WIDTHS    : [' + HERO_IMAGE_WIDTHS.join(', ') + ']' +
+  '   (heltal, stigande utan dubbletter, storsta <= ' + EXPECTED_WIDTH + ': ' +
+  (widthsOk ? 'ja' : 'NEJ') + ')');
 
-console.log('');
-console.log('--- BERAKNAD BESKARNING (4:5 staende) ---');
-console.log('  extract               : left=' + CROP.left + ' top=' + CROP.top +
-  ' width=' + CROP.width + ' height=' + CROP.height);
-console.log('  hogerkant             : ' + CROP.left + ' + ' + CROP.width + ' = ' + right +
-  '   (<= ' + meta.width + ' : ' + (right <= meta.width ? 'ryms' : 'FEL') + ')');
-console.log('  underkant             : ' + CROP.top + ' + ' + CROP.height + ' = ' + bottom +
-  '   (<= ' + meta.height + ' : ' + (bottom <= meta.height ? 'ryms' : 'FEL') + ')');
-console.log('  forhallande b/h       : ' + ratio.toFixed(4) + '   (ska vara 0.8000)');
-console.log('  bortskuret i sidled   : ' + CROP.left + ' px vanster, ' + (meta.width - right) + ' px hoger');
-console.log('  bortskuret i hojdled  : ' + CROP.top + ' px upptill, ' + (meta.height - bottom) + ' px nedtill');
-
-if (right > meta.width || bottom > meta.height) {
-  fail('beskarningen hamnar utanfor bilden.');
-}
-if (Math.abs(ratio - 0.8) > 0.0001) {
-  fail('beskarningen ar inte 4:5 (b/h = ' + ratio.toFixed(4) + ', ska vara 0.8).');
+if (!widthsOk) {
+  fail(
+    'HERO_IMAGE_WIDTHS i src/data/profile.js ar inte giltig.\n' +
+      '  Bredderna ska vara positiva heltal i stigande ordning utan dubbletter,\n' +
+      '  och den storsta far inte overstiga kallans bredd ' + EXPECTED_WIDTH +
+      ' (ingen uppskalning).',
+  );
 }
 
-// Beskar en gang och aterbruka bufferten till alla sex varianterna.
-const cropped = await rotated.extract(CROP).toBuffer();
-
-// --- 4. Skala ned till varje malbredd, hojd = bredd x 1,25 -----------------
-// Kodas till BUFFERT, inte till fil. Skrivningen sker langst ner, efter alla
-// grindar.
+// --- 3. Koda varje bredd till buffert, och grinda pa bufferten -------------
 console.log('');
 console.log('--- UTDATAFILER (kodade till buffert, inte skrivna an) ---');
-console.log('  GRIND: fil             matt          storlek         tak   utfall');
+console.log('  GRIND: fil          matt      (hojd ber.)  storlek        tak   max kanalskillnad  utfall');
 
-const produced = [];
-let overLimit = 0;
+let heroProblems = 0;
+const heroFiles = [];
 
-for (const width of WIDTHS) {
-  const height = Math.round(width * 1.25);
+for (const width of HERO_IMAGE_WIDTHS) {
+  const name = 'hero-' + width + '.webp';
+  const target = resolve(OUT_DIR, name);
 
-  const encoders = [
-    ['webp', (pipeline) => pipeline.webp(WEBP_OPTIONS)],
-    ['jpg', (pipeline) => pipeline.jpeg(JPEG_OPTIONS)],
-  ];
+  // Metadata strippas - sharps standard. Ingen withMetadata()-anropning.
+  const encoded = await sharp(HERO_SOURCE)
+    .rotate()
+    .resize({ width, withoutEnlargement: true })
+    .grayscale()
+    .webp(WEBP_OPTIONS)
+    .toBuffer({ resolveWithObject: true });
 
-  for (const [ext, encode] of encoders) {
-    const name = 'profile-' + width + '.' + ext;
-    const target = resolve(OUT_DIR, name);
+  const info = encoded.info;
+  queueWrite(target, encoded.data);
 
-    // Metadata strippas - sharps standard. Ingen withMetadata()-anropning.
-    const encoded = await encode(
-      sharp(cropped).resize(width, height, { fit: 'cover' }),
-    ).toBuffer({ resolveWithObject: true });
+  const expectedHeight = (width * EXPECTED_HEIGHT) / EXPECTED_WIDTH;
+  const dimsOk = info.width === width && Math.abs(info.height - expectedHeight) < 1;
 
-    const info = encoded.info;
-    queueWrite(target, encoded.data);
+  const size = kB(info.size);
+  const limit = HERO_SIZE_LIMIT_KB[width];
+  const limitOk = limit !== undefined && size <= limit;
 
-    const limit = SIZE_LIMIT_KB[name];
-    const size = kB(info.size);
-    const ok = size <= limit;
-    if (!ok) overLimit++;
-
-    produced.push({
-      name,
-      buffer: encoded.data,
-      width: info.width,
-      height: info.height,
-      kb: size,
-      limit,
-      ok,
-      expected: width,
-    });
-
-    console.log(
-      '  ' + name.padEnd(22) +
-      (info.width + 'x' + info.height).padEnd(13) +
-      (size.toFixed(1) + ' kB').padStart(10) +
-      ('<= ' + limit + ' kB').padStart(12) + '   ' +
-      (ok ? 'ok' : 'OVER TAKET'),
-    );
+  // Avkoda till ra RGB och mat storsta kanalskillnaden over ALLA pixlar.
+  const decoded = await sharp(encoded.data)
+    .removeAlpha()
+    .toColourspace('srgb')
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const channels = decoded.info.channels;
+  let maxDelta = 0;
+  for (let i = 0; i < decoded.data.length; i += channels) {
+    const r = decoded.data[i];
+    const g = channels >= 3 ? decoded.data[i + 1] : r;
+    const b = channels >= 3 ? decoded.data[i + 2] : r;
+    const d = Math.max(Math.abs(r - g), Math.abs(g - b), Math.abs(r - b));
+    if (d > maxDelta) maxDelta = d;
   }
-}
+  const greyOk = maxDelta <= GREY_MAX_CHANNEL_DELTA;
 
-// --- 5. Grindar, korda PA BUFFERTARNA innan nagot skrivs ------------------
-console.log('');
-console.log('--- KONTROLL (last ur buffertarna, inga filer skrivna an) ---');
+  const ok = dimsOk && limitOk && greyOk;
+  if (!ok) heroProblems++;
 
-const wrongSize = produced.filter(
-  (f) => f.width !== f.expected || f.height !== Math.round(f.expected * 1.25),
-);
-console.log('  GRIND: alla matt enligt tabell : ' +
-  (wrongSize.length === 0 ? 'ja' : 'NEJ - ' + wrongSize.map((f) => f.name).join(', ')));
-console.log('  GRIND: alla under sitt tak     : ' +
-  (overLimit === 0 ? 'ja' : 'NEJ - ' + overLimit + ' fil(er) over'));
+  heroFiles.push({ name, kb: size });
 
-let exifFound = 0;
-for (const file of produced) {
-  const outMeta = await sharp(file.buffer).metadata();
-  if (outMeta.exif) exifFound++;
-}
-console.log('  GRIND: EXIF i utdata           : ' +
-  (exifFound === 0 ? 'nej (strippad)' : 'JA pa ' + exifFound + ' fil(er)'));
-
-const after = await stat(SOURCE);
-const untouched = after.size === sourceStat.size && after.mtimeMs === sourceStat.mtimeMs;
-console.log('  GRIND: originalet oforandrat   : ' + (untouched ? 'ja' : 'NEJ') +
-  '  (' + kB(after.size).toFixed(0) + ' kB, ' + after.mtime.toISOString() + ')');
-
-if (overLimit > 0 || wrongSize.length > 0 || exifFound > 0 || !untouched) {
-  fail('en eller flera kontroller slog fel - se ovan.');
+  console.log(
+    '  ' + name.padEnd(17) +
+      (info.width + 'x' + info.height).padEnd(10) +
+      ('(' + expectedHeight.toFixed(1) + ')').padEnd(10) +
+      (size.toFixed(1) + ' kB').padStart(10) +
+      ('<= ' + limit + ' kB').padStart(11) + '   ' +
+      (maxDelta + ' (<= ' + GREY_MAX_CHANNEL_DELTA + ')').padEnd(19) +
+      (ok
+        ? 'ok'
+        : 'FEL:' + (dimsOk ? '' : ' matt') + (limitOk ? '' : ' storlek') + (greyOk ? '' : ' farg')),
+  );
 }
 
 console.log('');
-console.log('Profilbilden klar: ' + produced.length +
+console.log('--- KONTROLL ---');
+const heroUntouched = await sourceUntouched(HERO_SOURCE, heroStat, 'hero-portrait.jpg');
+
+if (heroProblems > 0 || !heroUntouched) {
+  fail('en eller flera kontroller av heros bild slog fel - se ovan.');
+}
+
+console.log('');
+console.log('Heros bild klar: ' + heroFiles.length +
   ' buffertar i skrivkon (skrivs langst ner, efter ikonens grindar).');
 
 // ===========================================================================
 //  MONOGRAM-IKONEN  (paket 2B, tajta varianter tillagda i paket 3)
 //
 //  Harleder JQ-monogrammet ur `assets-source/logo.png` till FEM PNG-filer med
-//  GENOMSKINLIG botten, direkt i `public/assets/` (det ar inget
-//  profilbildsderivat och ligger darfor inte i profile/):
+//  GENOMSKINLIG botten, direkt i `public/assets/` (de ar inga derivat av
+//  heros bild och ligger darfor inte i hero/):
 //
 //    logo-mark-{32,96,192}.png      kvadratiska  - favicon och apple-touch
 //    logo-mark-tight-{96,192}.png   tajta        - HEADERN, 48 x 36 px
 //
 //  De tajta harleds FORE extend()-steget, ur samma uttag.
 //
-//  `logo.png` LASES bara och skrivs aldrig over, precis som profile.jpg.
+//  `logo.png` LASES bara och skrivs aldrig over, precis som heros kalla.
 // ===========================================================================
 
 const ICON_OUT_DIR = assertSafeOutput(resolve(ROOT, 'public/assets'));
@@ -1033,11 +994,7 @@ for (const icon of icons) {
     ' (referens, INGEN grans - interpolationen flyttar alfan ca 1 rad ned)');
 }
 
-const logoAfter = await stat(LOGO_SOURCE);
-const logoUntouched =
-  logoAfter.size === logoStat.size && logoAfter.mtimeMs === logoStat.mtimeMs;
-console.log('  GRIND: logo.png oforandrat : ' + (logoUntouched ? 'ja' : 'NEJ') +
-  '  (' + kB(logoAfter.size).toFixed(0) + ' kB, ' + logoAfter.mtime.toISOString() + ')');
+const logoUntouched = await sourceUntouched(LOGO_SOURCE, logoStat, 'logo.png');
 
 if (iconsOverLimit > 0 || iconProblems > 0 || !logoUntouched) {
   fail('en eller flera ikonkontroller slog fel - se ovan.');
@@ -1054,8 +1011,8 @@ if (iconsOverLimit > 0 || iconProblems > 0 || !logoUntouched) {
 //  flytta sedan". Har halls artefakterna i stallet i MINNET fram till denna
 //  punkt. Invarianten regeln skyddar - "fallerar en kontroll ar malkatalogen
 //  ororad" - uppfylls starkare: det finns ingen temporarkatalog som kan bli
-//  kvar, och ingen skrivning alls fore den sista grinden. Elva PNG/WebP/JPEG
-//  pa sammanhanget 180 kB ryms utan vidare i minnet.
+//  kvar, och ingen skrivning alls fore den sista grinden. Artefakterna ar
+//  sma nog att rymmas i minnet utan vidare.
 // ===========================================================================
 console.log('');
 console.log('--- SKRIVFASEN (alla grindar passerade) ---');
@@ -1067,11 +1024,11 @@ for (const write of pendingWrites) {
 }
 
 console.log('  filer skrivna            : ' + pendingWrites.length);
-console.log('  public/assets/profile/   : ' + (await readdir(OUT_DIR)).sort().join(', '));
+console.log('  public/assets/hero/      : ' + (await readdir(OUT_DIR)).sort().join(', '));
 console.log('  public/assets/ (ikoner)  : ' +
   (await readdir(ICON_OUT_DIR)).filter((f) => f.endsWith('.png')).sort().join(', '));
 
 console.log('');
-console.log('Klart. ' + produced.length + ' profilvarianter + ' +
+console.log('Klart. ' + heroFiles.length + ' hero-filer + ' +
   (icons.length + tightIcons.length) + ' ikonfiler (' + icons.length +
   ' kvadratiska + ' + tightIcons.length + ' tajta for headern).');

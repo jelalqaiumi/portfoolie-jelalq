@@ -1,10 +1,13 @@
 # Plan: Modernisera portfolion enligt `UPPDRAG-2026-11-07.md` — mörk, lugn premiumdesign, nya projektkort med filter, utan att bryta sidan
 
-Skriven 2026-11-07, **uppdaterad samma dag efter G1** (EJ GODKÄND, sju fynd) och
-arkitektens beslut R1–R6. **Denna omgång (paket P1–P17) står först.** Den tidigare
-omgången (paket A–M, innehållsuppdraget 2026-10-07) står **oförändrad** längre
-ner i filen, under rubriken "Plan: Byt innehållet i hero ...". Där har jag bara
-markerat de paket som är avslutade.
+Skriven 2026-11-07. **Uppdaterad samma dag** efter G1 (EJ GODKÄND, sju fynd) och
+arkitektens beslut R1–R6, efter granskarens efterkontroll (G1-rättningen
+GODKÄND) och arkitektens beslut **M10c**, efter **M11b**, och **igen** efter att
+P10 byggts, arkitektens beslut **M12b**, P5 omgång 4:s återlämning och **Jelals
+besked om hero på mobil**. **Denna omgång (paket P1–P17) står först.** Den
+tidigare omgången (paket A–M, innehållsuppdraget 2026-10-07) står **oförändrad**
+längre ner i filen, under rubriken "Plan: Byt innehållet i hero ...". Där har jag
+bara markerat de paket som är avslutade.
 
 Uppdraget står i **`UPPDRAG-2026-11-07.md`** i projektroten. **Avsnittet "Jelals
 beslut (2026-11-07)" är bindande och går före uppdragstexten** där de krockar.
@@ -25,24 +28,39 @@ Kort:
 Prefixet **P** används för att inte krocka med bokstäverna A–M i den förra
 omgången eller med "paket 1–8" som `ARKITEKTUR.md` och `LARDOMAR.md` hänvisar
 till. Paketen efter G1 heter **G1-kommentarerna** och **G1-rättningen**, det
-senare med arkitektens namn ur `ARKITEKTUR.md`.
+senare med arkitektens namn ur `ARKITEKTUR.md`. Heros fjärde och femte omgång
+heter **P5 omgång 4** (M10c) och **P5 omgång 5** (M10d). **P9b** är följdpaketet
+med arkitektens namn ur M11b och M12b. **P8b finns inte som eget paket.** P8:s
+tre öppna frågor avgjordes i M11b (rad 1–3) och ingår i P9b.
 
 ---
 
-## Status efter G1 (2026-11-07)
+## Status 2026-11-07, efter P10, M12b och Jelals besked om hero på mobil
 
 | Paket | Läge |
 |---|---|
 | P1 | **Klart.** Besluten M1–M18 står i `ARKITEKTUR.md` |
-| P2, P3, P4, P5, P6, P7 | **Byggda.** P5 byggdes i tre omgångar (omgång 2 enligt M10b) |
+| P2, P3, P4, P5, P6, P7 | **Byggda.** P5 byggdes i tre omgångar (omgång 2 enligt M10b). Omgång 4 är byggd och lämnad tillbaka, och omgång 5 väntar på M10d, se nedan |
 | P4b | **Byggt.** Följdpaket enligt M8b: de öppna markeringarna från P3 och P4, och hover enligt M7 |
-| G1 | **Genomförd: EJ GODKÄND, sju fynd** (`LARDOMAR.md`, posterna daterade 2026-11-07) |
+| G1 | **Genomförd: EJ GODKÄND, sju fynd** (`LARDOMAR.md`, posterna daterade 2026-11-07). Fynd 1–7 är nu åtgärdade |
 | G1-kommentarerna | **Klart.** Fynd 1–2: de falska kommentarerna och den kvarglömda markeringen |
-| G1-rättningen | **Pågår** (byggaren arbetar med den). Fynd 3–7 enligt R1–R6 |
-| P8–P17 | Ej startade. **P8 startar inte förrän G1-rättningen är godkänd** |
+| G1-rättningen | **KLART. GODKÄND av granskarens efterkontroll 2026-11-07.** Fynd 3–7 enligt R1–R6. Efterkontrollen hittade två nya kommentarsfel (de två sista posterna 2026-11-07 i `LARDOMAR.md`). De blockerar inte, och har var sitt paket: `index.html:34-35` i **P5 omgång 4**, `Contact.module.css:15-17` i **P13** |
+| P8 | **Byggt.** De tre öppna frågorna är avgjorda i **M11b rad 1–3**, och det som ska göras genomförs i **P9b** |
+| P9 | **Byggt.** De öppna markeringarna är avgjorda i **M11b**, och genomförs i **P9b** |
+| P10 | **Byggt.** Byggaren hittade fem saker som M12 inte löste. Arkitekten har avgjort dem i **M12b**, och de genomförs i **P9b** |
+| P5 omgång 4 | **Byggd, men LÄMNAD TILLBAKA.** Kontrasten på M10c:s rad 7 föll under 900 px, och rad 9 förutsade fel `loading`-värde. Följs av **P5 omgång 5** (M10d) |
+| **P9b** | **PÅGÅR** (byggaren arbetar med det). M11b + M12b, tio filer, sju grindar |
+| **P5 omgång 5** | **Väntar på M10d**, som arkitekten skriver nu |
+| P11–P17 | Ej startade |
 
-"Byggt" betyder att byggarens verifiering är gjord. **Inget av P1–P7 är godkänt
-förrän G1-rättningen är godkänd**, eftersom G1 underkände dem som helhet.
+"Byggt" betyder att byggarens verifiering är gjord. G1 underkände P1–P7 som
+helhet. **Med G1-rättningen godkänd är G1:s fynd åtgärdade, och P1–P7 räknas som
+godkända mot G1.** Den slutliga prövningen av hela omgången är G2 (P16).
+
+**Jelals besked 2026-11-07, bindande:** på mobil ska bilden ligga **överst** och
+texten **under**. Han accepterar att man på små telefoner kan behöva scrolla för
+att nå knapparna. Frågan om ansiktet bakom rubriken är därmed **besvarad och
+struken**. Beskedet genomförs i P5 omgång 5 enligt M10d.
 
 ---
 
@@ -50,6 +68,44 @@ förrän G1-rättningen är godkänd**, eftersom G1 underkände dem som helhet.
 
 Varje "Regel framåt" i `LARDOMAR.md` är bindande. Dessa påverkar denna omgång
 konkret:
+
+**Nya efter P10, M12b och Jelals besked, och vad de gör med planen:**
+
+- **2026-11-07 (ÅTERFALL), ett uppskjutet beslut ska vara en punkt i `Ingår:`
+  hos det paket som kommer efter villkoret.** → P8:s tre frågor, P9:s
+  markeringar och P10:s fem fynd är **alla** punkter i `Ingår:` hos **P9b**, med
+  arkitektens tabell som underlag. P8b är upplöst i P9b, så att samma frågor inte
+  har två ägare. M10d får samma behandling: **P5 omgång 5** har `Ingår:` "enligt
+  M10d (P5 omgång 5)", och detaljerna fylls i när M10d finns.
+- **2026-10-02, paket 4 byggdes under pågående arbete: `ARKITEKTUR.md` ändras inte
+  under ett pass som bygger mot den.** → **Arkitekten skriver M10d medan P9b
+  byggs.** Det går bara på detta villkor: M10d rör **inga** stycken som P9b bygger
+  mot (M7, M11, M11b, M12, M12b, M4:s markup, A4, komponenttabellen, Mappstruktur
+  och tabellen över förbjudna strängar). Samordnaren kontrollerar med
+  `git diff ARKITEKTUR.md` innan P9b lämnas, och P9b:s byggare läser om M11b och
+  M12b mot dokumentet före överlämningen. Rör M10d något av dem, se Risker.
+- **2026-11-07, `clientWidth`-grinden larmade av fel skäl: en förväntad
+  mätsiffra ska ha mätts en gång innan den skrivs in i `ARKITEKTUR.md`.** → P5
+  omgång 4:s rad 9 förutsade fel `loading`-värde, alltså samma felläge. Byggaren
+  av P5 omgång 5 skriver de uppmätta talen i överlämningen och stoppar vid en
+  fallerande grind.
+- **2026-10-05, vaktrader som inte går att få att larma.** → M12b punkt 5 tar
+  bort den andra vakten för "klick på valt segment" i `ProjectFilter.jsx`. P9b:s
+  negativa kontroll (M12b punkt 5, prov 6) visar att den återstående mekanismen
+  bär invarianten.
+
+**Nya efter efterkontrollen (de två sista posterna 2026-11-07), och vad de gör med planen:**
+
+- **2026-11-07 (ÅTERFALL), `index.html` hävdar fortfarande att ARKITEKTUR.md
+  stänger dörren för en tredje global klass: sök efter påståendets nyckelord i
+  `src`, `scripts` och `index.html`, och kör tabellen över förbjudna strängar mot
+  alla tre.** → Kommentaren åtgärdades i **P5 omgång 4** (punkt 5), som rörde
+  `index.html` enligt M10c. **P5 omgång 5** kör tabellen mot `src/`, `scripts/` och
+  `index.html` igen, och **P16 lägger till `index.html`** i sin sökning.
+- **2026-11-07 (ÅTERFALL), `Contact.module.css` bär en mättabell från före M18:
+  den som ändrar ett token som påverkar en bredd kör `grep -rnE "[0-9]+ px"` över
+  CSS och JSX, och P13 har fyndet i `Ingår:`.** → Lagt som en `Ingår:`-punkt i
+  **P13**, med grepen som godkännandepunkt.
 
 **Nya efter G1 (posterna 2026-11-07), och vad de gör med planen:**
 
@@ -59,44 +115,56 @@ konkret:
   `Ingår:`-punkt för de tokens R5 skjuter upp, och P10 en för `index` (R1). Och
   därför kör **varje** byggpaket från och med G1-rättningen, före överlämning, för
   varje `OPEN-KEY: <nyckel>` i `src/` och `scripts/`: `grep -c "<nyckel>"
-  ARKITEKTUR.md`. Varje träff större än 0 tas bort i samma ändring.
+  ARKITEKTUR.md`. Varje träff större än 0 tas bort i samma ändring. **Undantag,
+  beslutat i M11b:** M11b:s nycklar gav träff under P10 men togs **inte** bort där.
+  De har ägaren P9b, som tar bort dem.
 - **2026-11-07, sex tokens utan konsument: ett token deklareras i samma paket som
   dess första `var()`-konsument, aldrig tidigare.** → M5h gör det till en grind i
   G1-rättningen. P9, P10 och P12 deklarerar sina tokens själva och måste klara
-  den grinden.
+  den grinden. Omvänt tog **P5 omgång 4** bort `--overlay-grey` i samma paket som
+  dess konsument försvann.
 - **2026-11-07 (ÅTERFALL), moderniseringen gjorde fem kommentarer falska.** →
   Varje paket som ändrar ett token, ett grid-spår eller lägger till en användare
   av en global klass kör `grep -rn "<tokennamn>\|<klassnamn>\|[0-9]\+ px" src` och
-  skriver om tal, antal och uppräkningar i kommentarer till invarianter. Gäller
-  särskilt P10, som gör `.reveal` till global klass och lägger till tre tokens.
+  skriver om tal, antal och uppräkningar i kommentarer till invarianter. Gällde
+  P10, som gjorde `.reveal` till global klass, och gäller nu **P9b**, som delar
+  reveal-regeln i `global.css` (grind 6), och **P5 omgång 5**, som byter heros
+  layout på mobil.
 - **2026-11-07, logo-brickans fasta höjd: ett element med fast `height` och text ur
   `src/data/` anger sitt överflöde, och syntessträngsprovet mäter
   `scrollHeight <= clientHeight`.** → R3 i G1-rättningen. Gäller också segment,
-  chips och sökfält i P8–P9 och nyckeltalen i P12 om de får fast höjd.
+  chips och sökfält i P8–P9 (M11b rad 1 godkänner segmentets ellips av detta skäl)
+  och nyckeltalen i P12 om de får fast höjd.
 - **2026-11-07, en slug som krockar med sidans egna id passerar: varje värde ur
   `src/data/` som blir `id` valideras mot alla id sidan sätter.** → R2 i
   G1-rättningen. Efter den gäller att **varje fast id i en komponent är en
-  `*_ID`-export i `sections.js`**. P8 och P9 får inte införa ett fast id på annat
-  sätt.
+  `*_ID`-export i `sections.js`**. **P9b prövar grinden mot `PROJECT_SEARCH_ID`**
+  (M11b rad 9), och fokus efter "Rensa filter" byggs med en ref, inte med ett id
+  (M11b rad 11).
 - **2026-11-07, grinden på rotens `clientWidth` larmade av fel skäl: "layouten
   flyttar sig inte" mäts på layoutens egna rektanglar.** → R4 i G1-rättningen, och
   samma metod i P15.
 - **2026-11-07 (ÅTERFALL), A4:s deklaration pekade på fel element: en signatur
   anges med det paket där varje parameter får sin första konsument.** → `index`
-  läggs till i `ProjectCard` i P10, inte tidigare.
+  lades till i `ProjectCard` i P10. **Samma regel ger `allRef` i `ProjectFilter`
+  till P9b**, där fokusflytten efter "Rensa filter" är dess första konsument.
 
 **Sedan tidigare:**
 
 - **Breda agentuppdrag hänger sig (projektets minne).** Därför 17 små paket i
   stället för 8 breda. Varje byggpaket rör en sektion eller en mekanism, och varje
-  paket lämnar en sida som går att öppna i webbläsaren.
+  paket lämnar en sida som går att öppna i webbläsaren. **P9b är bredare än övriga
+  (tio filer)**, men arkitekten har slagit ihop det av ett skäl: M11b och M12b
+  ändrar båda `Projects.jsx`. Varje fil har en rad i tabellen, och varje grind är
+  mätbar för sig.
 - **Granska hårt vid leverans, inte efter varje paket (Jelals önskemål, projektets
   minne).** Två granskningspunkter: **G1 efter P7** (projektkortet) och **G2 vid
   slutleveransen (P16)**. Övriga paket avslutas med byggarens egen
   verifieringslista och grönt `npm run build`. Det avviker från CLAUDE.md:s "kör
   alltid granskare" och är Jelals uttryckliga val. **Undantag efter G1:**
-  G1-rättningen godkänns genom en **smal** efterkontroll av granskaren, bara mot
-  fynd 1–7 och R1–R6, inte en ny hel granskning.
+  G1-rättningen godkändes genom en **smal** efterkontroll av granskaren, bara mot
+  fynd 1–7 och R1–R6, inte en ny hel granskning. **P9b och P5 omgång 5 följer
+  huvudregeln:** byggarens grindar, ingen egen granskning.
 - **2026-10-02 + 2026-10-05 (ÅTERFALL), arbetsträdet fryses under granskning.**
   `GRANSKNING-PAGAR` skapas före G1, efterkontrollen och G2, och raderas när
   rapporten är levererad. Inget P-paket byggs medan filen finns.
@@ -105,7 +173,8 @@ konkret:
   animation), A3 (inga ikoner), A5 (knappstilarna), A6 (kortet och rutnätet) och
   `.surface-light`. **Varje sådant stycke märks `UPPHÄVT` eller skrivs om på sin
   egen plats i P1**, inte bara i ett nytt avsnitt. Annars implementerar nästa
-  byggare det gamla.
+  byggare det gamla. Samma krav gäller M10d mot M10c: varje stycke i M10c som M10d
+  ersätter märks på sin egen plats.
 - **2026-10-02, ARKITEKTUR.md beskrev verktyg och filer som inte finns.**
   Lighthouse finns inte i `package.json`, och typsnittsfilerna finns inte i
   repot. **P1 får inte namnge ett verktyg eller en fil utan att ha kontrollerat att
@@ -118,7 +187,8 @@ konkret:
   chipsrad, kontaktens två kolumner, footerns kolumner, nyckeltalsraden) kräver
   `minmax(0, 1fr)` eller `min-width: 0` **och** `overflow-wrap: anywhere`.
   Golvet mäts med programmatiskt insatt syntessträng, aldrig med dagens korta
-  text, och mot **behållarens egen** bredd.
+  text, och mot **behållarens egen** bredd. Gäller också heros nya mobilläge i
+  P5 omgång 5.
 - **2026-10-08, mätvillkoret för rullningslisten.** Varje bredduppmätning anger
   sitt rullningslistvillkor. Ingen `--flagga=false`.
 - **2026-10-02, sektions-id som bokstavlig sträng i `.jsx`, och länk bara om
@@ -136,6 +206,7 @@ konkret:
 - **2026-10-05, ett löfte i en fil Jelal redigerar får aldrig vara osant.**
   Kommentaren överst i `projects.js` beskriver i dag sju fält och fältnamnen
   `id`, `url` och `repoUrl`. Den skrivs om i samma paket som datamodellen byts.
+  Samma regel gäller `README.md` och `GUIDE.md` efter M10c och M10d (P17).
 - **2026-10-05, mät artefakten, inte deklarationen — teckengrinden.** Med tre
   typsnittsfamiljer räcker det inte att mäta en fil. Grinden ska läsa `cmap` ur
   **varje** woff2-fil och läsa **alla** `@font-face` (`matchAll`).
@@ -145,12 +216,17 @@ konkret:
 - **2026-10-05, en grind som fälls av fel skäl lär oss att ignorera den.** När
   grindarna anpassas ska det stå skrivet vilken legitim ändring som får fälla dem.
   Svaret ska vara "ingen". Varje anpassad grind prövas med tre indata: korrekt,
-  felaktigt och den åtgärd felmeddelandet föreskriver.
+  felaktigt och den åtgärd felmeddelandet föreskriver. **Gäller Jelals besked:**
+  att knapparna kan hamna under skärmkanten på små telefoner är nu en legitim
+  ändring. Mätseriens krav på knapparna ska därför skrivas om av arkitekten i
+  M10d, inte lossas av byggaren.
 - **2026-10-08, kontrast: tokennamnet är ingen motivering.** Varje nytt texttoken
   (`--ink`, `--ink-muted`, `--ink-subtle`, mörk text på `--accent`) bär sin
   uppmätta kvot mot **varje** bakgrund det faktiskt används på, i lärdomens
   format. `--ink-subtle` hamnar både på `--surface` och möjligen på `--surface-2`.
-  Det ska mätas, inte antas.
+  Det ska mätas, inte antas. I hero mättes det i P5 omgång 4 mot bildens
+  ljusaste pixel bakom texten (M10c rad 7), och **föll under 900 px**. P5 omgång 5
+  mäter enligt M10d.
 - **2026-10-05 + 2026-10-08 (ÅTERKOMMANDE 3+), kodkommentarer.** Kommentarerna
   beskriver invarianten, aldrig ett uppmätt tal, aldrig vad `ARKITEKTUR.md`
   säger och aldrig en uppräkning av ett block i en annan fil. **Varje paket i
@@ -160,17 +236,24 @@ konkret:
   `.surface-light` och om "en enda vikt".
 - **2026-10-05 (ÅTERKOMMANDE 3+), `EJ I ARKITEKTUR`-markeringar.** Varje värde
   byggaren väljer utan stöd i `ARKITEKTUR.md` märks med frågan, utan beskrivning
-  av dokumentet. En besvarad fråga tas bort i samma ändring.
+  av dokumentet. En besvarad fråga tas bort i samma ändring. → **P9b är den
+  ändringen för P8:s, P9:s och P10:s markeringar.**
 - **2026-10-05, deklarationer i `ARKITEKTUR.md` skrivs tecken för tecken.**
   Uppdragets tokens och mått är exakta. Skriver P1 ut dem som deklarationer ska
   koden innehålla exakt dem, och byggaren svarar med `fil:rad`.
 - **2026-10-02, bilder.** Källbilder ligger aldrig i `public/`. Projektbilden ska
   vara webp med `width`/`height`. Varje paket som rör bilder mäter `dist/`, bundet
-  till ett färskt bygge (2026-10-05).
+  till ett färskt bygge (2026-10-05). Gällde P5 omgång 4 (M10c punkt 16), och
+  gäller P5 omgång 5 om M10d rör bilden eller bildskriptet.
+- **2026-10-02, ett skript som skriver artefakter kontrollerar före skrivning, och
+  parallell dubblering lyfts ut.** → P5 omgång 4 ersatte profildelen i
+  `optimize-images.mjs` i stället för att lägga till ett nytt skript, och tvingade
+  en grind att fallera för att visa att målkatalogen är orörd (M10c punkt 13–15).
 - **2026-10-02 + 2026-10-05, servrar.** Porten mäts med `netstat` före start och
   efter stopp, och servern stoppas via PID. Raden klistras in i överlämningen.
 - **2026-10-05, negativ kontroll.** Smalaste selektorn, vilket element som bar
-  avvikelsen, och att larmet upphörde.
+  avvikelsen, och att larmet upphörde. → Varje mätning i M12b och fokusprovet i
+  M11b rad 11 har en egen negativ kontroll i P9b.
 - **2026-10-05, vaktrader.** Kopierar byggaren vaktrader från de gamla korten
   till de nya ska de tvingas fallera i den nya layouten, annars skrivs
   kommentaren om.
@@ -220,59 +303,83 @@ P2 startar:
 | P4 | ~~Navigering, mobil: hamburgermeny med fullskärmspanel~~ **BYGGT** | byggare | Panelen öppnas och stängs med mus, tangentbord och Esc, och fokus hanteras |
 | P4b | ~~Följdpaket enligt M8b: de öppna markeringarna från P3 och P4, och hover enligt M7~~ **BYGGT** | byggare | Varje markering i M8b:s tabell är borttagen eller genomförd enligt sin rad, med M8b:s mätningar redovisade |
 | P5 | ~~Hero: eyebrow, h1, ingress, orange glöd och porträtt~~ **BYGGT** (tre omgångar) | byggare | Hero följer uppdragets typografi, ett `h1`, heros fyra markeringar avgjorda och borttagna |
+| P5 omgång 4 | ~~Heros svartvita porträtt som profilbild och bakgrund (Jelal 2026-11-07, M10c), och `<noscript>`-kommentaren i `index.html`~~ **BYGGD, LÄMNAD TILLBAKA:** rad 7 (kontrasten) föll under 900 px, och rad 9 förutsade fel `loading`-värde | byggare | Följs av P5 omgång 5 |
+| **P5 omgång 5** | **Hero enligt M10d: Jelals besked om mobil (bilden överst, texten under) och M10c:s rad 7 och 9. Väntar på M10d** | byggare | M10d:s grindar redovisade, och Jelal har sett skärmbilderna. Se eget avsnitt |
 | P6 | ~~Projektdatan: ny modell, Awle enligt beslut 5, `validate-data` anpassad~~ **BYGGT** | byggare | Den nya modellen valideras med tre värden per obligatoriskt fält, och det befintliga kortet visar Awle |
 | P7 | ~~Projektkortet och kortgriden 3/2/1 (hela kortet en länk, logo-bricka, statusbadge, hover, fokus)~~ **BYGGT** | byggare | Kortet följer uppdragets mått, länkar enligt beslut 1 och håller 360 px |
-| **G1** | ~~**GRANSKNINGSPUNKT 1: hård granskning av P1–P7**, och Jelal ser sidan~~ **GENOMFÖRD: EJ GODKÄND, sju fynd** | granskare (+ samordnare visar) | Fynden i `LARDOMAR.md`, fynden åtgärdade eller uppskjutna av Jelal |
+| **G1** | ~~**GRANSKNINGSPUNKT 1: hård granskning av P1–P7**, och Jelal ser sidan~~ **GENOMFÖRD: EJ GODKÄND, sju fynd. Fynden åtgärdade** | granskare (+ samordnare visar) | Fynden i `LARDOMAR.md`, fynden åtgärdade eller uppskjutna av Jelal |
 | G1-kommentarerna | ~~Fynd 1–2: de falska kommentarerna och den kvarglömda markeringen~~ **KLART** | byggare | Kommentarerna beskriver invarianter, och markeringen är borta |
-| **G1-rättningen** | **Fynd 3–7 enligt arkitektens R1–R6: tio filer, se eget avsnitt. PÅGÅR** | byggare, sedan granskare (smal efterkontroll) | Varje mätpunkt i avsnittet redovisad, och granskaren har bekräftat fynd 1–7 som åtgärdade. **P8 startar först då** |
-| P8 | Filterpanel del 1: segmentkontrollen med räknare och live-raden | byggare | Segmenten filtrerar på klientsidan, antalen och live-raden räknas ur data |
-| P9 | Filterpanel del 2: teknik-chips och sökfältet, och `--radius-chip` (R5) | byggare | Chips och sök samverkar med segmentet, tomt resultat har ett tydligt läge, och tokengrinden tiger |
-| P10 | Animationer: scroll-reveal, stagger på korten, in-/uttoning vid filtrering, `prefers-reduced-motion`, tre reveal-tokens (R5) och `index` i `ProjectCard` (R1) | byggare | Reveal fungerar, med reducerad rörelse finns ingen transform eller transition kvar, och tokengrinden tiger |
+| **G1-rättningen** | ~~**Fynd 3–7 enligt arkitektens R1–R6: tio filer, se eget avsnitt**~~ **KLART. GODKÄND av efterkontrollen 2026-11-07** | byggare, sedan granskare (smal efterkontroll) | Varje mätpunkt i avsnittet redovisad, och granskaren har bekräftat fynd 1–7 som åtgärdade |
+| P8 | ~~Filterpanel del 1: segmentkontrollen med räknare och live-raden~~ **BYGGT.** De tre öppna frågorna avgjorda i M11b rad 1–3, genomförs i P9b | byggare | Segmenten filtrerar på klientsidan, antalen och live-raden räknas ur data |
+| P9 | ~~Filterpanel del 2: teknik-chips och sökfältet, och `--radius-chip` (R5)~~ **BYGGT.** Markeringarna avgjorda i M11b, genomförs i P9b | byggare | Chips och sök samverkar med segmentet, tomt resultat har ett tydligt läge, och tokengrinden tiger |
+| P10 | ~~Animationer: scroll-reveal, stagger på korten, in-/uttoning vid filtrering, `prefers-reduced-motion`, tre reveal-tokens (R5) och `index` i `ProjectCard` (R1)~~ **BYGGT.** Fem fynd avgjorda i M12b, genomförs i P9b | byggare | Reveal fungerar, med reducerad rörelse finns ingen transform eller transition kvar, och tokengrinden tiger |
+| **P9b** | **M11b + M12b: filtrets och P8:s markeringar, fokus efter "Rensa filter", och P10:s fem fynd. Tio filer, sju grindar. PÅGÅR** | byggare | De sju grindarna i "P9b — exakt vad som ändras" under M11b redovisade. Se eget avsnitt |
 | P11 | Numrerade sektionsetiketter och kompetenserna i filterchipsens stil | byggare | Etiketterna räknas ur `sections.js`, och kompetenschipsen har samma stil som filterchipsen |
 | P12 | Nyckeltalsraden, och `--text-figure` (R5) | byggare | Varje tal är härlett ur data eller givet av Jelal, inget är påhittat, och tokengrinden tiger |
-| P13 | Kontakt: två kolumner, uppgifter till vänster och formuläret i en panel till höger | byggare | Formuläret (inklusive hCaptcha) fungerar som före, och layouten håller 360 px |
+| P13 | Kontakt: två kolumner, uppgifter till vänster och formuläret i en panel till höger, och mättabellen i `Contact.module.css:15-17` omskriven | byggare | Formuläret (inklusive hCaptcha) fungerar som före, layouten håller 360 px, och ingen kommentar bär ett uppmätt tal |
 | P14 | Footer: logga, tagline, länkkolumner, copyright, avdelare | byggare | Länkar renderas bara när adressen finns, och kontrasten är mätt |
 | P15 | Slutkontroll: 360 px, kontrast AA, tangentbord, Lighthouse, före/efter, fillista | byggare | Alla mätserier redovisade som upprepbara kriterier. **P15 bygger ingenting.** |
-| **P16** | **GRANSKNINGSPUNKT 2 och LEVERANS: hård granskning av hela omgången, och Jelal ser före/efter** | granskare, sedan projektledare | Fynden i `LARDOMAR.md`, Jelal har sett jämförelsen och svarat på de öppna frågorna |
-| P17 | Dokumentation: README, GUIDE.md (projektdatan och övrigt, tidigare paket H), listan över ändrade filer | dokumentator | Guiden är **genomspelad**: att lägga till ett projekt enligt den ger grönt bygge |
+| **P16 (G2)** | **GRANSKNINGSPUNKT 2 och LEVERANS: hård granskning av hela omgången, och Jelal ser före/efter** | granskare, sedan projektledare | Fynden i `LARDOMAR.md`, Jelal har sett jämförelsen och svarat på de öppna frågorna |
+| P17 | Dokumentation: README, GUIDE.md (projektdatan och övrigt, tidigare paket H), profilfilerna och `optimize:images` efter M10c och M10d, listan över ändrade filer | dokumentator | Guiden är **genomspelad**: att lägga till ett projekt enligt den ger grönt bygge |
+| Commit och push | Omgången checkas in och pushas | samordnare | `git status` är ren och pushen har gått igenom. Se eget avsnitt |
 
 Därefter, utanför denna omgång: **paket L** från förra omgången.
 
 ### Ordning och beroenden
 
-P1 → P2 → P3 → P4 → P4b → P5 → P6 → P7 → **G1** → G1-kommentarerna →
-**G1-rättningen** → P8 → P9 → P10 → P11 → P12 → P13 → P14 → P15 → **P16** → P17.
+Byggt hittills: P1 → P2 → P3 → P4 → P4b → P5 → P6 → P7 → **G1** →
+G1-kommentarerna → **G1-rättningen** → P8 → P9 → P10, med P5 omgång 4
+parallellt med P9 och P10.
 
-- **P1 blockerar allt.** Ingen byggare startar på ett beslut som inte är fattat.
-- **P2 före allt annat bygge**, eftersom varje senare paket använder de nya
-  tokens och typsnitten.
-- **P4 efter P3**, eftersom de delar header-komponenten. Två paket som skriver i
-  samma fil samtidigt går inte att läsa isär. **P4b efter P4**, av samma skäl.
-- **P6 före P7.** Datan och valideringen byts först, med det gamla kortet kvar,
-  så att ett fel i datamodellen inte blandas ihop med ett fel i kortets layout.
-- **G1-kommentarerna före G1-rättningen.** De rör delvis samma filer
-  (`tokens.css`, `validate-data.mjs`). Två agenter i samma fil går inte att läsa
-  isär (arkitektens förutsättning i "Exakt vad G1-rättningen ändrar").
-- **G1-rättningen blockerar P8.** P8 startar inte förrän G1-rättningen är
-  godkänd. Filtret bygger på kortet, och kortet ska vara rättat först.
-- **P10 efter P9.** Uttoningen vid filtrering behöver filtret, och reveal ska
-  gälla de färdiga sektionerna.
-- **P12 är blockerat av Jelals svar** om ett nyckeltal kräver uppgifter om honom
-  (se P12). P13 och P14 kan köras före P12 om svaret dröjer.
+**Ordningen härifrån:**
+
+1. **P9b ∥ P5 omgång 5**
+2. **P11** (kompetenser och sektionsetiketter)
+3. **P12** (nyckeltal)
+4. **P13** (kontakt)
+5. **P14** (footer)
+6. **P15** (slutkontroll)
+7. **G2 / P16**
+8. **P17** (dokumentation)
+9. **Commit och push**
+
+- **P1 blockerade allt.** Ingen byggare startar på ett beslut som inte är fattat.
+- **P4 efter P3, P4b efter P4**, eftersom de delar header-komponenten. Två paket
+  som skriver i samma fil samtidigt går inte att läsa isär.
+- **P9b efter P10.** Uppfyllt. P10 ändrade `Projects.jsx`, och P9b ändrar den
+  igen (M11b, "P9b — exakt vad som ändras").
+- **P5 omgång 5 efter M10d.** Ingen byggare startar på ett beslut som inte är
+  skrivet.
+- **P9b och P5 omgång 5 körs parallellt, på ett villkor:** ingen fil i P9b:s
+  tabell (`ProjectFilter.module.css`, `ProjectFilter.jsx`, `Projects.module.css`,
+  `Projects.jsx`, `projectRules.js`, `global.css`, `ProjectCard.jsx`,
+  `Header.jsx`, `Reveal.jsx`, `main.jsx`) får finnas i M10d:s fillista. M12b
+  säger att P9b inte rör `Hero*`, `index.html`, `profile.js` eller
+  `optimize-images.mjs`. Vilka filer M10d rör vet jag ännu inte. **Samordnaren
+  jämför de två fillistorna när M10d finns.** Delar de en fil körs P5 omgång 5
+  efter att P9b är överlämnat. Varje paket checkar in bara sina egna filer.
+- **P11 efter P9b och P5 omgång 5.** Kompetenschipsen tar filterchipsens stil, och
+  filterpanelen ska vara färdig först.
+- **P12:** M14 avgör att båda talen härleds ur data och att "år i branschen" utgår
+  tills Jelal ger det. P12 väntar alltså inte längre på ett svar från Jelal.
 - **P15 efter allt bygge, P16 efter P15.** P16 kräver `GRANSKNING-PAGAR`.
+- **P17 efter P16, commit och push efter P17.**
 
-**Körbart tidigt:** efter P2 syns de nya färgerna och typsnitten på hela sidan.
-Efter P3 syns naven, efter P5 hero, och efter P7 de nya korten. G1 är första
-gången Jelal visas något. Vill han se sidan tidigare kan samordnaren visa den
+**Körbart tidigt:** efter P2 syntes de nya färgerna och typsnitten på hela sidan.
+Efter P3 syntes naven, efter P5 hero, och efter P7 de nya korten. Efter P5 omgång 4
+syntes porträttet som heros bakgrund. Efter P5 omgång 5 syns heros nya mobilläge,
+och Jelal får skärmbilderna. Vill han se sidan tidigare kan samordnaren visa den
 efter vilket paket som helst, utan granskning.
 
 ---
 
 ## Öppna punkter utan paket
 
-- **Hero-bakgrundsbild — väntar på Jelals besked och bild.** Jelal funderar på en
-  bakgrundsbild i hero, i 4K. Inget är beslutat. Inget paket planeras, och ingen
-  agent hämtar eller skapar en bild, förrän Jelal har gett besked och bilden.
+Inga just nu. **Hero-bakgrundsbilden är beslutad** (Jelals besked 2026-11-07,
+M10c). **Heros mobilläge är beslutat** (Jelals besked 2026-11-07: bilden överst,
+texten under, och scroll till knapparna accepteras på små telefoner). Det ligger
+i **P5 omgång 5** enligt M10d. Frågan om ansiktet bakom rubriken är struken. P8:s,
+P9:s och P10:s öppna punkter är avgjorda i M11b och M12b och ligger i **P9b**.
 
 ---
 
@@ -537,6 +644,9 @@ radhöjd på dator och mobil, och ingress i `--ink-muted` med maxbredd 560 px.
 Orange glöd från höger kant, porträtt till höger på dator. Heros fyra markeringar
 genomförs enligt beslut 10 och tas bort i samma ändring.
 
+**Glöden, den runda bilden och bildspåret ersattes i P5 omgång 4 (M10c).** Detta
+avsnitt beskriver de tre första omgångarna och är historik för just de delarna.
+
 **Ingår INTE:** heros knappar, om P1 inte uttryckligen ändrar dem. Andra
 sektioner.
 
@@ -551,6 +661,144 @@ sektioner.
 5. `grep -rn "EJ I ARKITEKTUR" src` redovisad: heros fyra är borta, och inga nya
    har tillkommit utan att listas.
 6. `npm run build` grön.
+
+---
+
+## P5 omgång 4 — heros svartvita porträtt som profilbild och bakgrund (BYGGD, LÄMNAD TILLBAKA)
+
+**Agent:** byggare. **Förutsättning:** Jelals besked 2026-11-07 och M10c i
+`ARKITEKTUR.md` (båda uppfyllda). Källbilden finns som
+`assets-source/hero-portrait.jpg`, otrackad i git, och läggs till i samma
+incheckning. Kördes parallellt med P9 och P10.
+
+**Utfall 2026-11-07: byggd, men lämnad tillbaka till arkitekten.** Två rader i
+M10c:s mätserie höll inte:
+
+- **Rad 7, kontrasten:** föll under 900 px.
+- **Rad 9:** förutsade fel `loading`-värde.
+
+Arkitekten avgör båda i **M10d**, tillsammans med Jelals besked om mobilläget, och
+de genomförs i **P5 omgång 5**. Omgång 4:s filer står kvar i arbetsträdet, och
+omgång 5 bygger vidare på dem enligt M10d.
+
+**Jelals besked, bindande:** *"Lägg in bilden i hero-sektionen, det är en bild på
+mig men den ska föreställa en profilbild samt täcka bakgrunden, gör bilden
+svartvit."*
+
+**Mål:** porträttet är heros profilbild och täcker bakgrunden, i svartvitt.
+Cirkeln, strecket, tonplattan, bildspåret och den orange glöden utgår.
+
+**Ingick** — M10c:s tabell "P5 omgång 4 — exakt vad som ändras", en punkt per fil:
+
+1. **`src/components/Hero.module.css`:** enligt "`Hero.module.css`, tecken för
+   tecken" i M10c. Kommentarsblocken ovanför varje ändrad regel skrivs om till
+   invarianter.
+2. **`src/components/Hero.jsx`:** bilden, `HERO_IMAGE_SIZES`, `heroImageSrc` och
+   importen, enligt "`Hero.jsx`, tecken för tecken". Kommentarerna om bilden
+   skrivs om.
+3. **`src/data/profile.js`:** `HERO_IMAGE_WIDTHS`, tecken för tecken.
+4. **`src/styles/tokens.css`:** `--overlay-grey` tas bort, med sin
+   kvotkommentar om den finns. **Inget annat i filen rörs** (se samordningen).
+5. **`index.html`:** preloaden direkt efter `<title>`, och
+   **`<noscript>`-kommentaren** omskriven tecken för tecken enligt M10c. **Detta
+   åtgärdar efterkontrollens fynd `index.html:34-35`** (`LARDOMAR.md` 2026-11-07,
+   "`index.html` hävdar fortfarande ...", ÅTERFALL).
+6. **`scripts/optimize-images.mjs`:** profildelen ersätts av heros del. Ikondelen
+   rörs inte. Skriptets namn och scriptraden `optimize:images` behålls.
+7. **`public/assets/hero/`:** ny katalog, de tre genererade filerna.
+8. **`public/assets/profile/`:** tas bort.
+9. **`assets-source/hero-portrait.jpg`:** läggs till i git.
+10. **`assets-source/profile.jpg`:** tas bort (finns i git-historiken).
+
+**Ingick INTE:**
+- M10c:s "Rörs inte": `Projects*`, `ProjectFilter*`, `Chip*`, `global.css`,
+  `Header*`, `MobileMenu*`, `validate-data.mjs`, `validate-tokens.mjs`,
+  `package.json`.
+- `README.md` och `GUIDE.md`. De nämner profilfilerna och `optimize:images`, men
+  är dokumentatorns och ligger i **P17**.
+- `ARKITEKTUR.md` och `PLAN.md`.
+- Att ändra färger, texter eller layout för att klara kontrasten. Faller M10c:s
+  rad 7 följs M10c:s ordning (toningens alfa i steg, högst 95 %), och därefter
+  lämnar byggaren tillbaka till arkitekten. **Det är vad som hände.**
+- Att lossa en storleks- eller gråskalegräns i bildskriptet, eller ändra
+  kvaliteten. Fäller grind 4 eller 5 på den korrekta källan lämnas det tillbaka
+  till arkitekten.
+
+**Godkänt när** — M10c, "Grindar före överlämning", punkt 17–22. **Inte uppfyllt:
+rad 7 och rad 9 i mätserien höll inte.** Punkterna gäller vidare i omgång 5 i den
+mån M10d inte skriver om dem:
+
+17. `npm run validate:data`, `npm run validate:tokens`, `npm run build` och
+    `npm run lint` är gröna. Tokengrinden är tyst efter att `--overlay-grey`
+    tagits bort.
+18. Tabellen över förbjudna strängar körd mot `src/`, `scripts/` och `index.html`,
+    särskilt raderna under "Tillagt 2026-11-07, M10c". M10c:s grep-rad på
+    `overlay-grey`, `/assets/profile`, `profile-[0-9]`, `grayscale(1)`,
+    `const IMAGE_SIZES` och `styles.media` ger 0 träffar. Därtill:
+    `grep -rn "tredje global\|global klass" src scripts index.html` ger 0
+    träffar (M10c, `index.html`).
+19. `grep -rnE "[0-9]+ px|cirkel|tonplatta|glöd|bildspår"` på `Hero.jsx` och
+    `Hero.module.css`: varje träff i en kommentar omskriven till invarianten och
+    redovisad med `fil:rad`. Hela kommentarsblocket ovanför varje ändrad rad är
+    omläst.
+20. För varje `OPEN-KEY: <nyckel>` i `src/` och `scripts/`:
+    `grep -c "<nyckel>" ARKITEKTUR.md`, redovisat. M11b:s nycklar i filterfilerna
+    rörs inte (de ägs av P9b).
+21. Varje deklaration i M10c besvarad i överlämningen med `fil:rad`.
+22. Skärmbilder vid 360 × 640, 390 × 844, 1280 × 800 och 1600 × 900, med absoluta
+    sökvägar i överlämningen. **Jelal har sett resultatet och beslutat om
+    mobilläget 2026-11-07** (se P5 omgång 5).
+
+Underlaget för punkt 17–22 är M10c:s **mätserie utan bildspåret** (rad 1–5, 5b,
+5c, 7–10 och de negativa kontrollerna i rad 6) och punkt 12–16 om bildskriptet och
+bygget.
+
+**Samordning med P9 och P10 — passerad.** Alla tre paketen ändrade `tokens.css`,
+och samordnaren lät en ändring i taget vara överlämnad innan nästa gjordes. Alla
+tre är byggda.
+
+---
+
+## P5 omgång 5 — hero enligt M10d (VÄNTAR PÅ M10d)
+
+**Agent:** byggare. **Förutsättning:** **M10d i `ARKITEKTUR.md`**, som arkitekten
+skriver nu, och att samordnaren har jämfört M10d:s fillista med P9b:s (se
+"Ordning och beroenden"). **Körs parallellt med P9b** om fillistorna inte
+överlappar, annars efter P9b.
+
+**Bakgrund:**
+- P5 omgång 4 lämnades tillbaka: kontrasten på M10c:s rad 7 föll under 900 px,
+  och rad 9 förutsade fel `loading`-värde.
+- **Jelals besked 2026-11-07, bindande:** på mobil ligger bilden **överst** och
+  texten **under**. Han accepterar att man på små telefoner kan behöva scrolla för
+  att nå knapparna.
+
+**Mål:** heron uppfyller Jelals besked om mobilläget och M10d:s mätserie.
+
+**Ingår:** enligt M10d (P5 omgång 5). Fylls i här, en punkt per fil, när M10d
+finns.
+
+**Ingår INTE:**
+- Någon av P9b:s tio filer.
+- `README.md` och `GUIDE.md` (P17).
+- `ARKITEKTUR.md` och `PLAN.md`.
+- Att ändra färger, texter, layout eller en grind för att få en mätning att hålla,
+  utöver det M10d beslutar. Faller en grind lämnar byggaren tillbaka till
+  arkitekten.
+
+**Godkänt när:** enligt M10d:s grindar före överlämning, som fylls i här. Utöver
+dem gäller, eftersom `LARDOMAR.md` kräver det i varje paket:
+1. De uppmätta talen för varje rad M10d förutsäger står i överlämningen, med vyport
+   och rullningslistvillkor.
+2. Tabellen över förbjudna strängar körd mot `src/`, `scripts/` och `index.html`.
+3. För varje `OPEN-KEY: <nyckel>` i `src/` och `scripts/`: `grep -c "<nyckel>"
+   ARKITEKTUR.md`, redovisat.
+4. Kommentarsblocken kring varje ändrad rad omlästa, och `grep -rnE "[0-9]+ px"`
+   på de ändrade filerna redovisad.
+5. `npm run validate:data`, `npm run validate:tokens`, `npm run build` och
+   `npm run lint` gröna.
+6. Skärmbilder med absoluta sökvägar, och **Jelal har sett resultatet** innan
+   omgången räknas som klar.
 
 ---
 
@@ -624,13 +872,14 @@ skugga, kant, bildzoom). Synligt fokus.
 
 ---
 
-## G1 — Granskningspunkt 1 (efter projektkortet) — GENOMFÖRD, EJ GODKÄND
+## G1 — Granskningspunkt 1 (efter projektkortet) — GENOMFÖRD, EJ GODKÄND, FYNDEN ÅTGÄRDADE
 
 **Agent:** granskare. Samordnaren visar sidan för Jelal.
 
 **Utfall:** EJ GODKÄND, sju fynd, nedskrivna i `LARDOMAR.md` (posterna daterade
-2026-11-07). Fynd 1–2 rättas i **G1-kommentarerna**, fynd 3–7 i
-**G1-rättningen** enligt arkitektens R1–R6.
+2026-11-07). Fynd 1–2 rättades i **G1-kommentarerna**, fynd 3–7 i
+**G1-rättningen** enligt arkitektens R1–R6. **G1-rättningen godkändes av
+efterkontrollen 2026-11-07, så fynd 1–7 är åtgärdade.**
 
 **Ingår:** `GRANSKNING-PAGAR` skapas före start och raderas efter rapporten.
 Ändringslistan med datum tas vid start och slut. Hård granskning av P1–P7 mot
@@ -640,8 +889,8 @@ filen. Varje `EJ I ARKITEKTUR` läses mot dokumentet.
 
 **Godkänt när:** fynden står i `LARDOMAR.md`, och varje fynd är åtgärdat eller
 uppskjutet av Jelal. **Fynden räknas som åtgärdade först när G1-rättningen är
-godkänd.** Jelal har sett nav, hero och kortet, och har fått frågan om Awles
-beskrivning.
+godkänd** (uppfyllt 2026-11-07). Jelal har sett nav, hero och kortet, och har
+fått frågan om Awles beskrivning.
 
 ---
 
@@ -656,17 +905,25 @@ borttagen. Arkitekten räknar upp filerna som `Header.jsx`, `global.css`,
 `Hero.module.css`, `tokens.css`, `Projects.module.css` och `validate-data.mjs`.
 
 **Kontrollerat av mig 2026-11-07:** `OPEN-KEY: profile-export-saknas` finns inte
-längre i `src/` eller `scripts/`. Kommentarernas innehåll har jag inte prövat. Det
-gör granskarens efterkontroll i G1-rättningen.
+längre i `src/` eller `scripts/`. Kommentarernas innehåll prövades av granskarens
+efterkontroll i G1-rättningen, som godkände.
 
 ---
 
-## G1-rättningen — fynd 3–7 enligt R1–R6 (PÅGÅR)
+## G1-rättningen — fynd 3–7 enligt R1–R6 (KLART, GODKÄND 2026-11-07)
 
 **Agent:** byggare, därefter granskare för en smal efterkontroll.
 **Förutsättning:** G1-kommentarerna klara (uppfyllt). **Beslut:** avsnittet
 "Besluten efter G1 (2026-11-07)" i `ARKITEKTUR.md`, R1–R6, och M5h.
-**Blockerar:** P8.
+**Blockerade:** P8 (inte längre).
+
+**Utfall:** **GODKÄND av granskarens efterkontroll 2026-11-07.** Efterkontrollen
+hittade två nya kommentarsfel utanför fynd 1–7, nedskrivna i `LARDOMAR.md` (de två
+sista posterna 2026-11-07). Enligt punkt 11 nedan blockerar de inte. De har var
+sitt paket:
+
+- `index.html:34-35`, `<noscript>`-kommentaren → **P5 omgång 4**, punkt 5.
+- `Contact.module.css:15-17`, mättabellen från före M18 → **P13**, `Ingår:`.
 
 **Mål:** att G1:s fynd 3–7 är rättade så som arkitekten beslutat, och att varje
 rättelse är mätt.
@@ -751,13 +1008,25 @@ punkt 4 i "Godkänt när".
 11. **Efterkontrollen:** granskaren, med `GRANSKNING-PAGAR` och ändringslistan
     med datum, bekräftar fynd 1–7 som åtgärdade mot `LARDOMAR.md` och R1–R6.
     Inget annat granskas. Ett nytt fynd utanför de sju skrivs ner i `LARDOMAR.md`
-    men blockerar inte P8, om inte Jelal säger annat.
+    men blockerar inte P8, om inte Jelal säger annat. **Uppfyllt 2026-11-07.**
 
 ---
 
-## P8 — Filterpanel del 1: segmentkontrollen och live-raden
+## P8 — Filterpanel del 1: segmentkontrollen och live-raden (BYGGT)
 
-**Agent:** byggare. **Förutsättning:** **G1-rättningen godkänd**, beslut 11.
+**Agent:** byggare. **Förutsättning:** **G1-rättningen godkänd** (uppfyllt),
+beslut 11.
+
+**Läge:** **Byggt.** De tre öppna frågorna är avgjorda i **M11b**:
+
+- `segment-overflow` (M11b rad 1): godkänd, etiketten klipps med ellips.
+- `live-row-spacing` (M11b rad 2): godkänd.
+- **Piltangenterna i segmentkontrollen** (M11b rad 3): Tab räcker, ingen kod
+  ändras.
+
+Borttagningen av markeringarna och mätningarna ligger i **P9b**, inte här, så att
+P8 inte får nytt innehåll efter att det är byggt. Det tidigare planerade
+följdpaketet P8b är upplöst i P9b.
 
 **Mål:** filtrering per kategori utan sidomladdning.
 
@@ -767,7 +1036,8 @@ räknade ur data och tillgänglig grupproll. Live-raden "VISAR X AV Y PROJEKT".
 Varje fast id panelen sätter är en `*_ID`-export i `sections.js` (R2), så att
 id-grinden ser det.
 
-**Ingår INTE:** chips och sök (P9). In- och uttoning (P10).
+**Ingår INTE:** chips och sök (P9). In- och uttoning (P10). De tre öppna frågorna
+(P9b).
 
 **Godkänt när:**
 1. Med Awle enbart: "Alla 1", "Fullstack 1", och de övriga enligt beslut 11 om
@@ -783,9 +1053,13 @@ id-grinden ser det.
 
 ---
 
-## P9 — Filterpanel del 2: teknik-chips och sökfältet
+## P9 — Filterpanel del 2: teknik-chips och sökfältet (BYGGT)
 
-**Agent:** byggare. **Förutsättning:** P8, beslut 9 och 11.
+**Agent:** byggare. **Förutsättning:** P8, beslut 9 och 11. Kördes parallellt med
+P5 omgång 4.
+
+**Läge:** **Byggt.** Paketets öppna markeringar är avgjorda i **M11b** och
+genomförs i **P9b**.
 
 **Ingår:** teknik-chips med uppdragets mått och aktivt läge. Sökfältet med
 pill-form, ikon, placeholder "Sök projekt" och en riktig etikett. Kombinationen
@@ -794,7 +1068,9 @@ segment, chips och sök enligt beslut 11. Tomt resultat enligt beslut 11.
   chipsen blir dess första `var()`-konsument. Kommentaren i `tokens.css` som pekar
   fram mot chipsen skrivs om, så att den inte längre beskriver något framtida.
 
-**Ingår INTE:** animation (P10). Nya fält i datan för sökningens skull.
+**Ingår INTE:** animation (P10). Nya fält i datan för sökningens skull. De öppna
+markeringarna (P9b). Hero-filerna, `index.html`, bildskriptet och `--overlay-grey`
+(P5 omgång 4).
 
 **Godkänt när:**
 1. En tabell med minst sex kombinationer (segment × chip × sökord) mot klonade
@@ -811,9 +1087,17 @@ segment, chips och sök enligt beslut 11. Tomt resultat enligt beslut 11.
 
 ---
 
-## P10 — Animationer
+## P10 — Animationer (BYGGT)
 
-**Agent:** byggare. **Förutsättning:** P9, beslut 12.
+**Agent:** byggare. **Förutsättning:** P9, beslut 12. Kördes parallellt med P5
+omgång 4.
+
+**Läge:** **Byggt.** Byggaren hittade fem saker som M12 inte löste: ankarhoppet
+till ett kort som inte tonats in, `Header.jsx` utan skydd mot saknad
+IntersectionObserver, den avstängda lintregeln för `enableReveal`, live-raden som
+byter siffra före korten, och att varje tangenttryckning startar en ny uttoning.
+Arkitekten har avgjort dem i **M12b**, och de genomförs i **P9b**. P10 får inget
+nytt innehåll.
 
 **Ingår:** `.reveal` med IntersectionObserver, staggern på korten, in- och
 uttoning vid filtrering, och `prefers-reduced-motion` som stänger av transforms
@@ -828,7 +1112,10 @@ och transitions på hela sidan.
 - **Den globala regeln `a { transition }` stängs av vid reducerad rörelse**,
   tillsammans med varje annan transition på sidan.
 
-**Ingår INTE:** nya animationer utöver uppdraget. Ändrad layout.
+**Ingår INTE:** nya animationer utöver uppdraget. Ändrad layout. **M11b:s
+markeringar från P8 och P9**, även om `OPEN-KEY`-grepen ger träff på dem. De
+listas i överlämningen som "besvarade i M11b, tas bort i P9b". Hero-filerna,
+`index.html` och `--overlay-grey` (P5 omgång 4).
 
 **Godkänt när:**
 1. Med JavaScript avstängt (eller observern borttagen i en kopia) syns allt
@@ -854,9 +1141,101 @@ och transitions på hela sidan.
 
 ---
 
+## P9b — M11b + M12b: filtrets markeringar och P10:s fem fynd (PÅGÅR)
+
+**Agent:** byggare. **Förutsättning:** P10 byggt (uppfyllt), M11b och M12b i
+`ARKITEKTUR.md` (uppfyllda). **Körs parallellt med P5 omgång 5**, på villkoret i
+"Ordning och beroenden". **Blockerar:** P11, och måste vara klart före P15 och
+därmed före G2.
+
+**Varför ett paket.** Arkitekten slog ihop M11b och M12b eftersom båda ändrar
+`Projects.jsx`. P8:s tre frågor, som tidigare var planerade som P8b, är M11b rad
+1–3 och ingår här. `LARDOMAR.md` 2026-11-07 (ÅTERFALL): ett uppskjutet beslut ska
+vara en punkt i `Ingår:` hos det paket som kommer efter villkoret.
+
+**Mål:** att de besvarade markeringarna från P8, P9 och P10 är borta, att fokus
+hamnar på "Alla" efter "Rensa filter", och att P10:s fem fynd är rättade så som
+M12b beslutar.
+
+**Ingår** — tabellen "P9b — exakt vad som ändras (M11b + M12b, ett paket)" under
+M11b i `ARKITEKTUR.md`, en punkt per fil. **Inga andra filer.**
+
+1. **`src/components/ProjectFilter.module.css`** (M11b 1, 6, 7): markeringarna
+   för `segment-overflow` (i `.segment` och över `.label`),
+   `search-icon-position` och `search-placeholder-color` tas bort och ersätts med
+   `/* Beslutat i ARKITEKTUR.md: M11b */` plus invarianten. Inga deklarationer
+   ändras.
+2. **`src/components/ProjectFilter.jsx`** (M11b 3, 5, 11): markeringen för
+   `search-dom-order` ersätts med hänvisningen plus invarianten "DOM-ordningen är
+   den visuella ordningen i båda lägena". Propen `allRef` och `ref` på "Alla"
+   enligt signaturen. **Segmentets `onClick` ändras inte** (M12b punkt 5).
+   Komponentens kommentar får en mening om att Tab är tangentmodellen och att ett
+   valt segment inte kan avmarkeras.
+3. **`src/components/Projects.module.css`** (M11b 2, 8): markeringarna för
+   `live-row-spacing` och `no-match-style` ersätts på samma sätt. Inga
+   deklarationer ändras.
+4. **`src/components/Projects.jsx`** (M11b 11, M12b 4, 5): `allSegmentRef`,
+   `allRef={allSegmentRef}` och fokusraden i "Rensa filter". `displayed` med lat
+   startvärde, och `shown` tas bort ur renderingen. `pending`-ref och
+   `changeFilter` i sju steg. `sameSlugs` importeras. Live-raden blir
+   `displayed.length`. Kommentaren om de två listorna får invarianten "en fas
+   startar bara när mängden projekt ändras".
+5. **`src/lib/projectRules.js`** (M12b 5): `export function sameSlugs(a, b)`
+   enligt signaturen.
+6. **`src/styles/global.css`** (M12b 1): reveal-regeln delas i två, tecken för
+   tecken: opacitet på alla, `transform` bara `:not([id])`. Kommentaren får
+   invarianten om ankarmål, utan tal.
+7. **`src/components/ProjectCard.jsx`** (M12b 1): kommentaren ovanför
+   `<Reveal as="li" …>` får meningen om att id:t gör att elementet bara tonas i
+   opacitet, så att ett ankarhopp landar rätt.
+8. **`src/components/Header.jsx`** (M12b 2): skyddsraden först i effekten i
+   `useCurrentSection`, med kommentar.
+9. **`src/components/Reveal.jsx`** (M12b 3): `enableReveal`, `oxlint-disable`-raden
+   och markeringen för `reveal-lint-export` tas bort. Den inledande kommentaren
+   säger att `main.jsx` sätter attributet.
+10. **`src/main.jsx`** (M12b 3): lokal `function enableReveal()` utan export.
+    Importen ur `Reveal.jsx` tas bort.
+
+**Ingår INTE:**
+- Någon fil utöver de tio. Särskilt inte `Hero*`, `index.html`, `profile.js`,
+  `optimize-images.mjs` (P5 omgång 5), `sections.js`, `validate-data.mjs` eller
+  `tokens.css`. `PROJECT_SEARCH_ID` finns redan (P9), och P9b bara prövar grinden
+  mot den.
+- Kod för M11b rad 3, 10 och 12. De bekräftar att ingen kod ändras.
+- En egen vakt i `ProjectFilter.jsx` för klick på valt segment (M11b rad 4, M12b
+  punkt 5).
+- `useEffect` eller `setTimeout` för fokus, och ett id för fokusflytten (M11b
+  rad 11).
+- `ARKITEKTUR.md` och `PLAN.md`.
+
+**Godkänt när** — M11b, "Grindar före överlämning", punkt 1–7:
+
+1. `grep -rn "segment-overflow\|live-row-spacing\|search-dom-order\|search-icon-position\|search-placeholder-color\|no-match-style\|reveal-lint-export" src`
+   ger noll träffar. `grep -rn "oxlint-disable\|eslint-disable" src` ger noll.
+2. M11b: provet i rad 9 (`slug: 'project-search'` ger kod 1 och exakt den
+   beslutade raden, rättat ger kod 0), och mätningen i rad 11 (fokus efter "Rensa
+   filter", med tangentbord och mus) med negativ kontroll.
+3. M12b: mätningarna i punkt 1–5, var och en med sin negativa kontroll, med vyport
+   och rullningslistvillkor.
+4. Det befintliga 360 px-provet för panelen och P10:s reveal-mätningar (med och
+   utan reducerad rörelse) körs om oförändrade.
+5. `npm run lint` utan varningar för `only-export-components`.
+   `npm run validate:data` och `npm run build` är gröna, och tokengrinden tiger.
+6. Kommentarer: `grep -rn "reveal\|enableReveal\|shown\|[0-9]\+ px" src` läses,
+   och varje kommentar som beskriver det gamla beteendet skrivs om till
+   invarianten.
+7. För varje `OPEN-KEY: <nyckel>` i `src/` och `scripts/`:
+   `grep -c "<nyckel>" ARKITEKTUR.md`.
+
+Därtill, eftersom M10d skrivs under P9b: byggaren läser om M11b och M12b mot
+`ARKITEKTUR.md` före överlämningen och anger om något i dem har ändrats sedan
+starten.
+
+---
+
 ## P11 — Sektionsetiketter och kompetenser
 
-**Agent:** byggare. **Förutsättning:** P2 (kan köras efter P10), beslut 13 och 15.
+**Agent:** byggare. **Förutsättning:** P9b och P5 omgång 5, beslut 13 och 15.
 
 **Ingår:** numrerade etiketter i formatet "01 / 04 · PROJEKT" för varje sektion,
 härledda ur `sections.js`. Kompetensgrupperna med mono-eyebrow och chips i
@@ -880,8 +1259,8 @@ filterchipsens stil.
 
 ## P12 — Nyckeltal
 
-**Agent:** byggare. **Förutsättning:** beslut 14, och **Jelals svar om ett tal
-kräver uppgifter om honom.**
+**Agent:** byggare. **Förutsättning:** P11, beslut 14 (M14). M14 avgör att båda
+talen härleds ur data och att "år i branschen" utgår tills Jelal ger det.
 
 **Ingår:** raden med Urbanist-siffror och mono-etiketter, där varje tal kommer
 ur data eller ur en uppgift Jelal själv gett.
@@ -904,10 +1283,17 @@ ett påstående om Jelal.
 
 ## P13 — Kontakt
 
-**Agent:** byggare. **Förutsättning:** P2, beslut 16.
+**Agent:** byggare. **Förutsättning:** P12, beslut 16.
 
-**Ingår:** två kolumner med kontaktuppgifter ur `contact.js` till vänster och
-formuläret i en `--surface`-panel till höger, en kolumn på mobil.
+**Ingår:**
+- Två kolumner med kontaktuppgifter ur `contact.js` till vänster och formuläret
+  i en `--surface`-panel till höger, en kolumn på mobil.
+- **`Contact.module.css:15-17`: mättabellen från före M18 skrivs om till
+  invarianten** (efterkontrollens fynd, `LARDOMAR.md` 2026-11-07,
+  "`Contact.module.css` bär en mättabell från före M18", ÅTERFALL). Kommentaren
+  anger vad brytpunkten skyddar, utan tal, och hänvisar till avsnittet i
+  `ARKITEKTUR.md`. Mätningen hör hemma där, inte i kommentaren. Hela
+  kommentarsblocket kring raderna läses om.
 
 **Ingår INTE:** ändrad formulärlogik, hCaptcha-integration eller fält.
 
@@ -919,13 +1305,16 @@ formuläret i en `--surface`-panel till höger, en kolumn på mobil.
    är mätt och ≥ 4,5:1.
 3. En uppgift som är `null` i `contact.js` renderar inget element.
 4. 360 px-golvet med syntessträng i en uppgift och en etikett.
-5. `npm run build` grön.
+5. **Kommentarerna:** `grep -rnE "[0-9]+ px" src --include=*.css --include=*.jsx`
+   körd och redovisad. Ingen kommentar i `Contact.module.css` bär ett uppmätt tal,
+   och varje annan träff i en kommentar är läst.
+6. `npm run build` grön.
 
 ---
 
 ## P14 — Footer
 
-**Agent:** byggare. **Förutsättning:** P2, beslut 16.
+**Agent:** byggare. **Förutsättning:** P13, beslut 16.
 
 **Ingår:** avdelare överst, logga, tagline, länkkolumner för GitHub, LinkedIn och
 e-post, och copyright-rad.
@@ -945,16 +1334,17 @@ den.
 
 ## P15 — Slutkontroll
 
-**Agent:** byggare. **Förutsättning:** P3–P14. **P15 bygger ingenting.**
-Fallerar en rad lämnas fyndet tillbaka till det paket som äger filen, som rättar,
-och P15 körs om.
+**Agent:** byggare. **Förutsättning:** P3–P14, **P9b och P5 omgång 5**. **P15
+bygger ingenting.** Fallerar en rad lämnas fyndet tillbaka till det paket som äger
+filen, som rättar, och P15 körs om.
 
 **Ingår:**
 1. **360 px:** `documentElement.scrollWidth <= clientWidth` vid 360 × 640, 390 ×
    844, 600, 900, 1280 och 1600 px, med syntessträngen i varje textelement och
    med rullningslistvillkoret redovisat.
 2. **Kontrast AA:** varje text-token mot varje bakgrund det faktiskt används på,
-   som en tabell.
+   som en tabell. I hero mot bildens pixlar, med M10d:s metod (eller M10c:s, om
+   M10d inte ändrar den).
 3. **Tangentbord:** hela sidan genomtabbad från skip-länken till footern. Varje
    interaktivt element nås, har synligt fokus och fungerar med Enter/Space.
    Mobilmenyn ingår.
@@ -974,18 +1364,25 @@ ledig enligt `netstat`.
 
 ---
 
-## P16 — Granskningspunkt 2 och LEVERANS
+## P16 — Granskningspunkt 2 (G2) och LEVERANS
 
 **Agent:** granskare, därefter projektledare. **Förutsättning:** P15.
 
 **Ingår:** `GRANSKNING-PAGAR` och frysningen som i G1. Hård granskning av hela
-omgången: varje beslut i P1 punkt för punkt mot koden med `fil:rad`, de upphävda
-strängarna mot `src/`, `scripts/` och `GUIDE.md`, och varje `EJ I ARKITEKTUR` läst
-mot dokumentet. Därefter visas före/efter och fillistan för Jelal.
+omgången: varje beslut i P1 punkt för punkt mot koden med `fil:rad`, inklusive
+M10d, M11b och M12b, de upphävda strängarna mot `src/`, `scripts/`,
+**`index.html`** och `GUIDE.md` (`LARDOMAR.md` 2026-11-07, "`index.html` hävdar
+fortfarande"), och varje `EJ I ARKITEKTUR` läst mot dokumentet. Därefter visas
+före/efter och fillistan för Jelal.
 
-**Frågor till Jelal vid leverans:** Awles beskrivning och footerns tagline, om de
-inte redan godkänts. Kvarvarande frågor från förra omgången: Hem och Ekonomi,
-LinkedIn och granskningsrytmen. Att paket L körs härnäst.
+**Frågor till Jelal vid leverans:**
+- Awles beskrivning och footerns tagline, om de inte redan godkänts.
+- Kvarvarande frågor från förra omgången: Hem och Ekonomi, LinkedIn och
+  granskningsrytmen. Att paket L körs härnäst.
+
+Frågan om ansiktet på smal skärm är **struken**. Jelal beslutade 2026-11-07:
+bilden överst och texten under på mobil, och scroll till knapparna accepteras på
+små telefoner.
 
 **Godkänt när:** fynden står i `LARDOMAR.md` och är åtgärdade eller uppskjutna av
 Jelal, och Jelal har sett jämförelsen.
@@ -996,34 +1393,106 @@ Jelal, och Jelal har sett jämförelsen.
 
 **Agent:** dokumentator. **Förutsättning:** P16. Ersätter förra omgångens paket H.
 
-**Ingår:** README, och GUIDE.md omskriven: projektdatan (nya fält, kategori,
-status, bild i 4:3), kompetenserna (förra H:s innehåll) och filtret. Listan över
-ändrade filer.
+**Ingår:**
+- README, och GUIDE.md omskriven: projektdatan (nya fält, kategori, status, bild
+  i 4:3), kompetenserna (förra H:s innehåll) och filtret. Listan över ändrade
+  filer.
+- **Profilfilerna och `optimize:images` efter M10c och M10d.** `README.md` och
+  `GUIDE.md` nämner fortfarande profilfilerna och `optimize:images`. Efter P5
+  omgång 4 finns inte `public/assets/profile/` och `assets-source/profile.jpg`.
+  Källan är `assets-source/hero-portrait.jpg`, och `optimize:images` genererar
+  heros bild och logoikonerna. Varje sådant ställe skrivs om så att det stämmer
+  med `ARKITEKTUR.md`, M10c och M10d.
 
 **Godkänt när:** guiden är **genomspelad**. Att lägga till ett projekt, ändra
 status och lägga till en kompetens enligt den ger grönt `npm run build` efter
 varje steg, utan att en komponentfil öppnas. Inget antal och inget tokennamn som
-har upphävts står kvar i guiden.
+har upphävts står kvar i guiden. `grep -n "profile\|optimize:images" README.md
+GUIDE.md` är redovisad, och varje träff stämmer med M10c och M10d.
+
+---
+
+## Commit och push
+
+**Agent:** samordnare. **Förutsättning:** P17 klart.
+
+**Ingår:** incheckning av omgångens filer och push till `main`. Varje paket har
+checkat in bara sina egna filer, så detta steg tar det som återstår efter P17.
+
+**Godkänt när:** `git status` är ren, ingen fil utan ägande paket är med (jämfört
+mot fillistan från P15 punkt 6), och pushen har gått igenom.
 
 ---
 
 ## Risker (denna omgång)
 
-**Nya efter G1:**
+**Nya efter P10, M12b och Jelals besked:**
+
+- **M10d skrivs medan P9b byggs.** `LARDOMAR.md` 2026-10-02: dokumentet ändras
+  inte under ett pass som bygger mot det. Rör M10d något stycke P9b bygger mot,
+  bygger P9b mot en norm som flyttar sig. **Märks tidigt** genom att samordnaren
+  kör `git diff ARKITEKTUR.md` innan P9b lämnas, och genom att P9b:s byggare
+  läser om M11b och M12b före överlämningen.
+- **M10d rör en av P9b:s tio filer.** Då kan P9b och P5 omgång 5 inte köras
+  parallellt. **Märks tidigt** genom att samordnaren jämför fillistorna när M10d
+  finns, innan P5 omgång 5 startar.
+- **P5 omgång 5 faller igen på kontrasten eller på en förutsägelse.** Omgång 4
+  föll på rad 7 och 9. **Märks tidigt** genom att byggaren skriver de uppmätta
+  talen i överlämningen och stoppar vid en fallerande grind, i stället för att
+  justera.
+- **Knappgrinden lossas av byggaren i stället för att skrivas om av arkitekten.**
+  Jelal accepterar att knapparna kan hamna under skärmkanten på små telefoner.
+  Den frestande utvägen är att stryka eller vidga grinden i bygget. **Märks
+  tidigt** genom att mätseriens krav på knapparna bara ändras i M10d.
+- **`changeFilter` i sju steg blir fel i ett kantfall.** **Märks tidigt** genom
+  M12b punkt 5:s sex prov, där prov 6 är den negativa kontrollen.
+- **Fokusprovet går grönt av fel skäl**, till exempel för att fokus redan låg på
+  "Alla" eller för att provet bara kördes med mus. **Märks tidigt** genom P9b
+  grind 2: tangentbord och mus, och den negativa kontrollen som måste ge `BODY`.
+- **P9b växer utöver sina tio filer.** **Märks tidigt** genom att `git status`
+  före överlämning bara visar de tio.
+- **P8b dyker upp igen i en överlämning eller en hänvisning.** Paketet finns inte.
+  **Märks tidigt** genom att P8, P9, P10, P15 och beroendelistan pekar på P9b.
+
+**Efter M11b:**
+
+- ~~**P10 tar bort M11b:s markeringar "medan byggaren ändå är i filen".**~~
+  **Passerat, P10 är byggt.** P9b grind 1 visar att de är borta.
+- ~~**P9b startas medan P10 fortfarande ändrar `Projects.jsx`.**~~ **Passerat,
+  P10 är byggt.**
+
+**Efter efterkontrollen och M10c:**
+
+- ~~**P9, P10 och P5 omgång 4 skriver i `tokens.css` samtidigt.**~~ **Passerat,
+  alla tre är byggda.**
+- **Ett rött bygge från grannpaketet läses som eget fel.** Tokengrinden och
+  `build` läser hela trädet, så P9b:s halvfärdiga läge kan fälla P5 omgång 5 och
+  tvärtom. Den frestande utvägen är att "laga" grannens fil. **Märks tidigt**
+  genom att varje rött bygge redovisas med fil och rad, och genom att varje paket
+  bara checkar in sina egna filer.
+- **M10c:s tal var uträknade, inte uppmätta**, och rad 9 visade sig vara fel.
+  **Märks tidigt** genom att P5 omgång 5 skriver de uppmätta talen i
+  överlämningen.
+- ~~**Jelal vill inte ha ansiktet bakom rubriken på mobil.**~~ **Avgjort av Jelal
+  2026-11-07:** bilden överst, texten under. Genomförs i P5 omgång 5 enligt M10d.
+- **Kommentaren vid `<noscript>` eller mättabellen i Contact står kvar.** Båda är
+  återfall. **Märks tidigt** genom grepen i P5 omgång 4 punkt 18, P5 omgång 5
+  punkt 2 och P13 punkt 5.
+
+**Efter G1:**
 
 - **P9, P10 eller P12 deklarerar sitt token före konsumenten, eller glömmer det.**
   M5h fäller då bygget, eller så används ett odeklarerat token och M5g fäller.
   **Märks tidigt** genom att alla tre har tokengrinden som egen godkännandepunkt.
-- **`index` eller tokens läggs till "medan byggaren ändå är i filen" i
-  G1-rättningen.** Då får de ingen konsument, och M5h fäller. **Märks tidigt**
-  genom G1-rättningens "Ingår INTE".
-- **Grind 2 i R4 larmar inte i den negativa kontrollen.** Arkitektens förutsägelse
-  är omätt. **Märks tidigt** genom att G1-rättningen punkt 6 kräver de uppmätta
-  talen och stoppar byggaren om grinden inte larmar.
-- **Reveal i P10 tappar kortets id eller scroll-marginal** när `<li>` byts mot
-  `Reveal`. **Märks tidigt** genom P10 punkt 7, hoppet till `#awle`.
-- **Efterkontrollen av G1-rättningen växer till en ny hel granskning och hänger
-  sig.** **Märks tidigt** genom att den bara gäller fynd 1–7 och R1–R6.
+- ~~**`index` eller tokens läggs till "medan byggaren ändå är i filen" i
+  G1-rättningen.**~~ **Passerat, G1-rättningen är godkänd.**
+- ~~**Grind 2 i R4 larmar inte i den negativa kontrollen.**~~ **Passerat,
+  G1-rättningen är godkänd.**
+- **Reveal tappar kortets id eller scroll-marginal.** P10 visade att ankarhoppet
+  till ett kort som inte tonats in landade för högt. **Märks tidigt** genom M12b
+  punkt 1:s mätning och negativa kontroll i P9b.
+- ~~**Efterkontrollen av G1-rättningen växer till en ny hel granskning och hänger
+  sig.**~~ **Passerat, efterkontrollen levererade 2026-11-07.**
 
 **Sedan tidigare:**
 
@@ -1033,19 +1502,21 @@ har upphävts står kvar i guiden.
 - **Gamla tokennamn och "en enda vikt" lever kvar i kommentarer och i
   `ARKITEKTUR.md`.** Registrerat återfall tre gånger. **Märks tidigt** genom P1
   punkt 2 och P2 punkt 8.
-- **`--ink-subtle` faller på AA på `--surface-2` eller i glöden.** Tokenvärdena
-  är Jelals, men kontrasten är ett krav. **Märks tidigt** genom att P2, P5 och P7
-  mäter mot den faktiska bakgrunden. Faller det går det till arkitekten, och
-  byggaren justerar inte värdet själv.
+- **`--ink-subtle` faller på AA på `--surface-2` eller i hero.** Tokenvärdena
+  är Jelals, men kontrasten är ett krav. I hero föll kontrasten under 900 px i P5
+  omgång 4 (M10c rad 7). **Märks tidigt** genom att P2, P5 omgång 5 och P7 mäter
+  mot den faktiska bakgrunden. Faller det går det till arkitekten, och byggaren
+  justerar inte värdet själv.
 - **Fokusringen klipps av kortets `overflow: hidden`.** **Märks tidigt** genom
   P7 punkt 4.
 - **Reveal gömmer innehåll.** Faller observern, eller JS, förblir sektioner
   osynliga, vilket både Lighthouse och besökare straffar. **Märks tidigt** genom
-  P10 punkt 1.
+  P10 punkt 1 och M12b punkt 2 i P9b.
 - **Påhittat innehåll om Jelal.** Hero-h1, Awles beskrivning, taglinen och "år i
   branschen" lockar till att fylla i. **Märks tidigt** genom att varje sådant ställe
-  har en uttrycklig flaggning till Jelal i P5, P6, P12 och P14. Detsamma gäller
-  hero-bakgrundsbilden: ingen agent tar fram en bild innan Jelal gett en.
+  har en uttrycklig flaggning till Jelal i P5, P6, P12 och P14. Hero-bilden är
+  Jelals egen (`assets-source/hero-portrait.jpg`, hans besked 2026-11-07), och
+  ingen agent tar fram eller byter ut en bild utöver den.
 - **Platshållarprojekt smyger in i datan för att visa griden.** Beslut 2
   förbjuder det. **Märks tidigt** genom att P7, P8 och P9 kräver kloner **i en
   kopia**, och genom att G1 kontrollerar att `projects.js` har exakt en post.

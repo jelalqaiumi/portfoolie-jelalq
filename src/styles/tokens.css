@@ -4,8 +4,7 @@
  * Namnen och värdena är beslutade i ARKITEKTUR.md, "M5 - Tokens: uppdragets
  * namn ersätter de gamla". Ett token deklareras i samma paket som dess första
  * var()-konsument, och ett token utan konsument är dött fält och tas bort.
- * Tokens för chips, reveal och nyckeltal deklareras alltså i det paket som
- * bygger dem. scripts/validate-tokens.mjs fäller en deklaration utan konsument
+ * scripts/validate-tokens.mjs fäller en deklaration utan konsument
  * (ARKITEKTUR.md, M5h).
  *
  * Brytpunkter: CSS-variabler fungerar inte i @media, så dessa är fasta tal.
@@ -71,10 +70,8 @@
   /* --error mot --surface: 5,297:1 — AA normal */
   --error: #f85149;
 
-  /* Porträttets tonplatta. */
-  --overlay-grey: rgba(32, 32, 36, 0.45);
-
   /* Radier */
+  --radius-chip: 3px;
   --radius-badge: 4px;
   --radius-sm: 8px;
   --radius-md: 14px;
@@ -84,10 +81,10 @@
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --duration-fast: .16s;
   --duration-base: .32s;
+  --duration-reveal: .72s;
   --shadow-lift: 0 24px 60px rgba(0,0,0,.55);
 
   /* Spacing - 8 px-rytm, 4 px som finsteg */
-  --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
   --space-4: 1rem;
@@ -119,6 +116,7 @@
   --text-xl: clamp(1.25rem, 2.5vw, 1.5rem);
   --text-2xl: clamp(1.75rem, 4vw, 2.5rem);
   --text-3xl: clamp(2.75rem, 1.6rem + 5.2vw, 4.5rem);
+  --text-figure: clamp(2.5rem, 6vw, 3.5rem);
 
   --leading-display: 0.98;
   --leading-tight: 1.1;
@@ -148,4 +146,9 @@
 
   /* Sticky headerns lagernivå. Enda fristående z-index-värdet i projektet. */
   --z-header: 10;
+
+  /* Scroll-revealens stagger. Stegnumret sätts inline av Reveal.jsx och har
+   * här sitt standardvärde, så att ett element utan stegnummer inte väntar. */
+  --reveal-index: 0;
+  --reveal-stagger: 70ms;
 }

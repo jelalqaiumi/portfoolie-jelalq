@@ -1,18 +1,16 @@
-/* Kontaktformuläret. Ligger på sidans mörka bakgrund. De uppmätta kvoterna för
- * varje textfärg mot varje bakgrund står vid tokenet i tokens.css. */
-
-/* Här låg .wrapper med margin-top: var(--space-7). BORTTAGEN 2026-10-07 när
- * sektionen blev tvåspaltig: formuläret är nu det första i sin spalt, så
- * marginalen hade förskjutit det mot länkspaltens rubrik. Avståndet mellan
- * spalterna ägs av rutnätets gap i Contact.module.css, och maxbredden av
- * .formColumn där.
+/* Kontaktformuläret. Ligger i panelen som Contact.jsx lägger runt det
+ * (.formPanel i Contact.module.css), och varje text i det står alltså mot
+ * panelens yta - utom texten i fälten, som står mot fältets egen botten. De
+ * uppmätta kvoterna för varje textfärg mot varje bakgrund står vid tokenet i
+ * tokens.css.
  *
- * Omslagsdiven togs bort helt och komponenten returnerar ett fragment. En tom
- * regel hade strukits av minifieraren och gjort styles.wrapper undefined -
- * uppmätt när .logoName tömdes på samma sätt. */
+ * Komponenten returnerar ett fragment utan omslag. Avståndet till granspalten
+ * ägs av rutnätets gap, och bredden av panelen. En tom regel hade strukits av
+ * minifieraren och gjort klassen undefined i JSX:en, så ingen tom regel och
+ * ingen klass som saknas här står i ContactForm.jsx. */
 
-/* EJ I ARKITEKTUR: rubrikens grad och avstånd. h3 ärver --text-xl ur
- * global.css; bara luften under sätts här. */
+/* Beslutat i ARKITEKTUR.md: M16 (formulärrubrikens avstånd). Graden ärvs av
+ * h3 ur global.css; bara luften under sätts här. */
 .heading {
   margin-bottom: var(--space-2);
 }
@@ -33,13 +31,10 @@
   color: var(--error);
 }
 
-/* EJ I ARKITEKTUR: formulärets maxbredd och avstånden mellan fälten.
- * --measure är tokenet för max radlängd på brödtext, och ett inmatningsfält
- * som är bredare än texten man skriver i det är svårare att läsa tillbaka. */
-.form {
-  max-width: var(--measure);
-}
-
+/* Formuläret har ingen egen maxbredd: panelen begränsar bredden
+ * (ARKITEKTUR.md, M16).
+ *
+ * Beslutat i ARKITEKTUR.md: M19 punkt 5. */
 .field {
   margin-bottom: var(--space-5);
 }
@@ -54,7 +49,10 @@
 }
 
 /* FÄLTET. width 100% + box-sizing (global.css) och ALDRIG en fast pixelbredd:
- * det är det enda sättet ett fält kan spräcka 360 px-golvet.
+ * det är det enda sättet ett fält kan spräcka golvet.
+ *
+ * Fältets botten är sidans bakgrund, så att fältet läses som en fördjupning i
+ * panelen (ARKITEKTUR.md, M16).
  *
  * Ramen är den starka linjen och inget annat token. Ett inmatningsfälts ram
  * är en gränssnittskomponents avgränsning och omfattas av WCAG 1.4.11:s 3:1
@@ -63,7 +61,7 @@
 .input {
   width: 100%;
   padding: var(--space-3);
-  background-color: var(--surface);
+  background-color: var(--bg);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
   color: var(--ink);
@@ -86,13 +84,12 @@
 /* PLATSHÅLLAREN sätts uttryckligen. Webbläsarens standardfärg varierar och är
  * ofta för svag; den måste vara läsbar eftersom den bär en instruktion.
  *
- * Den dämpade textfärgen mot fältets EGEN botten, inte sidans - kvoten står
- * vid tokenet och ska klara AA:s 4,5 för liten text. KVOTEN ÄR KRAVET, inte hur
- * dämpad en ton känns - en platshållare bär en instruktion och får därför inte
- * en ton som valts för att vara underordnad. Vill någon ha den svagare: mät
- * mot fältets botten först. */
+ * Färgen mäts mot fältets EGEN botten, inte panelens - kvoten står vid tokenet
+ * och ska klara AA för normal text. KVOTEN ÄR KRAVET, inte hur dämpad en ton
+ * känns. Byts fältets botten eller färgen: mät mot fältets botten först.
+ * Beslutat i ARKITEKTUR.md: M16, samma token som sökfältets platshållare. */
 .input::placeholder {
-  color: var(--ink-muted);
+  color: var(--ink-subtle);
   opacity: 1; /* Firefox sänker annars placeholderns opacitet till 0,54 */
 }
 
@@ -113,18 +110,27 @@
   font-size: var(--text-sm);
 }
 
-/* EJ I ARKITEKTUR: knappens utseende. Fylld orange med mörk text, så att den
- * läser som sidans enda accentfärg och inte som en fjärde ton. */
+/* Beslutat i ARKITEKTUR.md: M16 (knappen får heros primära knapps
+ * deklarationer, M10). Deklarationerna står här och inte i en delad klass,
+ * eftersom stilen bara når elementet genom den egna modulen.
+ *
+ * font-family och font-size ärvs inte av formulärkontroller, och cursor är
+ * inte pekaren som standard på en knapp - därför sätts de uttryckligen. */
 .button {
-  padding: var(--space-3) var(--space-5);
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-pill);
+  font-weight: var(--weight-semibold);
+  transition: background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
   background-color: var(--accent);
   border: 1px solid transparent;
-  border-radius: var(--radius-sm);
   color: var(--ink-inverse);
   font-family: inherit;
   font-size: var(--text-base);
   cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-out);
 }
 
 .button:hover {

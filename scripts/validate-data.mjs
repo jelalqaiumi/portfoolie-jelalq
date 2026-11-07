@@ -67,7 +67,7 @@ function checkSections(mod) {
   }
 
   if (!hasText(HERO_ID)) {
-    /* EJ I ARKITEKTUR: vad meddelandet ska lyda när HERO_ID saknas.
+    /* Beslutat i ARKITEKTUR.md: M19 punkt 7.
      * Konstanten behövs för kontrollen nedan att hero inte ligger i listan -
      * utan den går kontrollen inte att göra alls. */
     fail('sections.js: HERO_ID saknas eller är inte en sträng');
@@ -553,7 +553,7 @@ function checkContact(mod) {
         fail(`contact.js: länk saknar label (post ${index + 1})`);
       }
 
-      /* EJ I ARKITEKTUR: om url ska grindas och med vilket meddelande.
+      /* Beslutat i ARKITEKTUR.md: M19 punkt 7.
        * null är det beslutade sättet att säga "länken finns inte". En tom
        * sträng eller '#' är det troligaste misstaget när någon tömmer fältet i
        * stället för att skriva null, och båda skulle rendera en länk utan mål -
@@ -995,8 +995,8 @@ for (const name of ACTIVE) {
   const check = CHECKS[name];
 
   if (check === undefined) {
-    /* EJ I ARKITEKTUR: vad som ska hända om ett namn aktiveras i ACTIVE innan
-     * dess kontroll finns. Larmar här av samma skäl som en saknad fil larmar:
+    /* Beslutat i ARKITEKTUR.md: M19 punkt 7.
+     * Larmar här av samma skäl som en saknad fil larmar:
      * en validering som tiger när underlaget försvinner ger falsk trygghet. */
     fail(`${name}.js: står i ACTIVE men har ingen kontroll i scripts/validate-data.mjs`);
     continue;

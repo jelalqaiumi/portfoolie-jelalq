@@ -61,6 +61,7 @@ export const MAIN_ID = 'main'; // <main id>, mål för skip-länken
  * för den kontrollen. Beslutat i ARKITEKTUR.md: R2 */
 export const MENU_ID = 'mobile-menu'; // mobilmenyns panel, aria-controls på hamburgern
 export const ROOT_ID = 'root'; // <div id> i index.html som React renderas i
+export const PROJECT_SEARCH_ID = 'project-search'; // sökfältet i projektfiltret, mål för dess etikett
 
 /* ORDNINGEN ÄR JELALS, beslutad 2026-10-07: projekt FÖRE kompetenser, och en
  * liten sektion "om mig" mellan kompetenser och kontakt. Hans eget skäl är att

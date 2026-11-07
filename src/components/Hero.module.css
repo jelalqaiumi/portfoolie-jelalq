@@ -11,16 +11,25 @@
  * Namnet följer modulernas konvention, där rotelementets klass heter som
  * komponenten - .header i Header.module.css och .footer i Footer.module.css.
  *
- * Den här klassen sätter bara bakgrunden. Sidomarginalen kommer från
- * global.css, och heros vertikala luft står i regeln direkt nedanför. */
-/* GLÖDEN ÄR EN BAKGRUNDSBILD PÅ SEKTIONEN, inte ett eget element. Den målas
- * inom sektionens egen ruta och kan därför aldrig ge horisontell scroll. Den
- * tonar ut till helt genomskinlig, så sektionens kant syns inte som en
- * färgkant. Ingressens kontrast mäts mot glödens LJUSASTE punkt, inte mot
- * --bg. Beslutat i ARKITEKTUR.md, "M10 - Hero". */
+ * Sidomarginalen kommer från global.css, och heros vertikala luft står i regeln
+ * direkt nedanför.
+ *
+ * UNDER 900 px ligger bilden i flödet överst, och texten står under den på
+ * sektionens botten.
+ *
+ * FRÅN 900 px LIGGER BILDEN OCH TONINGEN UNDER INNEHÅLLET, i sektionens egen
+ * staplingskontext: isolation gör sektionen till en egen kontext, och de
+ * negativa z-index-värdena på .backdrop och ::before ritar dem ovanpå
+ * sektionens bakgrund men under .inner, utan att .inner behöver ett eget
+ * z-index. position: relative gör sektionen till deras inneslutande block, så
+ * att de håller sig inom sektionens ruta.
+ *
+ * Sektionens bakgrundsfärg är det som syns innan bilden har laddats och där
+ * bilden har tonats ut. Beslutat i ARKITEKTUR.md, M10c och M10d. */
 .hero {
+  position: relative;
+  isolation: isolate;
   background-color: var(--bg);
-  background-image: radial-gradient(60% 70% at 100% 35%, rgba(255, 107, 0, .16), rgba(255, 107, 0, 0) 70%);
 }
 
 /* Heros egen vertikala luft, i alla bredder. Selektorn bär ett attribut mer än
@@ -29,6 +38,30 @@
  * ARKITEKTUR.md, "M10b". */
 section.hero[id] {
   padding-block: var(--space-6);
+}
+
+/* PORTRÄTTET, ett riktigt <img> så att det kan få srcset och alt. Under
+ * brytpunkten är bilden ett eget block och fyller sektionens bredd utan att
+ * sätta sidmarginalen: den drar sig ut genom marginalen med samma token som
+ * marginalen själv, och upp till sektionens överkant med samma token som
+ * sektionens vertikala luft. Lådan är så hög att ansiktet ryms helt, och aldrig
+ * högre än att rubriken börjar i första skärmen. Bilden beskärs med cover,
+ * förankrad i bildens överkant så att huvudet aldrig skärs av upptill. Masken
+ * tonar bilden mot sektionens botten under ansiktet; den läser bara alfa, så
+ * ingen färg utanför tokens.css behövs. Beslutat i ARKITEKTUR.md, M10d. */
+.backdrop {
+  width: calc(100% + 2 * var(--content-padding));
+  max-width: none;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  max-height: 60vh;
+  max-height: 60svh;
+  margin-inline: calc(-1 * var(--content-padding));
+  margin-block: calc(-1 * var(--space-6)) var(--space-4);
+  object-fit: cover;
+  object-position: 53% 0%;
+  -webkit-mask-image: linear-gradient(180deg, var(--bg) 70%, transparent 100%);
+  mask-image: linear-gradient(180deg, var(--bg) 70%, transparent 100%);
 }
 
 /* Beslutat i ARKITEKTUR.md, "Hero fyller första skärmen på dator" (A5), och
@@ -55,6 +88,39 @@ section.hero[id] {
   }
 }
 
+/* FRÅN 900 px täcker bilden sektionens högra del och toningen går från
+ * vänster: heltäckande --bg fram till exakt där bildens låda börjar, så att
+ * övergången inte syns som en kant. Då ligger texten på sektionens botten och
+ * ansiktet i det tomma högra spåret. Lådan förankras till höger för att bilden
+ * ska få spelrum i sidled.
+ *
+ * Blocket bär FULLSTÄNDIGA regler, eftersom basreglerna ovan är mobilens: det
+ * återställer bildens flödesmått och mask och lägger bilden och toningen
+ * absolut under innehållet. Toningen är --bg med alfa, aldrig en egen färg.
+ * Beslutat i ARKITEKTUR.md, M10c och M10d. */
+@media (min-width: 900px) {
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: linear-gradient(90deg, var(--bg) 0%, var(--bg) 30%, color-mix(in srgb, var(--bg) 80%, transparent) 45%, transparent 75%);
+  }
+
+  .backdrop {
+    position: absolute;
+    inset: 0 0 0 auto;
+    z-index: -2;
+    width: 70%;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    object-position: 50% 0%;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
 .inner {
   max-width: var(--content-max);
   margin-inline: auto;
@@ -68,13 +134,11 @@ section.hero[id] {
    * golvet. Gäller också den implicita enspaltsgridden här, inte bara
    * tvåspaltsläget nedan. */
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-7);
 }
 
-/* Två spår från 900 px: textspåret är flexibelt och bildspåret har cirkelns
- * tak som största bredd. Beslutat i ARKITEKTUR.md, "M10 - Hero". Bildspårets
- * maxbredd och .media:s tak hör ihop - ändras det ena ska cirkelns
- * diameterserie mätas om, så att cirkeln inte krymper när fönstret växer.
+/* Två lika spår från 900 px. Texten står i det vänstra, och det högra är tomt
+ * med avsikt: där syns ansiktet. Halva .inner är textens bredd i alla
+ * datorbredder. Beslutat i ARKITEKTUR.md, M10c.
  *
  * FULL BREDD: i tvåspaltsläget är .inner ett griditem i .hero med
  * auto-marginaler, och ett sådant sträcks inte ut av sig själv utan får sin
@@ -84,7 +148,7 @@ section.hero[id] {
 @media (min-width: 900px) {
   .inner {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: var(--space-7);
     align-items: center;
     width: 100%;
@@ -126,9 +190,7 @@ section.hero[id] {
   }
 }
 
-/* Ingressens grad är heros egen. Den är det andra som får vika under 600 px om
- * knapparna inte ryms i första skärmen på mobil (ARKITEKTUR.md, A5 "Vad som
- * får vika"). */
+/* Ingressens grad är heros egen. */
 .intro {
   font-size: var(--text-lg);
   max-width: 560px;
@@ -190,106 +252,4 @@ section.hero[id] {
 
 .actionSecondary:hover {
   border-color: var(--ink);
-}
-
-/* Bilden. GRÅSKALA plus en grå tonplatta, båda i CSS och inte inbakade i
- * bildfilen - medvetet beslut i ARKITEKTUR.md ("Vad som INTE görs i
- * bildskriptet") så att tonen kan justeras efter Leverans 1 utan att någon bild
- * genereras om. Tonplattan är --overlay-grey, tokenet som finns just för
- * detta.
- *
- * RUND BILD med ett tunt vitt streck. Beslutat av Jelal 2026-10-05, se
- * ARKITEKTUR.md "Profilbilden är rund". Beskärningen görs HÄR i CSS - de sex
- * 4:5-filerna är oförändrade och optimize-images.mjs är orörd.
- *
- * DIAMETERN ÄR RELATIV, aldrig ett fast pixeltal. En fast diameter är det enda
- * sättet en cirkel kan spräcka 360 px-golvet, och den möjligheten ska inte
- * finnas. width: 100% med max-width som tak.
- *
- * TAKET ÄR 360 UNDER 900 px OCH 420 FRÅN 900 px. Det är härlett, inte valt:
- * vid brytpunkten 900 går hero från en kolumn till två, och grid-spåret är då
- * smalare än hela spalten. Ett tak i enspaltsläget som överstiger spårets
- * bredd gör att cirkeln KRYMPER när man drar isär fönstret. Taket får därför
- * inte vara högre än spåret vid brytpunkten; 360 ligger strax under med
- * marginal för avrundning.
- *
- * Serien ska vara ICKE-AVTAGANDE över hela bredden - cirkeln växer eller står
- * still, aldrig krymper. Det är verifieringspunkt 5 i ARKITEKTUR.md.
- *
- * `max-width: none` över 900 px är avfärdat: cirkelns största storlek ska
- * bestämmas av taket på .media, inte av hur bildspåret i .inner råkar vara
- * deklarerat.
- *
- * BYT INTE MEKANISM från border till outline eller box-shadow utan att läsa
- * ARKITEKTUR.md, "Mekanismen: border". Kort: outline är reserverad för
- * :focus-visible i hela projektet, box-shadow ligger utanför layouten och
- * sticker ut 2 px som ingen breddmätning fångar. Och border är det enda
- * alternativet där tonplattan STRUKTURELLT inte kan nå ut över strecket:
- * overflow: hidden klipper barn till PADDING-boxen, alltså innanför ramen, och
- * ::after { inset: 0 } placeras mot samma box. Det följer av boxmodellen, inte
- * av att någon kommer ihåg det.
- *
- * Rundningen och overflow ligger på BEHÅLLAREN, inte på <img>. Då klipps allt
- * inuti av samma rundning - bilden, gråskalan och tonplattan. Låg rundningen på
- * <img> ensam hade tonplattan blivit kvar som en fyrkant ovanpå cirkeln. */
-.media {
-  position: relative;
-  width: 100%;
-  max-width: 360px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  overflow: hidden;
-
-  /* Det vita strecket. 2 px, inte 1: en böjd 1 px-kontur kantutjämnas ut över
-   * flera delpixlar och läses som en skugga i stället för som ett streck. Inte
-   * 3 px eller mer - då läses det som en ram, vilket Jelal avfärdade när han
-   * sa "streck".
-   *
-   * --ink och inget nytt token: båda användningarna lyder under samma
-   * villkor, sidans ljusaste ton mot mörk botten, så tokenet kan aldrig driva
-   * iväg åt ett håll som skadar strecket. Hårdkodat #FFFFFF är avfärdat - sidan
-   * har noll hårdkodade färger utanför tokens.css.
-   *
-   * box-sizing: border-box i global.css gör att strecket ryms INOM max-width
-   * och lägger noll pixlar utanpå. */
-  border: 2px solid var(--ink);
-}
-
-/* Från 900 px är hero två kolumner och grid-spåret bär bredden. Taket höjs då
- * till 420. Höj INTE taket under 900 px till 420 - då krymper cirkeln vid
- * brytpunkten, vilket verifieringspunkt 5 fäller. */
-@media (min-width: 900px) {
-  .media {
-    max-width: 420px;
-  }
-}
-
-.image {
-  /* Fyller behållaren helt. object-fit: cover BESKÄR, den skalar inte om, så
-   * ingen kvalitet går förlorad. */
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-
-  /* Kvadraten tas från ÖVERKANTEN, inte från mitten. Uppmätt i
-   * profile-800.jpg (ARKITEKTUR.md): hjässan på y 142, huvudets mitt på y 335,
-   * axlarna på y 528. En kvadrat från överkanten lägger huvudets mitt på
-   * 335/800 = ca 42 % av cirkelns höjd - strax ovanför mitten, där ett ansikte
-   * hör hemma i en rund ram. Centrerad beskärning hade skurit av hjässan. */
-  object-position: 50% 0%;
-
-  /* Svartvitt porträtt, med en knappt märkbar kontrasthöjning som håller det
-   * från att bli platt under tonplattan. Beslutat i ARKITEKTUR.md,
-   * "M10 - Hero". */
-  filter: grayscale(1) contrast(1.05);
-}
-
-/* Den grå tonplattan läggs OVANPÅ bilden. pointer-events: none så att lagret
- * inte fångar markering eller klick. */
-.media::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-color: var(--overlay-grey);
-  pointer-events: none;
 }

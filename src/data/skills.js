@@ -124,7 +124,7 @@ export const skillGroups = [
     skills: [
       { name: 'Git och GitHub' },
       { name: 'Azure DevOps' },
-      { name: 'CI/CD-pipelines (YAML)' },
+      { name: 'CI/CD pipelines (YAML)' },
       { name: 'Azure Web App' },
       { name: 'DevSecOps' },
     ],
@@ -144,9 +144,9 @@ export const skillGroups = [
     title: 'AI i utveckling',
     skills: [
       { name: 'GitHub Copilot' },
-      { name: 'Agentisk AI och AI-orkestrering' },
+      { name: 'Agentisk AI och orkestrering av AI' },
       { name: 'Prompt engineering' },
-      { name: 'Ansvarsfull AI-användning' },
+      { name: 'Ansvarsfull användning av AI' },
     ],
   },
 ];

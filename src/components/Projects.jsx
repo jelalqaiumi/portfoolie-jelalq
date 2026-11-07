@@ -1,5 +1,6 @@
 import Section from './Section.jsx';
-import ProjectCard, { isComplete } from './ProjectCard.jsx';
+import ProjectCard from './ProjectCard.jsx';
+import { isComplete } from '../lib/projectRules.js';
 import { projects } from '../data/projects.js';
 import { sections, PROJECTS_ID } from '../data/sections.js';
 import styles from './Projects.module.css';
@@ -14,10 +15,10 @@ import styles from './Projects.module.css';
  * ======================================================================== */
 const EMPTY_TEXT = 'Här lägger jag upp projekt jag har byggt. Än är listan tom.';
 
-/* isComplete importeras ur ProjectCard.jsx och definieras inte här: villkoret
- * är kortets eget krav på en post, och samma predikat avgör i About.jsx om
- * länkens mål kommer att renderas. Filtret garanterar dessutom att
- * React-nyckeln id aldrig kan bli undefined. */
+/* isComplete importeras ur src/lib/projectRules.js och definieras inte här:
+ * samma predikat avgör i About.jsx om länkens mål kommer att renderas, och
+ * valideringens OK-rad räknar med det. Filtret garanterar dessutom att
+ * React-nyckeln slug aldrig kan bli undefined. */
 
 function Projects() {
   /* Rubriken och id:t hämtas ur sections.js, som är enda sanningskällan för
@@ -28,23 +29,7 @@ function Projects() {
   const visible = projects.filter(isComplete);
 
   return (
-    /* "surface-light" är en GLOBAL klass i tokens.css, inte en modulklass.
-       Den binder om färgtokenen för hela sektionen så att den får vit bakgrund.
-       Samma mönster som "visually-hidden" i global.css: en sanktionerad global
-       klass, därför en bokstavlig sträng och inte styles.x.
-
-       YTAN FLYTTADES HIT FRÅN KOMPETENSER av Jelal 2026-10-07, i samma omgång
-       som projekten flyttades upp före kompetenserna. Skälet är hans eget: han
-       vill att projekten ska synas.
-
-       ⚠️ KLASSEN BÄR MER ÄN EN BAKGRUND. Den binder om flera ärvda färgtokens
-       för allt inuti sektionen - alltså även sektionsavgränsarens ton, kortens
-       ram och fokusringen på kortens länkar. Uppräkningen står i
-       .surface-light i tokens.css och ska bara stå där; en kommentar här hade
-       blivit falsk i samma stund blocket ändrades. Flyttas klassen vidare till
-       en annan sektion följer varje ombindning med. Läs "Ljus yta" i
-       ARKITEKTUR.md innan den rörs; en flytt är inte en bakgrundsändring. */
-    <Section id={section?.id} title={section?.label} className="surface-light">
+    <Section id={section?.id} title={section?.label}>
       {visible.length === 0 ? (
         /* TOMT LÄGE. En kort rad, aldrig en tom yta. Villkoret står på
          * filtrerade listan och inte på projects.length: finns bara
@@ -55,7 +40,7 @@ function Projects() {
       ) : (
         <ul className={styles.grid}>
           {visible.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <ProjectCard key={project.slug} project={project} />
           ))}
         </ul>
       )}

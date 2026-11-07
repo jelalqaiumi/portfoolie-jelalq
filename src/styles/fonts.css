@@ -1,44 +1,62 @@
-/* Teckensnittet. Importeras FÖRST av main.jsx, före tokens.css och global.css,
+/* Teckensnitten. Importeras FÖRST av main.jsx, före tokens.css och global.css,
  * så att @font-face är deklarerad innan något använder den.
  *
- * Didact Gothic, valt av Jelal 2026-10-03. Beslutat i ARKITEKTUR.md,
- * "Typsnittet - Didact Gothic, en enda vikt".
+ * Beslutat i ARKITEKTUR.md, "M1 - Typsnitten: självhostade woff2, en fil per
+ * familj". Vilken familj som bär vilken roll står där och i tokens.css, inte här.
  *
- * SJÄLVHOSTAD, inte Google Fonts CDN. Filen ligger i src/styles/fonts/ och inte
- * i public/: public/assets/ innehåller bara genererat, och en fil som CSS
+ * SJÄLVHOSTADE, inte Google Fonts CDN. Filerna ligger i src/styles/fonts/ och
+ * inte i public/: public/assets/ innehåller bara genererat, och en fil som CSS
  * refererar ur src/ får innehållshash av Vite och kan därför aldrig bli en
- * orefererad fil i dist/. Noll externa anrop i runtime, och besökarens IP går
- * inte till tredje part.
+ * orefererad fil i dist/. Inga externa anrop för typsnitten i runtime, och
+ * besökarens IP går inte till tredje part för dem.
  *
- * EN ENDA VIKT. Teckensnittet finns bara i 400. Lägg aldrig till en
- * @font-face-rad med en annan font-weight för samma family - då börjar
- * webbläsaren feta syntetiskt, alltså smeta ut konturerna algoritmiskt. Hur
- * vikten hanteras står i global.css.
+ * VARIABLA FILER. font-weight är ett INTERVALL och ska täcka varje vikt som
+ * sidan begär ur familjen - då väljer webbläsaren vikten ur filens viktaxel i
+ * stället för att feta syntetiskt. Begärs en vikt utanför intervallet blir
+ * fetningen syntetisk, alltså utsmetade konturer. Åtgärden är då ett nytt
+ * intervall hämtat ur källan, aldrig att vidga deklarationen för hand.
  *
- * ENDAST latin-delmängden. Sidan är på svenska: å ä ö ligger i latin, och
- * tankstrecket i "Klient-server-kommunikation" (U+2013) ligger i U+2000-206F.
+ * ENDAST latin-delmängden, kopierad ordagrant ur Googles svar. Sidan är på
+ * svenska och å ä ö ligger i latin.
  *
- * OBS om unicode-range nedan: den är webbläsarens FILTER för vilka tecken den
- * ska försöka hämta ur den här skärningen - inte ett löfte om att de finns.
- * Intervallet deklarerar 387 teckenpunkter medan filen innehåller 225, och det
- * är normalt: så levererar Google sina delmängder. Teckengrinden i
- * scripts/validate-data.mjs läser därför FILENS cmap och inte detta intervall.
+ * unicode-range är webbläsarens FILTER för vilka tecken den ska försöka hämta
+ * ur en skärning - inte ett löfte om att de finns. Teckengrinden i
+ * scripts/validate-data.mjs läser därför FILENS cmap och inte intervallet, och
+ * mäter varje familj för sig mot de fält som renderas i den.
  *
  * Behövs ett tecken som saknas är åtgärden att lägga till en delmängd som
- * verkligen innehåller det, aldrig att döpa om Jelals post. Ett extra
- * @font-face-block hittas och läses av grinden automatiskt. */
+ * verkligen innehåller det, för den familjen, aldrig att döpa om Jelals post.
+ * Ett extra @font-face-block hittas och läses av grinden automatiskt.
+ *
+ * swap, inte optional: optional kan hoppa över typsnittet helt vid ett
+ * långsamt förstabesök. En kort omflödning är bättre än att valet uteblir.
+ *
+ * Licens: SIL OFL 1.1, texterna ligger bredvid filerna i fonts/. Ingen CSS
+ * refererar dem, så de hamnar inte i dist/. */
 
 @font-face {
-  font-family: 'Didact Gothic';
+  font-family: 'Urbanist';
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: swap;
+  src: url('./fonts/urbanist-latin-var.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('./fonts/manrope-latin-var.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
   font-style: normal;
   font-weight: 400;
-
-  /* swap, inte optional: optional kan hoppa över typsnittet helt vid ett
-   * långsamt förstabesök, och då syns inte det typsnitt Jelal valt. En kort
-   * omflödning är bättre än att valet uteblir. */
   font-display: swap;
-  src: url('./fonts/didact-gothic-latin-400.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
-    U+2212, U+2215, U+FEFF, U+FFFD;
+  src: url('./fonts/jetbrains-mono-latin-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }

@@ -2,8 +2,7 @@
  * kommer från <Section> respektive global.css - modulen får ALDRIG sätta
  * padding-inline (ARKITEKTUR.md, "Var sidmarginalen bor").
  *
- * Sektionen ligger på --color-bg, alltså den mörka ytan. Ingen .surface-light
- * här - den ljusa ytan hör till Kompetenser och ingenting annat.
+ * Sektionen ligger på sidans mörka bakgrund, som hela sidan.
  *
  * Modulen är avsiktligt kort. Sektionen är en rubrik och några stycken text;
  * behöver den mer än detta är det inte längre den lilla sektion Jelal bad om. */
@@ -20,7 +19,7 @@
  * sätts här eftersom global.css nollställer all marginal. */
 .paragraph {
   max-width: var(--measure);
-  color: var(--color-text-muted);
+  color: var(--ink-muted);
   font-size: var(--text-base);
 }
 
@@ -34,13 +33,13 @@
  *   - graden sätts inte alls - en länk mitt i ett stycke ska ha styckets grad,
  *     annars hoppar radhöjden på just den raden. */
 .link {
-  color: var(--color-accent);
+  color: var(--accent);
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
 
 .link:hover {
-  color: var(--color-accent-hover);
+  color: var(--accent-hover);
 }
 
 /* Syskonselektorn, inte margin-bottom på varje stycke: då hade det sista

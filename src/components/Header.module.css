@@ -1,199 +1,173 @@
+/* Den svävande pill-naven. Beslutat i ARKITEKTUR.md, "M6 - Headerns höjd med
+ * svävande nav" och "M7 - Aktiv länk".
+ *
+ * INVARIANTEN: avståndet ovanför pillen och pillens höjd är två token, och det
+ * headern tar i flödet är deras summa, --header-height. scroll-margin-top i
+ * global.css och heros min-height räknar på samma summa, så inget mått får
+ * stå som tal här - då glider de isär.
+ *
+ * Omslaget är genomskinligt och släpper igenom klick; bara pillen tar emot
+ * pekaren. Sidmarginalen kommer från den gemensamma regeln i global.css. */
 .header {
   position: sticky;
-  top: 0;
-
-  /* Headerns höjd LÅSES till tokenet. global.css räknar scroll-margin-top på
-   * samma token, och de två måtten får inte kunna glida isär. box-sizing:
-   * border-box i global.css gör att border-bottom ryms inom höjden, så
-   * renderad höjd är exakt --header-height. */
-  height: var(--header-height);
-
-  /* Grå header. Beslutat av Jelal 2026-10-03 - han har sett sidan. Det
-   * UPPHÄVER "Headerns bakgrund - avgjort", som slog fast --color-bg med
-   * motiveringen att loggan skulle ligga mot den mörka bottnen utan platta.
-   * Sätt inte tillbaka --color-bg med hänvisning till det avsnittet.
-   *
-   * Tokenet, aldrig #1C1C1F som inline-värde: tonen ska kunna ändras på ett
-   * ställe.
-   *
-   * --color-bg-top är ett eget token för just denna yta: sedan 2026-10-05 har
-   * hero samma botten, så headern och hero är ETT sammanhängande grått fält och
-   * ska alltid ändras tillsammans. Tokenet bröts ut ur ett som också bar
-   * hover-läget på kort - det delade inget villkor med sidans största
-   * bakgrundsyta, och är sedan dess borttaget eftersom ingen komponent
-   * använde det. */
-  background-color: var(--color-bg-top);
-
-  /* Kantlinjen står KVAR, och är nu det ENDA som markerar var headern slutar.
-   * Invarianten den skyddar: headern är sticky, så innehåll scrollar förbi
-   * under den, och utan en markerad underkant ser text ut att kapas mitt i
-   * tecknen när den glider in under headern.
-   *
-   * Sedan hero fick samma yta som headern finns inget färgsteg kvar att falla
-   * tillbaka på - uppmätt 1,00:1 mellan header och hero, alltså ingen gräns
-   * alls utan linjen. Kantens uppgift är därmed viktigare än förut, inte
-   * mindre.
-   *
-   * --color-header-border, INTE --color-border: det senare har samma hexvärde
-   * som bandet självt, så kanten hade blivit osynlig mot sin egen bakgrund.
-   * Denna linje är därför LJUSARE än sin yta, till skillnad från sidans övriga
-   * linjer som är ljusare än den mörka bottnen. Riktningen är omvänd av
-   * nödvändighet, inte av smak. */
-  border-bottom: 1px solid var(--color-header-border);
-
+  top: var(--nav-offset);
+  margin-top: var(--nav-offset);
   z-index: var(--z-header);
+  pointer-events: none;
 }
 
-.inner {
+.pill {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  height: 100%;
+  height: var(--nav-height);
   max-width: var(--content-max);
   margin-inline: auto;
-  /* Sidomarginalen kommer från den gemensamma regeln i global.css. */
+  padding: 8px 8px 8px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background-color: rgba(20, 20, 20, .62);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  pointer-events: auto;
 }
 
-/* Loggan har ingen EGEN platta och ingen ram - den ligger direkt mot headerns
- * botten, vilken den än är. (Headerns botten är sedan 2026-10-03 grå; det är
- * headerns beslut, inte loggans, och ändrar inget här.)
- * EN länk, två barn: ikonen och namnet. Måtten är beslutade i ARKITEKTUR.md,
- * "Headerns uppbyggnad". */
+/* Utan blur ska texten vara läsbar oavsett vad som rullar under. */
+@supports not ((backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px))) {
+  .pill { background-color: rgba(20, 20, 20, .94); }
+}
+
+/* EN länk, två barn: ikonen och det visuellt dolda namnet. */
 .logoLink {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   flex-shrink: 0;
 
-  /* TRÄFFYTAN. Länkens box var tidigare ikon PLUS den synliga texten. När
-   * namnet blev visuellt dolt 2026-10-07 krympte boxen till enbart ikonen,
-   * 48 x 36 px - över WCAG 2.5.8:s 24 x 24 men UNDER 2.5.5:s 44 x 44.
-   *
-   * 4 px över och under ger 36 + 8 = 44. Bakgrunden är genomskinlig, så det
-   * syns inte; träffytan blir 48 x 44.
-   *
-   * Det här är den sortens försämring som smyger in när något tas bort: ingen
-   * mätning går sönder, inget larmar, bygget är grönt och kontrasterna står -
-   * knappen blir bara lite svårare att träffa för den som har skakiga händer.
-   * Ta inte bort raden med motiveringen att den inte syns. */
+  /* TRÄFFYTAN. Ikonen ensam är lägre än WCAG 2.5.5:s 44 x 44; blocket över
+   * och under ger träffytan den höjden utan att något syns. Ta inte bort
+   * raden med motiveringen att den inte syns. */
   padding-block: 4px;
 }
 
-/* Det tajta märket renderas på HÖJD, inte på en kvadratisk ruta: 36 px i en
- * 64 px hög header lämnar 14 px luft över och under, och bredden följer av
- * proportionen 592 : 442 -> ca 48 px. Beslutat i ARKITEKTUR.md, "Ikonens
- * optiska storlek - rättat efter paket 2B". */
+/* Det tajta märket renderas på HÖJD; bredden följer av filens proportion.
+ * Beslutat i ARKITEKTUR.md, "Ikonens optiska storlek". */
 .logo {
   height: 36px;
   width: auto;
   flex-shrink: 0;
 }
 
-/* Här låg .logoName. BORTTAGEN 2026-10-07 när namnet blev visuellt dolt i alla
- * bredder: font-size, letter-spacing, color och white-space har ingen
- * observerbar effekt på text som är klippt till 1 px av .visually-hidden, och
- * en deklaration utan effekt är död CSS.
- *
- * Klassen togs bort HELT, inte bara tömd. En tom regel stryks av minifieraren -
- * uppmätt: den försvann ur byggd CSS, och då blir styles.logoName undefined och
- * klassattributet "visually-hidden undefined". Det är skräp i markupen.
- *
- * Döljningen ligger nu enbart på .visually-hidden i global.css. Visas namnet
- * någon gång igen skapas klassen på nytt, med värden som passar det läget. */
+/* Beslutat i ARKITEKTUR.md: M8b */
+/* En automatisk marginal före navet samlar länkarna och CTA:n till höger,
+ * med pillens gap emellan. */
+.nav {
+  margin-inline-start: auto;
+}
 
-/* flex-wrap: nowrap, ALDRIG wrap. Beslutat i ARKITEKTUR.md, "Navigeringen på
- * smal skärm - förebyggande regel, inte en felrättning".
- *
- * Detta är en FÖREBYGGANDE regel. Den rättar inget observerat fel: regeln
- * vilar inte på en mätning utan på invarianten att headern har låst höjd
- * (--header-height), och att wrap inuti en låst höjd klipper innehåll nedåt
- * där ingen kontroll tittar. Med `nowrap` blir ett framtida överskridande i
- * stället en vågrät överspillning - alltså horisontell scroll, som larmar av
- * sig självt. Regeln byter ett tyst felläge mot ett som syns.
- *
- * Samma mening täcker både listan och den enskilda länken nedan: ingenting
- * inuti headern får radbryta.
- *
- * Utrymmesbudgeten för smal skärm står i ARKITEKTUR.md - inga tal upprepas
- * här. gap --space-4 är modulens värde i alla bredder. Graden är det INTE
- * längre: se media queryn vid .navLink nedan, som kom till när navet fick sin
- * fjärde länk. */
+/* Ingenting inuti headern får radbryta: pillen har låst höjd, och wrap inuti
+ * en låst höjd klipper innehåll där ingen kontroll tittar. `white-space:
+ * nowrap` häver dessutom den ärvda `overflow-wrap: anywhere` från body.
+ * Beslutat i ARKITEKTUR.md, "360 px-golvet och grid". Under brytpunkten
+ * ligger länkarna i panelen i stället ("M8 - Mobilmenyn"). */
 .navList {
   display: flex;
   flex-wrap: nowrap;
-
-  /* UTTRYCKLIGT UNDANTAG från `overflow-wrap: anywhere` på body. `flex-wrap`
-   * hindrar bara att LISTPOSTER bryter till ny rad; `white-space: nowrap`
-   * hindrar text från att brytas och upphäver samtidigt overflow-wrap, som
-   * saknar verkan när nowrap är satt. Den är ärvd, så den täcker även ett
-   * element någon lägger till i listan senare. Beslutat i ARKITEKTUR.md,
-   * "360 px-golvet och grid" (undantagslistan) samt "Navigeringen på smal
-   * skärm". */
   white-space: nowrap;
   gap: var(--space-4);
   margin: 0;
 }
 
 .navLink {
-  /* Ljus text, valt av Jelal 2026-10-05: länkarna ska synas bättre. Det
-   * UPPHÄVER `--color-text-muted` för navlänkar (tokentabellen, "navlänkar i
-   * viloläge", och "Typsnittet"). Sätt inte tillbaka --color-text-muted här med
-   * hänvisning till de avsnitten.
-   *
-   * Tokenet, aldrig #FFFFFF: --color-text är sidans ljusa textfärg och läses
-   * som vitt. Ett inline-värde hade blivit sidans enda hårdkodade färg. Tycker
-   * Jelal att den är för dämpad är rent vitt ett eget beslut, inte en genväg
-   * här.
-   *
-   * Frågan om hur namnet skulle skiljas ut från navlänkarna är sedan
-   * 2026-10-07 inte längre en fråga: namnet är visuellt dolt i alla bredder, så
-   * det finns ingen synlig text att skilja från. */
-  color: var(--color-text);
-
-  /* GRADEN ÄR SMALSKÄRMENS, och den större graden kommer först vid 600 px.
-   * Mobile-first åt samma håll som projektets övriga brytpunkter, som alla är
-   * `min-width` (tokens.css).
-   *
-   * VARFÖR: navet fick en fjärde länk, "Om mig", 2026-10-07. Med --text-sm i
-   * alla bredder blev navlistan 256,2 px vid 360 px vyport, medan headerns
-   * innehållsbox är 309 px och loggan plus mellanrummet tar 64. Navet spillde
-   * alltså över sin behållare med 11,2 px och åt av högermarginalen. UPPMÄTT -
-   * arkitektens uppskattning låg inom en pixel från taket och hamnade på fel
-   * sida om det.
-   *
-   * ÅTGÄRDEN ÄR GRADEN, ALDRIG ETIKETTEN. Storleken är presentation, etiketten
-   * är innehåll - "Om mig" är Jelals ord och kortas inte för att skapa plats.
-   * Beslutat i ARKITEKTUR.md, "En fjärde navlänk 2026-10-07".
-   *
-   * OBS att överspillningen INTE gav horisontell scroll: sidmarginalens 18 px
-   * absorberade den, så golvkontrollen passerade medan navet låg utanför sin
-   * box. Felläget som arkitekturen kallar "tryggt" larmar först när
-   * överspillningen äter upp hela marginalen. Mät navlistans högerkant mot
-   * headerns innerkant, inte bara scrollWidth. */
-  font-size: var(--text-xs);
-
-  /* UTTRYCKLIGT UNDANTAG från `overflow-wrap: anywhere` på body, och hör ihop
-   * med `flex-wrap: nowrap` på listan - samma förebyggande försvar en nivå ned.
-   * `flex-wrap` hindrar bara att LISTPOSTER bryter till ny rad; texten inuti en
-   * post kan fortfarande brytas, och då är den tysta bortklippningen nedåt
-   * tillbaka i en header med låst höjd. Står kvar uttryckligen även om listan
-   * ärver nowrap: etiketten är det som faktiskt bär text. Beslutat i
-   * ARKITEKTUR.md, "Navigeringen på smal skärm". */
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  color: var(--ink);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
   white-space: nowrap;
 }
 
+/* Beslutat i ARKITEKTUR.md: M7 */
+/* Hover byter inte färg: pillen är genomskinlig, och texten ska hålla sin
+ * kontrast oavsett vad som rullar under. Den aktiva länken skiljs från hover
+ * av understrykningens färg. Ordningen är bindande: regeln för aria-current
+ * står EFTER :hover, så att en aktiv länk under pekaren behåller sin färg. */
 .navLink:hover {
-  color: var(--color-accent);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
 }
 
-/* Från 600 px finns utrymmet igen och graden går tillbaka till --text-sm, samma
- * som resten av sidans småtext. Brytpunkten är projektets sm (tokens.css), inte
- * ett eget tal: utrymmet räcker redan vid 420 px, men att införa ett femte
- * brytvärde för 60 px skulle göra systemet svårare att hålla i huvudet än
- * vinsten är värd. */
-@media (min-width: 600px) {
-  .navLink {
-    font-size: var(--text-sm);
+.navLink[aria-current='true'] {
+  text-decoration-line: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-pill);
+  background-color: var(--accent);
+  color: var(--ink-inverse);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.cta:hover {
+  background-color: var(--accent-hover);
+}
+
+/* Mobil först: basen är hamburgern. Från brytpunkten visas navlistan och
+ * CTA:n i pillen och hamburgern döljs; under den ligger samma länkar och CTA:n
+ * i panelen (MobileMenu). Beslutat i ARKITEKTUR.md, "M8 - Mobilmenyn". */
+.nav,
+.cta {
+  display: none;
+}
+
+.menuButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+/* Beslutat i ARKITEKTUR.md: M8b */
+/* Ett osynligt lager runt knappen gör träffytan större än det synliga måttet,
+ * så att den når WCAG 2.5.5:s minsta storlek. Lagret räknas från knappens
+ * insida, innanför kanten, och ryms i pillens inre marginal. */
+.menuButton::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+}
+
+@media (min-width: 900px) {
+  .nav {
+    display: block;
+  }
+
+  .cta {
+    display: inline-flex;
+  }
+
+  .menuButton {
+    display: none;
   }
 }

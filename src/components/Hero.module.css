@@ -1,29 +1,34 @@
-/* Hero. Sidomarginalen (padding-inline) och den vertikala luften
- * (padding-block) ligger på section[id] i global.css och får ALDRIG upprepas
- * här - då blir marginalen dubbel (ARKITEKTUR.md, "Var sidmarginalen bor").
- * Modulen äger bara centreringen och hero-specifik stil. */
+/* Hero. Sidomarginalen (padding-inline) bor på section[id] i global.css och
+ * får ALDRIG upprepas här - då blir marginalen dubbel (ARKITEKTUR.md, "Var
+ * sidmarginalen bor"). Hero har däremot en egen vertikal luft, och den regeln
+ * har därför en selektor som slår den globala på specificitet (M10b). Modulen
+ * äger i övrigt bara centreringen och hero-specifik stil. */
 
-/* Heros sektionsrot. Grå bakgrund, samma yta som headern - tillsammans bildar
- * de sidans övre grå fält, och den mörka bottnen börjar först vid Kompetenser.
- * Beslutat av Jelal 2026-10-05, se ARKITEKTUR.md "Hero får grå bakgrund".
- *
- * Bakgrunden ligger HÄR och inte i global.css: en regel som gäller alla
- * sektioner ska inte bära ett specialfall. Samma skäl som gjorde
+/* Heros sektionsrot. Bakgrunden ligger HÄR och inte i global.css: en regel som
+ * gäller alla sektioner ska inte bära ett specialfall. Samma skäl som gjorde
  * sektionsavgränsaren till en syskonselektor i stället för ett hero-undantag.
  *
- * Före detta hade section#hero backgroundColor rgba(0, 0, 0, 0) och visade
- * body igenom. Genomskinlig är inte en färg - den som mäter på den måste lösa
- * upp den effektiva ytan, annars läses den som svart.
- *
- * Klassen fanns inte innan: sektionsroten hade ingen className alls. Namnet
- * följer modulernas befintliga konvention, där rotelementets klass heter som
+ * Namnet följer modulernas konvention, där rotelementets klass heter som
  * komponenten - .header i Header.module.css och .footer i Footer.module.css.
  *
- * Padding-inline och padding-block ligger på section[id] i global.css och får
- * ALDRIG upprepas här (ARKITEKTUR.md, "Var sidmarginalen bor"). Den här
- * klassen sätter bara bakgrunden. */
+ * Den här klassen sätter bara bakgrunden. Sidomarginalen kommer från
+ * global.css, och heros vertikala luft står i regeln direkt nedanför. */
+/* GLÖDEN ÄR EN BAKGRUNDSBILD PÅ SEKTIONEN, inte ett eget element. Den målas
+ * inom sektionens egen ruta och kan därför aldrig ge horisontell scroll. Den
+ * tonar ut till helt genomskinlig, så sektionens kant syns inte som en
+ * färgkant. Ingressens kontrast mäts mot glödens LJUSASTE punkt, inte mot
+ * --bg. Beslutat i ARKITEKTUR.md, "M10 - Hero". */
 .hero {
-  background-color: var(--color-bg-top);
+  background-color: var(--bg);
+  background-image: radial-gradient(60% 70% at 100% 35%, rgba(255, 107, 0, .16), rgba(255, 107, 0, 0) 70%);
+}
+
+/* Heros egen vertikala luft, i alla bredder. Selektorn bär ett attribut mer än
+ * section[id] i global.css och vinner därför på specificitet, oberoende av i
+ * vilken ordning filerna buntas. padding-inline rörs inte här. Beslutat i
+ * ARKITEKTUR.md, "M10b". */
+section.hero[id] {
+  padding-block: var(--space-6);
 }
 
 /* Beslutat i ARKITEKTUR.md, "Hero fyller första skärmen på dator" (A5), och
@@ -53,15 +58,6 @@
 .inner {
   max-width: var(--content-max);
   margin-inline: auto;
-
-  /* EJ I ARKITEKTUR: vilken layoutmekanism hero ska använda, om de två
-   * kolumnerna ska vara lika breda, och vilka avstånden ska vara.
-   *
-   * Grid med två lika spår valt eftersom bildspåret då blir 528 px vid
-   * --content-max, vilket ligger i det spann bildens sizes räknar med.
-   * Avstånden är tokens, inga lösa tal.
-   *
-   * Spårens SKRIVSÄTT är däremot beslutat - se minmax-regeln nedan. */
   display: grid;
 
   /* 360 px-golvet, halva två. Beslutat i ARKITEKTUR.md, "360 px-golvet och
@@ -75,17 +71,29 @@
   gap: var(--space-7);
 }
 
+/* Två spår från 900 px: textspåret är flexibelt och bildspåret har cirkelns
+ * tak som största bredd. Beslutat i ARKITEKTUR.md, "M10 - Hero". Bildspårets
+ * maxbredd och .media:s tak hör ihop - ändras det ena ska cirkelns
+ * diameterserie mätas om, så att cirkeln inte krymper när fönstret växer.
+ *
+ * FULL BREDD: i tvåspaltsläget är .inner ett griditem i .hero med
+ * auto-marginaler, och ett sådant sträcks inte ut av sig själv utan får sin
+ * bredd från innehållet. .text är innesluten (container-type) och bidrar då
+ * inte med någon bredd, så utan width: 100% kollapsar textspåret. Beslutat i
+ * ARKITEKTUR.md, "M10b" punkt 2. */
 @media (min-width: 900px) {
   .inner {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: var(--space-8);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+    gap: var(--space-7);
     align-items: center;
+    width: 100%;
   }
 }
 
 /* Beslutat i ARKITEKTUR.md, "A5 - Hero: knapparna, mätserien och 360 px":
  * rollraden skiljs från ingressen med FÄRG och inte med en fjärde typografisk
- * nivå - vikt går inte att använda, teckensnittet har en enda. Gapet nedan är
+ * nivå. Gapet nedan är
  * gridens enda avståndsregel, och varje barn i .text hämtar sitt avstånd
  * därifrån i stället för att sätta en egen marginal. */
 .text {
@@ -99,28 +107,39 @@
   gap: var(--space-4);
 }
 
-/* h1 behöver ingen egen klass: graden (--text-3xl), radavståndet och vikten
- * kommer från h1 i global.css, och marginalen nollas av reseten. */
+/* INVARIANTEN för h1: i tvåspaltsläget följer graden textspårets bredd, inte
+ * vyportens, eftersom det är spåret som avgör radbrytningen. Golvet hindrar
+ * graden från att bli mindre än heros uppmätta golv, och taket från att bli
+ * större än sidans display-grad. Under brytpunkten rörs h1 inte. Beslutat i
+ * ARKITEKTUR.md, "M10b".
+ *
+ * Eyebrow-raden och rollraden har ingen modulklass: deras stil kommer ur
+ * type.module.css och sätts i Hero.jsx (ARKITEKTUR.md, M1 "Hur stilen når
+ * elementet"). */
+@media (min-width: 900px) {
+  .text {
+    container-type: inline-size;
+  }
 
-.role {
-  font-size: var(--text-lg);
-  color: var(--color-text);
+  .headline {
+    font-size: clamp(2.75rem, 11cqi, var(--text-3xl));
+  }
 }
 
+/* Ingressens grad är heros egen. Den är det andra som får vika under 600 px om
+ * knapparna inte ryms i första skärmen på mobil (ARKITEKTUR.md, A5 "Vad som
+ * får vika"). */
 .intro {
   font-size: var(--text-lg);
-  color: var(--color-text-muted);
-  max-width: var(--measure);
+  max-width: 560px;
+  color: var(--ink-muted);
 }
 
-/* HEROS TVÅ KNAPPAR. Deklarationerna nedan står utskrivna i ARKITEKTUR.md,
- * "A5 - Hero: knapparna, mätserien och 360 px", och är bindande tecken för
- * tecken. Ändra dem inte här - ändra beslutet först.
+/* HEROS TVÅ KNAPPAR. Deklarationerna nedan är bindande tecken för tecken
+ * (ARKITEKTUR.md, "M10 - Hero"). Ändra dem inte här - ändra beslutet först.
  *
- * INGEN TREDJE GLOBAL KLASS. Formulärets knapp bär samma orange par men är en
- * <button> med tillstånd hero inte har, så stilen upprepas i denna modul i
- * stället för att lyftas ut. Dörren till en global knappklass är stängd i
- * ARKITEKTUR.md, "Headerns logotyp".
+ * Formulärets knapp bär samma orange par men är en <button> med tillstånd hero
+ * inte har, så stilen står i denna modul i stället för att lyftas ut.
  *
  * RADBRYTNINGEN ÄR HELA MOBILHANTERINGEN: knapparna staplas när de inte får
  * plats, utan brytpunkt. En brytpunkt hade varit ett andra tal att hålla i synk
@@ -131,51 +150,52 @@
   gap: var(--space-3);
 }
 
-/* INVARIANTEN: de två knapparna har samma höjd. Den primära har därför en
- * genomskinlig ram av samma tjocklek som den sekundäras synliga - ingen av dem
- * har en satt höjd, så höjden är innehåll plus padding plus ram, och en knapp
- * utan ram blir lägre än en med. Det följer av boxmodellen, inte av att någon
- * kommer ihåg det. Beslutat i ARKITEKTUR.md, A5. */
+.actionPrimary,
+.actionSecondary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-pill);
+  font-weight: var(--weight-semibold);
+  transition: background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+/* INVARIANTEN: de två knapparna har samma höjd även när texten radbryter. Den
+ * primära har därför en genomskinlig ram av samma tjocklek som den sekundäras
+ * synliga - annars blir knappen utan ram lägre så fort innehållet överstiger
+ * min-height. Det följer av boxmodellen. */
 .actionPrimary {
-  padding: var(--space-3) var(--space-5);
-  background-color: var(--color-accent);
+  background-color: var(--accent);
   border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  color: var(--color-on-accent);
-  font-size: var(--text-base);
-  transition: background-color var(--transition);
+  color: var(--ink-inverse);
 }
 
 /* Hover rör sig BORT från underlaget, samma riktning som sidans övriga
  * återkopplingar. */
 .actionPrimary:hover {
-  background-color: var(--color-accent-hover);
+  background-color: var(--accent-hover);
 }
 
-/* RAMEN ÄR --color-text-muted, ALDRIG --color-border. --color-border
- * sammanfaller i dag med hero:s bakgrundston, så den ramen hade saknat kontrast
- * mot sin egen botten - exakt samma fel som headerns kant hade innan
- * --color-header-border infördes. En knapps ram är en gränssnittskomponents
- * avgränsning och omfattas av WCAG 1.4.11; kvoterna står i ARKITEKTUR.md, A5.
- * Byt den inte till --color-border "för enhetlighetens skull". */
+/* RAMEN ÄR DEN STARKA LINJEN, ALDRIG DEN DEKORATIVA. En knapps ram är en
+ * gränssnittskomponents avgränsning och omfattas av WCAG 1.4.11:s 3:1, och den
+ * dekorativa linjen klarar inte det mot sidans botten. Byt den inte "för
+ * enhetlighetens skull". */
 .actionSecondary {
-  padding: var(--space-3) var(--space-5);
   background-color: transparent;
-  border: 1px solid var(--color-text-muted);
-  border-radius: var(--radius-sm);
-  color: var(--color-text);
-  font-size: var(--text-base);
-  transition: border-color var(--transition);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
 }
 
 .actionSecondary:hover {
-  border-color: var(--color-text);
+  border-color: var(--ink);
 }
 
 /* Bilden. GRÅSKALA plus en grå tonplatta, båda i CSS och inte inbakade i
  * bildfilen - medvetet beslut i ARKITEKTUR.md ("Vad som INTE görs i
  * bildskriptet") så att tonen kan justeras efter Leverans 1 utan att någon bild
- * genereras om. Tonplattan är --color-overlay-grey, tokenet som finns just för
+ * genereras om. Tonplattan är --overlay-grey, tokenet som finns just för
  * detta.
  *
  * RUND BILD med ett tunt vitt streck. Beslutat av Jelal 2026-10-05, se
@@ -196,8 +216,9 @@
  * Serien ska vara ICKE-AVTAGANDE över hela bredden - cirkeln växer eller står
  * still, aldrig krymper. Det är verifieringspunkt 5 i ARKITEKTUR.md.
  *
- * `max-width: none` över 900 px är avfärdat: då växer cirkeln till spårets
- * fulla 528 px vid 1600, och 528 var måttet som avfärdades som dominerande.
+ * `max-width: none` över 900 px är avfärdat: cirkelns största storlek ska
+ * bestämmas av taket på .media, inte av hur bildspåret i .inner råkar vara
+ * deklarerat.
  *
  * BYT INTE MEKANISM från border till outline eller box-shadow utan att läsa
  * ARKITEKTUR.md, "Mekanismen: border". Kort: outline är reserverad för
@@ -224,14 +245,14 @@
    * 3 px eller mer - då läses det som en ram, vilket Jelal avfärdade när han
    * sa "streck".
    *
-   * --color-text och inget nytt token: båda användningarna lyder under samma
+   * --ink och inget nytt token: båda användningarna lyder under samma
    * villkor, sidans ljusaste ton mot mörk botten, så tokenet kan aldrig driva
    * iväg åt ett håll som skadar strecket. Hårdkodat #FFFFFF är avfärdat - sidan
    * har noll hårdkodade färger utanför tokens.css.
    *
    * box-sizing: border-box i global.css gör att strecket ryms INOM max-width
    * och lägger noll pixlar utanpå. */
-  border: 2px solid var(--color-text);
+  border: 2px solid var(--ink);
 }
 
 /* Från 900 px är hero två kolumner och grid-spåret bär bredden. Taket höjs då
@@ -257,10 +278,9 @@
    * hör hemma i en rund ram. Centrerad beskärning hade skurit av hjässan. */
   object-position: 50% 0%;
 
-  /* EJ I ARKITEKTUR: vilket contrast-värde gråskalan ska ha.
-   *
-   * 1.05 är en knappt märkbar höjning som håller porträttet från att bli platt
-   * under tonplattan. Ett värde att justera när Jelal sett bilden. */
+  /* Svartvitt porträtt, med en knappt märkbar kontrasthöjning som håller det
+   * från att bli platt under tonplattan. Beslutat i ARKITEKTUR.md,
+   * "M10 - Hero". */
   filter: grayscale(1) contrast(1.05);
 }
 
@@ -270,6 +290,6 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-color: var(--color-overlay-grey);
+  background-color: var(--overlay-grey);
   pointer-events: none;
 }

@@ -54,6 +54,14 @@ export const ABOUT_ID = 'about';
 export const CONTACT_ID = 'contact';
 export const MAIN_ID = 'main'; // <main id>, mål för skip-länken
 
+/* VARJE FAST ID PÅ SIDAN står här som en *_ID-export, även de som inte är
+ * sektioner. scripts/validate-data.mjs läser varje sådan export och fäller
+ * bygget om ett id ur datafilerna (ett projekts slug, en skillgrupp) blir
+ * samma som något av dem. Ett id som skrivs direkt i en komponent syns inte
+ * för den kontrollen. Beslutat i ARKITEKTUR.md: R2 */
+export const MENU_ID = 'mobile-menu'; // mobilmenyns panel, aria-controls på hamburgern
+export const ROOT_ID = 'root'; // <div id> i index.html som React renderas i
+
 /* ORDNINGEN ÄR JELALS, beslutad 2026-10-07: projekt FÖRE kompetenser, och en
  * liten sektion "om mig" mellan kompetenser och kontakt. Hans eget skäl är att
  * kompetenssektionen är sidans högsta och att projekten låg bakom den.

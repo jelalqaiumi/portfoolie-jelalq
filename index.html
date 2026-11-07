@@ -15,8 +15,9 @@
     <link rel="icon" type="image/png" sizes="96x96" href="/assets/logo-mark-96.png" />
     <link rel="apple-touch-icon" href="/assets/logo-mark-192.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Rollen efter tankstrecket är samma sträng som rollraden i Hero.jsx.
-         Ändras den där ändras den här, i samma redigering. -->
+    <!-- Rollen efter tankstrecket är samma sträng som "role" i
+         src/data/profile.js. Ändras den där ändras den här, i samma
+         redigering. -->
     <title>Jelal Qaiumi — Systemutvecklare · Fullstack</title>
   </head>
   <body>
@@ -39,6 +40,8 @@
       </p>
     </noscript>
     <div id="root"></div>
+    <!-- id:t ovan är ROOT_ID i src/data/sections.js, som main.jsx renderar i.
+         Ändras det ändras det på båda ställena, i samma redigering. -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

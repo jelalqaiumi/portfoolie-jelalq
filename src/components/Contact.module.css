@@ -2,8 +2,7 @@
  * kommer från <Section> respektive global.css - modulen får ALDRIG sätta
  * padding-inline (ARKITEKTUR.md, "Var sidmarginalen bor").
  *
- * Sektionen ligger på --color-bg, alltså den mörka ytan. Ingen .surface-light
- * här. */
+ * Sektionen ligger på sidans mörka bakgrund, som hela sidan. */
 
 /* TVÅSPALTIGT FRÅN 900 px: formuläret till vänster, kontaktuppgifterna till
  * höger. Beslutat av Jelal 2026-10-07.
@@ -78,14 +77,14 @@
 }
 
 /* EJ I ARKITEKTUR: länkarnas färg och understrykning. Orange är tillåtet för
- * länkar enligt kontrastbeslutet i ARKITEKTUR.md, "Färger" - 6,95:1 mot den
- * mörka ytan. Understrykningen gör att länken inte skiljs ut av färg ensam. */
+ * länkar så länge kvoten mot den mörka ytan klarar AA - den står vid tokenet
+ * i tokens.css. Understrykningen gör att länken inte skiljs ut av färg ensam. */
 .link {
-  color: var(--color-accent);
+  color: var(--accent);
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
 
 .link:hover {
-  color: var(--color-accent-hover);
+  color: var(--accent-hover);
 }

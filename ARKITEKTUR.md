@@ -108,8 +108,36 @@ fynd.
 | `Antalskontrollen 93` / `93 handskrivna poster` / `93 rader` (som antal i prosa) | inget antal grindas och inget antal står i prosa | A1 + A17 |
 | `filled: true` (som värde på en post i `skills.js`) | fältet är borttaget; inga sammanslagningar, alltså inga `MERGED`-mål | A1 + A2 |
 | `292` / `267` / `56 gamla poster` / `50 filled: false` (antal ur den gamla listan) | nio grupper och 53 namn, inget antal grindas | A1 + A6 |
-| `#D9D9DE` (som ljusa ytans ram eller som avgränsarlinje) | `#CFCFD4` — **1,413:1** mot `#F4F4F6` | "De dämpade pillarna" + noten "`--color-border` på ljus yta efter A2" |
+| `#D9D9DE` (som ljusa ytans ram eller som avgränsarlinje) | ~~`#CFCFD4` — **1,413:1** mot `#F4F4F6`~~ — **även ersättningen är upphävd 2026-11-07:** ingen ljus yta finns | M2 (raden skrevs när "De dämpade pillarna" gällde) |
 | "de dämpade pillarnas ram" / "de ifyllda pillarna" som **motivering** för ett tokenvärde | konsumenten är kortets och chipsets ram (A6) | ↑ |
+| **Tillagt 2026-11-07, moderniseringen:** | | |
+| `Didact Gothic` / `didact-gothic-latin-400.woff2` | Urbanist, Manrope, JetBrains Mono | "M1 — Typsnitten" |
+| "en enda vikt" / `font-weight: inherit` (på rubriker) / "sätts aldrig till något annat än 400" | `--weight-regular` / `--weight-semibold` / `--weight-bold` | M1 + M5 |
+| `--font-sans` | `--font-body` (och `--font-heading`, `--font-mono`) | M1 + M5 |
+| "Systemfont-stack, ingen webbfont" | självhostade woff2 | M1 |
+| `surface-light` / `.surface-light` / `className="surface-light"` | klassen finns inte | "M2 — `.surface-light` tas bort helt" |
+| varje `--color-`-namn: `--color-bg`, `--color-surface`, `--color-bg-top`, `--color-header-border`, `--color-border`, `--color-field-border`, `--color-text`, `--color-text-muted`, `--color-accent`, `--color-accent-hover`, `--color-on-accent`, `--color-overlay-grey`, `--color-focus`, `--color-error`, `--color-media-*` | översättningstabellen | "M5 — Tokens" |
+| `--transition` / `150ms ease` | `var(--duration-fast) var(--ease-out)` | M5 |
+| `--tracking-wide` | utgår, ingen konsument | M5 |
+| `--content-max: 1120px` / `1120 px` som maxbredd | `1180px` | M18 |
+| `clamp(1rem, 5vw, 3rem)` (sidmarginal) | `1.5rem` | M18 |
+| `--header-height: 64px` / "exakt 64,00 px" (headerns höjd) | `calc(var(--nav-offset) + var(--nav-height))`, alltså 74 px | M6 |
+| `repoUrl` / `url` (fält på ett projekt) / `id` (fält på ett projekt) | `githubUrl` / `liveUrl` / `slug` | "M3 — Projektdatan" |
+| `projectId` (fält i `about.link`) | `projectSlug` | M3 |
+| `16 / 10` / "16:10" (projektbilden) / `[640, 1280]` | `4 / 3` / `[600, 1200]` | "M4 — Projektbilden och kortet" |
+| `minmax(280px, 1fr)` / `calc(var(--measure) + var(--space-5) * 2)` (projektkortet) | rutnät 3/2/1 med `minmax(0, 1fr)`, inget tak på kortet | M4 |
+| "Ingen animation" / "inga in-animationer" som gällande | M12 | "M12 — Animationerna" |
+| "Inga ikoner" som gällande för hela sidan | tre inline-SVG med funktion | "M9 — Ikonerna" |
+| "Formuläret till vänster, kontaktuppgifterna till höger" | uppgifterna till vänster, formuläret till höger | "M16 — Kontakt och footer" |
+| "Ingen tredje global klass" som gällande | `.reveal` är den tredje, och dörren stängs efter den | M12 |
+| **Tillagt 2026-11-07, efter G1:** | | |
+| `.card { scroll-margin-top` | `.item { scroll-margin-top: … }` på kortets `<li>` | "R1" och A4 |
+| `ProjectCard({ project, index })` som signatur i P7 | `ProjectCard({ project })` i P7, `index` från P10 | R1 |
+| `clientWidth` som grind för att layouten står still med menyn öppen | rotens, `#projects` och panelens `getBoundingClientRect().width` | R4, M10b punkt 3 |
+| "15 … och nu också med menyn öppen" (om `innerWidth - clientWidth`) | villkoret läses med menyn stängd | R4 |
+| "var och en har en konsument" (om tokenblocket i M5) | ett token deklareras i det paket som har dess första konsument | R5 |
+| `--space-9` | tokenet är borttaget | R5 |
+| `const MENU_ID` i `Header.jsx` | `MENU_ID` ur `src/data/sections.js` | R2 |
 
 Jag skriver in nya rader här varje gång jag upphäver något. Raderna tas aldrig
 bort — en tom tabell går inte att skilja från en obevakad.
@@ -149,6 +177,2103 @@ bedömning per gång. Här är regeln, formulerad under städpasset 2026-10-08
 
 ---
 
+## Paket P — moderniseringen 2026-11-07: besluten M1–M18, och var de står
+
+Underlag: `UPPDRAG-2026-11-07.md` (avsnittet **"Jelals beslut (2026-11-07)" går
+före uppdragstexten** där de krockar), `PLAN.md` paket P1–P17 och `LARDOMAR.md`.
+Numret M*n* är samma som numret i `PLAN.md`:s lista "Beslut arkitekten måste
+fatta i P1".
+
+**Detta avsnitt är det gällande för allt det rör.** Varje äldre stycke som krockar
+är märkt `UPPHÄVT 2026-11-07, se M<n>` på **sin egen rubrik** (konventionen
+ovan). Gäller bara tokennamnen i ett i övrigt gällande stycke står det
+`tokennamnen UPPHÄVDA 2026-11-07, se M5` — då gäller beslutet, och namnen läses
+genom översättningstabellen i M5. Hittar byggaren ett omärkt äldre stycke som
+krockar gäller M-avsnittet, och motsägelsen lämnas tillbaka hit.
+
+| # | Beslut i en mening | Genomförs i | Upphäver (märkt på sin plats) |
+|---|--------------------|-------------|-------------------------------|
+| M1 | Tre självhostade woff2 (Urbanist, Manrope, JetBrains Mono), latin, och teckengrinden mäter varje familj mot de fält som renderas i den. Textstilarna i `type.module.css` sätts i JSX, aldrig med `composes` (efter P5) | P2, P5 | "Typsnittet — Didact Gothic, en enda vikt" med 1–5, Teknikval-raden "Systemfont-stack" |
+| M2 | `.surface-light` tas bort helt | P2 | "Ljus yta — Kompetenser får vit bakgrund" med alla underavsnitt |
+| M3 | Projektdatan byter till uppdragets fältnamn, `logo` utgår, en länkregel i `src/lib/projectRules.js` | P6 | "`src/data/projects.js` — projekt" |
+| M4 | Projektbilden blir 4:3, vänsterförankrad beskärning, bredderna 600 och 1200, `loading="lazy"`; kortets deklarationer | P6 (bild), P7 (kort) | "Projektkortens bredd — läget med ETT projekt" med underavsnitt |
+| M5 | Uppdragets tokennamn ersätter `--color-*` rakt av, översättningstabell, och tokengrinden gäller varje custom property | P2 | "Färger", "A8", "Typografi", "Layout, radier och övrigt", "Accentfärg — mätning" |
+| M6 | Svävande nav: `--header-height` = avstånd + pillhöjd, båda låsta som token | P3 | "Headern är enfärgad", "Headerns bakgrund" (redan upphävd) |
+| M7 | `aria-current`-observern behålls, understrykningen läggs på den. Hover i pillen är en understrykning i `--ink`, ingen färgändring (efter P4) | P3, P4b | "Hover — mätningen säger tvärtom mot magkänslan" |
+| M8 | Hamburgermeny under 900 px, dialog med fokusfälla, Esc, scroll-lås och CTA i panelen. M8b avgör P3:s och P4:s öppna markeringar. Låset får inte flytta layouten: `scrollbar-gutter: stable` på `html` (M10b punkt 3) | P4, P4b, P5 omgång 2 (punkt 3) | "Navigeringen på smal skärm" med underavsnitt (alternativ (d) var avfärdat) |
+| M9 | Tre egna inline-SVG, inget beroende | P4, P9 | "A3 — Inga ikoner" |
+| M10 | Heros texter (h1 är ett markerat förslag), glöd, knappstilar och heros fyra markeringar. M10b: heros `padding-block`, h1:s grad från 900 px med `.inner` i full bredd, `scrollbar-gutter` på `html`, och mätseriens vyporter | P5 (omgång 2 för M10b) | "Hero får grå bakgrund", "A5 … Knappstilarna", "Heros `EJ I ARKITEKTUR`-markeringar", A5 "Vad som får vika" steg 1 |
+| M11 | Filtret: chips ur datan, segment med 0 visas men är inaktiva, OCH mellan alla villkor, live-raden `aria-live="polite"` | P8, P9 | — |
+| M12 | Animationerna: `.reveal` via en gemensam observer, aldrig dold utan observer, stagger 70 ms med tak, och reducerad rörelse stänger av allt | P7 (hover), P10 | "A11 — Ingen animation införs" |
+| M13 | Sektionsetiketten `01 / 04 · PROJEKT` räknas ur `sections` utan hero och är `aria-hidden` | P11 | — |
+| M14 | Nyckeltalen är "Projekt" och "Kompetenser", båda härledda; "år i branschen" utgår tills Jelal svarat | P12 | — |
+| M15 | Kompetenschipsen får filterchipsens stil via en gemensam `Chip`-komponent | P9 (Chip), P11 | "A6" (chipset), "Chipsens färg" |
+| M16 | Kontakt: uppgifterna till vänster, formuläret i en panel till höger, hCaptcha `compact`. Footer: GitHub renderas inte så länge den är `null` | P13, P14 | "Kontaktsektionen blir tvåspaltig" med underavsnitt |
+| M17 | Lighthouse körs med `npx` mot `vite preview` och installerad Chrome, mobil och dator, median av tre | P15 | Teknikval (inget verktyg fanns) |
+| M18 | `--content-max: 1180px` och `--content-padding: 1.5rem` | P2 | "Layout, radier och övrigt", värdet i "Var sidmarginalen bor" |
+
+**Efter G1 (2026-11-07):** besluten R1–R6 står i "Besluten efter G1", sist i
+M-avsnittet, och genomförs i paketet G1-rättningen. De rättar A4, M3, M4, M5,
+M8b, M10b punkt 3 och M18 på sina platser.
+
+### Kontrollerat i miljön 2026-11-07 (LARDOMAR 2026-10-02: inget namnges okontrollerat)
+
+| Namngivet | Läge |
+|-----------|------|
+| `scripts/font-coverage.mjs`, `scripts/validate-data.mjs`, `scripts/validate-tokens.mjs`, `scripts/optimize-project-images.mjs` | Finns |
+| `src/data/projects.js` med `PROJECT_IMAGE_WIDTHS = [640, 1280]` | Finns |
+| `assets-source/projects/awle.png` | Finns. Måtten 1440 × 900 är **uppgivna** (kommentaren i `projects.js` och samordnaren) och syns som 16:10 när filen öppnas, men är **inte uppmätta av mig**. P6 läser dem med `sharp().metadata()` innan beskärningen körs |
+| `public/assets/projects/awle-640.webp`, `awle-1280.webp` | Finns. Blir orefererade i P6 och tas bort där |
+| `src/styles/fonts/didact-gothic-latin-400.woff2` | Finns. Tas bort i P2 |
+| Urbanist, Manrope och JetBrains Mono som filer | **Finns inte.** Hämtas i P2 enligt M1. Att nätverket når `fonts.googleapis.com` har jag inte kunnat pröva. P2 prövar det först |
+| Chrome | `C:\Program Files\Google\Chrome\Application\chrome.exe` finns |
+| Lighthouse | **Finns inte**: varken i `package.json`, i `%APPDATA%\npm\node_modules` eller i npx-cachen. M17 föreskriver `npx`, och P15 prövar det innan något mäts |
+| `size="compact"` på `HCaptcha` | Finns i `node_modules/@hcaptcha/react-hcaptcha/types/index.d.ts:26` (`"normal" \| "compact" \| "invisible"`) |
+| `src/lib/`, `src/data/profile.js`, `src/styles/type.module.css` och de nya komponenterna | **Finns inte.** Skapas i det paket som står vid varje namn |
+
+### M1 — Typsnitten: självhostade woff2, en fil per familj (P2)
+
+**Beslut: självhostade, som i dag.** Samordnarens rekommendation följs i sak.
+Google Fonts CDN skulle ta bort det enda teckengrinden kan mäta (filen), lägga
+en extern uppkoppling och render-blockerande CSS i Lighthouse, och bryta
+principen om noll externa anrop i runtime. hCaptcha är fortfarande det enda
+externa anropet, och bara i kontaktsektionen.
+
+**En avvikelse från rekommendationen: variabla filer i stället för en fil per
+vikt.** Google serverar alla tre familjerna som variabla typsnitt. Begärs ett
+viktintervall (`wght@600..700`) svarar API:t med **ett** `@font-face` och **en**
+fil som täcker intervallet. Statiska woff2 per vikt går inte att få därifrån utan
+att konvertera TTF, och det kräver ett nytt verktyg. Följden är att Urbanist- och
+Manrope-filerna bär hela viktaxeln. Deklarationen begränsar ändå webbläsaren
+till de vikter uppdraget använder. Byten mäts i P2 och redovisas, och
+`dist/`-gränsen på 1 MB gäller.
+
+**Filerna, i `src/styles/fonts/`:**
+
+| Fil | `font-family` | `font-weight` | Används till |
+|-----|---------------|---------------|--------------|
+| `urbanist-latin-var.woff2` | `'Urbanist'` | `600 700` | rubriker, kortets titel, logo-brickan, nyckeltalens siffror |
+| `manrope-latin-var.woff2` | `'Manrope'` | `400 700` | brödtext, navlänkar, knappar, segment, eyebrow (700) |
+| `jetbrains-mono-latin-400.woff2` | `'JetBrains Mono'` | `400` | kategori, status, taggar, chips, live-raden, sektionsetiketten, nyckeltalens etiketter |
+
+**Källan, och hur den hämtas en gång:** P2 hämtar
+`https://fonts.googleapis.com/css2?family=Urbanist:wght@600..700&family=Manrope:wght@400..700&family=JetBrains+Mono:wght@400&display=swap`
+med en aktuell webbläsares `User-Agent`. Utan den svarar Google med TTF. Ur svaret
+används blocken märkta `/* latin */`. Filerna laddas ned från de
+`fonts.gstatic.com`-adresser som står i blocken och döps om enligt tabellen.
+`unicode-range` och `font-weight` kopieras **ordagrant** ur respektive latin-block.
+Det är samma väg som Didact Gothic hämtades. **P2 klistrar in de tre blocken ur
+svaret i överlämningen.** Visar svaret något annat än ett block och en adress per
+familj (t.ex. olika adresser per vikt) stannar P2 och lämnar tillbaka hit. Det
+avgörs inte på plats.
+
+**Licens:** alla tre är SIL OFL 1.1. OFL-texten läggs bredvid som
+`src/styles/fonts/OFL-urbanist.txt`, `OFL-manrope.txt` och `OFL-jetbrains-mono.txt`,
+hämtade från `github.com/google/fonts` (`ofl/<familj>/OFL.txt`). Ingen CSS
+refererar dem, så de hamnar inte i `dist/`. **Didact Gothic hade ingen sådan fil.**
+Det rättas inte i efterhand, eftersom filen tas bort.
+
+**`fonts.css` — ett `@font-face` per fil, alla med `font-style: normal;` och
+`font-display: swap;`.** Ingen `<link rel="preload">`, samma skäl som förut: Vite
+ger filerna innehållshash. Behöver Lighthouse preload är det ett eget beslut med
+den avvägningen framme (M17).
+
+**Typsnittstokens (i `tokens.css`, M5), tecken för tecken:**
+
+```css
+--font-heading: 'Urbanist', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+--font-body: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+--font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+```
+
+**Grundtypografin i `global.css` (P2), tecken för tecken.** Den ersätter
+`font-weight: 400` på `body` och regeln `h1, h2, h3, h4, strong, b { font-weight: inherit; }`:
+
+```css
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-normal);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+h1 {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+h2 { font-size: var(--text-2xl); }
+h3 { font-size: var(--text-xl); }
+
+strong,
+b {
+  font-weight: var(--weight-semibold);
+}
+```
+
+`overflow-wrap: anywhere` på `body` står kvar oförändrad ("360 px-golvet och
+grid" gäller).
+
+**Krocken med A6 (avgjord efter P2): M1 gäller.** Kompetenskortets `.cardTitle`
+är ett `h3` och får `--tracking-tight` ur regeln ovan från P2. A6:s "utan
+spärrning" är upphävt för `.cardTitle`. Det sattes mot den gamla breda
+spärrningen, och rubriken byts ändå i P11 mot mono-stilen (M15, som ger
+`--tracking-mono`). Ingen undantagsregel läggs in för de paket som är kvar till
+dess. **P11 genomför** och skriver i samma ändring om kommentaren ovanför
+`.cardTitle` i `Skills.module.css`, som fram till dess påstår "utan spärrning".
+
+**De återanvändbara textstilarna bor i `src/styles/type.module.css`** och sätts
+**i JSX**, aldrig med `composes` (avgjort efter P5, se nedan). Det blir inga
+globala klasser. **Filen skapas av det första paket som har en konsument**
+(`.eyebrow` och `.meta` i P5, där rollraden är `.meta`. `.tag` i P7), inte av P2.
+En stil utan konsument är samma döda fält som ett token utan konsument.
+Deklarationerna, tecken för tecken:
+
+```css
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--accent);
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-mono);
+  color: var(--ink-subtle);
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-mono);
+  color: var(--ink-subtle);
+}
+```
+
+`src/styles/` får därmed innehålla `type.module.css` utöver `fonts.css`,
+`tokens.css`, `global.css` och `fonts/`.
+
+**Hur stilen når elementet (avgjort efter P5): import i JSX, inte `composes`.**
+`composes … from '<fil>'` ger Vite-varningen "A PostCSS plugin did not pass the
+`from` option" i varje bygge. Klasserna fungerar, men en varning alla lär sig läsa
+förbi är det felläge LARDOMAR 2026-10-05 ("Grindar") beskriver. Därför:
+
+- Importnamnet är **`typeStyles`**, i varje fil:
+  `import typeStyles from '../styles/type.module.css';`
+- Har elementet **ingen** egen stil utöver textstilen:
+  `className={typeStyles.meta}`. Ingen tom modulklass skapas.
+- Har elementet egen stil: `` className={`${typeStyles.meta} ${styles.category}`} ``,
+  typklassen först.
+- **Invarianten:** modulklassen får aldrig deklarera en egenskap som typklassen
+  sätter (`font-family`, `font-size`, `font-weight`, `text-transform`,
+  `letter-spacing`, `color`). Två klasser i olika moduler har samma specificitet,
+  och vilken som vinner beror då på i vilken ordning Vite buntar filerna. Det är
+  inget beslut och ska inte kunna bli ett.
+- **Verifiering i varje paket som använder en typklass:** `grep -rn "composes" src`
+  ger noll träffar, och utdata från `npm run build` innehåller inte strängen
+  `did not pass the`. Utdata klistras in i överlämningen.
+- **Genomförs i P5, omgång 2:** `.eyebrow` och `.role` tas bort ur
+  `Hero.module.css`, `Hero.jsx` importerar `typeStyles` (M10), och kommentaren
+  överst i `type.module.css`, som beskriver `composes`, skrivs om till hur filen
+  används. P7, P9, P11 och P12 följer regeln när de skapar sina konsumenter.
+
+#### M1d — Teckengrinden mäter varje familj mot de fält som renderas i den
+
+Unionen av alla filer, som grinden räknar i dag, räcker inte längre. Ett tecken
+som finns i Manrope men saknas i JetBrains Mono skulle passera grinden och sedan
+renderas i reservtypsnittet i en tagg. **Beslut:**
+
+1. **Täckning per familj.** Grinden läser **alla** `@font-face` i `fonts.css`
+   (`matchAll`) och grupperar dem på `font-family`. Inom en familj och samma
+   `font-weight`-deklaration är täckningen **unionen** av filerna (flera
+   `unicode-range`-delmängder kompletterar varandra). Mellan olika
+   `font-weight`-deklarationer i samma familj är täckningen **snittet**, eftersom
+   ett tecken måste finnas i den vikt det renderas i. Med M1:s tre filer blir det
+   en fil per familj. Regeln står ändå skriven så att den inte går sönder om P2
+   måste falla tillbaka till en fil per vikt.
+2. **Vilka fält som renderas i vilken familj står i EN tabell,** konstanten
+   `FONT_ROLES` i `scripts/validate-data.mjs`. Nycklarna är sökvägar i datan.
+   `[]` betyder ett element i en lista, och `—` betyder att fältet inte renderas
+   som text. Familjenycklarna `heading`, `body` och `mono` slås upp mot
+   `font-family`-namnen `Urbanist`, `Manrope` och `JetBrains Mono`.
+
+   | Sökväg | Familjer |
+   |--------|----------|
+   | `sections[].label` | heading, body, mono |
+   | `sections[].id` och varje `*_ID`-konstant i `sections.js` | — |
+   | `skillGroups[].id` | — |
+   | `skillGroups[].title` | mono |
+   | `skillGroups[].skills[].name` | mono |
+   | `projects[].slug`, `projects[].image`, `projects[].liveUrl`, `projects[].githubUrl` | — |
+   | `projects[].title` | heading |
+   | `projects[].category` | mono |
+   | `projects[].status` | mono |
+   | `projects[].description` | body |
+   | `projects[].tech[]` | mono |
+   | `PROJECT_CATEGORIES[]` | body, mono |
+   | `PROJECT_STATUSES[]` | mono |
+   | `about.paragraphs[]`, `about.link.phrase` | body |
+   | `about.link.projectSlug` | — |
+   | `contact.email`, `contact.links[].label` | body |
+   | `contact.links[].url`, `contact.form.endpoint`, `contact.form.accessKey`, `contact.form.hcaptchaSiteKey` | — |
+   | `profile.name` | body |
+   | `profile.role` | body, mono |
+
+   **Tillfälligt, från P2 till P6:** datan bär fortfarande de gamla fältnamnen,
+   och `FONT_ROLES` har därför fyra rader till: `projects[].id` → `—`,
+   `projects[].url` → body (det gamla kortet skriver värdnamnet som knapptext),
+   `projects[].repoUrl` → `—` och `about.link.projectId` → `—`. Raderna godkänns
+   som byggaren skrev dem och **står kvar tills P6 byter fältnamnen.** P6 tar
+   bort de fyra raderna och markeringen med nyckeln `FONT_ROLES-gamla-projektfält`
+   i samma ändring som omdöpningen (M3). Efter P6 ska en kvarglömd gammal rad
+   inte kunna dölja något: datan har då inga sådana fält, och raden är död.
+
+3. **En sträng på en sökväg som saknas i `FONT_ROLES` fäller bygget:**
+   `<fil>: fältet <sökväg> saknar typsnittsroll (FONT_ROLES i scripts/validate-data.mjs)`.
+   Det tvingar den som inför ett fält att ta ställning. Tystnad är inget alternativ.
+   Talvärden, som `PROJECT_IMAGE_WIDTHS`, är inte strängar och berörs inte.
+4. **Grundmängden.** Varje familj ska dessutom innehålla U+0020–U+007E,
+   `å ä ö Å Ä Ö` och `·` (U+00B7). Den täcker de texter som står som
+   literaler i komponenterna (siffrorna och `/` i sektionsetiketten,
+   "Visar … av … projekt", "Sök projekt") utan att grinden behöver läsa `.jsx`.
+5. **Felmeddelandet** får familjen:
+   `projects.js: tecken saknas i JetBrains Mono ("Łódź", tecken "Ł" U+0141, fältet projects[].tech[])`.
+   **Åtgärden är att lägga till en delmängd som verkligen innehåller tecknet, för
+   den familjen, aldrig att döpa om Jelals post.**
+6. **Upplysningsraden** visar en siffra per familj:
+   `<n> tecken i Urbanist, <n> i Manrope, <n> i JetBrains Mono` (`UPPLYSNING`, ingen
+   grind).
+7. **Meddelandena för `fonts.css` själv (avgjort efter P2).** Byggarens två
+   ordalydelser godkänns som de står, och en tredje läggs till:
+
+   | Fall | Meddelande |
+   |------|------------|
+   | Ett `@font-face`-block saknar `font-family` (nyckel `fonts-block-utan-familj`) | `fonts.css: ett @font-face-block saknar font-family, teckensnittets täckning går inte att läsa` |
+   | En familj saknar ett tecken ur grundmängden (nyckel `grundmangd-meddelande`) | `fonts.css: tecken saknas i <familj> (tecken "<t>" U+XXXX, grundmängden)` |
+   | En familj i `FONT_FAMILIES` har **inget** `@font-face`-block alls | `fonts.css: inget @font-face-block för <familj>, teckengrinden kan inte mäta den` — **en** rad, och grundmängdskontrollen hoppas över för den familjen |
+
+   Skälet till den tredje: i dag ger en borttagen familj en rad per tecken i
+   grundmängden (102 rader), och felet syns inte i mängden. Samma princip som
+   "ett tecken i 50 poster ger en rad". Datafälten som renderas i familjen larmar
+   fortfarande, så inget tystnar. **P5 genomför** (första paket efter P2 som rör
+   `validate-data.mjs`): lägger till den tredje raden, prövar den med tre indata,
+   och tar bort de två markeringarna med nycklarna ovan i samma ändring.
+
+**Vilken legitim ändring får fälla grinden? Ingen.** Jelal som skriver ett
+tecken som faktiskt saknas i den familj det renderas i är ett riktigt fel. Ett nytt
+fält utan roll är en ändring av en byggare, och det felmeddelandet föreskriver
+(lägg till rollen) får grinden att tiga.
+
+**Prövning i P2, tre indata per fil:** korrekt (tyst). Ett tecken som saknas i
+just den filen, insatt i ett fält med den familjen (larm med fil, familj och
+tecken). Åtgärden (tyst). Därtill: samma tecken i ett fält som **inte** renderas i
+den familjen ska **inte** larma, för det beviser att grinden mäter per familj. Och
+ett extra `@font-face` i en isolerad kopia beviser att alla block läses.
+
+**Mätning i webbläsaren (P2):** efter `document.fonts.ready`, för var och en av
+de tre familjerna, att `document.fonts` har en post med den familjen och
+`status === 'loaded'`. Dessutom första namnet i den beräknade `font-family` på
+`h1`, på ett stycke brödtext och på ett mono-element.
+
+### M2 — `.surface-light` tas bort helt (P2)
+
+Den nya designen är mörk rakt igenom. **Klassen, ombindningsblocket i
+`tokens.css` och `className="surface-light"` i `Projects.jsx` tas bort i P2.**
+Ingenting behålls "för framtiden".
+
+- `validate-tokens.mjs` slutar tala om klassen: deklarationer räknas var de än står
+  i `tokens.css` (M5).
+- Kommentarerna som nämner klassen skrivs om **till invarianter** eller tas bort
+  i samma ändring. Det gäller `Projects.jsx`, `tokens.css`,
+  `ProjectCard.module.css`, `About.module.css`, `Contact.module.css`,
+  `ContactForm.module.css` och `validate-tokens.mjs` (LARDOMAR 2026-10-08: sök
+  på namnet i hela projektet och redovisa sökningen).
+- Följden för sektionsavgränsarna: alla gränser ritas nu i `--line` på mörk yta.
+- `grep -rn "surface-light" src scripts` ska ge **noll** träffar efter P2.
+
+### M3 — Projektdatan (P6)
+
+**Uppdragets fältnamn införs.** `id` → `slug`, `url` → `liveUrl`, `repoUrl` →
+`githubUrl`. Två namn för samma sak i en fil Jelal redigerar vore sämre än en
+engångsomdöpning. Kortet byggs ändå om i P7.
+
+```js
+/**
+ * @typedef {'Fullstack'|'Frontend'|'Backend'} ProjectCategory
+ * @typedef {'Live'|'Skolprojekt'|'Arkiverad'} ProjectStatus
+ *
+ * @typedef {Object} Project
+ * @property {string}          slug         OBLIGATORISK. Unik, gemener, a-z0-9-. React-key och kortets id (ankarmål för Om mig). Får inte krocka med något annat id på sidan (R2).
+ * @property {string}          title        OBLIGATORISK. Projektets namn. Visas som titel och i logo-brickan.
+ * @property {ProjectCategory} category     OBLIGATORISK. Ett av värdena i PROJECT_CATEGORIES.
+ * @property {ProjectStatus}   status       OBLIGATORISK. Ett av värdena i PROJECT_STATUSES.
+ * @property {string}          description  OBLIGATORISK. 1-2 meningar på svenska.
+ * @property {string[]}        tech         OBLIGATORISK. Får vara tom []. Visas som taggar och blir filterchips. Ingen teknik två gånger (R2).
+ * @property {string|null}     image        OBLIGATORISK NYCKEL. Bildnamn utan ändelse, eller null (då platshållare).
+ * @property {string|null}     [liveUrl]    Valfri. https-adress till live-sajten, eller null.
+ * @property {string|null}     [githubUrl]  Valfri. https-adress till koden, eller null.
+ */
+export const PROJECT_CATEGORIES = ['Fullstack', 'Frontend', 'Backend'];
+export const PROJECT_STATUSES = ['Live', 'Skolprojekt', 'Arkiverad'];
+```
+
+- **`logo` införs inte.** Det finns ingen loggfil för något projekt och ingen
+  pipeline för en. Ett fält som bara kan vara `null` är dött fält. Brickan visar
+  `title` (uppdraget: "projektets logga eller namn"). Vill Jelal ha loggor är det
+  ett eget beslut. Ett `logo`-fält i datan fälls av grinden för okända fält.
+- **`status`:** alla tre värdena är tillåtna. Pricken är grön (`--positive`) för
+  `Live` och grå (`--ink-subtle`) för `Skolprojekt` och `Arkiverad`. Färgen är
+  aldrig ensam bärare, eftersom statusen alltid står som text bredvid.
+- **Ordningen i `PROJECT_CATEGORIES` är segmentens ordning** (M11).
+- **Awle enligt Jelals beslut 5:** `category: 'Fullstack'`, `status: 'Live'`, de
+  sex teknikerna i den ordning de står i dag, `liveUrl: 'https://awle.se'`,
+  `githubUrl: null`, `image: 'awle'`. Beskrivningen: se P6 i `PLAN.md`. Byggaren
+  härleder den ur beslut 5 och dagens text, utan ny fakta, och flaggar den till
+  G1.
+- **`about.link.projectId` döps om till `about.link.projectSlug`** i samma
+  ändring, med `validate-data.mjs` och `About.jsx`. Fältet pekar på `slug`, och ett
+  namn som säger `Id` om något som heter `slug` är ett löfte som inte stämmer.
+- **Kommentaren överst i `projects.js` skrivs om helt** (LARDOMAR 2026-10-05: ett
+  löfte i en fil Jelal redigerar får aldrig vara osant). Den räknar upp
+  fälten, de tillåtna värdena, att bilden ska vara en PNG i
+  `assets-source/projects/` som beskärs till 4:3 från vänster kant (M4), och
+  reglerna bygget kontrollerar.
+
+**Länkregeln är EN funktion på ETT ställe,** `src/lib/projectRules.js`:
+
+```js
+/** Kortets länkmål: liveUrl, annars githubUrl, annars inget. */
+/** @param {Project} project  @returns {string|null} */
+export function projectHref(project)
+
+/** Samma krav som valideringen. Kort, filter, räknare, Om mig och OK-raden läser detta. */
+/** @param {unknown} project  @returns {boolean} */
+export function isComplete(project)
+```
+
+`isComplete` flyttar från `ProjectCard.jsx` till `src/lib/projectRules.js` i P6.
+`About.jsx` och `Projects.jsx` importerar den därifrån, och `validate-data.mjs`
+importerar samma funktion, så att OK-radens antal är **antalet kort som
+renderas**. `src/lib/` är ren JavaScript utan React, JSX och DOM, så att Node kan
+importera den.
+
+Länkattribut när `projectHref` ger en adress: `target="_blank"` och
+`rel="noopener noreferrer"`. När den ger `null` renderas kortet utan `<a>`.
+
+**Grindarna i `validate-data.mjs` (P6), ett meddelande per fall:**
+
+| Fall | Meddelande |
+|------|------------|
+| Obligatoriskt textfält borttaget, `''` eller `'   '` (`slug`, `title`, `description`) | `projects.js: <fält> saknas eller är tomt (post <n>, "<slug eller ?>")` |
+| `category` inte i `PROJECT_CATEGORIES` | `projects.js: category måste vara ett av Fullstack, Frontend, Backend (post <n>, "<slug>", fick "<värde>")` |
+| `status` inte i `PROJECT_STATUSES` | samma form, med Live, Skolprojekt, Arkiverad |
+| `tech` inte en lista med icke-tomma strängar | `projects.js: tech måste vara en lista med text (post <n>, "<slug>")` |
+| `image` saknas som nyckel, `''`, `'   '`, eller saknar genererade filer | `projects.js: image måste vara null eller ett namn vars bilder är genererade (post <n>, "<slug>")` |
+| `liveUrl` eller `githubUrl` finns men är varken `null` eller en sträng som börjar med `https://` | `projects.js: <fält> måste vara null eller en https-adress (post <n>, "<slug>")` |
+| Okänt fält | `projects.js: okänt fält på projekt ("<slug>", fält "<namn>")` |
+| `slug` förekommer två gånger eller bryter mot `a-z0-9-` | `projects.js: slug "<slug>" ...` (dubblett respektive ogiltigt tecken) |
+| **Tillagt 2026-11-07 (R2):** samma teknik två gånger i `tech` i ett projekt, jämfört efter `trim()` och `toLocaleLowerCase('sv')` | `projects.js: tekniken "<värde>" står mer än en gång i tech (post <n>, "<slug>")` |
+| **Tillagt 2026-11-07 (R2):** ett id som kortet sätter är redan ett id på sidan | `sidans id: "<id>" sätts av både <källa 1> och <källa 2>`, se R2 för källorna och mekanismen |
+
+Varje rad prövas med tre indata, i P6:s godkännandepunkt 1. De två tillagda raderna
+prövas i G1-rättningen, se R2.
+
+#### M3b — De öppna frågorna från P6, avgjorda (genomförs i P7)
+
+P7 tar bort markeringen nedan i samma ändring som beslutet genomförs, och
+ersätter den med `/* Beslutat i ARKITEKTUR.md: M3b */` (LARDOMAR 2026-10-02).
+Kvarvarande text i kommentaren skrivs som invariant.
+
+| Nyckel | Fil | Beslut |
+|--------|-----|--------|
+| `isComplete-kravmangd` | `src/lib/projectRules.js` | Godkänd som den står: `slug` (text, `a-z0-9-`), `title`, `description`, `category`, `status` och `tech`. Kriteriet: `isComplete` prövar de krav i grindtabellen ovan som går att avgöra ur posten själv **och som kortet behöver för att renderas**. Bildfilerna och slugens unikhet prövas bara av valideringen, eftersom de inte går att avgöra ur en post. `image`-nyckelns form, url-formaten och okända fält prövas inte heller: valideringen fäller dem, och kortet tål dem redan (`hasImage` i `ProjectCard.jsx`, och `projectHref` ger `null` för allt som inte är https). Ingen kod ändras, bara kommentaren |
+| Dubbla larm (ingen nyckel) | `scripts/validate-data.mjs` | Ändrad: **teckengrinden läser inte en projektpost som datagrinden redan har fällt.** Se nedan |
+
+**Dubbla larm: mekanismen (P7).** Med `tech: 'React'` eller ett okänt fält gav
+bygget i dag dessutom `saknar typsnittsroll (FONT_ROLES …)`. Den åtgärden är fel
+för Jelal, som har gjort ett datafel, och följer han den tystnar fel grind
+(LARDOMAR 2026-10-05, "Grindar").
+
+```js
+/** Fäller enligt grindtabellen i M3. Returnerar indexen för de poster som fick minst en rad. */
+/** @param {object} mod  @returns {Promise<Set<number>>} */
+async function checkProjects(mod)
+
+/* Oförändrad signatur. */
+function checkFontSubset(fileName, mod, coverage)
+```
+
+- För `projects.js` anropas `checkFontSubset` med en kopia av modulen där
+  `projects` bara innehåller poster vars index **inte** finns i mängden ur
+  `checkProjects`. Är `projects` inte en array hoppar teckengrinden över hela
+  exporten (`checkProjects` har redan fällt den). Övriga exporter i filen och
+  övriga datafiler läses som i dag.
+- **Varför per post och inte "hoppa över fält utanför datamodellen":** den
+  regeln täcker inte `tech` som sträng, vars sökväg `projects[].tech` är ett känt
+  fält med fel form. Och den hade stängt av skyddet för byggaren, som är själva
+  skälet till larmet `saknar typsnittsroll`.
+- **Ingenting tystnar för gott:** en fälld posts tecken mäts så snart Jelal rättat
+  posten, och bygget är rött under tiden.
+- **P7 prövar med tre indata, plus skyddet:**
+  1. Korrekt data (Awle): tyst.
+  2. `tech: 'React'` ger exakt en rad, tech-raden. `logo: 'x'` ger exakt en rad,
+     raden om okänt fält. Ingen av dem ger `saknar typsnittsroll`.
+  3. Den föreskrivna åtgärden (`tech` som lista, `logo` borttaget): tyst.
+  4. Skyddet står kvar: med korrekt data och `'projects[].title'` tillfälligt
+     borttagen ur `FONT_ROLES` ska raden `fältet projects[].title saknar
+     typsnittsroll` komma.
+
+### M4 — Projektbilden och kortet (P6 bilden, P7 kortet)
+
+**Format: 4:3, webp, bredderna `PROJECT_IMAGE_WIDTHS = [600, 1200]`** i
+`src/data/projects.js`.
+
+- **Beskärning: full höjd, vänsterförankrad.** Ur en 16:10-källa på 1440 × 900
+  tas fönstret `left: 0, top: 0, width: 1200, height: 900`. Skälet är uppmätt i
+  bilden: Awle-loggan ligger vid x ≈ 108–185 och rubriken börjar vid x ≈ 112. En
+  centrerad beskärning (x 120–1320) kapar loggan. En vänsterförankrad tappar bara
+  "Logga in" och "Registrera dig" längst till höger. Regeln är allmän: är källan
+  bredare än 4:3 tas full höjd från vänster kant, och är den högre tas full bredd
+  från överkanten. Skärmdumpar av startsidor har sin identitet uppe till vänster.
+- **Ingen uppskalning.** 1200 är källans beskurna bredd. Är beskärningen smalare
+  än den största bredden i `PROJECT_IMAGE_WIDTHS` fäller skriptet med
+  `GRIND: <namn>: beskuren bredd <b> px är mindre än <största> px`, före all
+  skrivning. Det mönstret gäller redan i skriptet ("Grindar körs före skrivning").
+- **Varför 600 och 1200:** kortet är som bredast i enspaltsläget strax under
+  600 px vyport, ca 552 px. Där räcker 600 för 1×. 1200 täcker 2× i tre- och
+  tvåspaltsläget och är det största källan ger.
+- `optimize-project-images.mjs`: `RATIO` blir `4 / 3`, beskärningen enligt ovan,
+  och storleksgrinden på 150 kB står kvar. Kommentaren om 16:10 skrivs om. De gamla
+  `awle-640.webp` och `awle-1280.webp` tas bort i P6, eftersom de annars blir
+  orefererade i `dist/`.
+- **`<img>` i kortet:** `src` = 600-varianten, `srcSet` med båda bredderna,
+  `sizes="(min-width: 900px) 380px, (min-width: 600px) 50vw, 100vw"`,
+  `width="600"`, `height="450"`, `loading="lazy"`, `decoding="async"`, `alt=""`.
+  **Lazy även för första kortet:** hero fyller första skärmen från 900 px ("Hero
+  fyller första skärmen på dator"), och under 900 px står hero ovanför. Kortet
+  ligger alltså under vikningen i alla mätserier, och heros text är LCP-elementet.
+  **`alt=""` är ett beslut, inte en lucka:** bilden är en dekorativ skärmdump
+  inuti en länk vars namn är titeln (se nedan). En beskrivande alt hade blivit en
+  del av länkens namn och upprepat titeln.
+- **Utan bild** (`image: null`): mediadelen behåller 4:3 och `--surface-2`, och
+  logo-brickan står kvar.
+
+**Kortets markup (P7).** Det är en `<li>` per kort i en `<ul>`:
+
+```
+<li class="item" id={slug}>                        ← ankarmål för Om mig-länken (A4), bär scroll-marginalen (R1)
+  <a class="card" href={projectHref} target="_blank" rel="noopener noreferrer"
+     aria-labelledby="{slug}-title {slug}-newtab" aria-describedby="{slug}-desc">
+    <div class="media">
+      <img … />                                    ← bara om image inte är null
+      <span class="brand" aria-hidden="true">{title}</span>
+    </div>
+    <div class="body">
+      <div class="meta">
+        <span class="category">{category}</span>
+        <span class="badge"><span class="dot" data-status={status} aria-hidden="true"></span>{status}</span>
+      </div>
+      <h3 class="title" id="{slug}-title">{title}</h3>
+      <p class="description" id="{slug}-desc">{description}</p>
+      <ul class="tags" aria-label="Tekniker">…<li class="tag">…</li></ul>   ← bara om tech inte är tom
+      <span class="visually-hidden" id="{slug}-newtab">(öppnas i ny flik)</span>
+    </div>
+  </a>
+</li>
+```
+
+Utan länk byts `<a …>` mot `<div class="card">` utan aria-attribut och utan
+`newtab`-spannet. Länkens namn blir "Awle (öppnas i ny flik)" och beskrivningen
+blir dess beskrivning. Hela kortets text som länkmening uppfyller inte P7:5.
+
+**`ProjectCard.module.css`, tecken för tecken** (`.item` och `.brand` rättade
+2026-11-07 efter G1, se R1 och R3):
+
+```css
+.item {
+  scroll-margin-top: calc(var(--header-height) + var(--space-4));
+}
+
+.card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100%;
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background-color: var(--surface-2);
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.brand {
+  position: absolute;
+  left: var(--space-4);
+  bottom: var(--space-4);
+  display: block;
+  height: 40px;
+  max-width: calc(100% - 2 * var(--space-4));
+  padding: 9px var(--space-3);
+  border-radius: var(--radius-sm);
+  background-color: rgba(255, 255, 255, .92);
+  color: var(--ink-inverse);
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  line-height: 22px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--space-2);
+  padding: var(--space-5);
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.category {
+  min-width: 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 2px var(--space-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-badge);
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+}
+
+.dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--ink-subtle);
+}
+
+.dot[data-status='Live'] {
+  background-color: var(--positive);
+}
+
+.title {
+  font-size: var(--text-title);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-title);
+}
+
+.description {
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  color: var(--ink-muted);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+/* I JSX: className={`${typeStyles.meta} ${styles.category}`} på kategorin och
+ * className={`${typeStyles.tag} ${styles.tag}`} på varje tagg (M1, "Hur stilen
+ * når elementet"). */
+.tag {
+  max-width: 100%;
+}
+
+a.card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card {
+    transition: transform var(--duration-base) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out),
+      border-color var(--duration-base) var(--ease-out);
+  }
+
+  .image {
+    transition: transform .9s var(--ease-out);
+  }
+
+  a.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
+    border-color: var(--line-strong);
+  }
+
+  a.card:hover .image {
+    transform: scale(1.05);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: reduce) {
+  a.card:hover {
+    box-shadow: var(--shadow-lift);
+    border-color: var(--line-strong);
+  }
+}
+```
+
+- **Hover bara på kort som är länkar.** Ett kort utan mål som lyfter sig lovar ett
+  klick som inte finns.
+- `outline` ritas utanför elementets egen ram och klipps inte av dess egen
+  `overflow: hidden`. P7:4 **mäter** det ändå.
+- `.9s` står som literal, eftersom uppdraget anger det och inget annat element
+  har den längden. Ett token med en konsument vore ingen vinst.
+- **Brickan är en rad och klipps med ellips (R3, rättat 2026-11-07 efter G1).**
+  Brickan har en fast höjd och text ur `src/data/`, och M4 sa inte vad som händer
+  när titeln är längre än en rad. Med 47 tecken blev `scrollHeight` 53 mot 40, och
+  raderna utanför brickan ritades mörkt på mörkt. Därför `white-space: nowrap`,
+  `overflow: hidden` och `text-overflow: ellipsis`. `display` blir `block`,
+  eftersom ellipsen inte ritas när texten ligger i en flexcontainer. Den vertikala
+  centreringen som `align-items: center` gav bärs nu av `padding-block: 9px`,
+  alltså (40 − 22) / 2 med `box-sizing: border-box` ur `global.css`. Brickan ser
+  likadan ut som förut för en kort titel. `max-width: calc(100% - 2 * var(--space-4))`
+  räknas mot `.media` (`position: relative`), så ellipsen slår in vid mediadelens
+  inre kant och aldrig utanför. Brickan är `aria-hidden` och titeln står i sin
+  helhet i `h3`, så ingen text går förlorad för skärmläsare.
+  - Avvisat: `min-height: 40px` i stället för `height`. Brickan hade då vuxit uppåt
+    över bilden med en lång titel, och uppdraget anger 40 px.
+  - Avvisat: `line-height: 40px` utan padding. Det ger samma bild, men `22px` är
+    det uppmätta och godkända värdet från P7, och padding ändrar mindre.
+- **Hur 360-golvet mäts för brickan (R3).** Brickans `scrollWidth` är **större**
+  än `clientWidth` när ellipsen är aktiv, och det är avsikten. Golvet mäts därför
+  inte med `scrollWidth` på brickan utan mot dess behållare. Med syntessträngen
+  som titel (47 tecken, `Hem och Ekonomi - hushållsapp för hela familjen`, och en
+  obruten sträng på 60 tecken) vid 360 × 640, 600 × 640, 899 × 700, 900 × 700 och
+  1280 × 800, med reserverad rullningslist 15 px (kontrollerat före serien):
+  1. **GRIND:** `brand.scrollHeight <= brand.clientHeight` (talet ska vara 40 mot 40).
+  2. **GRIND:** `brand.getBoundingClientRect().height` är 40 ±0,5.
+  3. **GRIND:** brickans `left >= media.left + 16 - 0,5` och
+     `right <= media.right - 16 + 0,5`, där `media` är `brand.parentElement`.
+  4. **GRIND:** `getComputedStyle(brand).textOverflow === 'ellipsis'` och
+     `brand.scrollWidth > brand.clientWidth` med syntessträngen, alltså att
+     klippningen faktiskt sker.
+  5. Sidans `scrollWidth <= clientWidth`, som för alla golvprov.
+  - **Negativa kontroller:** injicera `li[id] [class*="brand"] { white-space: normal; }`
+    sist i dokumentet. Klassnamnet är hashat av CSS Modules, därför
+    delsträngsselektorn. Kontrollera `querySelectorAll('li[id] [class*="brand"]').length`
+    mot antalet kort innan slutsatsen dras. Grind 1 ska larma med brickan som
+    element som bär avvikelsen. Injicera sedan `max-width: none` på samma selektor.
+    Grind 3 ska larma. Båda ska tiga när injektionen tas bort.
+
+**Rutnätet, `Projects.module.css`, tecken för tecken.** Det ersätter
+`repeat(auto-fit, minmax(280px, 1fr))` och taket på kortet:
+
+```css
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+}
+
+@media (min-width: 600px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 900px) {
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+```
+
+Ett ensamt kort blir alltså en tredjedel brett från 900 px och står till vänster.
+Det är uppdragets rutnät. Jelals val B från 2026-10-05, med taket på kortet,
+**upphävs av hans beslut 4** och är märkt på sin plats.
+
+**Kontraster P7 mäter**, mina uträknade förväntningar enligt WCAG-formeln. De är
+inte beslutet:
+
+| Text | Mot | Förväntat |
+|------|-----|-----------|
+| `--ink-subtle` (kategori, taggar) | `--surface` | ca 4,99:1, alltså **knappt** över 4,5 |
+| `--ink-muted` (beskrivning, badge) | `--surface` | ca 7,09:1 |
+| `--ink-inverse` (brickan) | brickan över svart bild, sämsta fall `#EBEBEB` | ca 15,5:1 |
+| `--ink-subtle` | `--surface-2` | ca **4,48:1, FALLER**. Därför **får `--ink-subtle` aldrig stå som text på `--surface-2`.** Ingen text gör det i M4 |
+
+### M5 — Tokens: uppdragets namn ersätter `--color-*` (P2)
+
+**Beslut: ersätt, mappa inte.** Ett alias ger två namn för samma sak, och
+projektet har tre gånger betalat för kommentarer och namn som pekar på något som
+bytts. P2 skriver om **varje** referens i `src/` och `scripts/` enligt
+översättningstabellen nedan, och de gamla namnen deklareras inte längre. Varje
+kvarglömd referens, även i en kommentar, fälls då av tokengrinden.
+
+**`:root` i `tokens.css`, tecken för tecken.** Uppdragets tolv
+deklarationer står exakt som i `UPPDRAG-2026-11-07.md`. Resten är mina.
+
+> **Rättat 2026-11-07 efter G1 (R5).** ~~"var och en har en konsument"~~ var ett
+> påstående om slutläget, skrivet som om det gällde efter P2. Sex tokens hade
+> ingen konsument. **Ett token deklareras i samma paket som dess första
+> `var()`-konsument** (M1:s princip om döda fält). Blocket nedan är därför
+> **slutläget**, och varje rad märkt `← <paket>` finns **inte** i `tokens.css`
+> förrän det paketet lägger till den, tillsammans med konsumenten. G1-rättningen
+> tar bort de fem raderna och `--space-9`. Tokengrinden fäller från och med nu en
+> deklaration utan konsument (M5h).
+
+```css
+--bg: #101010;
+--surface: #181818;
+--surface-2: #222222;
+--line: #2e2e2e;
+--line-strong: #7a756f;
+--ink: #f4f1ec;
+--ink-muted: #a8a39c;
+--ink-subtle: #8d8780;
+--ink-inverse: #141414;
+--accent: #ff6b00;
+--accent-hover: #ff8a3d;
+--positive: #5dbb7e;
+--error: #f85149;
+--overlay-grey: rgba(32, 32, 36, 0.45);
+/* + de fem temporära --media-*-tokens nedan, med dagens värden oförändrade. Tas bort i P7 */
+
+--radius-chip: 3px;                       /* ← P9, med Chip.module.css (M15) */
+--radius-badge: 4px;
+--radius-sm: 8px;
+--radius-md: 14px;
+--radius-pill: 999px;
+
+--ease-out: cubic-bezier(.16, 1, .3, 1);
+--duration-fast: .16s;
+--duration-base: .32s;
+--duration-reveal: .72s;                  /* ← P10, med .reveal (M12) */
+--shadow-lift: 0 24px 60px rgba(0,0,0,.55);
+
+/* --font-heading, --font-body och --font-mono: de tre deklarationerna i M1, tecken för tecken */
+
+--weight-regular: 400;
+--weight-semibold: 600;
+--weight-bold: 700;
+
+--text-2xs: 0.6875rem;
+--text-xs: 0.75rem;
+--text-sm: 0.875rem;
+--text-base: 1rem;
+--text-lg: 1.125rem;
+--text-title: 1.375rem;
+--text-xl: clamp(1.25rem, 2.5vw, 1.5rem);
+--text-2xl: clamp(1.75rem, 4vw, 2.5rem);
+--text-3xl: clamp(2.75rem, 1.6rem + 5.2vw, 4.5rem);
+--text-figure: clamp(2.5rem, 6vw, 3.5rem); /* ← P12, med KeyFigures (M14) */
+
+--leading-display: 0.98;
+--leading-tight: 1.1;
+--leading-snug: 1.55;
+--leading-normal: 1.6;
+
+--tracking-display: -0.04em;
+--tracking-tight: -0.02em;
+--tracking-title: -0.01em;
+--tracking-mono: 0.04em;
+--tracking-eyebrow: 0.16em;
+
+--measure: 62ch;
+--content-max: 1180px;
+--content-padding: 1.5rem;
+--nav-offset: 16px;
+--nav-height: 58px;
+--header-height: calc(var(--nav-offset) + var(--nav-height));
+--z-header: 10;
+
+--reveal-index: 0;                        /* ← P10, med .reveal och Reveal.jsx (M12, M5g) */
+--reveal-stagger: 70ms;                   /* ← P10, med .reveal (M12) */
+```
+
+`--space-1` till `--space-8` och `--space-10` står kvar oförändrade.
+**`--space-9` tas bort i G1-rättningen (R5)** och läggs inte tillbaka: ingen regel
+använder det och inget paket planerar en. `--space-10` byter inte namn. Ett hål i
+numreringen kostar ingenting, ett namnbyte ändrar `global.css` utan skäl.
+
+- **`--accent` blir `#ff6b00`, inte loggans uppmätta `#FC6F03`.** Uppdraget
+  skriver ut värdet och säger "behåll min accentfärg". Jelals beslut 4 ("den nya
+  designen gäller") avgör det. Skillnaden är 3/4/3 per kanal. Det är noterat för
+  G1 att headerns PNG-märke är `#FC6F03` och står bredvid. "Accentfärg — mätning"
+  är märkt.
+- **`--text-3xl`** ger 44,3 px vid 360 px vyport och når taket 72 px vid ca 893 px
+  (uppdraget: 72 px dator, ca 44 px mobil).
+- **`--line-strong` som formulärram och sökfältsram:** mot `--surface` ca 3,89:1
+  och mot `--bg` ca 4,17:1, alltså över 1.4.11:s 3:1. `--line` (ca 1,3:1) duger
+  inte för en gränssnittskomponents avgränsning. Se M11 för sökfältet.
+- **`--accent-hover`, `--ink-inverse`, `--error` och `--overlay-grey`** står inte i
+  uppdraget men har konsumenter: hover på accentytor och accentlänkar, mörk text
+  på orange (uppdraget: "#141414") och på logo-brickan, formulärets röda och
+  porträttets tonplatta. Värdena för `--error` och `--overlay-grey` är dagens.
+- **`--media-scrim`, `--media-scrim-strong`, `--media-pill-border`,
+  `--media-pill-bg` och `--media-shadow` är TEMPORÄRA.** De bär det gamla kortet
+  från P2 till P7, med dagens värden, och **tas bort i P7** tillsammans med kortet.
+  Tokengrinden fäller varje referens som blir kvar. **Rättelse efter P2:**
+  `--media-scrim-strong` har **ingen** konsument (påståendet ovan att varje token
+  har en stämmer inte för det). Det står kvar till P7 och tas bort där med de
+  andra fyra. Tokengrinden ser inte oanvända deklarationer, så P7 bekräftar med
+  `grep -rn "media-" src scripts` att noll träffar återstår.
+
+**Översättningstabellen (P2), tecken för tecken.** Vänster kolumn finns inte
+efter P2:
+
+| Gammalt | Nytt |
+|---------|------|
+| `--color-bg` | `--bg` |
+| `--color-surface` | `--surface` |
+| `--color-bg-top` | `--bg` (det gråa övre fältet utgår, M6 och M10) |
+| `--color-header-border` | `--line` |
+| `--color-border` | `--line` |
+| `--color-field-border` | `--line-strong` |
+| `--color-text` | `--ink` |
+| `--color-text-muted` | `--ink-muted` |
+| `--color-accent` | `--accent` |
+| `--color-accent-hover` | `--accent-hover` |
+| `--color-on-accent` | `--ink-inverse` |
+| `--color-overlay-grey` | `--overlay-grey` |
+| `--color-focus` | `--accent` |
+| `--color-error` | `--error` |
+| `--color-media-text` | `--ink` |
+| `--color-media-text-muted` | `--ink-muted` |
+| `--color-media-fallback` | `--surface-2` |
+| `--color-media-accent` | `--accent` |
+| `--color-media-accent-hover` | `--accent-hover` |
+| `--color-media-scrim` / `-scrim-strong` / `-pill-border` / `-pill-bg` / `-shadow` | `--media-scrim` / `--media-scrim-strong` / `--media-pill-border` / `--media-pill-bg` / `--media-shadow` (temporära, P7) |
+| `--font-sans` | `--font-body` |
+| `--transition` | `var(--duration-fast) var(--ease-out)` skrivet ut. Tokenet tas bort |
+| `--tracking-wide` | tas bort. Ingen konsument finns |
+| `--content-max: 1120px` | `1180px` (M18) |
+| `--content-padding: clamp(1rem, 5vw, 3rem)` | `1.5rem` (M18) |
+| `--header-height: 64px` | `calc(var(--nav-offset) + var(--nav-height))` (M6) |
+| `--radius-sm: 6px` / `--radius-md: 12px` | `8px` / `14px` |
+
+**Globalt fokus (P2, `global.css`), tecken för tecken:**
+
+```css
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+```
+
+**Kontrastkvoterna i `tokens.css`** skrivs vid varje texttoken i lärdomens format
+(`/* <token> mot <bakgrund>: X,XXX:1 — AA <normal|stor> */`), **uppmätta i P2**
+mot varje bakgrund tokenet faktiskt står på. Mina förväntningar, som ska
+bekräftas eller rättas av mätningen: `--ink` mot `--bg` ca 16,9 och mot `--surface`
+ca 15,7. `--ink-muted` mot `--bg` ca 7,6 och mot `--surface` ca 7,1.
+`--ink-subtle` mot `--bg` ca 5,35 och mot `--surface` ca 4,99. `--ink-inverse`
+mot `--accent` ca 6,45. `--accent` som text mot `--bg` ca 6,67. `--error` mot
+`--surface` ca 5,3.
+
+#### M5g — Tokengrinden gäller varje custom property
+
+`validate-tokens.mjs` (P2) byter mönster:
+
+- **Regeln:** varje namn som matchar `(?<![\w-])--[a-z][a-z0-9]*(?:-[a-z0-9]+)*`
+  i `src/**/*.{css,jsx,js}` och `scripts/*.mjs` ska vara **deklarerat** i
+  `tokens.css` (`--namn:` utanför kommentarer). Kommentarer räknas som
+  förekomster, som i dag.
+- **`src/data/` genomsöks inte.** Det är Jelals filer, och ingen text han skriver
+  ska kunna fälla en tokengrind. Datafilerna refererar inga tokens.
+- **`tokens.css` själv:** kommentarerna är fortfarande undantagna, men varje
+  `var(--x)` utanför kommentarer ska peka på ett deklarerat namn, eftersom
+  `--header-height` nu bygger på två andra.
+- **Inline custom properties som JSX sätter** (`--reveal-index`, M12) ska ha en
+  deklaration med standardvärde i `:root`. Då gäller regeln utan undantag.
+- Meddelandet (rättat efter P2, byggarens form bekräftas):
+  `validate-tokens.mjs: tokenet finns inte i tokens.css ("--x" i <fil>:<rad>)`,
+  t.ex. `("--x" i src/components/Hero.module.css:20)`. `<fil>` är sökvägen
+  relativt projektroten med `/`, och `<rad>` är **första** förekomsten i filen.
+  En rad per par av token och fil. "Oförändrat" var fel: prövningen nedan kräver
+  fil och rad. Genomfört i P2, inget kvar att göra.
+
+**Vilken legitim ändring får fälla grinden? Ingen.** Ett nytt token som används
+utan deklaration är felet grinden finns för. En kommandoradsflagga skrivs inte med
+två bindestreck i en kommentar i `scripts/`, eftersom den då läses som ett token.
+Det är en skrivregel för byggare och påverkar inte Jelals filer. **Prövning i P2:**
+ett påhittat namn larmar med fil och rad, tiger när det rättats, och ett gammalt
+`--color-*`-namn i en kommentar larmar.
+
+#### M5h — Tokengrinden fäller också en deklaration utan konsument (G1-rättningen, R5)
+
+G1 hittade sex tokens utan konsument, och grinden ovan ser bara åt ena hållet.
+Lärdomen 2026-11-07 föreskriver en grep före varje paket. En grind gör det åt
+byggaren, och projektet har betalat för varje kontroll som bara stod i prosa
+(LARDOMAR 2026-10-05).
+
+- **Regeln:** varje `--namn:` i `:root` i `tokens.css` (utanför kommentarer) ska ha
+  minst en förekomst av `var(--namn` utanför kommentarer i `src/**/*.{css,jsx,js}`.
+  En förekomst i `tokens.css` räknas, eftersom `--header-height` konsumerar
+  `--nav-offset` och `--nav-height` där. En kommentar räknas **inte** som
+  konsument.
+- **Meddelandet:** `validate-tokens.mjs: tokenet har ingen konsument ("--x" deklarerat i src/styles/tokens.css:<rad>)`.
+  En rad per token.
+- **Följd för kommentarer i `tokens.css`:** ett borttaget token får inte nämnas i en
+  kommentar, eftersom M5g då fäller det som odeklarerat. Kommentaren som pekar
+  fram mot P9, P10 och P12 skrivs utan tokennamn ("tokens för chips, reveal och
+  nyckeltal deklareras i det paket som bygger dem").
+- **Vilken legitim ändring får fälla grinden?** Att en konsument tas bort medan
+  tokenet står kvar. Åtgärden är att ta bort tokenet, och då tiger grinden.
+- **Prövas i G1-rättningen, i denna ordning:**
+  1. Grinden byggs **innan** de sex tas bort. Den ska då ge **exakt sex** rader,
+     en per token i fynd 7. Det visar att den larmar av rätt skäl.
+  2. De sex tas bort: tyst.
+  3. `--x-test: 0;` läggs till i `:root`: en rad, med rätt radnummer. Borttaget: tyst.
+
+### M6 — Headerns höjd med svävande nav (P3)
+
+**Två token, en härledd summa.** `--nav-offset: 16px` är avståndet från toppen och
+`--nav-height: 58px` är pillens höjd (40 px CTA + 2 × 8 px padding + 2 × 1 px
+kant, med `box-sizing: border-box`). `--header-height` är **härledd** som deras
+summa, 74 px, och är det `scroll-margin-top` och heros `min-height` räknar med.
+Ingen av dem står som tal någon annanstans.
+
+**`Header.module.css` (P3), tecken för tecken:**
+
+```css
+.header {
+  position: sticky;
+  top: var(--nav-offset);
+  margin-top: var(--nav-offset);
+  z-index: var(--z-header);
+  pointer-events: none;
+}
+
+.pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  height: var(--nav-height);
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding: 8px 8px 8px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background-color: rgba(20, 20, 20, .62);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  pointer-events: auto;
+}
+
+@supports not ((backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px))) {
+  .pill { background-color: rgba(20, 20, 20, .94); }
+}
+```
+
+- **Sticky, inte fixed.** Headern ligger i flödet med `margin-top` och tar exakt
+  `--header-height` i anspråk ovanför hero. Det är skälet till att heros
+  `min-height: calc(100svh - var(--header-height))` fortsätter att stämma utan att
+  hero behöver veta något om naven.
+- **`pointer-events: none` på det genomskinliga omslaget**, och `auto` på pillen.
+  Annars blockerar de genomskinliga sidorna klick på innehåll som rullar under.
+- **Utan `backdrop-filter`** blir bakgrunden nästan opak. Texten ska vara läsbar
+  oavsett vad som rullar under.
+- **Headerns `border-bottom` och det gråa bandet utgår.** Pillens egen kant är
+  gränsen. Det upphäver "Headern är enfärgad" och kraven på `--color-header-border`.
+- **Mätningen (P3):** pillens `getBoundingClientRect()` har `top === 16` och
+  `height === 58` vid scroll 0 och vid scroll till botten.
+  `getComputedStyle(section).scrollMarginTop` är `90px` (74 + `--space-4`). Varje
+  ankarhopp landar med sektionens överkant **under pillens `bottom`**. Kontrast:
+  `--ink` på pillen mot den ljusaste punkt som kan rulla under (porträttets vägg
+  och en vit pixel i projektbilden) mäts. Mitt överslag för en helvit underyta är
+  ca 4,6:1 före blur, alltså knappt. Faller det höjs pillens alfa, och det beslutet
+  lämnas tillbaka hit.
+- **A16:s nämnare:** med margin ovanför headern är `header.getBoundingClientRect().height`
+  58, inte 74. Nämnaren läses därför som **headerns `bottom` vid scroll 0**. A16 är
+  märkt.
+
+### M7 — Aktiv länk (P3)
+
+**Bekräftat:** `useCurrentSection` med läsraden behålls oförändrad. Den läser
+bandets läge ur sektionernas `scrollMarginTop` och följer därför med M6 av sig
+själv. Understrykningen läggs på det befintliga attributet, tecken för tecken:
+
+```css
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  color: var(--ink);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+
+.navLink:hover {
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
+
+.navLink[aria-current='true'] {
+  text-decoration-line: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
+```
+
+`min-height: 40px` stänger den öppna punkten om navlänkarnas träffyta på 19 px.
+
+**Hover byter inte färg (ändrat efter P4, genomförs i P4b).** Orange text
+(`--accent-hover` som byggaren mätte, och `--accent` som stod här) på pillen
+ovanför vitt innehåll ger 2,20:1, alltså under AA. Hover ger därför bara en
+understrykning i textens egen färg, `--ink`, som håller pillens kontrast
+oberoende av vad som rullar under. Den aktiva länken skiljs från hover av
+understrykningens **färg** (orange mot vit). Hover är ett övergående
+pekartillstånd, och användaren vet var pekaren står.
+
+- **Ordningen i filen är bindande:** `[aria-current='true']` står **efter**
+  `:hover`. Båda har specificiteten (0,2,0), så den senare vinner, och en aktiv
+  länk under pekaren behåller sin orange understrykning.
+- **Gäller bara pillen.** Panelens `.link:hover { color: var(--accent); }` i
+  `MobileMenu.module.css` står kvar. Panelen är opak `--bg`, och där är kvoten
+  6,664:1 (`tokens.css`).
+- **P4b mäter:** med pekaren över en icke-aktiv navlänk är `getComputedStyle(a).color`
+  lika med det beräknade värdet av `--ink` och `textDecorationLine` är `underline`.
+  Över den aktiva länken är `textDecorationColor` det beräknade värdet av `--accent`.
+
+**CTA "Kontakta mig" (P3), tecken för tecken.** Texten står som konstanten
+`ctaText = 'Kontakta mig'` i `Header.jsx`. Målet är `CONTACT_ID`, och CTA:n
+renderas bara om `sections.some((s) => s.id === CONTACT_ID)`:
+
+```css
+.cta {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-pill);
+  background-color: var(--accent);
+  color: var(--ink-inverse);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.cta:hover {
+  background-color: var(--accent-hover);
+}
+```
+
+Ordningen i DOM och för Tab: logga, de fyra navlänkarna, CTA.
+
+### M8 — Mobilmenyn (P4)
+
+- **Brytpunkt: under 900 px.** Mobil först: basen är hamburgern, och
+  `@media (min-width: 900px)` visar navlistan och CTA:n och döljer hamburgern med
+  `display: none`. Navlistans fyra länkar plus CTA:n och loggan behöver ca 580 px.
+  Vid 600 px finns ca 550, så 600 är för smalt. 900 är en befintlig brytpunkt.
+- **Hamburgern:** `<button type="button" aria-expanded={open} aria-controls="mobile-menu">`
+  med `MenuIcon` och den visuellt dolda texten "Öppna meny". Mått 40 × 40 px,
+  `border-radius: var(--radius-pill)`, `border: 1px solid var(--line-strong)`.
+- **Panelen:** `<div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Meny">`,
+  `position: fixed; inset: 0;`, bakgrund `--bg` (opak). Den renderas **bara när
+  den är öppen**, så att två navlistor aldrig står i tillgänglighetsträdet samtidigt.
+  Den ligger inuti `<header>` och ärver headerns lagernivå, så inget nytt z-index
+  behövs. Innehåll i DOM-ordning: stängknappen (`CloseIcon` + "Stäng meny", på
+  samma plats som hamburgern), `<nav aria-label="Huvudnavigering">` med samma länkar
+  ur `sections` i `--font-heading` och `--text-2xl`, och sist CTA:n.
+- **Fokus:** vid öppning flyttas fokus till första navlänken. Tab och Shift+Tab
+  cirkulerar inom panelen (första ↔ sista). Esc stänger. Vid stängning med Esc
+  eller stängknappen går fokus tillbaka till hamburgern. **Vid ett länkklick
+  bestämmer webbläsarens ankarhopp var Tab fortsätter**, alltså i målsektionen
+  (avgjort efter P4, se M8b). Den som valde en sektion ska fortsätta där, inte
+  längst upp i headern.
+- **Scroll-lås:** `document.documentElement.style.overflow = 'hidden'` vid
+  öppning, och det tidigare värdet återställs vid stängning och avmontering. Ingen
+  global klass. **Vid klick på en navlänk hävs låset synkront i klickhanteraren,
+  före webbläsarens ankarhopp**, och därefter stängs panelen. Låset får inte
+  ändra layoutbredden: rullningslistens plats hålls av `scrollbar-gutter: stable`
+  på `html` i `global.css` (beslutat 2026-11-07, se M10b punkt 3).
+- **Stängs av sig själv** om vyporten passerar 900 px medan den är öppen
+  (`matchMedia('(min-width: 900px)')`-lyssnare).
+- **CTA:n ligger i panelen**, och i pillen bara från 900 px.
+
+#### M8b — De öppna markeringarna från P3 och P4, avgjorda (genomförs i P4b)
+
+Varje rad godkänner byggarens lösning **som den står i koden** om inget annat
+sägs. P4b tar bort varje `EJ I ARKITEKTUR` + `OPEN-KEY` nedan i samma ändring och
+ersätter den med `/* Beslutat i ARKITEKTUR.md: M8b */` eller, för hover, `M7`
+(LARDOMAR 2026-10-02). Kvarvarande text i kommentaren skrivs som invariant, utan
+uppmätta tal.
+
+| Nyckel | Fil | Beslut |
+|--------|-----|--------|
+| `pill-right-group` | `Header.module.css` | Godkänd: `.nav { margin-inline-start: auto; }`. Länkarna och CTA:n samlas till höger med pillens `gap` emellan |
+| `menu-button-hit-area` | `Header.module.css`, `MobileMenu.module.css` | Godkänd: synligt 40 × 40, `::after { content: ''; position: absolute; inset: -4px; }`. Träffytan blir minst 44 × 44 (byggaren mätte 46,5) och lagret ryms i pillens inre marginal. P4b visar med `document.elementFromPoint(rect.left - 2, rect.top + rect.height / 2)` att punkten utanför den synliga kanten träffar knappen, i pillen och i panelen |
+| `menu-close-placement` | `MobileMenu.module.css` | Godkänd: `.bar` återger pillens geometri. P4b mäter att stängknappens `getBoundingClientRect()` är lika med hamburgerns (±0,5 px) vid 360, 600 och 899 px |
+| `menu-panel-overflow` | `MobileMenu.module.css` | Godkänd: `overflow-y: auto` på `.panel`. CTA:n ska gå att nå även i liggande läge. P4b mäter vid 640 × 360 att CTA:n går att rulla fram i panelen |
+| `menu-link-focus` | `MobileMenu.jsx` | Godtas: efter länkklick fortsätter Tab i målsektionen, inte på hamburgern (M8, punkten "Fokus"). Ingen kod ändras, bara kommentaren. P4b mäter: klick på varje länk, sedan ett Tab, och `document.activeElement` ligger i målsektionen eller efter den i DOM, aldrig i `<header>` |
+| `menu-panel-spacing` | `MobileMenu.module.css` | Godkänd: `.nav { margin-top: var(--space-6); }`, `.list { gap: var(--space-3); }`, `.link { min-height: 44px; }` |
+| `menu-cta-size` | `MobileMenu.module.css` | Godkänd: `min-height: 44px`, `margin-block: var(--space-6)`, `padding: 0 var(--space-5)`, `align-self: flex-start`, `max-width: 100%` |
+| `profile-export-saknas` | `scripts/validate-data.mjs` | Godkänd: `profile.js: profile saknas eller är inte ett objekt`, samma form som `skills.js: skillGroups saknas eller är inte en array` (A1). ~~**Genomförs i P4b men först när P6 är överlämnat**~~ — **ändrat 2026-11-07 (R6): genomförs i G1-rättningen**, som tar bort markeringen tillsammans med de fyra andra exportmarkeringarna. Uppskjutningen hade ingen ägare (LARDOMAR 2026-11-07). G1 prövade redan raden med tre indata. G1-rättningen prövar om den efter borttagningen |
+| Hover på navlänkarna | `Header.module.css` | Ändrad: understrykning i `--ink`, ingen färgändring. Deklarationerna står i M7 |
+
+### M9 — Ikonerna: tre egna inline-SVG (P4, P9)
+
+Inget beroende. A3 avvisade ikoner för att de skulle säga det rubriken redan sa.
+Här bär ikonerna en **funktion** (öppna, stäng, sök) och står alltid tillsammans
+med en dold text eller etikett. En komponent per fil, `export default`, utan
+stilfil. Alla har `aria-hidden="true" focusable="false" width="20" height="20"
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+stroke-linecap="round"`:
+
+| Fil | Paket | Innehåll |
+|-----|-------|----------|
+| `src/components/MenuIcon.jsx` | P4 | `<path d="M4 7h16M4 12h16M4 17h16" />` |
+| `src/components/CloseIcon.jsx` | P4 | `<path d="M6 6l12 12M18 6L6 18" />` |
+| `src/components/SearchIcon.jsx` | P9 | `<circle cx="11" cy="11" r="6.5" />` och `<path d="M16 16l4 4" />` |
+
+### M10 — Hero (P5)
+
+**Texterna.** Hero.jsx har dem som namngivna konstanter (A15):
+
+| Konstant | Text | Status |
+|----------|------|--------|
+| `eyebrowText` | `Portfolio` (versaler via `.eyebrow`, inte i DOM) | Uppdragets |
+| `headline` | `Jag bygger webb- och mobilappar, från gränssnitt till API.` | **FÖRSLAG.** Uppdragets "t.ex."-text. Står med kommentaren att den väntar på Jelals svar. Ingen agent ändrar den utan svar |
+| `intro` | oförändrad, Jelals exakta från 2026-10-07 | Jelals |
+| `primaryActionText`, `secondaryActionText` | oförändrade | Jelals |
+| `name`, `role` | flyttar till `src/data/profile.js` (nedan) | Jelals |
+
+DOM-ordning: eyebrow (`<p className={typeStyles.eyebrow}>`),
+`<h1 className={styles.headline}>{headline}</h1>`, rollraden
+(`<p className={typeStyles.meta}>`), ingressen, knapparna, och porträttet sist.
+Modulklasserna `.eyebrow` och `.role` i `Hero.module.css` tas bort (M1, "Hur
+stilen når elementet"; avgjort efter P5). **Sidans enda `h1` är `headline`.**
+Namnet syns då inte längre som rubrik. Logga-länkens dolda text, `<title>` och
+footern bär det. Det är fråga 2 till Jelal.
+
+**`src/data/profile.js` (P5)**, eftersom `role` nu läses av både hero och footern
+(M16) och står i `<title>`:
+
+```js
+/** @typedef {Object} Profile
+ *  @property {string} name  OBLIGATORISK.
+ *  @property {string} role  OBLIGATORISK. Samma sträng står i <title> i index.html. */
+export const profile = { name: 'Jelal Qaiumi', role: 'Systemutvecklare · Fullstack' };
+```
+
+`validate-data.mjs`: `profile` läggs i `ACTIVE`, och `checkProfile` fäller `name`
+och `role` som är borttagna, `''` eller `'   '`. Kommentaren i `index.html` som
+pekar på `Hero.jsx` skrivs om till att peka på `profile.js`.
+
+**Glöden och layouten, `Hero.module.css`, tecken för tecken.** K-blocket ("Hero
+fyller första skärmen på dator") står kvar:
+
+```css
+.hero {
+  background-color: var(--bg);
+  background-image: radial-gradient(60% 70% at 100% 35%, rgba(255, 107, 0, .16), rgba(255, 107, 0, 0) 70%);
+}
+
+@media (min-width: 900px) {
+  .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+    gap: var(--space-7);
+    align-items: center;
+    width: 100%;
+  }
+}
+
+.intro {
+  font-size: var(--text-lg);
+  max-width: 560px;
+  color: var(--ink-muted);
+}
+```
+
+> Rättat 2026-11-07 (M10b punkt 2 och 2b): `width: 100%;` i `.inner` och
+> `font-size: var(--text-lg);` i `.intro` saknades i blocket. Blocket ovan är det
+> gällande.
+
+Glödens ljusaste punkt över `--bg` blir ca `#361F0D`. Mot den ger `--ink-muted`
+ca 6,2:1. **P5 mäter det** (P5:3), men marginalen är stor. "På två rader" i
+uppdraget gäller dess exempeltext vid dess bredd. Ingen radbrytning tvingas fram.
+
+**Knapparna (A5 står kvar i sak, stilarna ersätts), tecken för tecken:**
+
+```css
+.actionPrimary,
+.actionSecondary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-pill);
+  font-weight: var(--weight-semibold);
+  transition: background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.actionPrimary {
+  background-color: var(--accent);
+  border: 1px solid transparent;
+  color: var(--ink-inverse);
+}
+
+.actionPrimary:hover {
+  background-color: var(--accent-hover);
+}
+
+.actionSecondary {
+  background-color: transparent;
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+}
+
+.actionSecondary:hover {
+  border-color: var(--ink);
+}
+```
+
+**Heros fyra `EJ I ARKITEKTUR`-markeringar, avgjorda. Tas bort i P5:**
+
+| Markering | Beslut |
+|-----------|--------|
+| `IMAGE_SIZES` | `'(min-width: 900px) 420px, 360px'`. Cirkelns renderade bredd är som mest dess tak ("Diametern"), så taket är rätt `sizes`. Ett överslag uppåt kostar en större fil vid 1×, aldrig en suddig bild |
+| Profilbildens `alt` | `"Porträtt av Jelal Qaiumi"` står kvar. Bilden bär information om vem sidan handlar om |
+| `.inner` | Gridden ovan. Textspåret är flexibelt och bildspåret har cirkelns tak |
+| `contrast(1.05)` | Står kvar tillsammans med gråskalan. Uppdraget säger "svartvita porträtt" |
+
+Porträttet laddas **inte** lazy: det ligger i första skärmen från 900 px.
+`width`/`height` står kvar.
+
+#### M10b — Knapparna under skärmkanten: besluten efter P5:s första omgång (genomförs i P5, omgång 2)
+
+**Fynden** (P5, omgång 1): "Kontakta mig" slutade på 651,875 vid 360 × 640, och
+båda knapparna på 824,047 vid 900 × 700. Vid 900 × 700 är h1 72 px och bryts på
+sex rader (423 px) i ett textspår på 369 px. Två orsaker, två åtgärder.
+
+**1. Heros `padding-block` vinner nu på specificitet, i alla bredder.** A5 steg 1
+skrevs som `.hero { … }` (0,1,0) och förlorar mot `section[id]` (0,1,1) i
+`global.css`. Byggaren visade att det blev 64 px trots regeln. `section.hero` har
+samma specificitet som `section[id]` och vinner bara på buntordning, och det är
+inget beslut. Selektorn får därför ett attribut till och vinner oberoende av
+ordningen. Värdet gäller **i alla bredder**, inte bara under 600 px: från 900 px
+ger `min-height` plus `align-content: center` luften ovanför och under innehållet,
+så den stora paddingen syns bara när innehållet är högre än skärmen, och det är
+just då den trycker ner knapparna. Tecken för tecken, direkt efter `.hero`-regeln
+i `Hero.module.css`:
+
+```css
+section.hero[id] {
+  padding-block: var(--space-6);
+}
+```
+
+`padding-inline` rörs inte och kommer fortfarande från `global.css`. Kommentarerna
+överst i `Hero.module.css` som säger att `padding-block` aldrig får stå i modulen
+skrivs om i samma ändring: sidomarginalen bor i `global.css`, medan hero har en
+egen vertikal luft och därför en selektor som slår den globala regeln på
+specificitet.
+
+**2. h1:s grad beror på textspårets bredd från 900 px.** `--text-3xl` växer med
+**vyporten**, men från 900 px är det **textspåret** som avgör radbrytningen, och
+det är som smalast precis vid brytpunkten (369 px med reserverad rullningslist,
+alltså vyporten minus marginaler, gap och bildspårets 420). Graden får därför en
+`clamp()` i containerenheter. Tecken för tecken, som ett eget block efter `.text`:
+
+```css
+@media (min-width: 900px) {
+  .text {
+    container-type: inline-size;
+  }
+
+  .headline {
+    font-size: clamp(2.75rem, 11cqi, var(--text-3xl));
+  }
+}
+```
+
+- **Golvet 2,75rem (44 px)** är heros eget golv och det mått byggaren redan mätt
+  godkänt vid 900 × 700 (591,6). **Taket är `--text-3xl`**, så h1 blir aldrig
+  större än i dag. Från ca 1190 px vyport når `11cqi` taket, och vid 1280 och
+  1600 är graden oförändrad 72 px. Mätserierad 5 påverkas alltså inte.
+- **Under 900 px rörs h1 inte.** Blocket gäller bara tvåspaltsläget, och i
+  enspaltsläget är textspåret nästan hela vyporten och `--text-3xl` fungerar.
+  Följden är ett hopp i grad vid brytpunkten (72 px vid 899, 44 px vid 900). Det
+  är avsiktligt: layouten byter där från en spalt till två.
+- **`container-type` kräver att `.inner` har full bredd från 900 px (rättat
+  2026-11-07, efter P5 omgång 2).** Från 900 px är `.hero` en grid och `.inner`
+  ett griditem med `margin-inline: auto`. Auto-marginaler tar upp det fria
+  utrymmet, så `.inner` sträcks inte ut utan får sin bredd från innehållet.
+  `inline-size`-inneslutningen gör att `.text` bidrar med 0, och då blir
+  textspåret 0 px (uppmätt: h1 44 px och 2155 px hög, knapparna på y 5883).
+  Rättelsen är en rad i M10:s `.inner`-block från 900 px, tecken för tecken som
+  sista deklaration:
+
+  ```css
+      width: 100%;
+  ```
+
+  Blocket i sin helhet står i M10 ("Glöden och layouten"). Under 900 px är `.hero`
+  inte en grid och `.inner` fyller redan bredden, så raden står bara i
+  tvåspaltsläget och 899 px och nedåt är oförändrade. `max-width: var(--content-max)`
+  och `margin-inline: auto` står kvar, så `.inner` blir 1180 px och centreras
+  när vyporten är bredare. Kodkommentaren ovanför blocket får invarianten:
+  `.inner` är ett griditem med auto-marginaler och sträcks inte ut av sig själv,
+  och utan full bredd kollapsar textspåret eftersom `.text` är innesluten. Inga
+  tal i kommentaren (LARDOMAR 2026-10-02).
+  - Avvisat: `justify-self: stretch` på `.inner`. Auto-marginaler har företräde
+    framför stretch, så det gör ingen skillnad.
+  - Avvisat: att ta bort `margin-inline: auto`. Varje sektion ska ha ett
+    centrerande innerelement (LARDOMAR 2026-10-02, "hero-platshållaren saknar
+    `.inner`").
+  - Avvisat: att ta bort `display: grid` på `.hero`. Det är K-blocket, som är
+    bindande tecken för tecken, och `align-content: center` behöver det.
+  - Avvisat: att flytta `container-type` till `.inner`. Den har samma
+    krympbeteende och kollapsar på samma sätt.
+- **2b. `.intro` har `font-size: var(--text-lg)`.** Koden gäller. M10:s block
+  saknade raden, och den är nu inskriven där som första deklaration. A5 steg 2
+  förutsätter raden och gäller oförändrat. Ingen kodändring.
+- **Avvisat: mer bredd åt textspåret mellan 900 och 1100 px.** Det kräver ett
+  smalare bildspår, och då krymper cirkeln vid brytpunkten. Diameterserien ska
+  vara icke-avtagande ("Diametern"). Ett mindre gap (48 → 24 px) ger för lite för
+  att ta bort en rad.
+- **Avvisat: en kortare rubrik.** Texterna kortas aldrig.
+
+**Hero.jsx:** `<h1 className={styles.headline}>`. Kommentaren "h1 behöver ingen
+egen klass" i `Hero.module.css` ersätts med invarianten: graden följer textspårets
+bredd i tvåspaltsläget, och golvet och taket hindrar den från att bli mindre än det
+uppmätta golvet eller större än sidans display-grad.
+
+**A5:s ordning för vad som får vika, efter detta:** steg 1 är genomfört enligt
+punkt 1 ovan. Steg 2 (ingressens grad till `--text-base` under 600 px) tas
+**bara** om rad 1 fortfarande faller efter punkt 1 och 2. Därefter stopp och
+tillbaka hit. Texterna kortas aldrig.
+
+**Mätserien efter detta (P5 omgång 2), rad 1 och 2 i A5:**
+
+| Rad | Vyporter (bredd × höjd) |
+|-----|--------------------------|
+| 1 | 360 × 640, 360 × 667, 360 × 740, 390 × 844 (oförändrad) |
+| 2 | 600 × 640, **899 × 700**, 900 × 700, **1000 × 700**, **1100 × 700**, **1200 × 700**, 1280 × 800, 1600 × 900 |
+
+- **Villkor:** båda knapparnas `bottom <= window.innerHeight` i samtliga tolv.
+- **Mätvillkor:** rullningslist reserverad (det strängare, eftersom spåret blir
+  smalare). Före serien skrivs `window.innerWidth - document.documentElement.clientWidth`
+  ut, och talet ska vara 15 (LARDOMAR 2026-10-08).
+- **Varför de nya:** 899 och 900 ligger på var sin sida om brytpunkten och
+  graden hoppar där. 1000, 1100 och 1200 × 700 täcker bandet där textspåret är
+  smalt och `11cqi` styr graden, på en låg datorskärm.
+- **UPPLYSNING per rad från 900 px:** `getComputedStyle(h1).fontSize`. **GRIND** vid
+  1280 × 800 och 1600 × 900: `fontSize` är `72px`.
+- **GRIND per rad från 900 px (tillagd 2026-11-07, punkt 2):** textspåret, mätt som
+  `document.querySelector('section#hero h1').parentElement.clientWidth`, är
+  `>= 300` vid 900, 1000, 1100, 1200, 1280 och 1600. Utskriften anger talet och
+  rullningslistvillkoret i samma rad. Varför 300: det minsta riktiga värdet är
+  369 vid 900 × 700 med reserverad rullningslist, och kollapsen ger 0. En legitim
+  ändring som kan fälla grinden är ett bredare bildspår, ett större gap eller en
+  mindre `--content-max`. Alla tre kräver ett nytt beslut här, och diameterserien
+  mäts då om ändå. Felmeddelande: `hero: textspåret är <n> px vid <b> × <h>, under 300 (M10b punkt 2: .inner måste ha full bredd)`.
+- **Negativ kontroll för spårgrinden:** injicera `section#hero > div { width: auto; }`
+  (bekräfta att `querySelectorAll('section#hero > div').length === 1`, att träffen
+  är `.inner` och att den vinner på specificitet). Spårgrinden ska larma vid
+  samtliga sex vyporter från 900 px, och 72 px-grinden vid 1280 och 1600. När
+  injektionen tas bort ska båda tiga. Prövas med de tre indata som LARDOMAR
+  kräver: korrekt (tiger), injektionen (larmar), injektionen borttagen (tiger).
+- **Förväntat efter rättelsen** (byggarens diagnos, rullningslist reserverad 15 px):
+  spåret är 369, 469, 569, 669, 712 och 712 px, h1 är 44, 51,6, 62,6, 72, 72 och
+  72 px, och knapparnas underkant är 591,6, 566,8, 583,0, 596,8, 646,8 och
+  696,8. Mätningen avgör, inte tabellen.
+- **Negativ kontroll (rad 6):** ta bort `container-type` på `.text` genom den
+  smalaste selektorn (`section#hero h1` ska ge `querySelectorAll(...).length === 1`
+  och `.text` likaså). Då räknas `cqi` mot vyporten, h1 når taket och rad 2 ska
+  falla vid 900 × 700 med h1 som det element som bär avvikelsen. Larmet ska upphöra
+  när injektionen tas bort.
+- Rad 3–5 körs om oförändrade. Rad 4:s synteststräng sätts in i h1 även vid
+  900 × 700.
+
+**3. Rullningslisten hoppar inte när menyn öppnas (genomförs i P5 omgång 2).**
+Fyndet kommer från P4b. Låset sätter `overflow: hidden` på `html`, den reserverade
+rullningslisten försvinner, och stängknappen hoppar 15 px på datorer där
+rullningslisten tar plats. `global.css`, i den befintliga `html`-regeln, tecken för
+tecken direkt efter `scroll-behavior: smooth;`:
+
+```css
+  scrollbar-gutter: stable;
+```
+
+- **Varför P5 omgång 2:** omgången rör redan bara `Hero.module.css`, och raden rör
+  bara `global.css`. Ingen av filerna ägs av P7. `MobileMenu.jsx` rörs inte, och
+  låset står kvar som M8 beskriver det.
+- **Kommentaren i `global.css`** anger invarianten: låset får inte ändra
+  layoutbredden, så rullningslistens plats hålls även när `overflow` är `hidden`.
+  Hänvisning: "Beslutat i ARKITEKTUR.md, M10b punkt 3". Inga tal.
+- **Följd för M18 vid 360 px:** ingen ändring av måtten. Sidan går alltid att
+  rulla, så rullningslisten finns redan i vanligt läge, och raden ändrar bara
+  läget med menyn öppen. Spalten är fortfarande **297 px med reserverad
+  rullningslist på 15 px** och **312 px utan rullningslist**.
+  `innerWidth - clientWidth` är 15 respektive 0 **med menyn stängd**.
+  ~~"och nu också med menyn öppen"~~ — **rättat 2026-11-07 efter G1 (R4):** med
+  `overflow: hidden` räknar Chrome inte in den reserverade rännan i rotens
+  `clientWidth`. Uppmätt av G1 med reserverad rullningslist 15 px: `clientWidth`
+  går 345 → 360, 585 → 600 och 884 → 899 vid 360, 600 och 899 px när menyn
+  öppnas, medan layouten står still. Villkorskontrollen i LARDOMAR 2026-10-08
+  (`innerWidth - clientWidth`) görs därför **alltid med menyn stängd**.
+  På pekskärmar med överliggande rullningslist är bredden på rännan 0, och där
+  märks ingen skillnad. Med menyn öppen syns rännan som en remsa i sidans
+  bakgrund. Panelen är `--bg` och opak, så remsan har samma färg.
+- **Grindarna — omskrivna 2026-11-07 efter G1 (R4), genomförs i G1-rättningen.**
+  Med reserverad rullningslist (15 px, kontrollerat **med menyn stängd** före
+  serien), vid 360 × 640, 600 × 640 och 899 × 700, före öppning och med menyn
+  öppen:
+  1. **GRIND:** hamburgerns `getBoundingClientRect()` före öppning är lika med
+     stängknappens med menyn öppen (±0,5 px), i `x`, `y`, `width` och `height`.
+     Oförändrad. Uppmätt av G1: x 272, y 25, 40 px vid 360.
+  2. **GRIND:** `document.documentElement.getBoundingClientRect().width` är samma
+     före öppning och med menyn öppen (±0,5 px). Uppmätt av G1: 345, 585 och 884
+     både före och med menyn öppen.
+  3. **GRIND:** `document.querySelector('section#projects').getBoundingClientRect().width`
+     är samma före och med menyn öppen (±0,5 px). Sektionen står för innehållet
+     bakom panelen, och den är vad besökaren ser hoppa. Uppmätt av G1: oförändrad.
+  4. **GRIND:** med menyn öppen är panelens (`document.getElementById('mobile-menu')`)
+     `getBoundingClientRect().width` lika med rotens (±0,5 px). Panelen är
+     `position: fixed` och ska respektera rännan. Uppmätt av G1: 345, 585 och 884.
+  - ~~`document.documentElement.clientWidth` är samma före öppning och med menyn
+    öppen~~ — **UPPHÄVT 2026-11-07 (R4):** grinden mätte rullningslisten, inte
+    layouten, och föll med korrekt layout.
+  - Varje utskriftsrad anger vyport, tal före, tal med menyn öppen och
+    rullningslistvillkoret. Faller grind 4 för att panelen inte respekterar
+    rännan stoppar byggaren och lämnar tillbaka hit. Ingen kompensation med
+    `padding-right` i JS.
+- **Negativ kontroll (R4):** injicera `html { scrollbar-gutter: auto !important; }`
+  sist (bekräfta att `getComputedStyle(document.documentElement).scrollbarGutter`
+  är `auto`). Med menyn öppen försvinner rännan, och **min förutsägelse, som inte
+  är uppmätt**, är att grind 1, 2 och 3 larmar med 15 px vid alla tre vyporterna
+  (roten 360, 600, 899), och att grind 4 tiger, eftersom panelen och roten växer
+  lika. G1-rättningen mäter det och skriver de uppmätta talen i sin överlämning.
+  Larmar grind 2 inte stoppar byggaren och lämnar tillbaka hit: då mäter grinden
+  inte layoutbredden. Alla fyra ska tiga när injektionen tas bort. Prövas med
+  korrekt (tyst), injektionen (larmar) och injektionen borttagen (tyst).
+- **Avvisat: att kompensera i `MobileMenu.jsx`** genom att mäta rullningslisten och
+  sätta `padding-right`. Det ger ett tal i JS som måste hållas i synk med CSS, och
+  en ren CSS-rad räcker.
+
+### M11 — Filtrets regler (P8, P9)
+
+**State och signaturer.** `Projects.jsx` äger filtret, och `ProjectFilter.jsx` är
+kontrollerad:
+
+```js
+// src/lib/projectRules.js
+/** @typedef {{ category: string|null, tech: string[], query: string }} ProjectFilterState */
+export const EMPTY_FILTER = { category: null, tech: [], query: '' };              // P8
+/** @returns {Record<string, number>} en nyckel per värde i PROJECT_CATEGORIES */
+export function countByCategory(projects)                                          // P8
+/** @returns {string[]} unika, flest projekt först, sedan localeCompare(…, 'sv') */
+export function collectTech(projects)                                              // P9
+/** @returns {string} toLocaleLowerCase('sv-SE') och trim() */
+export function normalizeText(text)                                                // P9
+/** @returns {Project[]} i datans ordning */
+export function filterProjects(projects, filter)                                   // P8 kategori, P9 tech och query
+
+// src/components/ProjectFilter.jsx
+function ProjectFilter({ counts, total, techOptions, filter, onChange })          // P8, P9
+```
+
+Varje funktion får **redan kompletta** projekt (`projects.filter(isComplete)`).
+`null` som kategori betyder "Alla".
+
+| Fråga | Beslut |
+|-------|--------|
+| Var kommer chipsen ifrån? | **Ur datan** (`collectTech`). Ingen chip kan då ge noll träffar på egen hand. Uppdragets exempel (React Native, C#, Blazor) finns inte på något projekt i dag och visas därför inte |
+| Visas segment med antal 0? | **Ja, alla fyra, men ett segment vars antal i hela datan är 0 får `disabled`.** Uppdraget ritar fyra segment, och ett segment som bara kan ge tomt resultat ska inte gå att välja. Med enbart Awle: "Alla 1", "Fullstack 1", "Frontend 0" (inaktiv), "Backend 0" (inaktiv) |
+| Vad räknar segmentens antal? | **Hela datan**, oberoende av chips och sök. Antalen hoppar alltså inte medan man skriver. Live-raden visar det kombinerade utfallet |
+| Kombination | **OCH genom hela kedjan:** kategori OCH varje vald chip finns i `tech` OCH sökordet. Varje val smalnar av, aldrig breddar |
+| Sökningen | Delsträng i `normalizeText(title + ' ' + description + ' ' + category + ' ' + tech.join(' '))`. Tom eller bara blanksteg = inget villkor. `å`, `ä` och `ö` jämförs som sig själva. Ingen diakritvikning |
+| Noll träffar | Live-raden "Visar 0 av N projekt", stycket "Inga projekt matchar filtret." och knappen "Rensa filter", som återställer `EMPTY_FILTER`. Texterna är gränssnittstext, inte påståenden om Jelal |
+| Ingen komplett post alls | Filterpanelen och live-raden renderas **inte**. Dagens tomma läge står kvar |
+| Live-raden | `<p aria-live="polite" aria-atomic="true">` med DOM-texten `Visar {x} av {y} projekt`. Versalerna kommer från CSS (`.meta`), så skärmläsaren läser ord och inte bokstäver. Uppläsningen följer varje ändring. `polite` låter skärmläsaren slå ihop snabba ändringar |
+| Semantik | Segmenten: `<div role="group" aria-label="Kategori">` med `<button type="button" aria-pressed>`. Chipsen: `<div role="group" aria-label="Teknik">` med `Chip` (M15). Sök: `<label class="visually-hidden" for="project-search">Sök projekt</label>` + `<input type="search" id="project-search" placeholder="Sök projekt">` med `SearchIcon` |
+
+**Panelens och kontrollernas deklarationer (`ProjectFilter.module.css`), tecken
+för tecken:**
+
+```css
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.segments,
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.segment {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 40px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--ink-muted);
+  font: inherit;
+  font-weight: var(--weight-semibold);
+}
+
+.segment[aria-pressed='true'] {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink-inverse);
+}
+
+.segment:disabled {
+  color: var(--ink-subtle);
+  border-color: var(--line);
+}
+
+.search {
+  position: relative;
+  min-width: 0;
+}
+
+.searchInput {
+  width: 100%;
+  height: 40px;
+  padding: 0 var(--space-4) 0 40px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background-color: var(--bg);
+  color: var(--ink);
+  font: inherit;
+}
+
+@media (min-width: 900px) {
+  .panel {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 280px);
+    align-items: start;
+  }
+}
+```
+
+- **Avvikelse från uppdraget: sökfältets kant är `--line-strong`, inte `--line`.**
+  `--line` mot `--surface` är ca 1,3:1, och uppdraget kräver också WCAG AA. Ett
+  inmatningsfälts avgränsning omfattas av 1.4.11:s 3:1. Samma skäl som
+  formulärramen.
+- Från 900 px står segmenten och chipsen i vänsterspåret och sökfältet i högerspåret
+  ("Sökfält till höger"). Under 900 px staplas de.
+- Live-raden står **under panelen**, utanför den, och har `typeStyles.meta` i JSX
+  (M1, "Hur stilen når elementet").
+
+### M12 — Animationerna (P7 hover, P10 resten)
+
+**A11 är upphävt av Jelals beslut 4.** Uppdraget beställer nu animation.
+
+- **`.reveal` är den tredje sanktionerade globala klassen** (efter
+  `.visually-hidden`). Den ligger i `global.css`. Skälet: mekanismen går genom
+  sektioner i flera moduler, och uppdraget namnger klassen. Dörren stängs igen
+  efter den.
+- **Komponenten `src/components/Reveal.jsx`:**
+  `function Reveal({ as = 'div', index = 0, className, children, ...rest })`
+  renderar elementet med klassen `reveal` (plus `className`) och
+  `style={{ '--reveal-index': index }}`. Den registrerar elementet i **en
+  gemensam** `IntersectionObserver` på modulnivå
+  (`{ threshold: 0, rootMargin: '0px 0px -10% 0px' }`), sätter
+  `data-revealed="true"` vid första skärning och slutar observera elementet. Den
+  avregistrerar vid avmontering.
+- **`export function enableReveal()`** i samma fil anropas i `main.jsx` **före**
+  `createRoot(...).render`. Den sätter `document.documentElement.dataset.revealReady = 'true'`
+  **bara om** `'IntersectionObserver' in window` och
+  `!matchMedia('(prefers-reduced-motion: reduce)').matches`.
+- **Innehållet kan aldrig bli kvar osynligt utan observer.** Döljandet villkoras på
+  attributet, tecken för tecken:
+
+```css
+.reveal {
+  transition: opacity var(--duration-reveal) var(--ease-out),
+    transform var(--duration-reveal) var(--ease-out);
+  transition-delay: calc(var(--reveal-index) * var(--reveal-stagger));
+}
+
+:root[data-reveal-ready] .reveal:not([data-revealed]) {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+```
+
+- **Var `Reveal` sitter:** sektionsrubriken i `Section.jsx` (etikett + `h2`),
+  filterpanelen, varje projektkort (`as="li"`, `index`, och `className={styles.item}`
+  plus `id` ur `cardIds`, så att ankarmålet och scroll-marginalen följer med, R1
+  och R2), varje kompetenskort
+  (`index`), Om mig-texten och nyckeltalsraden, och kontaktens två spalter
+  (`index` 0 och 1). **Hero är inte `reveal`.** Den är LCP och ska inte vänta på
+  en observer. Footern är det inte heller.
+- **Staggern:** 70 ms per steg, och `index` sätts till `Math.min(i, REVEAL_INDEX_MAX)`
+  med `export const REVEAL_INDEX_MAX = 5` i `Reveal.jsx`. Längsta fördröjningen
+  blir 350 ms, oavsett antal kort.
+- **In- och uttoning vid filtrering (P10):** `Projects.jsx` håller två listor, den
+  filtrerade och den visade. Vid ändring sätts `data-phase="out"` på rutnätet
+  (`opacity: 0`, `transition: opacity var(--duration-fast) var(--ease-out)`).
+  Efter `--duration-fast` (160 ms, en `setTimeout`) byts den visade listan och
+  `data-phase` tas bort (`opacity: 1`, `transition: opacity var(--duration-base)
+  var(--ease-out)`). Kort som monteras på nytt passerar `Reveal` och tonar in med
+  stagger. **Snabba klick:** varje ändring rensar föregående timeout, så den
+  visade listan blir alltid den senaste. **Med reducerad rörelse byts listan
+  direkt**, utan timeout.
+- **`prefers-reduced-motion` stänger av:** varje transition och animation (blocket
+  ovan), reveal-döljandet (`enableReveal` sätter inget attribut), kortens lyft och
+  bildzoom (M4), filtrets fördröjning, och `scroll-behavior: smooth` (befintlig
+  regel).
+
+### M13 — Sektionsetiketterna (P11)
+
+- Formatet `01 / 04 · PROJEKT`: nummer och nämnare räknas ur **`sections`**
+  (de navigerbara sektionerna). **Hero räknas inte.** Den är ingen post i listan
+  och har ingen `h2`.
+- `src/lib/sectionLabel.js`:
+  `export function sectionIndexLabel(sections, id)` → `'01 / 04'`, eller `null` om
+  `id` inte finns. Siffrorna fylls ut till två tecken.
+- `Section.jsx` behåller signaturen `function Section({ id, title, children, className })`.
+  Ovanför `h2` renderas `<p className={styles.label} aria-hidden="true">{indexLabel} · {title}</p>`,
+  där `className` är `` `${typeStyles.meta} ${styles.label}` `` (M1, "Hur stilen
+  når elementet"). Versalerna kommer från CSS.
+- **Skärmläsare:** etiketten är `aria-hidden`. Den upprepar `h2` med ett nummer, och
+  numret säger inget som rubriknavigeringen inte redan ger.
+
+### M14 — Nyckeltalen (P12)
+
+- **Två tal, båda härledda:**
+  `export function keyFigures({ projects, skillGroups })` i `src/lib/keyFigures.js`
+  ger `[{ key: 'projects', value, label: 'Projekt' }, { key: 'skills', value, label: 'Kompetenser' }]`.
+  `projects` räknas med `isComplete`. `skills` är antalet **unika** namn i
+  `skillGroups[].skills[].name`.
+- **"År i branschen" utgår** tills Jelal har gett talet (fråga 3). Det är ett
+  påstående om honom.
+- **"Teknologier" byts mot "Kompetenser".** Projektdatan har sex tekniker från ett
+  projekt, och kompetenslistan blandar tekniker och arbetssätt. Etiketten ska säga
+  vad som faktiskt räknas.
+- **Placering:** i Om mig, under texten. Den hör till personen, och i hero hade
+  den tryckt knapparna under vikningen på mobil (A5).
+- **Komponenten:** `src/components/KeyFigures.jsx`, `function KeyFigures()`, som en
+  `<dl>` med en `<div>` per tal: `<dt>` (etiketten, `typeStyles.meta` i JSX) och `<dd>`
+  (siffran i `--font-heading`, `--text-figure`, `--weight-bold`). Visuellt står
+  siffran överst (`flex-direction: column-reverse`). Uppläsningen blir
+  "Projekt, 1".
+
+### M15 — Kompetenschipsen (P9, P11)
+
+- **En gemensam komponent:** `src/components/Chip.jsx`,
+  `function Chip({ children, pressed, onToggle })`. Med `onToggle` blir den
+  `<button type="button" aria-pressed={pressed} onClick={onToggle}>`, och utan blir
+  den `<span>`. Stilen bor i `Chip.module.css`. Skapas i P9 (filtret är första
+  konsumenten).
+- **`SkillChip.jsx`** behåller signaturen `function SkillChip({ name })` och
+  renderar `<li><Chip>{name}</Chip></li>` (P11). `SkillChip.module.css` tas bort.
+- **`Chip.module.css`, tecken för tecken:**
+
+```css
+.chip {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-chip);
+  background-color: transparent;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-mono);
+}
+
+button.chip[aria-pressed='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+```
+
+`min-height` och inte `height`: en lång kompetens får radbryta inuti chipset
+("välj det felläge som syns").
+
+- **Kompetenskortet (A6) står kvar** med nya tokennamn. Gruppens `h3` får
+  mono-eyebrow-stilen: `` className={`${typeStyles.meta} ${styles.cardTitle}`} ``
+  i JSX, och `.cardTitle` bär då bara `margin-bottom: var(--space-4)`.
+  Elementet är fortfarande `h3`, så rubrikordningen ändras inte.
+
+### M16 — Kontakt och footer (P13, P14)
+
+**Kontakt (P13), uppdraget gäller före Jelals val 2026-10-07:** uppgifterna
+**till vänster och först i DOM**, formuläret i en `--surface`-panel till höger.
+Visuell ordning och Tab-ordning är då densamma, alltså samma princip som förut.
+
+- Vänster spalt: `h3` "Kontaktuppgifter", e-posten som `mailto:` i klartext, och
+  `contact.links.filter((l) => l.url !== null)`. Det ger LinkedIn i dag.
+- **Rutnätet, tecken för tecken:**
+
+```css
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-7);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .grid { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
+}
+
+.formPanel {
+  min-width: 0;
+  padding: var(--space-5);
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+```
+
+- **hCaptcha får `size="compact"`.** Den normala widgeten är 302 px och går inte
+  att krympa. Med 24 px sidmarginal (M18) och 24 px panelpadding finns ca 247 px
+  vid 360 px vyport med reserverad rullningslist. Den kompakta är 164 px. Det är en
+  presentationsprop, inte ändrad formulärlogik, och P13 får göra den.
+- Formulärets `max-width: var(--measure)` tas bort. Panelen begränsar bredden.
+- Fälten: `background-color: var(--bg)`, `border: 1px solid var(--line-strong)`.
+  Formulärknappen får heros `.actionPrimary`-deklarationer (M10) i sin egen
+  modul.
+- **Markeringarna i `Contact.module.css` och `ContactForm.module.css` avgörs så
+  här och tas bort i P13:** `.linkHeading { margin-bottom: var(--space-4); }`,
+  länklistan lodrät med `gap: var(--space-3)`, länkarna i `--accent` med
+  understrykning, formulärrubrikens `margin-bottom: var(--space-2)`. De beslutas
+  som de står.
+
+**Footer (P14):**
+
+- Överst `border-top: 1px solid var(--line)`. Därefter JQ-märket (samma tajta PNG
+  som headern, `alt=""` + `aria-hidden="true"`) med taglinen **`profile.role`**.
+  Det är Jelals egen godkända text och ingen ny påhittad. Sedan en länkkolumn
+  "Kontakt" med `contact.links` där `url !== null` och e-posten, och sist
+  copyright-raden `© {år} {profile.name}`, där året är `new Date().getFullYear()`.
+- **GitHub renderas inte så länge `url` är `null`.** Det bekräftas: Jelal har
+  sagt "ta bort github", och `contact.js` har `null`. Datadriven rendering tar bort
+  länken av sig själv.
+- Text: `--ink-muted` på `--bg` (ca 7,6:1). P14 mäter.
+
+### M17 — Slutkontrollens verktyg: Lighthouse (P15)
+
+- **Verktyg:** `npx --yes lighthouse@12` mot `npm run preview` på en fast port,
+  med installerad Chrome (`CHROME_PATH=C:\Program Files\Google\Chrome\Application\chrome.exe`).
+  **Inget läggs i `package.json`.** Det är ett engångsverktyg för mätning, inte en
+  del av bygget, och 90+ är ett leveranskrav, inte en grind.
+- **Prövas först:** P15 kör `npx --yes lighthouse@12 --version` och klistrar in
+  utfallet. Faller det (inget nätverk, blockerat) stannar P15 för den punkten och
+  lämnar tillbaka hit. Ingen siffra uppskattas.
+- **Inställningar:** `--only-categories=performance,accessibility`,
+  `--chrome-flags="--headless=new"`, `--output=json`. Två lägen: standard (mobil,
+  simulerad strypning) och `--preset=desktop`. **Tre körningar per läge, medianen
+  redovisas.** Kravet ≥ 90 gäller **båda** kategorierna i **båda** lägena.
+- Servern startas och stoppas enligt `netstat`-regeln (LARDOMAR 2026-10-02 och
+  2026-10-05). Ingen flagga sätts med `=false`.
+
+### M18 — Maxbredd och sidmarginal (P2)
+
+`--content-max: 1180px` och `--content-padding: 1.5rem` (24 px i alla bredder.
+Över ca 1228 px vyport binder maxbredden ändå). Mekanismen i "Var sidmarginalen
+bor" står kvar. Bara värdena byts.
+
+**Följd för 360 px-golvet:** spaltbredden vid 360 px vyport blir **297 px med
+reserverad rullningslist på 15 px** och **312 px utan rullningslist** (tidigare 309
+respektive 324). Varje bredduppmätning anger sitt villkor (LARDOMAR 2026-10-08).
+Villkoret (`innerWidth - clientWidth`, 15 eller 0) läses **med menyn stängd**: med
+menyn öppen är rotens `clientWidth` lika med `innerWidth` fast layouten står still
+(rättat 2026-11-07, R4, se M10b punkt 3). Layoutbredden med menyn öppen mäts med
+`getBoundingClientRect().width`.
+
+### Markeringarna från före P2 — vilka ett M-beslut redan besvarar (inventerat efter P2)
+
+De 23 `EJ I ARKITEKTUR`-markeringar som fanns före P2. Ingen ny fråga avgörs
+här. Tabellen säger bara vilka som redan är besvarade, och vilket paket som tar
+bort markeringen i samma ändring som beslutet genomförs (LARDOMAR 2026-10-02).
+Radnumren gäller efter P2.
+
+| Markering | Besvarad av | Tas bort i |
+|-----------|-------------|------------|
+| `scripts/validate-data.mjs:285`, om url och repoUrl ska grindas | M3, grindtabellen (`liveUrl`/`githubUrl`) | P6 |
+| `src/components/Hero.jsx:26` (`sizes`), `:100` (alt) | M10, heros fyra markeringar | P5 |
+| `src/components/Hero.module.css:48` (layout), `:249` (`contrast`) | M10, heros fyra markeringar | P5 |
+| `src/components/Projects.module.css:15`, spårets 280px och avståndet | M4, rutnätet | P7 |
+| `src/components/Contact.module.css:53`, `:62`, `:79` | M16 | P13 |
+| `src/components/ContactForm.module.css:14` (rubriken), `:116` (knappen) | M16 | P13 |
+| `src/components/ContactForm.module.css:36`, maxbredden | M16 (`max-width` tas bort). **Bara delvis:** avstånden mellan fälten är obesvarade. P13 tar bort maxbredden och skriver om markeringen till enbart den frågan | P13 (delvis) |
+
+**Obesvarade, inget M-beslut rör dem:** `scripts/validate-data.mjs:61`, `:68`,
+`:233`, `:350`, `:467`, `:489` och `:806`, `src/components/About.module.css:26`,
+`src/styles/global.css:17` och `:200`, samt `src/components/Projects.module.css:5`.
+De står kvar som öppna frågor.
+
+**Rättat 2026-11-07 (R6):** `validate-data.mjs:61` ovan är exportmarkeringen i
+`checkSections` (`:64` före G1-rättningen) och är **besvarad av R6**. Den tas bort
+i G1-rättningen tillsammans med exportmarkeringarna i `checkProjects`,
+`checkAbout`, `checkContact` och `checkProfile`.
+
+### Komponenter och signaturer efter moderniseringen
+
+Gäller före tabellen "Komponenter och exakta signaturer" för de rader som är
+märkta där.
+
+| Fil | Signatur | Paket | Ansvar |
+|-----|----------|-------|--------|
+| `src/components/Header.jsx` | `function Header()` | P3, P4 | Pill-naven (M6), logga, navlänkar ur `sections` med `aria-current` (M7), CTA, hamburgern och `MobileMenu` (M8) |
+| `src/components/MobileMenu.jsx` | `function MobileMenu({ id, open, onClose, links, currentId, cta, triggerRef })` | P4 | Panelen i M8. `links` är `{ id, label }[]`, `cta` är `{ href, text }` eller `null` |
+| `src/components/MenuIcon.jsx`, `CloseIcon.jsx`, `SearchIcon.jsx` | `function MenuIcon()` etc. | P4, P9 | M9 |
+| `src/components/Hero.jsx` | `function Hero()` | P5 | M10 |
+| `src/components/Section.jsx` | `function Section({ id, title, children, className })` | P11 | Etiketten i M13 och `Reveal` runt rubriken (P10) |
+| `src/components/Projects.jsx` | `function Projects()` | P7–P10 | Filtrets state, live-raden, rutnätet, tomma lägen, faserna i M12 |
+| `src/components/ProjectFilter.jsx` | `function ProjectFilter({ counts, total, techOptions, filter, onChange })` | P8, P9 | M11 |
+| `src/components/ProjectCard.jsx` | `function ProjectCard({ project })` i P7. **`index` läggs till i P10**, som `function ProjectCard({ project, index })`, när `Reveal` (M12) är dess första konsument (rättat 2026-11-07, R1) | P7, P10 | M4. `isComplete` finns inte längre här. Kortets id hämtas ur `cardIds(slug)` från G1-rättningen (R2) |
+| `src/components/Chip.jsx` | `function Chip({ children, pressed, onToggle })` | P9 | M15 |
+| `src/components/SkillChip.jsx` | `function SkillChip({ name })` | P11 | `<li><Chip>{name}</Chip></li>` |
+| `src/components/Reveal.jsx` | `function Reveal({ as, index, className, children, ...rest })` + `export function enableReveal()` + `export const REVEAL_INDEX_MAX` | P10 | M12 |
+| `src/components/KeyFigures.jsx` | `function KeyFigures()` | P12 | M14 |
+| `src/components/About.jsx` | `function About()` | P6, P12 | Importerar `isComplete` ur `src/lib/projectRules.js` och läser `about.link.projectSlug`. Renderar `KeyFigures` |
+| `src/components/Contact.jsx` | `function Contact()` | P13 | M16 |
+| `src/components/Footer.jsx` | `function Footer()` | P14 | M16 |
+| `src/lib/projectRules.js` | `isComplete`, `projectHref` (P6), `cardIds` (G1-rättningen, R2), `EMPTY_FILTER`, `countByCategory`, `filterProjects` (P8), `collectTech`, `normalizeText` (P9) | P6–P9 | Ren JS, ingen React |
+| `src/data/sections.js` | `HERO_ID`, `PROJECTS_ID`, `SKILLS_ID`, `ABOUT_ID`, `CONTACT_ID`, `MAIN_ID`, `MENU_ID`, `ROOT_ID`, `sections` | G1-rättningen (`MENU_ID`, `ROOT_ID`) | Varje fast id på sidan (R2). `Header.jsx` importerar `MENU_ID`, `main.jsx` importerar `ROOT_ID` |
+| `src/lib/sectionLabel.js` | `sectionIndexLabel(sections, id)` | P11 | M13 |
+| `src/lib/keyFigures.js` | `keyFigures({ projects, skillGroups })` | P12 | M14 |
+| `src/data/profile.js` | `export const profile` | P5 | M10 |
+
+**`src/lib/`** är en ny mapp: ren JavaScript utan React, JSX och DOM. Den importeras
+av komponenterna **och** av `scripts/validate-data.mjs`, så att en regel bara står
+på ett ställe.
+
+### Besluten efter G1 (2026-11-07): R1–R6, genomförs i paketet G1-rättningen
+
+G1 gav EJ GODKÄND med sju fynd (`LARDOMAR.md`, posterna 2026-11-07). Fynd 1 och 2
+är byggarens (kommentarerna). Fynd 3–7 och de fem exportmarkeringarna avgörs här.
+Varje beslut står också på sin gamla plats, rättat där. **Allt genomförs i ett
+paket, G1-rättningen**, som byggaren kör direkt efter detta och efter att
+kommentarsrättningen är klar. Ingen punkt skjuts upp till ett senare paket utom de
+som är namngivna i P9, P10 och P12.
+
+| # | Fynd | Beslut i en mening | Rättat på plats |
+|---|------|--------------------|-----------------|
+| R1 | 3 | Scroll-marginalen ligger på `<li>` (`.item`), godkänd som byggd. `kortets-li-scroll-marginal` är stängd. `index` läggs till i `ProjectCard` i P10 | A4, M4 (markup och CSS-block), komponenttabellen |
+| R2 | 4 | En grind för alla id på sidan, härledd ur `*_ID`-exporterna i `sections.js`, `sections[].id`, skillgruppernas `id` och kortens id ur `cardIds(slug)`. Plus en grind mot dubbla tekniker | M3 (typedef och grindtabell), `sections.js` i Datamodell, komponenttabellen |
+| R3 | 5 | Brickan blir `display: block` med `white-space: nowrap`, `overflow: hidden`, `text-overflow: ellipsis` och `padding: 9px var(--space-3)`. Golvet mäts mot `.media`, och `scrollHeight <= clientHeight` är en grind | M4 (CSS-blocket och punkterna under det) |
+| R4 | 6 | Grinden på rotens `clientWidth` med menyn öppen utgår. I stället mäts rotens, `#projects` och panelens `getBoundingClientRect().width`, med negativ kontroll `scrollbar-gutter: auto` | M10b punkt 3, M18 |
+| R5 | 7 | De sex tas bort nu. `--radius-chip` kommer tillbaka i P9, `--duration-reveal`, `--reveal-index` och `--reveal-stagger` i P10 och `--text-figure` i P12. `--space-9` kommer inte tillbaka. Tokengrinden fäller en deklaration utan konsument (M5h) | M5, M5h, Spacing |
+| R6 | — | Samma form gäller alla fem exportmarkeringar: `<fil>.js: <export> saknas eller är inte <en array \| ett objekt>`. De fyra i `validate-data.mjs` är godkända som de står, och `profile-export-saknas` genomförs nu | M8b, och här |
+
+#### R2 — Sidans id: en grind, och listan skrivs aldrig två gånger
+
+**Källorna, i denna ordning.** Ordningen gör att `<källa 2>` i meddelandet alltid
+är den fil som ska ändras, alltså Jelals datafil när krocken gäller hans data.
+
+| # | Källa | Hur den läses | `<källa>` i meddelandet |
+|---|-------|---------------|-------------------------|
+| 1 | Varje export i `sections.js` vars namn slutar på `_ID` och vars värde är en sträng | `Object.entries(mod)` | `sections.js <NAMN>`, t.ex. `sections.js CONTACT_ID` |
+| 2 | `sections[i].id` vars värde **inte** redan är ett `*_ID`-värde | `mod.sections` | `sections.js sections[<i+1>]` |
+| 3 | Varje unik `skillGroups[].id` (`<h3 id>` i `Skills.jsx`) | `mod.skillGroups` | `skills.js grupp "<id>"` |
+| 4 | För varje unik slug som matchar `a-z0-9-`: varje värde i `cardIds(slug)` | `mod.projects` och `cardIds` ur `src/lib/projectRules.js` | `projects.js projekt "<slug>"` |
+
+- **Varför 2 hoppar över värden som redan är konstanter:** `sections` byggs av
+  konstanterna (`{ id: PROJECTS_ID, … }`), och samma värde är samma element. Bara ett
+  id som skrivits som literal i listan är en egen källa.
+- **Varför bara unika värden i 3 och 4:** dubbletter inom en fil fälls redan av
+  sin egen grind. Att ta med dem hade gett två rader för samma fel (M3b, "Dubbla
+  larm").
+- **Varför alla poster i 4, inte bara de som `isComplete` släpper igenom:** ett
+  ofullständigt projekt får ett id i samma stund som Jelal fyller i det sista
+  fältet. Krocken ska synas innan dess.
+- **Utanför grinden, med skäl:** id:n ur `useId()` i `ContactForm.jsx` innehåller
+  kolon eller `«»` och kan aldrig vara lika med en sträng som matchar `a-z0-9-`.
+- **Varje fast id i en komponent ska vara en `*_ID`-export i `sections.js`.**
+  `MENU_ID` flyttar dit ur `Header.jsx`, och `ROOT_ID = 'root'` läggs till och läses
+  av `main.jsx`. Verifiering i G1-rättningen: `grep -rnE "id=\"|id=\{'|getElementById\('" src --include=*.jsx`
+  ger noll träffar utanför kommentarer.
+
+**Signaturer:**
+
+```js
+/* src/lib/projectRules.js — ProjectCard och valideringen läser samma funktion,
+ * så att suffixen bara står på ett ställe. */
+/** Varje id ett projektkort sätter i DOM. */
+/** @param {string} slug  @returns {{ item: string, title: string, desc: string, newTab: string }} */
+export function cardIds(slug)
+// item === slug, title === `${slug}-title`, desc === `${slug}-desc`, newTab === `${slug}-newtab`
+
+/* scripts/validate-data.mjs — körs EFTER loopen över ACTIVE, före utskriften. */
+/** Fäller varje id som sidan sätter mer än en gång. */
+/** @param {{ sections?: object, skills?: object, projects?: object }} loaded  Modulerna som gick att importera, nycklade på namnet i ACTIVE. */
+/** @returns {Promise<void>} */
+async function checkPageIds(loaded)
+```
+
+- `ProjectCard.jsx` ersätter sina tre mallsträngar med `cardIds(slug)`. `<li>` får
+  `id={ids.item}`.
+- Loopen över `ACTIVE` sparar varje importerad modul i `loaded[name]`. Saknas
+  `sections`, `skills` eller `projects` i `loaded`, eller är dess lista inte en
+  array, hoppar `checkPageIds` över **den källan**. Felet är då redan rapporterat
+  av filens egen grind, och bygget är rött.
+- `cardIds` importeras på samma sätt som `isComplete` i `checkProjects`. Gick
+  importen inte att göra är felet redan rapporterat, och källa 4 hoppas över.
+- **Meddelandet**, en rad per krock:
+  `sidans id: "<id>" sätts av både <källa 1> och <källa 2>`.
+  Exempel: `sidans id: "contact" sätts av både sections.js CONTACT_ID och projects.js projekt "contact"`.
+- **Dubbla tekniker** fälls i `checkProjects`, i samma block som tech-grinden och
+  bara när `tech` är en giltig lista. En rad per teknik som upprepas, med värdet så
+  som det står första gången:
+  `projects.js: tekniken "<värde>" står mer än en gång i tech (post <n>, "<slug>")`.
+  Raden räknas som en fälld post för teckengrinden (M3b), automatiskt genom
+  `errorsBefore`.
+- **Vilken legitim ändring får fälla grinden?** En ny sektion, grupp eller projekt
+  vars id redan finns. Åtgärden är att byta id i den fil meddelandet nämner sist,
+  och då tiger grinden.
+
+**Prövas i G1-rättningen, i en isolerad kopia, med exit-kod och utskrift:**
+
+1. Korrekt data: kod 0, OK-raden oförändrad.
+2. `slug` lika med varje fast id i tur och ordning: `hero`, `projects`, `skills`,
+   `about`, `contact`, `main`, `mobile-menu`, `root`. Varje ger kod 1 och **exakt
+   en** rad `sidans id: …`, med rätt `<NAMN>`.
+3. `slug: 'backend'` (en skillgrupp): en rad med `skills.js grupp "backend"`.
+4. Två projekt, `awle` och `awle-title`: en rad med `projects.js projekt "awle"` och
+   `projects.js projekt "awle-title"`.
+5. En skillgrupp med `id: 'contact'`: en rad med `skills.js grupp "contact"`.
+6. `tech: [..., 'Zod', 'Zod']` och `tech: [..., 'Zod', 'zod']`: var sin rad
+   `tekniken "Zod" …`, och ingen rad `saknar typsnittsroll`.
+7. Rättat: kod 0.
+
+#### R6 — Exportmarkeringarna: samma form för alla fem
+
+**Ja, M8b:s form gäller alla fem.** Formen är `<fil>.js: <exportnamn> saknas eller är
+inte <en array | ett objekt>`, samma som A1:s `skills.js: skillGroups saknas eller
+är inte en array`. Den namnger filen, exporten och den typ som krävs, och det är
+allt Jelal behöver för att hitta felet. Alla fem står redan i den formen i koden
+och godkänns **som de står**:
+
+| Markering | Meddelandet, godkänt |
+|-----------|----------------------|
+| `validate-data.mjs:64` (`checkSections`) | `sections.js: sections saknas eller är inte en array` |
+| `validate-data.mjs:256` (`checkProjects`) | `projects.js: projects saknas eller är inte en array` |
+| `validate-data.mjs:403` (`checkAbout`) | `about.js: about saknas eller är inte ett objekt` |
+| `validate-data.mjs:520` (`checkContact`) | `contact.js: contact saknas eller är inte ett objekt` |
+| `validate-data.mjs:598-600`, `profile-export-saknas` (`checkProfile`) | `profile.js: profile saknas eller är inte ett objekt` (M8b) |
+
+- Radnumren gäller före G1-rättningen. Markeringen hittas på meddelandets text.
+- Varje markering tas bort och ersätts med `/* Beslutat i ARKITEKTUR.md: R6 */`.
+  För profile står även raden `OPEN-KEY: profile-export-saknas`, och den tas bort i
+  samma ändring.
+- **Utanför R6, och fortfarande öppna:** `validate-data.mjs:71` (`HERO_ID`
+  saknas), `:542` (url i `contact.js`) och `:888` (ett namn i `ACTIVE` utan
+  kontroll). De är inte exportmarkeringar, och ingen har bett om dem här. De står
+  kvar.
+- Prövas: för var och en av de fem exporterna, i en isolerad kopia, (a) exporten
+  borttagen, (b) satt till `null`, (c) rättad. (a) och (b) ger exakt den raden,
+  (c) tiger.
+
+#### Exakt vad G1-rättningen ändrar
+
+Förutsättning: byggarens kommentarsrättning (fynd 1 och 2) i `Header.jsx`,
+`global.css`, `Hero.module.css`, `tokens.css`, `Projects.module.css` och
+`validate-data.mjs` är klar och överlämnad. Annars ändrar två agenter samma filer.
+
+| Fil | Ändring | Beslut |
+|-----|---------|--------|
+| `src/components/ProjectCard.module.css` | Ta bort `EJ I ARKITEKTUR` + `OPEN-KEY: kortets-li-scroll-marginal` ovanför `.item`, ersätt med `/* Beslutat i ARKITEKTUR.md: A4 (R1) */`. `.item` rörs inte | R1 |
+| `src/components/ProjectCard.module.css` | `.brand`: `display: inline-flex` → `display: block`, ta bort `align-items: center`, `padding: 0 var(--space-3)` → `padding: 9px var(--space-3)`, lägg till `white-space: nowrap`, `overflow: hidden`, `text-overflow: ellipsis` sist. Kommentar: invarianten (en rad, klipps med ellips, hela titeln står i `h3`), inga tal | R3 |
+| `src/lib/projectRules.js` | Lägg till `export function cardIds(slug)` enligt signaturen i R2 | R2 |
+| `src/components/ProjectCard.jsx` | Importera `cardIds`. Ersätt `titleId`, `descId`, `newTabId` och `id={slug}` med värdena ur `cardIds(slug)`. Signaturen förblir `ProjectCard({ project })` | R1, R2 |
+| `src/data/sections.js` | Lägg till `export const MENU_ID = 'mobile-menu';` och `export const ROOT_ID = 'root';`. Kommentaren: varje fast id på sidan är en `*_ID`-export här, och valideringen läser dem | R2 |
+| `src/components/Header.jsx` | Ta bort den lokala `const MENU_ID`, importera `MENU_ID` ur `sections.js` | R2 |
+| `src/main.jsx` | `document.getElementById(ROOT_ID)`, med `ROOT_ID` importerad ur `sections.js` | R2 |
+| `index.html` | Kommentar vid `<div id="root">`: värdet är `ROOT_ID` i `src/data/sections.js` och ändras på båda ställena | R2 |
+| `scripts/validate-data.mjs` | Spara modulerna i `loaded`, lägg till `checkPageIds(loaded)` efter loopen, lägg till grinden för dubbla tekniker i `checkProjects` | R2 |
+| `scripts/validate-data.mjs` | De fem exportmarkeringarna: ta bort och ersätt med `/* Beslutat i ARKITEKTUR.md: R6 */`, inklusive `OPEN-KEY: profile-export-saknas` | R6 |
+| `scripts/validate-tokens.mjs` | Lägg till grinden i M5h, **innan** tokens tas bort, och visa att den ger exakt sex rader | R5 |
+| `src/styles/tokens.css` | Ta bort `--radius-chip`, `--duration-reveal`, `--text-figure`, `--reveal-index`, `--reveal-stagger` och `--space-9`. Ingen kommentar får nämna dem (M5h) | R5 |
+
+**Mäts i G1-rättningen** (varje mått med vyport och rullningslistvillkor):
+
+1. R2:s sju prövningar och R6:s tre indata per export, med utskrift.
+2. M5h:s tre steg.
+3. R3:s fem grindar och två negativa kontroller vid de fem vyporterna, med Awles
+   riktiga titel **och** syntessträngarna. Med Awle ska brickan se ut som före
+   (bredd och höjd ±0,5 px mot ett mått taget före ändringen).
+4. R4:s fyra grindar och den negativa kontrollen. De uppmätta talen med
+   `scrollbar-gutter: auto` skrivs in i överlämningen, eftersom min förutsägelse
+   inte är mätt.
+5. Ett hopp till `#awle` landar på samma avstånd som före (90 px vid 360 och 1280).
+6. För varje `OPEN-KEY: <nyckel>` i `src/` och `scripts/`: `grep -c "<nyckel>" ARKITEKTUR.md`.
+   `kortets-li-scroll-marginal` och `profile-export-saknas` ska inte längre finnas
+   i koden.
+7. `npm run validate:data`, `npm run build` gröna, och tokengrinden tyst.
+
+**PLAN.md:** paketet G1-rättningen står inte där. Det är projektledarens att lägga
+in, mellan G1 och P8, med `Ingår:` enligt tabellen ovan. P9, P10 och P12 får var
+sin punkt i `Ingår:` om tokens de deklarerar (R5) och P10 om `index` (R1), enligt
+lärdomen 2026-11-07 om uppskjutna beslut. Jag rör inte `PLAN.md`.
+
+---
+
 ## Paket A — besluten för innehållsuppdraget 2026-10-08, och var de står
 
 Dokumentet är stort. Detta är enda stället som listar paket A:s beslut; varje
@@ -159,15 +2284,15 @@ beslut står på den plats där det gamla beslutet stod, enligt konventionen ova
 |---|--------|---------|-----------------|
 | A1 | Grinden för `skills.js` blir strukturell; korsreferensen och `MERGED` utgår | "A1 — Grinden för `skills.js` är strukturell" (i "Validering av datafilerna") | D |
 | A2 | `filled`, den orange fyllningen och teckenförklaringen tas bort | "A2 — `filled`, den orange fyllningen och teckenförklaringen" (i "`src/data/skills.js`") | D, E |
-| A3 | Inga ikoner, inget nytt beroende | "A3 — Inga ikoner" | E |
+| A3 | ~~Inga ikoner~~, inget nytt beroende — **"inga ikoner" UPPHÄVT 2026-11-07, se M9** (inget nytt beroende gäller) | "A3 — Inga ikoner" | E |
 | A4 | "Hem och Ekonomi" som länk, båda lägena, via `about.link` | "A4 — Hem och Ekonomi som länk" (i "`src/data/about.js`") | F |
-| A5 | Heros två knappar, stilarna och mätserien | "A5 — Hero: knapparna, mätserien och 360 px" | B, C |
-| A6 | Kortet, chipset och rutnätet 3/2/1 | "A6 — Kortet, chipset och rutnätet" (i "Skills — rendering") | E |
+| A5 | Heros två knappar, stilarna och mätserien — **stilarna UPPHÄVDA 2026-11-07, se M10** (knapparna och mätserien gäller) | "A5 — Hero: knapparna, mätserien och 360 px" | B, C |
+| A6 | Kortet, chipset och rutnätet 3/2/1 — **chipset UPPHÄVT 2026-11-07, se M15** (kortet och rutnätet gäller, med nya tokennamn) | "A6 — Kortet, chipset och rutnätet" (i "Skills — rendering") | E |
 | A7 | Rollraden `Systemutvecklare · Fullstack` och `<title>` | "A7 — Rollraden" | B |
 | A8 | Footerns kontrast: `--color-text-dim` tas bort | "A8 — Footerns kontrast" (i "Färger") | eget paket |
 | A9 | Grind mot kvarglömda tokenreferenser; grinden mot uppräknande kommentarer avfärdad | "A9 — Kommentarer som räknar upp tokens" | eget paket |
 | A10 | Inga ikonlänkar i hero — inte GitHub, inte LinkedIn | "A10 — Inga ikonlänkar i hero" | B |
-| A11 | Ingen animation införs | "A11 — Ingen animation införs" | E |
+| A11 | ~~Ingen animation införs~~ — **UPPHÄVT 2026-11-07, se M12** | "A11 — Ingen animation införs" | E |
 | A12 | Uppdragstexten måste in i repot innan paket B startar | "A12 — Uppdragstexten måste bo i repot" | B, D, F |
 | A13 | `.hero`-blocket (hero fyller första skärmen) genomförs i **ett eget paket K**, mellan B och C | "A13 — blocket genomförs i ett eget paket K" (i "A5 … Hero fyller första skärmen på dator") | **K**, och K blockerar C |
 | A14 | Citattecknen i uppdragsfilen är avgränsare, inte innehåll — gäller ingressen OCH "Om mig" | "A14 — Citattecknen i `UPPDRAG-2026-10-07.md` är avgränsare" | F (B är redan rätt byggt) |
@@ -194,6 +2319,9 @@ alltså ingen ändring i hero; den tredje (A13) är ett bygge som inget paket ba
 Numreringen fortsätter på A-serien därför att `PLAN.md` säger att arkitektens
 nummer används överallt — de är beslut i samma uppdrag, inte ett nytt uppdrag.
 
+> **UPPHÄVT 2026-11-07, se M1:** stycket nedan mätte filen för ett typsnitt som tas
+> bort i P2. Teckengrinden mäter nu tre familjer, var och en mot sina fält.
+
 **Teckentäckningen (punkt 8 i uppdraget till mig) behövde inget beslut:** varje
 tecken uppdragets nya texter innehåller finns i
 `src/styles/fonts/didact-gothic-latin-400.woff2` — uppmätt 2026-10-08 ur filens
@@ -205,6 +2333,10 @@ skriver; mätningen gällde de strängar jag kunde läsa.
 
 ## Mappstruktur
 
+> **Trädet nedan är skrivet om 2026-11-07 (moderniseringen, M1, M3, M5, M9, M12–M15).**
+> De rader som är tillagda eller ändrade bär paketnumret. Mappreglerna under trädet
+> gäller, med de två tillägg som står där.
+
 ```
 Portfoolie-Jelalq/
 ├─ index.html                     Vites entry. <html lang="sv">, <title>, favicon → /assets/logo-mark-32.png
@@ -215,23 +2347,27 @@ Portfoolie-Jelalq/
 ├─ scripts/
 │  ├─ optimize-images.mjs         Engångsskript (paket 2). Körs manuellt, ingår INTE i build.
 │  ├─ validate-data.mjs           Grindar src/data/. Första steget i build.
-│  ├─ font-coverage.mjs           Läser cmap ur woff2-filen. Anropas av validate-data.mjs.
-│  └─ validate-tokens.mjs         Grindar att varje --color-*-referens finns i tokens.css (A9). I build.
+│  ├─ font-coverage.mjs           Läser cmap ur en woff2-fil. Anropas av validate-data.mjs, en gång per fil (M1d).
+│  ├─ optimize-project-images.mjs Projektbilder 4:3, webp, vänsterförankrad beskärning (M4, P6). Manuellt, inte i build.
+│  └─ validate-tokens.mjs         Grindar att varje custom property som nämns är deklarerad i tokens.css (M5g, P2). I build.
 ├─ assets-source/                 KÄLLBILDER. Publiceras ALDRIG — ligger utanför public/.
 │  ├─ logo.png                    ORIGINAL 1254x1254 — läses, skrivs aldrig över
-│  └─ profile.jpg                 ORIGINAL 4688x5051 — läses, skrivs aldrig över
+│  ├─ profile.jpg                 ORIGINAL 4688x5051 — läses, skrivs aldrig över
+│  └─ projects/                   En PNG per projekt, t.ex. awle.png (M4)
 ├─ public/                        Allt här kopieras rakt ut i dist/. Endast genererat.
 │  └─ assets/
 │     ├─ profile/                 Genererade profilvarianter (paket 2A)
+│     ├─ projects/                <namn>-{600,1200}.webp (M4, P6)
 │     ├─ logo-mark-{32,96,192}.png        Kvadratisk ikon, favicon/apple-touch (paket 2B)
-│     └─ logo-mark-tight-{96,192}.png     Tajt märke för headern (paket 3)
+│     └─ logo-mark-tight-{96,192}.png     Tajt märke för headern och footern (paket 3, M16)
 └─ src/
-   ├─ main.jsx                    Monterar <App />. Importerar tokens.css + global.css i den ordningen.
-   ├─ App.jsx                     Komponerar sidan: Header, Hero, Skills, Projects, Contact, Footer.
-   ├─ components/                 En komponent per fil + en .module.css per komponent
-   ├─ data/                       Ren data. Innehåll som Jelal redigerar. Ingen JSX här.
-   └─ styles/                     Global CSS: fonts.css, tokens.css, global.css.
-      └─ fonts/                   didact-gothic-latin-400.woff2. Refereras ur fonts.css.
+   ├─ main.jsx                    Monterar <App />. Importerar fonts.css, tokens.css, global.css i den ordningen och anropar enableReveal() före render (M12, P10).
+   ├─ App.jsx                     Komponerar sidan: Header, <main> med Hero och sections.map(...), Footer.
+   ├─ components/                 En komponent per fil + en .module.css per komponent (ikonerna har ingen, M9)
+   ├─ data/                       Ren data. Innehåll som Jelal redigerar. Ingen JSX här. Ny: profile.js (M10, P5).
+   ├─ lib/                        NY (M3, P6). Ren JavaScript utan React/JSX/DOM: projectRules.js, sectionLabel.js, keyFigures.js.
+   └─ styles/                     fonts.css, tokens.css, global.css, type.module.css (M1).
+      └─ fonts/                   urbanist-latin-var.woff2, manrope-latin-var.woff2, jetbrains-mono-latin-400.woff2 + OFL-*.txt (M1, P2).
 ```
 
 Regler för mapparna:
@@ -240,8 +2376,12 @@ Regler för mapparna:
   får aldrig innehålla innehållsdata (skill-namn, projekt, kategorier) hårdkodad.
 - `src/data/` — innehåller endast `export const`-arrayer/objekt. Ingen import av
   React, ingen logik, inga funktioner.
-- `src/styles/` — innehåller bara `fonts.css`, `tokens.css`, `global.css` och
-  mappen `fonts/`. All komponentspecifik CSS bor i respektive `.module.css`.
+- `src/styles/` — innehåller bara `fonts.css`, `tokens.css`, `global.css`,
+  `type.module.css` (tillagd 2026-11-07, M1) och mappen `fonts/`. All
+  komponentspecifik CSS bor i respektive `.module.css`.
+- `src/lib/` — **tillagd 2026-11-07 (M3).** Rena funktioner och konstanter. Ingen
+  import av React, ingen JSX, ingen åtkomst till `document` eller `window`. Läses av
+  både komponenter och `scripts/`.
 - `assets-source/` — källbilderna. Läses av `scripts/optimize-images.mjs`, skrivs
   aldrig. Ligger **utanför** `public/` och följer därför aldrig med i leveransen.
 - `public/assets/` — **endast genererat**. Ingenting läggs här för hand.
@@ -310,10 +2450,11 @@ regression som upptäcks fyra paket senare är dyr att spåra.
 | React 19 + Vite (mall `react`, JavaScript) | Beslutat i briefen. Portfolion demonstrerar den stack som står i kompetenslistan. Mallen `react` (Babel-plugin) framför `react-swc` eftersom skillnaden bara är byggtid på ett projekt av den här storleken och Babel-varianten är den som är bäst dokumenterad. | TypeScript (inte efterfrågat, Jelals lista säger JavaScript), Next.js (ingen SSR eller routing behövs för en one-pager) |
 | **CSS Modules** (`*.module.css`), inbyggt i Vite | Noll nya beroenden — Vite kompilerar `.module.css` direkt. Klassnamn skopas automatiskt, så sex komponenter kan använda `.title` utan att krocka och utan att vi måste upprätthålla en namnkonvention med disciplin. Stilen ligger bredvid komponenten, vilket gör den lätt att hitta och lätt att ta bort. | Global BEM-fil (växer till en enda lång fil, kräver mänsklig disciplin för att inte läcka), Tailwind/UI-ramverk (förbjudet i briefen), CSS-in-JS (runtime-beroende utan nytta här) |
 | Designtokens som CSS-variabler i `:root` i `styles/tokens.css` | Variabler kaskaderar rakt in i CSS Modules, så de två strategierna krockar inte. Ett ställe att ändra färg/spacing på. | SASS-variabler (hade krävt `sass` som beroende och tappat runtime-kaskaden) |
-| Systemfont-stack, ingen webbfont | Noll nätverksbegäran, ingen FOUT, inget beroende. Loggan bär den grafiska identiteten — texten ska vara neutral och lugn. | Google Fonts / Inter via npm (extern begäran eller extra beroende för marginell vinst) |
+| ~~Systemfont-stack, ingen webbfont~~ — **UPPHÄVT 2026-11-07, se M1.** Gäller: tre självhostade woff2 (Urbanist, Manrope, JetBrains Mono), latin, i `src/styles/fonts/`. Inget beroende, inget externt anrop | ~~Noll nätverksbegäran, ingen FOUT, inget beroende. Loggan bär den grafiska identiteten — texten ska vara neutral och lugn.~~ | Google Fonts CDN (externt anrop, render-blockerande, och ingen fil för teckengrinden att mäta), `@fontsource/*` via npm (tre nya beroenden för filer som kan hämtas en gång) |
 | `sharp` som **devDependency** | ImageMagick saknas på maskinen (verifierat i briefen). sharp är standardverktyget i Node för detta, körs en gång manuellt och hamnar aldrig i bundlen. | Manuell export i bildprogram (går inte att upprepa eller verifiera), `vite-imagetools` (pluggar in sig i byggkedjan för en enda bild) |
 | **oxlint** — mallens egen linter behålls som den levereras | Dev-beroende, noll runtime-kostnad. Vite-mallen `react` ger i dag (vite 8.3.0) `.oxlintrc.json` + `oxlint`, **inte** ESLint. Regeln `react/rules-of-hooks: error` finns med, vilket är exakt det skydd vi ville ha. | Att byta ut mallens linter mot ESLint (nytt beroende och ny konfiguration för ett skydd vi redan har), att strippa lintern helt (tar bort ett verkligt skyddsnät gratis) |
-| Inga andra runtime-beroenden | Briefen: "Inga externa beroenden utöver React/Vite om det inte är motiverat". Ankarnavigering, pills, grid och gråskala löses med plattformen. | react-router (one-pager använder ankare), framer-motion (ingen animation är beställd), ikonbibliotek (inga ikoner är beställda) |
+| Inga andra runtime-beroenden | Briefen: "Inga externa beroenden utöver React/Vite om det inte är motiverat". Ankarnavigering, pills, grid och gråskala löses med plattformen. **Tillägg 2026-11-07:** filtret, mobilmenyn, scroll-reveal och ikonerna löses också med plattformen (M8, M9, M11, M12) | react-router (one-pager använder ankare, och Jelals beslut 1: inga detaljsidor), framer-motion (~~ingen animation är beställd~~ — **skälet UPPHÄVT 2026-11-07:** animation är beställd, men CSS-transitions och en `IntersectionObserver` räcker, M12), ikonbibliotek (~~inga ikoner är beställda~~ — **skälet UPPHÄVT 2026-11-07:** tre ikoner behövs, och tre inline-SVG kostar mindre än ett beroende, M9) |
+| **Lighthouse via `npx`, inte i `package.json`** (tillagt 2026-11-07, M17) | Ett engångsverktyg för slutkontrollen. Det hör inte till bygget och ska inte installeras med det | `lighthouse` som devDependency (ett stort beroendeträd för en mätning per leverans), PageSpeed Insights (kräver en publik adress) |
 
 | **`@hcaptcha/react-hcaptcha`** | hCaptchas **officiella** React-paket. Sköter skriptladdning, livscykel i React:s modell, skydd mot omrendering och — avgörande — `resetCaptcha()`, som arkitekturen kräver i två lägen. hCaptchas JavaScript laddas externt i **alla** alternativ, så frågan är inte "beroende eller inte" utan vem som skriver limmet. | Web3Forms klientskript som fyller en `div` React äger, **utan dokumenterad återställning**; och att ladda `api.js` själva, vilket flyttar hela livscykeln till oss att underhålla |
 
@@ -324,7 +2465,11 @@ Inget mer.**
 
 ## Designtokens
 
-### Accentfärg — mätning
+### Accentfärg — mätning — accenttokenets värde UPPHÄVT 2026-11-07, se M5
+
+> Mätningen av loggans orange står kvar som fakta om loggan. **Sidans accenttoken
+> är `--accent: #ff6b00`** enligt uppdraget och Jelals beslut 4. Raden "Ändra den
+> inte" i `tokens.css` skrivs om i P2.
 
 Accentfärgen är **pixelmätt** ur `assets-source/logo.png` (1254 × 1254 px) med
 System.Drawing: hela bilden avsökt med var tredje pixel, filtrerat på mättade
@@ -350,7 +2495,10 @@ mer mättad och rödare än båda — B-kanalen är i praktiken noll, inte 24–
 byggt på briefens ungefärliga värde hade accentfärgen på sidan aldrig matchat
 loggan som ligger bredvid den i headern.
 
-### Färger
+### Färger — UPPHÄVT 2026-11-07, se M5
+
+**Gäller i stället:** `:root` och översättningstabellen i "M5 — Tokens". Tabellen
+nedan är historik, och inget av dess namn finns efter P2.
 
 Mörk bas rakt igenom, i loggans nästan-svarta ton. Orange är enda accenten.
 
@@ -374,7 +2522,11 @@ Mörk bas rakt igenom, i loggans nästan-svarta ton. Orange är enda accenten.
 | `--color-error` | `#F85149` | **Formulärets uppmärksamhetsfärg**: obligatorisk-asterisken och felmeddelandena. 5,87:1 mot `--color-bg`. Binds om i `.surface-light` till `#C0271E`. Jelals beslut 2026-10-07 — se "Asterisken är röd". |
 | `--color-field-border` | `#606068` | Ram på formulärfält. **3,16:1** mot `--color-bg` — WCAG 1.4.11 kräver 3:1 för gränssnittskomponenters avgränsning, och `--color-border` (1,38:1) duger inte. |
 
-### A8 — Footerns kontrast: `--color-text-dim` tas bort — beslutat 2026-10-08
+### A8 — Footerns kontrast: `--color-text-dim` tas bort — beslutat 2026-10-08 — tokennamn och kvoter UPPHÄVDA 2026-11-07, se M5
+
+> Principen gäller: varje texttoken bär sin uppmätta kvot mot varje bakgrund det
+> står på. Namnen och talen nedan gäller den gamla paletten. De nya kvoterna mäts i
+> P2 (M5).
 
 Uppmätt (`LARDOMAR.md` 2026-10-08, incheckat som `ee67b2e`):
 `Footer.module.css:20` sätter `color: var(--color-text-dim)` på text i
@@ -475,13 +2627,16 @@ loggan. Orange text på `--color-bg` är samma par omvänt, alltså också 6,95:
 | `--space-6` | `2rem` (32px) |
 | `--space-7` | `3rem` (48px) |
 | `--space-8` | `4rem` (64px) |
-| `--space-9` | `6rem` (96px) |
+| ~~`--space-9`~~ | ~~`6rem` (96px)~~ — **UPPHÄVT 2026-11-07, se R5:** ingen konsument, tas bort i G1-rättningen |
 | `--space-10` | `8rem` (128px) |
 
 Sektionernas vertikala luft: `padding-block: clamp(var(--space-8), 10vw, var(--space-10))`.
 Det ger de generösa marginalerna som förebilden har, utan att spräcka 360 px.
 
-### Typografi
+### Typografi — UPPHÄVT 2026-11-07, se M1 och M5
+
+**Gäller i stället:** typsnittstokens och grundtypografi i M1, och textskalan,
+radhöjderna, spärrningarna och vikterna i M5. Det nedan är historik.
 
 ```
 --font-sans: 'Didact Gothic', system-ui, -apple-system, "Segoe UI", Roboto,
@@ -512,7 +2667,11 @@ Det ger de generösa marginalerna som förebilden har, utan att spräcka 360 px.
 
 Max radlängd för brödtext: `--measure: 62ch`.
 
-### Typsnittet — Didact Gothic, en enda vikt
+### Typsnittet — Didact Gothic, en enda vikt — UPPHÄVT 2026-11-07, se M1
+
+> Hela avsnittet och dess fem underavsnitt är historik. Varje underavsnitt bär sin
+> egen märkning. Principerna som lever vidare står i M1: självhostat, ingen preload,
+> `font-display: swap` och mät artefakten.
 
 Jelals val 2026-10-03. Teckensnittet finns **bara i vikt 400**. Begäran om
 `wght@100..900` returnerar enbart `font-weight: 400`-deklarationer.
@@ -520,7 +2679,7 @@ Jelals val 2026-10-03. Teckensnittet finns **bara i vikt 400**. Begäran om
 Det är inte en detalj. Det tar bort ett av typografins två huvudverktyg, och allt
 nedan följer av det.
 
-#### 1. Vikt är inte längre en designparameter
+#### 1. Vikt är inte längre en designparameter — UPPHÄVT 2026-11-07, se M1 (vikterna 400/600/700 och grundtypografin)
 
 ```css
 /* global.css */
@@ -539,7 +2698,7 @@ designval.**
 Webbläsarens standard gör annars `h1`–`h4` och `strong` feta utan att någon bett
 om det, och det är just den tysta fetningen vi stänger av.
 
-#### 2. Hierarkin bärs av storlek, färg, versaler, spärrning och luft
+#### 2. Hierarkin bärs av storlek, färg, versaler, spärrning och luft — UPPHÄVT 2026-11-07, se M1 och M5
 
 | Nivå | Vad som skiljer den | Ändring |
 |------|---------------------|---------|
@@ -566,7 +2725,7 @@ mellan 400 och 500 nätt och jämnt synlig.
 navlänkarna har `--color-text-muted`. Distinktionen flyttar från vikt till färg,
 och den var redan tillgänglig i tokentabellen.
 
-#### 3. Självhostad woff2, inte Google Fonts CDN
+#### 3. Självhostad woff2, inte Google Fonts CDN — filen och placeringen UPPHÄVDA 2026-11-07, se M1 (principen gäller)
 
 **Beslut: filen bor i projektet.**
 
@@ -591,7 +2750,7 @@ import './styles/tokens.css';
 import './styles/global.css';
 ```
 
-#### 4. Delmängd, visning och reserv
+#### 4. Delmängd, visning och reserv — grinden och filen UPPHÄVDA 2026-11-07, se M1 och M1d (latin, `swap` och ingen preload gäller)
 
 **Endast `latin`.** Sidan är på svenska. `å ä ö` ligger i latin-delmängden, liksom
 tankstrecket i `Klient–server-kommunikation` (U+2013 ingår i U+2000–206F).
@@ -637,7 +2796,7 @@ nedladdat typsnitt.
 valdes bort. Det kräver uppmätta metrik-värden per plattform och är mer maskineri
 än problemet motiverar vid en fil på 20 kB från samma ursprung.
 
-#### 5. Vad byggaren måste mäta om efter bytet
+#### 5. Vad byggaren måste mäta om efter bytet — UPPHÄVT 2026-11-07, se M1 och M6 (mätningarna efter bytet står i P2 och P3)
 
 Ett nytt typsnitt ändrar textens mått. Tre saker som i dag är verifierade kan
 spricka, och **inget av dem larmar av sig självt**:
@@ -657,7 +2816,12 @@ Dessutom: `dist/`-gränsen räknas om. Teckensnittet lägger ca 15–30 kB på n
 472 kB, alltså långt under 1 MB — men siffran ska mätas och rapporteras, inte
 antas.
 
-### Layout, radier och övrigt
+### Layout, radier och övrigt — UPPHÄVT 2026-11-07, se M5, M6 och M18
+
+**Gäller i stället:** `--content-max: 1180px`, `--content-padding: 1.5rem`,
+`--header-height: calc(var(--nav-offset) + var(--nav-height))`, radierna
+`3px`/`4px`/`8px`/`14px`/`999px` och tiderna `--duration-*` med `--ease-out`.
+`--transition` finns inte. `--z-header: 10` står kvar. Tabellen nedan är historik.
 
 | Variabel | Värde | Kommentar |
 |----------|-------|-----------|
@@ -888,6 +3052,8 @@ export const SKILLS_ID   = 'skills';
 export const ABOUT_ID    = 'about';
 export const CONTACT_ID  = 'contact';
 export const MAIN_ID     = 'main';   // <main id>, mål för skip-länken
+export const MENU_ID     = 'mobile-menu'; // mobilmenyns panel (G1-rättningen, R2)
+export const ROOT_ID     = 'root';   // <div id> i index.html, monteringspunkten (G1-rättningen, R2)
 
 export const sections = [ /* se tabellen nedan, id hämtas ur konstanterna ovan */ ];
 ```
@@ -896,6 +3062,16 @@ Id:na exporteras som namngivna konstanter eftersom kod ibland behöver ett enski
 id (logga-länken, heros egen `<section id>`). **Ett sektions-id får aldrig
 förekomma som bokstavlig sträng i en `.jsx`-fil** — se "Rättelser efter
 granskningen av paket 1".
+
+**Tillägg 2026-11-07 (R2): varje id som sidan sätter med ett fast värde är en
+`export const <NAMN>_ID` i denna fil, och bara här.** Det gäller inte bara
+sektionerna: `MENU_ID` flyttar hit ur `Header.jsx`, och `ROOT_ID` läses av
+`main.jsx`. Valideringen hämtar listan över sidans fasta id genom att läsa varje
+export vars namn slutar på `_ID`, så att listan aldrig skrivs två gånger. Ett nytt
+fast id i en komponent läggs alltså till här, och då omfattas det av grinden utan
+att någon minns att lägga in det. Det enda undantaget är `index.html`, som inte
+kan importera. Där står `root` som literal, med en kommentar som pekar på
+`ROOT_ID`.
 
 Innehållet är beslutat och ska vara exakt detta, i denna ordning:
 
@@ -1011,7 +3187,7 @@ En **skill-post ser exakt ut så här**, inget mer:
 { name: 'React (Hooks, Context)' },
 ```
 
-#### A2 — `filled`, den orange fyllningen och teckenförklaringen, beslutat 2026-10-08
+#### A2 — `filled`, den orange fyllningen och teckenförklaringen, beslutat 2026-10-08 — tokennamnen UPPHÄVDA 2026-11-07, se M5 (beslutet gäller)
 
 **`filled` TAS BORT. Det får inte stå kvar, inte ens med en kommentar om ett
 framtida paket.** Den nya listan har ingen ifylld/dämpad-dimension — allt i den är
@@ -1123,7 +3299,7 @@ De nio grupperna, i denna ordning, med id:
 
 Innehållet skrivs av **exakt** ur Jelals meddelande, tecken för tecken.
 
-#### Vad som utgår, uppräknat
+#### Vad som utgår, uppräknat — tokennamn och `.surface-light` UPPHÄVDA 2026-11-07, se M2 och M5 (uppräkningen gäller)
 
 Det här är en betydande mängd verifierat arbete, och det ska stå utskrivet vad som
 faller — inte försvinna tyst.
@@ -1200,7 +3376,7 @@ grupp har `title`.
 Rubrikordningen håller: ett `h1` (namnet), `h2` per sektion ur `sections.js`, `h3`
 per kompetensgrupp.
 
-#### Chipsens färg — ett utseendeval att lägga fram
+#### Chipsens färg — ett utseendeval att lägga fram — UPPHÄVT 2026-11-07, se M15 (chipsen får filterchipsens stil)
 
 Med `filled` borta finns ingen skillnad kvar för orange att bära.
 
@@ -1228,7 +3404,14 @@ Lösta i förväg, och skrivna här så att ingen försöker igen:
 | "lugn in-animation om sidan redan använder animationer" | Sidan gör inte det, och specifikationen säger då själv "annars ingen". **Ingen animation.** |
 | "kontrollera även undersidor" | **Det finns inga.** Sidan är en enda |
 
-#### A3 — Inga ikoner, bekräftat som beslut 2026-10-08
+#### A3 — Inga ikoner, bekräftat som beslut 2026-10-08 — UPPHÄVT 2026-11-07, se M9
+
+> **Gäller i stället:** tre egna inline-SVG (meny, stäng, sök), som var och en har
+> en funktion och står med en dold text eller etikett. **Inget nytt beroende
+> gäller fortfarande**, och den raden i tabellen nedan står fast. Kompetenskorten
+> får fortfarande inga ikoner. Det skälet ("en gissad symbol är sämre än ingen")
+> gäller, och uppdraget 2026-11-07 ber inte om dem. Det som upphävs är "inga
+> ikoner" som regel för hela sidan.
 
 Premissen var fel — projektet har noll ikonberoenden, och det är ett medvetet
 läge: jag har avvisat ikonbibliotek tidigare med motiveringen att inga ikoner är
@@ -1565,12 +3748,16 @@ Ingen post har omdöpts, omstavats eller fått ändrad versalisering utöver de
 nära-dubbletter som räknas upp ovan. Ingen kategori har tagits bort utan att dess
 innehåll fått ett namngivet nytt hem.
 
-### Ljus yta — Kompetenser får vit bakgrund, beslutat av Jelal 2026-10-05
+### Ljus yta — Kompetenser får vit bakgrund, beslutat av Jelal 2026-10-05 — UPPHÄVT 2026-11-07, se M2
+
+> **`.surface-light` tas bort helt i P2.** Den nya designen är mörk rakt igenom
+> (Jelals beslut 4). Hela avsnittet och vart och ett av dess underavsnitt är
+> historik och bär sin egen märkning.
 
 Jelal: *"sektionen med kompetens sidan ha bakrunden vit."* Varje färg i sektionen
 är vald för mörk botten, så det här är ingen enradsändring.
 
-#### Mekanismen: tokenen binds om på en ytklass, inte nya tokennamn
+#### Mekanismen: tokenen binds om på en ytklass, inte nya tokennamn — UPPHÄVT 2026-11-07, se M2
 
 ```css
 /* tokens.css, direkt efter :root */
@@ -1639,7 +3826,7 @@ Klassen bor i **`tokens.css`**, inte i `Skills.module.css`: alla färgvärden i
 projektet ligger i en fil, och en ljus yta är ett sidbegrepp som en annan sektion
 ska kunna återanvända utan att importera skills modul.
 
-#### De dämpade pillarna — härledda ur kvoten, inte ur färgen — premissen UPPHÄVD 2026-10-08 av A2, men värdena står kvar
+#### De dämpade pillarna — härledda ur kvoten, inte ur färgen — premissen UPPHÄVD 2026-10-08 av A2, men värdena står kvar — även värdena UPPHÄVDA 2026-11-07, se M2
 
 > **Läs noten "`--color-border` på ljus yta efter A2" nedan innan du rör ett värde
 > här.** Pillarnas två tillstånd finns inte längre (A2), så **motiveringen** i
@@ -1668,7 +3855,7 @@ inte är det.
 > bakgrunden gick från vitt till `#F4F4F6`: samtliga tre tappade sin kvot och
 > fick nya värden.
 
-##### `--color-border` på ljus yta efter A2 — värdet står kvar, motiveringen byts
+##### `--color-border` på ljus yta efter A2 — värdet står kvar, motiveringen byts — UPPHÄVT 2026-11-07, se M2
 
 Avgjort i städpasset 2026-10-08. **Frågan:** `--color-border: #cfcfd4` i
 `.surface-light` är ett **omräknat** värde, och målkvoten (`#D9D9DE` mot vitt,
@@ -1713,7 +3900,7 @@ kvoten sattes för den dämpade pillens **text** och bärs i dag av annan text p
 ljus yta. Värdet står kvar av samma skäl som ovan — kvoten är målet, konsumenten
 är utbytbar.
 
-#### De ifyllda pillarna — accenten ändras inte, och kan inte heller räddas — premissen UPPHÄVD 2026-10-08 av A2
+#### De ifyllda pillarna — accenten ändras inte, och kan inte heller räddas — premissen UPPHÄVD 2026-10-08 av A2 — helt UPPHÄVT 2026-11-07, se M2
 
 > **UPPHÄVT som motivering.** Det finns inga ifyllda pillar (A2) och chipsen är
 > neutrala (A6), så orange är inte längre en **yta** i kompetenssektionen. Beslutet
@@ -1756,7 +3943,7 @@ oförändrat.
 Det här är ett medvetet avsteg från 1.4.11 med ett utskrivet skäl, inte ett
 förbiseende.
 
-#### Var den ljusa ytan sitter efter omordningen — Jelals val
+#### Var den ljusa ytan sitter efter omordningen — Jelals val — UPPHÄVT 2026-11-07, se M2 (Jelals beslut 4)
 
 Med den nya ordningen blir rytmen:
 
@@ -1784,7 +3971,7 @@ Byter ytan sektion flyttar `.surface-light` med den, och de ombundna tokenen fö
 automatiskt — det var hela poängen med att binda om i stället för att införa egna
 namn.
 
-#### Accenten på ljus yta — binds om, och det motsäger inte det tidigare beslutet
+#### Accenten på ljus yta — binds om, och det motsäger inte det tidigare beslutet — UPPHÄVT 2026-11-07, se M2
 
 Byggaren mätte på ett riktigt projektkort:
 
@@ -1813,7 +4000,7 @@ botten ljusnar hovern (`#FC6F03` → `#FD9140`), på ljus mörknar den
 (`#AE4802` → `#8F3A01`). Regeln är inte "hover är ljusare" utan **"hover rör sig
 bort från underlaget"**. Räta inte ut inkonsekvensen — den är poängen.
 
-#### Kortet får en egen yta igen
+#### Kortet får en egen yta igen — UPPHÄVT 2026-11-07, se M2 och M4
 
 `--color-surface` band om till `#F4F4F6`, alltså exakt sektionens egen bakgrund:
 kortets kontrast mot sektionen blev **1,000:1**. Kortet var inget kort längre.
@@ -1833,7 +4020,7 @@ ljusare.
 > Ramen är lika subtil som på mörk botten (1,38:1), där den accepterades. **Att
 > behandla den som ett fel skulle ge tunga ramar överallt för att lösa ingenting.**
 
-#### Bakgrunden blir `#F4F4F6` — och vad som följde med
+#### Bakgrunden blir `#F4F4F6` — och vad som följde med — UPPHÄVT 2026-11-07, se M2
 
 Jelal 2026-10-05: *"Gör bakgrunden på kompetenser lite mindre vit den är för
 vit."* Han valde `#F4F4F6` ur `#FAFAFB` / `#F4F4F6` / `#EDEDF0`.
@@ -1871,7 +4058,7 @@ ytan ligger över**. Att den ljusa ytan blir mätbart sämre tillgänglig än de
 det ska stå rätt. Ett medvetet avsteg vars storlek är felskriven är på väg att bli
 ett omedvetet.
 
-#### Fokusringen binds om — och varför samma tal duger här men inte där
+#### Fokusringen binds om — och varför samma tal duger här men inte där — UPPHÄVT 2026-11-07, se M2 och M5 (principen om redundanta signaler gäller)
 
 `--color-focus` är ett eget token, inte `--color-accent`. Det följer alltså inte
 med en ombindning av accenten, och mot vitt ger `#FC6F03` **2,832:1** — under
@@ -1897,7 +4084,7 @@ olika svar, och skillnaden är inte godtycklig:
 är redundant.** Pillen har två reservsignaler. Fokusringen har noll. Därför får den
 inte ligga under tröskeln ens med marginal.
 
-#### Det tysta felet som inte hann bli ett fel
+#### Det tysta felet som inte hann bli ett fel — UPPHÄVT 2026-11-07, se M2
 
 Hade den mörkare orangen stått kvar hade accenten bytts men ringen inte. Inne i
 den vita sektionen hade fokusmarkeringen behållit originalorangen **utan att någon
@@ -1931,7 +4118,7 @@ vara uttömmande, inte stickprov — det är frånvaron av element som dolde fel
 slutliga bakgrunden `#F4F4F6` ger originalringen `#FC6F03` **2,579:1** — under
 3:1. Den ombundna `#C25102` ger 4,275:1, uppmätt i renderad sida.
 
-#### Underlag om frågan kommer upp igen
+#### Underlag om frågan kommer upp igen — UPPHÄVT 2026-11-07, se M2
 
 Jelal bad 2026-10-05 om en mörkare orange, fick siffrorna nedan, valde `#D65B02`
 begränsat till `.surface-light` — och ångrade sig innan något syntes: *"återgå
@@ -1960,7 +4147,7 @@ sak till som gäller oavsett: en ljus variant vore en **härledning** av den mö
 inte en egen färg, så de måste behålla samma kulör. Blir det aktuellt ska
 invarianten mätas — högst 5° kulörskillnad — inte kommenteras.
 
-#### Sektionsavgränsarna löser sig själva
+#### Sektionsavgränsarna löser sig själva — UPPHÄVT 2026-11-07, se M2 (alla gränser ritas i `--line` på mörk yta)
 
 Linjen hör till den **andra** syskonsektionen, så den ritas i skills överkant och
 ärver skills ombundna `--color-border`:
@@ -1984,7 +4171,7 @@ Vid hero → skills gör dessutom färgsteget grått → vitt nästan hela jobbe
 linjen blir knappt synlig där. Det är rätt: jag beslutade tidigare att den gränsen
 bär dubbel markering, och viktningen mellan de två signalerna är fri.
 
-#### ~~Till Jelal: rent vitt eller brutet vitt~~ — AVGJORT
+#### ~~Till Jelal: rent vitt eller brutet vitt~~ — AVGJORT — UPPHÄVT 2026-11-07, se M2
 
 Sektionen är 2410 px hög på desktop och 6634 px på mobil. Det är en stor ljus yta
 att scrolla igenom på en i övrigt nästan svart sida.
@@ -2014,7 +4201,14 @@ skiljer alternativen åt ska man säga det, så att den som väljer vet att det 
 > teckenförklaringen är avgjorda i A2. Avsnittet står kvar som historik över hur
 > den gamla listan renderades.
 
-#### A6 — Kortet, chipset och rutnätet, beslutat 2026-10-08
+#### A6 — Kortet, chipset och rutnätet, beslutat 2026-10-08 — chipset UPPHÄVT 2026-11-07, se M15; tokennamnen UPPHÄVDA, se M5
+
+> **Gäller:** rutnätet 3/2/1 och kortet (`.grid`, `.card`, `.chips`), med namnen
+> översatta genom M5 (`--surface`, `--line`). **Upphävt:** `.chip`-deklarationen
+> nedan. Chipset får filterchipsens stil via `Chip.jsx` (M15), och
+> `SkillChip.module.css` tas bort i P11. `.cardTitle` byts mot mono-eyebrow-stilen
+> på `h3` (M15). Punkten "Ingen `transition` och ingen `animation` i Skills-filerna"
+> är upphävd av M12. Korten får `Reveal`.
 
 Ett kort per grupp, `h3` som rubrik, kompetenserna som chips i en riktig
 `<ul>`/`<li>`. **Dessa deklarationer är bindande tecken för tecken**
@@ -2291,7 +4485,11 @@ Förvald text, omvänd så att den beskriver undantaget i stället för regeln:
   bara han kan bekräfta — säger han att de hellre ska beskrivas som "ännu inte
   genomgångna" eller något annat, är det hans ord som gäller.
 
-### `src/data/projects.js` — projekt (fylls av Jelal, tom i paket 5)
+### `src/data/projects.js` — projekt (fylls av Jelal, tom i paket 5) — UPPHÄVT 2026-11-07, se M3
+
+**Gäller i stället:** typedefen, konstanterna och grindarna i "M3 — Projektdatan"
+(`slug`, `title`, `category`, `status`, `description`, `tech`, `image`,
+`liveUrl`, `githubUrl`). Genomförs i P6. Typedefen nedan är historik.
 
 ```js
 /**
@@ -2310,7 +4508,13 @@ export const projects = [];
 `projects.length === 0`. Inga fält utöver dessa sex — ingen bild, inget årtal,
 ingen kategori, ingen "featured"-flagga. De kan läggas till den dag de behövs.
 
-### Projektkortens bredd — läget med ETT projekt
+### Projektkortens bredd — läget med ETT projekt — UPPHÄVT 2026-11-07, se M4
+
+> **Gäller i stället:** rutnätet 3/2/1 med `minmax(0, 1fr)` och gap 24 px, utan tak
+> på kortet. Jelals val B (2026-10-05) upphävs av hans eget beslut 4 ("den nya
+> designen gäller"), och uppdraget ritar rutnätet. Ett ensamt kort blir en
+> tredjedel brett från 900 px. Underavsnitten är historik och bär var sin
+> märkning. Genomförs i P7.
 
 Det här är **Jelals första läge**: han lägger in ett projekt, laddar om, och ser
 resultatet. Mitt layoutavsnitt var tyst om det.
@@ -2333,7 +4537,7 @@ Men kortet är fortfarande 1120 px. Det är ett utseendeval, och tre vägar finn
 
 **Jelal har valt B**, efter att ha sett uppmätta tal för båda mekanismerna.
 
-#### Taket ligger på KORTET, inte på spåret
+#### Taket ligger på KORTET, inte på spåret — UPPHÄVT 2026-11-07, se M4
 
 > **Rättelse.** Jag skrev formeln som ett tak på *spåret*, medan tabellen beskrev
 > ett tak på *kortet*. De ger olika layouter, och byggaren mätte båda:
@@ -2366,7 +4570,7 @@ kort än spår.
 **Framräknat ur sidans egna token:** `--measure` = 556,5 px (62ch i Didact Gothic)
 + `--space-5` × 2 = 48 px → **604,5 px**.
 
-#### Två påståenden i mitt eget beslut som inte stämde
+#### Två påståenden i mitt eget beslut som inte stämde — UPPHÄVT 2026-11-07, se M4
 
 **1. "Kortet ska vara exakt så brett som dess egen text vill vara."** Fel ordval.
 Med tre projekt är kortet 357 px och beskrivningen pressas till 307 px — smalare
@@ -2387,7 +4591,7 @@ som en stapel, och ett ensamt kort ska inte bli en banderoll. Sida vid sida ger
 det första, taket det andra. Att kortet krymper när samlingen växer är hur ett
 rutnät fungerar, inte ett pris man betalar.
 
-#### De 2 pixlarna från kortets ram — ingen avvikelse
+#### De 2 pixlarna från kortets ram — ingen avvikelse — UPPHÄVT 2026-11-07, se M4
 
 Kortet har `border: 1px` per sida. Med `box-sizing: border-box` blir
 innehållsbredden 604,5 − 48 − 2 = **554,5 px**, alltså 2 px under `--measure`
@@ -2409,7 +4613,7 @@ effekt.
 > smalnar beskrivningen märkbart och formeln behöver då räkna med ramen. Det är
 > inget som ska göras i förväg, men det är skälet talet står utskrivet här.
 
-#### Kort i samma rad får inte sträckas ut
+#### Kort i samma rad får inte sträckas ut — UPPHÄVT 2026-11-07, se M4 (korten i en rad är lika höga med avsikt: `height: 100%`, och innehållet ligger överst via `align-content: start` i `.body`)
 
 Byggaren satte `align-content: flex-start` och `align-items: flex-start` på
 teknik-etiketterna **förebyggande**, med samma uppmätta skäl som i skills:
@@ -2421,7 +4625,11 @@ innehåll inuti kortet aldrig får ärva kortets utsträckta höjd. Ett kort bli
 av sin granne, inte av sitt eget innehåll, och då ska dess etiketter, knappar och
 bilder ligga kvar högst upp. Markeringen `EJ I ARKITEKTUR` kan tas bort.
 
-### `src/data/about.js` — Om mig
+### `src/data/about.js` — Om mig — fältnamnet `projectId` UPPHÄVT 2026-11-07, se M3
+
+> I typedefen nedan heter fältet `projectSlug` från P6 och pekar på projektets
+> `slug`. Allt annat gäller. Om mig får dessutom nyckeltalsraden under texten
+> (M14, P12).
 
 Ny sektion, beslutad av Jelal 2026-10-07. Han sa **"en liten sektion"**, och det
 är en del av specifikationen, inte en artighet.
@@ -2445,7 +4653,11 @@ export const about = {
 };
 ```
 
-#### A4 — "Hem och Ekonomi" som länk, båda lägena, beslutat 2026-10-08
+#### A4 — "Hem och Ekonomi" som länk, båda lägena, beslutat 2026-10-08 — fältnamnen UPPHÄVDA 2026-11-07, se M3 (beslutet gäller)
+
+> `about.link.projectId` heter `about.link.projectSlug` och pekar på projektets
+> `slug` (P6). Målet är kortets `<li id={slug}>` (M4), och `isComplete` importeras
+> ur `src/lib/projectRules.js`. Mekanismen och båda lägena gäller oförändrade.
 
 Uppdraget säger att frasen **"Hem och Ekonomi" i texten ska vara en länk som
 scrollar till projektet**. Två saker i premissen stämmer inte med koden, och båda
@@ -2493,14 +4705,28 @@ Varför ett fält i datan och inte de tre alternativen:
 | HTML i datan (`dangerouslySetInnerHTML`) | Nej. Aldrig i detta projekt |
 | Länk till `#projects` i stället | Den skulle alltid vara klickbar och landa på tomma läget "Än är listan tom". En länk som ser ut att gå till ett projekt och går till ett tomrum är sämre än ingen länk |
 
-**Målets id ligger på kortet.** `ProjectCard` sätter `id={project.id}` på kortets
-`<li>`, och kortet får samma scroll-marginal som sektionerna, med **samma uttryck
-ur samma token** så att de två inte kan driva isär:
+**Målets id ligger på kortets `<li>`, och marginalen sitter på samma element —
+omskrivet 2026-11-07 (R1), efter M4.** `ProjectCard` sätter `id={slug}` på
+`<li className={styles.item}>` (M4, "Kortets markup"). Sedan M4 är `.card` länken
+`<a>` **inuti** `<li>`, alltså inte ankarmålet. Invarianten är oförändrad:
+**ankarmålet** får samma scroll-marginal som sektionerna, med **samma uttryck ur
+samma token** så att de två inte kan driva isär. Tecken för tecken, först i
+`ProjectCard.module.css`:
 
 ```css
-/* ProjectCard.module.css */
-.card { scroll-margin-top: calc(var(--header-height) + var(--space-4)); }
+.item {
+  scroll-margin-top: calc(var(--header-height) + var(--space-4));
+}
 ```
+
+Det besvarar `OPEN-KEY: kortets-li-scroll-marginal`: **godkänd som byggd** i
+`ProjectCard.module.css`. Markeringen tas bort i G1-rättningen och ersätts med
+`/* Beslutat i ARKITEKTUR.md: A4 (R1) */`. Uppmätt av G1: ett hopp till `#awle`
+landar på 90 px med regeln och på 0 px utan den, vid 360 och 1280 px.
+
+> ~~`.card { scroll-margin-top: calc(var(--header-height) + var(--space-4)); }`~~ —
+> **UPPHÄVT 2026-11-07 (R1):** skrevs när `.card` var `<li>`. Efter M4 hade regeln
+> satt marginalen på länken, som inte är ankarmålet.
 
 Utan den landar kortet under den klibbande headern. Regeln i `global.css` träffar
 bara `section[id]` och ska **inte** breddas till `[id]` — den hade då fångat
@@ -2571,6 +4797,11 @@ Validering: `paragraphs` är en icke-tom array av icke-tomma strängar, plus
 > avgjord.
 
 ### `src/data/contact.js` — kontaktuppgifter (paket 6)
+
+> **Exemplet nedan har GitHub-adressen ifylld. Det är UPPHÄVT sedan Jelal sa "ta
+> bort github" (2026-10-06).** I filen står `{ label: 'GitHub', url: null }`, och
+> M16 bekräftar 2026-11-07 att länken inte renderas så länge den är `null`.
+> Typedefen och reglerna gäller.
 
 Alla uppgifter är nu givna (`BRIEF.md`, 2026-10-06).
 
@@ -2679,7 +4910,7 @@ i samma formulär ger ett godtyckligt utfall beroende på ordning.
 
 Dolda fält: `access_key` och honeypot enligt nedan. Ingen telefon.
 
-#### Asterisken är röd — beslutat av Jelal 2026-10-07
+#### Asterisken är röd — beslutat av Jelal 2026-10-07 — tokennamnen UPPHÄVDA 2026-11-07, se M5 (beslutet gäller, och tokenet heter `--error`)
 
 ~~**Asterisken blir orange, `var(--color-accent)`.** Att införa en ny färg enbart
 för den vore att betala mest för det som bär minst.~~
@@ -2721,7 +4952,7 @@ alltid intill etikettens ord, och ovanför formuläret står förklaringen en g�
 
 > \* obligatoriskt fält
 
-#### Felmeddelandena använder samma röda
+#### Felmeddelandena använder samma röda — tokennamnen UPPHÄVDA 2026-11-07, se M5 (beslutet gäller)
 
 **Ja — förslaget är rätt och jag tar det.**
 
@@ -2736,7 +4967,7 @@ uppmärksamhetsfärg.
 
 Mot `--color-bg` ger den 5,87:1, vilket räcker för brödtext.
 
-#### Det röda binds om på ljus yta
+#### Det röda binds om på ljus yta — UPPHÄVT 2026-11-07, se M2
 
 ```css
 .surface-light { --color-error: #C0271E; }   /* 5,39:1 mot #F4F4F6 */
@@ -2751,7 +4982,7 @@ token prövas mot varje yta, inte bara mot de ytor där det råkar användas.
 
 Kulören hålls, 3,3° mot det mörka lägets 2,7°.
 
-#### Platshållare är förenliga med etiketterna
+#### Platshållare är förenliga med etiketterna — tokennamnen UPPHÄVDA 2026-11-07, se M5 och M16 (platshållaren i `--ink-subtle` på fältets `--bg`, P13 mäter)
 
 Mitt beslut löd "synliga `<label>` ovanför varje fält, **ingen platshållare som
 etikett**". Specifikationen vill ha platshållare **som komplement**. Det är inte en
@@ -3002,7 +5233,12 @@ besökaren ger upp. **Ingen komplicerad regex.**
 Ingen minimilängd på meddelandet. Taket på 5000 finns för att hindra orimliga
 inlägg, inte för att styra hur någon skriver.
 
-#### Utseende på mörk yta
+#### Utseende på mörk yta — UPPHÄVT 2026-11-07, se M16 och M5
+
+> **Gäller i stället:** formuläret ligger i en `--surface`-panel. Fälten har
+> `--bg` som botten och `--line-strong` som ram (ca 3,89:1 mot panelen och 4,17:1
+> mot `--bg`). Fokusringen är `--accent`. P13 mäter. Tabellen nedan är historik.
+> **Synliga `<label>` ovanför varje fält gäller fortfarande.**
 
 Kontaktsektionen ligger på `--color-bg`, **inte** i `.surface-light`.
 
@@ -3027,7 +5263,7 @@ behövs här.
 försvinner när man börjar skriva, och då vet den som tappat tråden inte längre vad
 fältet var.
 
-#### ~~En rad om vart uppgifterna tar vägen~~ — BORTTAGEN av Jelal
+#### ~~En rad om vart uppgifterna tar vägen~~ — BORTTAGEN av Jelal (UPPHÄVT, ingen rad finns)
 
 ~~Under formuläret, i `var(--color-text-muted)`: "Formuläret skickas via tjänsten
 Web3Forms. Ditt namn och din e-postadress passerar deras servrar på vägen till
@@ -3043,12 +5279,19 @@ besökarens IP, vilket gör en integritetsrad **mer** relevant än när han tog 
 den, inte mindre. Det är framfört till honom som information. Vill han ha tillbaka
 den är formuleringen färdig.
 
-### Kontaktsektionen blir tvåspaltig — beslutat av Jelal 2026-10-07
+### Kontaktsektionen blir tvåspaltig — beslutat av Jelal 2026-10-07 — sidorna och DOM-ordningen UPPHÄVDA 2026-11-07, se M16
+
+> **Gäller i stället:** kontaktuppgifterna till **vänster och först i DOM**,
+> formuläret i en `--surface`-panel till höger, och `minmax(0, 2fr) minmax(0, 3fr)`
+> från 900 px. Uppdraget 2026-11-07 är nyare än Jelals val 2026-10-07 och säger
+> uttryckligen motsatsen, och hans beslut 4 avgör det. **Principen att visuell
+> ordning och Tab-ordning är densamma gäller.** Rubrikerna gäller. Genomförs i
+> P13.
 
 Jelal: *"De är nog bättre att kontakt är på högra sidan utav de man fyller i och
 inte ovanför."* Formuläret till vänster, kontaktuppgifterna till höger.
 
-#### DOM-ordningen byts också — inte bara den visuella
+#### DOM-ordningen byts också — inte bara den visuella — ordningen UPPHÄVD 2026-11-07, se M16 (principen gäller: DOM-ordning = visuell ordning)
 
 **Beslut: formuläret först i koden, länkarna efter.**
 
@@ -3072,7 +5315,7 @@ på smal skärm är en följd av hans beslut, inte en avvikelse från det.
 > han ha den högre upp på mobil är det hans beslut, och då en egen ändring med en
 > egen lösning.
 
-#### Spalterna
+#### Spalterna — UPPHÄVT 2026-11-07, se M16 (rutnätet och `.formPanel` står där tecken för tecken)
 
 ```css
 .grid {
@@ -3093,7 +5336,7 @@ samma regel som för pills och projektkort.
 **Formulärets block får `max-width: var(--measure)`.** Fälten ska inte bli bredare
 än en läsbar radlängd; en textarea på 700 px är obekväm att skriva i.
 
-#### Brytpunkten 900 är räknad, inte vald
+#### Brytpunkten 900 är räknad, inte vald — premissen UPPHÄVD 2026-11-07, se M16 (captchan är `compact`, 164 px. 900 står kvar som brytpunkt men bärs inte längre av widgeten)
 
 Projektet har 600 och 900. **600 går inte**, och skälet är captchan:
 
@@ -3129,7 +5372,7 @@ får ingen väg dit. Förvald text: **"Kontaktuppgifter"**. Neutral och beskriva
 **men den är min, inte Jelals, och ska godkännas** som alla texter som talar i
 hans namn.
 
-#### Verifiering av flytten
+#### Verifiering av flytten — UPPHÄVT 2026-11-07, se M16 (P13:s godkännandepunkter gäller)
 
 - **Tangentbordsordningen mot den visuella, i båda lägena.** Tabba igenom
   sektionen vid 360 px och vid 1280 px och jämför med den visuella ordningen.
@@ -3143,7 +5386,7 @@ hans namn.
 - **Inget annat på sidan ändras.** Jämför renderad utdata för header, hero, skills,
   projekt och footer före och efter.
 
-#### Verifiering
+#### Verifiering — tokennamn och `.surface-light`-punkten UPPHÄVDA 2026-11-07, se M2 och M5 (formulärpunkterna gäller och körs om i P13)
 
 Paket 7 lämnade fyra punkter oprövade **för att kontaktsektionen var tom**. Alla
 fyra blir prövbara nu och ska prövas:
@@ -3221,7 +5464,13 @@ Utöver det:
 - All kod, alla filnamn och alla variabler på engelska. All text som syns i
   gränssnittet på svenska.
 
-### Komponenter och exakta signaturer
+### Komponenter och exakta signaturer — tio rader UPPHÄVDA 2026-11-07, se M-avsnittets komponenttabell
+
+> **UPPHÄVT 2026-11-07 för raderna Header, Section, Hero, Skills, SkillChip,
+> Projects, ProjectCard, Contact, About och Footer, se "Komponenter och signaturer
+> efter moderniseringen" i M-avsnittet.** Den tabellen gäller för dem. Raderna
+> nedan gäller för `App.jsx` och `ContactForm.jsx` och är historik för resten.
+> `isComplete` ligger i `src/lib/projectRules.js` från P6, inte i `ProjectCard.jsx`.
 
 | Fil | Signatur | Ansvar |
 |-----|----------|--------|
@@ -3239,9 +5488,15 @@ Utöver det:
 | `src/components/Footer.jsx` | `function Footer()` | `<footer>` med namn och årtal. Inget `id`, inget navmål. |
 
 Alla komponenter är funktionskomponenter utan `useState`/`useEffect` i paket 1–6.
-Den mobila navigationens eventuella toggle hör till paket 7.
+Den mobila navigationens eventuella toggle hör till paket 7. **(Historik. Mobilmenyn
+är beslutad i M8 och byggs i P4.)**
 
-### Ankarnavigering — exakt mekanik
+### Ankarnavigering — exakt mekanik — punkt 6 UPPHÄVD och punkt 4 ändrad 2026-11-07, se M5 och M6
+
+> Punkt 4: formeln står kvar, men `--header-height` är nu
+> `calc(var(--nav-offset) + var(--nav-height))` (M6). Punkt 6 är UPPHÄVD: fokus är
+> `outline: 2px solid var(--accent); outline-offset: 2px;` (M5). Punkt 1–3 och 5
+> gäller oförändrade.
 
 1. `src/data/sections.js` är enda källan. Header mappar `sections` till länkar,
    och varje sektion får sitt `id` från samma lista. Ingen sträng skrivs två gånger.
@@ -3263,7 +5518,10 @@ Den mobila navigationens eventuella toggle hör till paket 7.
 6. Fokus: `:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }`
    globalt. Ingen `outline: none` någonstans.
 
-### Var sidmarginalen bor — beslutat efter paket 1
+### Var sidmarginalen bor — beslutat efter paket 1 — värdet UPPHÄVT 2026-11-07, se M18 (mekanismen gäller)
+
+> `--content-padding` är `1.5rem`, inte `clamp(1rem, 5vw, 3rem)`. Allt annat i
+> avsnittet gäller: marginalen ägs globalt, och modulerna äger bara centreringen.
 
 Arkitekturen sa var `padding-block` och `scroll-margin-top` hör hemma men inget om
 sidmarginalen. Byggaren lade den globalt. **Det beslutet står fast.**
@@ -3304,13 +5562,17 @@ Regler som följer av det:
   medvetet undantag med negativ marginal i sin egen modul. Inget sådant behov
   finns i planen i dag.
 
-### Hero får grå bakgrund — beslutat av Jelal 2026-10-05
+### Hero får grå bakgrund — beslutat av Jelal 2026-10-05 — UPPHÄVT 2026-11-07, se M10
+
+> **Gäller i stället:** hero har `--bg` med den orange glöden från höger kant
+> (M10), och det gråa övre fältet utgår helt (M5, M6). Underavsnitten är historik
+> och bär var sin märkning.
 
 Jelal har valt att **hero**, inte Kompetenser, är "första sektionen" och ska ha
 samma grå ton som headern. Header och hero blir alltså **ett sammanhängande grått
 fält**, och den mörka bottnen börjar först vid Kompetenser.
 
-#### Var bakgrunden sätts
+#### Var bakgrunden sätts — bakgrunden UPPHÄVD 2026-11-07, se M10 (platsen gäller: heros egen sektionsklass)
 
 **I `Hero.module.css`, på heros egen sektionsklass.** `Hero.jsx` renderar sin egen
 `<section id={HERO_ID}>`, så komponenten äger sitt eget utseende.
@@ -3327,7 +5589,7 @@ Byggaren upptäckte det när dess luminansfunktion läste genomskinligt som svar
 värt att minnas nästa gång något mäts: **genomskinlig är inte en färg, och en
 mätfunktion som tolkar den som svart ljuger tyst.**
 
-#### Varför tokenet delas
+#### Varför tokenet delas — UPPHÄVT 2026-11-07, se M5 (testet "vill vi ändra dem tillsammans" gäller som princip)
 
 `--color-surface-raised` bar tre jobb: headerns band, heros bakgrund och hover på
 kort. **Det delas i två.**
@@ -3361,7 +5623,7 @@ Namnet `--color-bg-top` parar med `--color-bg`: den mörka bottnen och det gråa
 övre fältet, båda sidbakgrunder. `surface-raised` betyder upphöjd yta, vilket
 passade ett 64 px-band men beskriver inte sidans största område.
 
-#### Gränsen hero → Kompetenser bär dubbel markering — avsiktligt
+#### Gränsen hero → Kompetenser bär dubbel markering — avsiktligt — UPPHÄVT 2026-11-07, se M10 (inget färgsteg finns längre, bara linjen)
 
 Där möts nu både `section[id] + section[id]`-linjen och ett färgsteg från grått
 till mörkt, medan de två andra sektionsgränserna bara har linjen.
@@ -3374,7 +5636,7 @@ Alternativet — att släcka linjen just där med `#hero + section[id]` — avf�
 två grunder: det inför ett id-specifikt undantag i en regel som i dag är
 id-oberoende, och det hade gett sidans viktigaste gräns dess svagaste markering.
 
-#### Cirkeln mot grå botten
+#### Cirkeln mot grå botten — UPPHÄVT 2026-11-07, se M10 (cirkeln står mot `--bg` och glöden. P5 mäter om strecket och tonplattan)
 
 **Det vita strecket klarar sig väl.** `#EDEDEF` mot `#1C1C1F` ger **14,5:1**, mot
 tidigare 16,8:1 mot `#0B0B0C`. Skillnaden är marginell och strecket förblir
@@ -3429,7 +5691,13 @@ aldrig stå som literal i en `.jsx`-fil (`LARDOMAR.md` 2026-10-02). Uppdragets
 `projects` och `contact` och byts inte — navet, `aria-current`-observern,
 sektionsavgränsarna och varje befintlig länk hänger på dem.
 
-#### Knappstilarna — bindande deklarationer
+#### Knappstilarna — bindande deklarationer — UPPHÄVT 2026-11-07, se M10
+
+> **Gäller i stället:** pill-knapparna i M10, tecken för tecken. Knapparnas antal,
+> texter, mål och ordning gäller oförändrade. Deklarationerna och kvoterna nedan är
+> historik, eftersom de bygger på det gråa fältet och den gamla paletten. Meningen
+> "Ingen tredje global klass införs" är upphävd av M12 för `.reveal` och ingenting
+> annat.
 
 De bygger på **det som redan finns**: formulärets `.button` har sedan paket 6 den
 fyllda orangen med `--color-on-accent`, och den paret är sidans "primära
@@ -3550,7 +5818,7 @@ markeringen är för öppna frågor om utseende och värden, inte för kodstrukt
 från och med detta beslut vore den dessutom förbjuden — en besvarad fråga får
 ingen markering (`LARDOMAR.md` 2026-10-05, ÅTERKOMMANDE).
 
-#### Heros `EJ I ARKITEKTUR`-markeringar — vilka som är besvarade nu
+#### Heros `EJ I ARKITEKTUR`-markeringar — vilka som är besvarade nu — UPPHÄVT 2026-11-07, se M10 (alla fyra kvarvarande är avgjorda där och tas bort i P5)
 
 Två av dem blir besvarade av detta beslut, eftersom A5 bygger på dem. De tas bort
 i samma ändring som genomförandet (`LARDOMAR.md` 2026-10-05, ÅTERKOMMANDE):
@@ -3630,7 +5898,10 @@ får vika (`padding-block`, sedan ingressens grad, sedan stopp) är ett
 **genomförande** och genomförs därför i K, aldrig av C. C mäter, redovisar och
 lämnar tillbaka. Det är samma gräns som gjorde detta beslut nödvändigt.
 
-#### Mätserien — detta ÄR kravet (paket C)
+#### Mätserien — detta ÄR kravet (paket C) — rad 2:s vyporter UTÖKADE 2026-11-07, se M10b
+
+> Rad 2 mäts sedan P5 på åtta vyporter i stället för fyra, med rullningslisten
+> reserverad. Listan står i M10b. Raderna 1 och 3–6 gäller som de står.
 
 Varje rad mäts på **elementens egna rektanglar** (`getBoundingClientRect()`), med
 **bevisad vyport**, aldrig genom att titta på sidan.
@@ -3638,13 +5909,20 @@ Varje rad mäts på **elementens egna rektanglar** (`getBoundingClientRect()`), 
 | # | Mätning | Villkor |
 |---|---------|---------|
 | 1 | Båda knappelementens `bottom` vid 360 × 640, 360 × 667, 360 × 740, 390 × 844 | `bottom <= window.innerHeight` i **samtliga** fall. 640 är golvet och får inte utelämnas för en bekvämare höjd |
-| 2 | Samma mätning vid 600 × 640, 900 × 700, 1280 × 800, 1600 × 900 | Samma villkor. Serien gör att en framtida brytpunkt inte kan smyga sönder kravet |
+| 2 | Samma mätning vid de åtta vyporterna i M10b (före 2026-11-07: 600 × 640, 900 × 700, 1280 × 800, 1600 × 900) | Samma villkor. Serien gör att en framtida brytpunkt inte kan smyga sönder kravet |
 | 3 | `section#hero .inner` `scrollWidth` mot `clientWidth` vid 360 px | Lika. Mätt mot **hero:s egen behållare**, inte mot sidan — slack absorberar fel, och absorberade fel larmar inte |
 | 4 | Samma, med `verksamhetsutvecklingsprojektledningsarbete` (43 tecken) programmatiskt insatt i `h1`, rollraden, ingressen **och båda knapptexterna** | Lika. En synteststräng, inte dagens text: dagens text bevisar ingenting om morgondagens. **Den gamla listans längsta strängar är inte längre måttet** |
 | 5 | `section#hero` höjd vid **1280 × 800** och **1280 × 900** | Kvoten `hero.getBoundingClientRect().height / (window.innerHeight - headerHöjd)` ligger mellan **0,80 och 1,15** i båda fallen. `headerHöjd` mäts i samma körning på `header`-elementets egen rektangel. **Exakt en kvot per rad** — kvoten mot hela vyporten är inget kriterium och redovisas inte. Formeln och bandets giltighetsområde är avgjorda i **A16** nedan |
 | 6 | Negativ kontroll | Tvinga fram ett överskridande genom den smalaste selektor som träffar det som prövas, redovisa **vilket element** som bar avvikelsen (`scrollWidth` plus elementet med största `right`), kontrollera `querySelectorAll(sel).length`, och visa att larmet upphörde när injektionen togs bort |
 
-##### A16 — Höjdkvoten har EN formel, och bandet gäller bara från 900 px — beslutat 2026-10-08
+##### A16 — Höjdkvoten har EN formel, och bandet gäller bara från 900 px — beslutat 2026-10-08 — nämnarens mätpunkt ändrad 2026-11-07, se M6
+
+> Headern har `margin-top: var(--nav-offset)` sedan M6, så
+> `header.getBoundingClientRect().height` är 58 och inte de 74 px headern tar i
+> flödet. **Nämnaren mäts som `window.innerHeight - header.getBoundingClientRect().bottom`
+> vid scroll 0.** Det är samma tanke (vyporten minus det headern tar) med en
+> mätpunkt som stämmer med den svävande naven. GRIND-raden jämför `bottom` med det
+> beräknade värdet av `--header-height`. Resten av A16 gäller.
 
 Paket D och K lämnade tillbaka att bandet mättes på två oförenliga sätt: mätserien
 rad 5 skrev nämnaren `(window.innerHeight - 64)`, medan A13 nedan räknade
@@ -3706,10 +5984,15 @@ ligger utanför bandet (hero högre än vyporten) och det är **inte ett fynd**:
   1280 × 800 och 1280 × 900. Bandets giltighetsområde ("från 900 px") säger var ett
   framtida höjdkrav **får** bo, inte att C ska mäta fler vyportar. C mäter exakt de
   sex raderna; en sjunde rad är ett beslut av mig, inte ett initiativ under
-  mätningen. Knapparnas underkant mäts däremot vid alla åtta vyportarna i rad 1
-  och 2, inklusive 900 × 700 — det är en annan mätning än höjdkvoten.
+  mätningen. Knapparnas underkant mäts däremot vid alla vyportar i rad 1
+  och 2 (tolv sedan 2026-11-07, se M10b), inklusive 900 × 700 — det är en annan
+  mätning än höjdkvoten.
 
-#### Vad som får vika, i denna ordning, och bara om mätningen kräver det
+#### Vad som får vika, i denna ordning, och bara om mätningen kräver det — steg 1 UPPHÄVT 2026-11-07, se M10b
+
+> Steg 1 är genomfört med selektorn `section.hero[id]` och gäller i alla bredder,
+> inte bara under 600 px: `.hero` förlorade på specificitet mot `section[id]`.
+> Dessutom har h1 en egen grad från 900 px. Steg 2 och 3 gäller.
 
 Mina överslag säger att allt ryms vid 360 × 640 utan åtgärd (summerat ca 478 px
 från dokumentets överkant till knapparnas underkant). **Mätningen avgör, inte
@@ -3725,7 +6008,12 @@ redovisas:
    inte bort och krymps inte, och dess tak (360/420 px) och den icke-avtagande
    serien står fast.
 
-### A7 — Rollraden: `Systemutvecklare · Fullstack` — beslutat 2026-10-08
+### A7 — Rollraden: `Systemutvecklare · Fullstack` — beslutat 2026-10-08 — platsen och teckensnittsmätningen UPPHÄVDA 2026-11-07, se M10 och M1
+
+> Rollraden gäller ordagrant. Den flyttar från en konstant i `Hero.jsx` till
+> `profile.role` i `src/data/profile.js` (P5), och `<title>`-kommentaren pekar dit.
+> Mätningen nedan gällde Didact Gothic. Att `·` finns i alla tre nya familjerna
+> grindas av grundmängden i M1d.
 
 **Uppdraget gäller.** Jelal sa 2026-10-07, tidigare samma vecka, "ta bort
 systemutvecklare längst upp och ersätt det med Fullstackutvecklare". Uppdraget är
@@ -3783,7 +6071,12 @@ betyder att det går att avstå.
 `.actions`-raden med adressen ur `contact.links`, aldrig som literal. Det står som
 öppen punkt i `PLAN.md`.
 
-### A11 — Ingen animation införs — avtryck 2026-10-08
+### A11 — Ingen animation införs — avtryck 2026-10-08 — UPPHÄVT 2026-11-07, se M12
+
+> **Uppdraget 2026-11-07 beställer animation** (scroll-reveal, stagger, hover-lyft,
+> in- och uttoning vid filtrering), och Jelals beslut 4 avgör det. Avtrycket nedan
+> var riktigt för det dåvarande uppdraget och står kvar som historik. Tabellen
+> "Tillåtet / Inte tillåtet" gäller inte.
 
 Uppdraget säger: *"Lugn in-animation när sektionen scrollas in, **om sidan redan
 använder animationer. Annars ingen.**"* Uppmätt: sidan har **två
@@ -3857,7 +6150,11 @@ omsluter hela texten, eller där det står ett ensamt citattecken, lämnas tillb
 hit. Regeln ovan ska kunna tillämpas utan bedömning; kan den inte det är det ett
 nytt beslut.
 
-### Sektionsavgränsare — beslutat av Jelal 2026-10-03
+### Sektionsavgränsare — beslutat av Jelal 2026-10-03 — tokennamn, headerlinjen och den ljusa ytan UPPHÄVDA 2026-11-07, se M2, M5 och M6
+
+> **Regeln gäller** (`section[id] + section[id]`, full bredd). Färgen är `--line`.
+> Gränsen header → hero finns inte längre som linje, eftersom headern är en
+> svävande pill med egen kant (M6). Tabellens rad med den ljusa ytan utgår (M2).
 
 Jelals ord: *"mellan varje sektion dra en liten och tunn streck så man ser vart
 sektionerna är på sidan"*. Det upphäver rättelse 6. Hans beslut gäller — han har
@@ -3979,7 +6276,7 @@ namnet.
 | ~~Avstånd ikon → text~~ | **UTGÅR** — ingen synlig text att hålla avstånd till |
 | ~~Namnets grad, vikt, spärrning, färg, radbrytning~~ | **UTGÅR.** Namnet är visuellt dolt i alla bredder; visuella regler på klippt text har ingen verkan och är död CSS. Se "Namnet döljs i alla bredder". |
 
-#### Headern är enfärgad — beslutat 2026-10-05
+#### Headern är enfärgad — beslutat 2026-10-05 — UPPHÄVT 2026-11-07, se M6 och M7 (navlänkarna är fortfarande `--ink`, alltså vita)
 
 > **Efterskrift 2026-10-07.** Hela detta avsnitt handlar om hur namnet skulle
 > skiljas från navlänkarna. **Frågan är nu utan föremål** — namnet syns inte
@@ -4014,7 +6311,7 @@ räcker.
 **Alternativet att i stället dämpa namnet avfärdas.** Det hade gjort identiteten
 underordnad navigationen, vilket är fel ordning i en header.
 
-#### Hover — mätningen säger tvärtom mot magkänslan
+#### Hover — mätningen säger tvärtom mot magkänslan — UPPHÄVT 2026-11-07, se M7 (hover på navlänkarna i pillen byter inte längre färg utan får en understrykning i `--ink`: orange text på den genomskinliga pillen över vitt innehåll gav 2,20:1)
 
 Oron var att orange hover skulle bli ett mindre tydligt steg mot nästan vitt än
 mot dämpat grått. **Uträknat blir det tvärtom:**
@@ -4037,7 +6334,12 @@ uträknade ur WCAG-luminans, inte avlästa i webbläsaren. Visar mätningen någ
 annat är underlinje det första alternativet, eftersom det inte kostar någon
 färgdimension.
 
-#### Distinktionsregister — vilket verktyg bär vilken skillnad
+#### Distinktionsregister — vilket verktyg bär vilken skillnad — tokennamnen UPPHÄVDA 2026-11-07, se M5 (registret gäller)
+
+> **Tillägg 2026-11-07:** rubriknivå mot brödtext bärs nu av familj (Urbanist
+> mot Manrope), storlek, vikt och spärrning. Aktiv navlänk mot övriga bärs av
+> understrykning och `aria-current`. Det aktiva segmentet och den aktiva chipen bärs
+> av fyllning eller kantfärg och `aria-pressed`. Pills-raderna är historik.
 
 Namn-mot-nav-skillnaden flyttade från vikt till färg utan att någon skrev ner det,
 och bröts därför av nästa färgändring utan förvarning. Den sortens följdbeslut är
@@ -4119,7 +6421,7 @@ Bakgrunden är genomskinlig, så det syns inte — men träffytan blir 48 × 44.
 mätning går sönder, inget larmar, och knappen blir bara lite svårare att träffa
 för den som har skakiga händer.
 
-#### Navlänkarnas träffyta — 19 px, och det är en egen ändring
+#### Navlänkarnas träffyta — 19 px, och det är en egen ändring — UPPHÄVT 2026-11-07, se M7 (`min-height: 40px` på `.navLink`, genomförs i P3)
 
 Byggaren har mätt navlänkarna till **19 px höga**, och de har alltid varit det.
 
@@ -4157,7 +6459,7 @@ bred skärm blir det mer luft mellan märket och navet.
 passa på att omfördela utrymmet vore en andra ändring han inte bett om, och den
 sortens tillägg är hur en enkel begäran blir en omdesign.
 
-#### Ikonens optiska storlek — rättat efter paket 2B
+#### Ikonens optiska storlek — rättat efter paket 2B — headerhöjden UPPHÄVD 2026-11-07, se M6 (märket 48 × 36 px gäller och ryms i pillens 40 px)
 
 Den kvadratiska 672-ikonen har 115 px genomskinlig luft upptill och nedtill,
 eftersom märket är 592 × 442, alltså bredare än högt. I en 44 × 44-ruta blir det
@@ -4185,7 +6487,12 @@ optiskt** än med den kvadratiska varianten, och 36 px i en 64 px hög header l�
 Genomförs i **paket 3**, inte som en egen omgång: header och hero ses tillsammans
 vid Leverans 1, och det är då proportionerna ska stämma.
 
-#### Navigeringen på smal skärm — förebyggande regel, inte en felrättning
+#### Navigeringen på smal skärm — förebyggande regel, inte en felrättning — UPPHÄVT 2026-11-07, se M8
+
+> **Gäller i stället:** under 900 px tar hamburgermenyn över (M8). Alternativ (d)
+> nedan, som avfärdades 2026-10, är nu beställt av uppdraget. Regeln "ingenting i
+> en låst höjd får radbryta" (`nowrap` på `.navLink`) gäller fortfarande för
+> pillen. Budgettabellen och 360-mätningarna är historik.
 
 > **Premissen i en tidigare version av detta avsnitt var fel.** Avsnittet sa att
 > navlänkar försvann tyst under 480 px (360 px → bara "Kompetenser", 420 px → två
@@ -4262,7 +6569,7 @@ bedöma:
 > **Navet är nu sidans trängsta element vid 360 px. En femte länk ryms inte**, och
 > det är värt att veta innan någon föreslår en.
 
-#### Det "trygga fälläget" fanns inte — en blind zon på 18 px
+#### Det "trygga fälläget" fanns inte — en blind zon på 18 px — talen UPPHÄVDA 2026-11-07, se M8 och M18 (regeln "mät mot den egna behållaren" gäller)
 
 Min uppskattning av den fjärde länken låg inom en pixel och hamnade på fel sida.
 Det var väntat och ofarligt, eftersom jag skrev att byggaren skulle mäta.
@@ -4326,7 +6633,7 @@ Avfärdade alternativ, bedömda som om problemet vore verkligt:
   drar in paket 7:s tillgänglighetsarbete i förtid. Inga nya navposter är
   planerade. Behövs det någon gång är det ett eget beslut då, inte nu.
 
-#### Verifiering av navigeringen — "ingen horisontell scroll" räcker INTE
+#### Verifiering av navigeringen — "ingen horisontell scroll" räcker INTE — bredderna UPPHÄVDA 2026-11-07, se M8 (metoden gäller och används i P3 och P4)
 
 `scrollWidth === clientWidth` bevisar att inget svämmar över åt sidan. Det säger
 ingenting om innehåll som klipps bort **nedåt** i en låst höjd. Måttet kan alltså
@@ -4354,7 +6661,7 @@ Använd `Emulation.setDeviceMetricsOverride` eller motsvarande, och låt sidan
 rapportera sitt eget `window.innerWidth` i samma mätning. **Mät elementens
 rektanglar, tolka inte en bild.**
 
-#### Fyra noteringar från paket 2B
+#### Fyra noteringar från paket 2B — tokennamnen UPPHÄVDA 2026-11-07, se M5 (noteringarna gäller)
 
 - ~~**`apple-touch-icon`** hör hemma i paket 7 tillsammans med `<noscript>`.~~
   **UPPHÄVT** — läggs in **nu**, tillsammans med de två `rel="icon"`-raderna. Se
@@ -4558,7 +6865,7 @@ Ingen `.ico` genereras. `<link rel="icon" type="image/png" href="/assets/logo-ma
 räcker i alla webbläsare som är aktuella, och ICO hade krävt ett beroende till
 utöver sharp.
 
-#### Ikonen genereras med genomskinlig botten
+#### Ikonen genereras med genomskinlig botten — tokennamnen UPPHÄVDA 2026-11-07, se M5 (beslutet gäller)
 
 Kontrollen av loggans bottenton är gjord och utfallet var negativt:
 
@@ -4649,7 +6956,7 @@ paket 2B flyttas ombyggnaden till paket 3, men inte längre än så — lockupen
 inte stå kvar till Leverans 1, eftersom det är just headern Jelal kommer att titta
 på först.
 
-### Rättelser efter granskningen av paket 1
+### Rättelser efter granskningen av paket 1 — tokennamn, `.surface-light`, Didact och kortets rutnät UPPHÄVDA 2026-11-07, se M1, M2, M4 och M5 (rättelserna i övrigt gäller)
 
 `LARDOMAR.md` lämnar sju punkter tillbaka till arkitekten. Besluten är dessa.
 
@@ -5118,7 +7425,11 @@ kommentarstext är ett nytt beslut som ingen har fattat.
 `I` undviks, så nästa fria är **L**. Jag pekar ut behovet, innehållet och platsen
 i ordningen — projektledaren skriver in paketet.
 
-#### A9 — Kommentarer som räknar upp tokens: en grind som fångar borttagningen, inte uppräkningen
+#### A9 — Kommentarer som räknar upp tokens: en grind som fångar borttagningen, inte uppräkningen — mönstret och `.surface-light` UPPHÄVDA 2026-11-07, se M5g och M2 (grindens syfte gäller)
+
+> Grinden gäller nu **varje** custom property och inte bara `--color-*`, och
+> `.surface-light` finns inte. Regeln står i M5g. Resonemanget nedan om att
+> kommentarer räknas som förekomster gäller oförändrat.
 
 Beslutat 2026-10-08. Bakgrunden är `LARDOMAR.md`-posten från samma dag, märkt
 **ÅTERKOMMANDE (3+)** med uppmaningen att göra om felet till ett automatiskt test:
@@ -5353,7 +7664,7 @@ som det som scrollar förbi under den gör att text glider in under headern och 
 ut att kapas mitt i tecknen. Med grå header gäller det argumentet svagare, men se
 nästa avsnitt.
 
-#### Det gråa fältet ljusnar till `#2A2A2E` — och kanten måste byta riktning
+#### Det gråa fältet ljusnar till `#2A2A2E` — och kanten måste byta riktning — UPPHÄVT 2026-11-07, se M5 och M6
 
 Jelal: *"Gör den lite ljusare grå."* Han valde `#1C1C1F` ur stegen
 `#1C1C1F` / `#2A2A2E` / `#3A3A40`, så **"lite ljusare" är ett steg på den stege han
@@ -5391,7 +7702,7 @@ nu.
 > "vill vi ändra dem tillsammans" — en kantfärg på pills och kort och sidans övre
 > bakgrundsfält har inga gemensamma villkor.
 
-#### Vad ljusningen gör med allt annat — uträknat
+#### Vad ljusningen gör med allt annat — uträknat — UPPHÄVT 2026-11-07, se M5 och M6
 
 | Vad | Mot `#1C1C1F` | Mot `#2A2A2E` | Bedömning |
 |-----|---------------|---------------|-----------|
@@ -5416,7 +7727,7 @@ Talen är uträknade ur WCAG-luminans. Att min uträkning för JQ-märket mot
 `#1C1C1F` ger exakt samma 6,00:1 som rapporterades oberoende är en välkommen
 kontroll av att metoden stämmer.
 
-#### Kanten behålls — och mitt tidigare skäl var fel fråga
+#### Kanten behålls — och mitt tidigare skäl var fel fråga — UPPHÄVT 2026-11-07, se M6 (headerns underkant utgår, pillens kant är gränsen)
 
 > **Rättad motivering.** Jag försvarade kanten med att jämföra färgsteg: kanten
 > mot hero gav 1,38:1 medan enbart färgskillnaden gav 1,16:1. **Den uträkningen
@@ -5566,7 +7877,7 @@ Inga `@import` inuti CSS-filerna — ordningen ska vara synlig i JS. `global.css
 innehåller reset, baselement, `html`/`body`-färger och `section[id]`-regeln.
 Allt annat ligger i modulfiler.
 
-### Vilka filer som skapas i vilket paket
+### Vilka filer som skapas i vilket paket — historik, tokennamnen UPPHÄVDA 2026-11-07, se M5 (filerna i moderniseringen står i M-avsnittets komponenttabell)
 
 Skapa inga tomma filer i förväg.
 
@@ -5671,7 +7982,7 @@ Jelals ord: *"Kan du göra profilbilden som en rund ring så ansiktet syns och a
 bilden inte är 4 kantigt?"*, förtydligat till **"bilden ska vara rund men en vit
 kant utanför ringen"**. Alltså rund urklippning **plus en synlig vit ram**.
 
-#### Beskärningen görs i CSS, inte med nya filer
+#### Beskärningen görs i CSS, inte med nya filer — tokennamnen UPPHÄVDA 2026-11-07, se M5 (beslutet gäller)
 
 De sex profilvarianterna är 4:5 stående och behålls oförändrade.
 
@@ -5729,7 +8040,7 @@ alltså omkring 3 % av leveransen.
 lägg till. Att lägga till skapar orefererade filer. Det är en avgränsad ändring på
 ett ställe och originalet ligger kvar i `assets-source/`.
 
-#### Diametern — och felet att den krympte när skärmen växte
+#### Diametern — och felet att den krympte när skärmen växte — sidmarginalens värde UPPHÄVT 2026-11-07, se M18 (taken 360/420 och den icke-avtagande serien gäller. P5 kör serien igen)
 
 > **Rättat fel.** Ett enda `max-width: 420px` utan brytpunkt gav detta:
 >
@@ -5808,7 +8119,7 @@ nedan finns för.
 Gråskalan och tonplattan är i övrigt oförändrade. De är beslutade och Jelal har
 inte invänt.
 
-#### Det vita strecket
+#### Det vita strecket — tokennamnen UPPHÄVDA 2026-11-07, se M5 (strecket är `--ink`)
 
 Jelal preciserade till **"vit streck mena jag"**. Det är samma ord han använde om
 sektionsavgränsarna — *"en liten och tunn streck"* — och samma avsikt. En linje
@@ -5894,7 +8205,7 @@ olika layoutpåverkan och olika förhållande till tonplattan.
    larmar — enligt regeln att en kontroll som aldrig setts fallera inte är en
    kontroll.
 
-### Vad som INTE görs i bildskriptet
+### Vad som INTE görs i bildskriptet — tokennamnen UPPHÄVDA 2026-11-07, se M5 (beslutet gäller)
 
 Gråskalan och den grå tonplattan bakas **inte** in i filerna. De görs i CSS i
 paket 3 (`filter: grayscale(1) contrast(…)` plus ett overlay-lager med
@@ -5908,7 +8219,7 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
 
 ---
 
-## Beslutslogg
+## Beslutslogg — historik. Varje rad som nämner ett `--color-*`-namn, Didact Gothic, `.surface-light`, det gråa fältet, ingen animation eller inga ikoner är UPPHÄVD 2026-11-07, se M-avsnittet
 
 - **CSS Modules som enda CSS-strategi, med globala tokens i `:root`** — ger
   skopning gratis via Vite utan nytt beroende, och tokens kaskaderar ändå in i
@@ -6549,7 +8860,7 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
 
 ---
 
-### Beslutslogg — paket A, innehållsuppdraget 2026-10-08
+### Beslutslogg — paket A, innehållsuppdraget 2026-10-08 — historik, och varje rad som nämner ett `--color-*`-namn, Didact Gothic, `.surface-light`, ingen animation eller inga ikoner är UPPHÄVD 2026-11-07, se M-avsnittet
 
 - **A1: skills-grinden blir strukturell, korsreferensen utgår** — uppmätt fällde
   den 17 av 53 kurerade namn, och inget av dem var fel. En grind som larmar på
@@ -6696,7 +9007,179 @@ punkter:**
   förbigås. (påverkat av lärdom: **ja** — 2026-10-05 "en sektion utan `id` passerar
   tyst och räknas med i OK-raden")
 
+### Beslutslogg — paket P1, moderniseringen 2026-11-07
+
+- **M1: självhostade woff2, en variabel fil per familj, och teckengrinden per
+  familj** — CDN hade tagit bort filen grinden mäter, lagt till ett externt anrop
+  och gett render-blockerande CSS. Variabla filer eftersom statiska per vikt inte
+  går att hämta utan ett nytt konverteringsverktyg. Grinden per familj eftersom
+  unionen släpper igenom ett tecken som saknas i just den familj det renderas i.
+  (påverkat av lärdom: **ja** — 2026-10-05 "mät artefakten, inte deklarationen",
+  2026-10-05 "en grind som fälls av fel skäl", 2026-10-02 "namnge inget
+  okontrollerat")
+- **M2: `.surface-light` bort helt** — designen är mörk rakt igenom, och en klass
+  "för framtiden" är dött fält. (påverkat av lärdom: **ja** — 2026-10-08 "två
+  kommentarer räknar upp en ombindning som togs bort": varje kommentar som nämner
+  klassen skrivs om i samma ändring)
+- **M3: uppdragets fältnamn, `logo` utgår, länkregeln och `isComplete` i
+  `src/lib/`** — en regel på ett ställe, som valideringen och kortet läser
+  gemensamt så att OK-raden räknar det som renderas. (påverkat av lärdom: **ja** —
+  2026-10-05 "en sektion utan id räknas med i OK-raden", 2026-10-05 "ett löfte i
+  en fil Jelal redigerar får aldrig vara osant")
+- **M4: 4:3, vänsterförankrad beskärning, [600, 1200], lazy** — beskärningen är
+  vald efter var Awles logga faktiskt ligger i källbilden, inte efter en
+  standardregel. 1200 är det största källan ger. (påverkat av lärdom: **ja** —
+  2026-10-02 "källbilder i `public/`", 2026-10-05 "mät artefakten")
+- **M5: ersätt tokennamnen, alias inte** — två namn för samma sak är exakt den
+  sortens glidning som tre lärdomar handlar om. Grinden utvidgas till varje custom
+  property, så att varje kvarglömt gammalt namn fälls. (påverkat av lärdom:
+  **ja** — 2026-10-08 ÅTERKOMMANDE, kommentarer om borttagna tokens, och
+  2026-10-08 "tokennamnet är ingen motivering")
+- **M6: `--header-height` härledd ur två token, sticky med `margin-top`** — en
+  sanning för höjden, och hero behöver inte veta att naven svävar. (påverkat av
+  lärdom: **ja** — 2026-10-02 "headerns höjd har två sanningar")
+- **M8: hamburger under 900 px** — 2026-10-07 avfärdade jag den som för dyr för ett
+  hypotetiskt problem. Uppdraget beställer den nu, och budgeten vid 600 px räcker
+  inte för fyra länkar plus CTA. (påverkat av lärdom: nej)
+- **M10: h1 som markerat förslag, inte som beslut** — texten är Jelals att ge.
+  Bygget får inte stå still, men förslaget får inte se ut som ett beslut. (påverkat
+  av lärdom: **ja** — 2026-10-02 "sidans enda h1", och projektets regel att inga
+  texter om Jelal hittas på)
+- **M11: sökfältets kant `--line-strong` i stället för uppdragets `--line`** — en
+  medveten avvikelse, eftersom uppdragets eget AA-krav fäller `--line`. (påverkat
+  av lärdom: **ja** — 2026-10-08 "kontrast: tokennamnet är ingen motivering")
+- **M12: döljandet villkoras på ett attribut som bara sätts när observern finns**
+  — innehållet kan inte bli kvar osynligt i något felläge. (påverkat av lärdom:
+  **ja** — 2026-10-05 "en invariant som bara står i prosa": P10 mäter det med
+  observern borttagen)
+- **M14: "Kompetenser" i stället för "Teknologier", och inget "år i branschen"** —
+  etiketten ska säga vad som räknas, och ett påhittat tal är ett påstående om
+  Jelal. (påverkat av lärdom: nej, projektets regel om texter om Jelal)
+- **M16: kontakten vänds, och hCaptcha blir `compact`** — den nya sidmarginalen gör
+  att den normala widgeten (302 px) inte ryms vid 360 px. Det upptäcktes när
+  sidmarginalens följder räknades igenom, inte i uppdragstexten. (påverkat av
+  lärdom: **ja** — 2026-10-02 ÅTERFALL "360 px-golvet spricker genom grid")
+- **M17: Lighthouse via `npx`, inte devDependency** — minsta möjliga beroenden, och
+  verktyget prövas i miljön innan något mäts. (påverkat av lärdom: **ja** —
+  2026-10-02 "ARKITEKTUR.md beskrev verktyg som inte finns")
+- **Märkningen gjordes på varje stycke, inte i ett rättelseavsnitt** — varje
+  `###`, `####` och `#####` som nämner ett upphävt namn bär sin egen märkning.
+  (påverkat av lärdom: **ja** — 2026-10-02 ÅTERFALL ×3 "överspelade stycken står
+  kvar")
+
+### Beslutslogg — efter P5 omgång 1 och P4, 2026-11-07
+
+- **M10b: `section.hero[id] { padding-block: var(--space-6); }` i alla bredder** —
+  `.hero` förlorade på specificitet mot `section[id]`, och `section.hero` vinner
+  bara på buntordning. Från 900 px ger `min-height` och centreringen luften ändå.
+  (påverkat av lärdom: **ja** — 2026-10-05 "en invariant som bara står i prosa":
+  att regeln vinner ska följa av selektorn, inte av ordningen)
+- **M10b: h1 `clamp(2.75rem, 11cqi, var(--text-3xl))` från 900 px, i containerenheter
+  mot `.text`** — det är textspåret och inte vyporten som avgör radbrytningen, och
+  spåret är smalast vid brytpunkten. Ett bredare textspår avvisades eftersom
+  cirkeln då krymper vid brytpunkten. (påverkat av lärdom: **ja** — 2026-10-05
+  "mät invarianten": mätserien utökas med 899, 1000, 1100 och 1200 × 700, där
+  felet annars kunde gömma sig)
+- **M10b punkt 2, rättad efter P5 omgång 2: `width: 100%` på `.inner` från 900 px,
+  och en spårgrind `>= 300` från 900 px** — påståendet att inneslutningen var
+  ofarlig var fel. `.inner` är ett griditem med auto-marginaler och krymper till
+  innehållet, och med `inline-size` på `.text` blev spåret 0. Meningen är struken
+  och rättelsen står på samma plats. (påverkat av lärdom: **ja** — 2026-10-02
+  "360 px-golvet sprack igen, nu genom hero-gridden": varje gridnivå ovanför ett
+  spår ska prövas, inte bara spåret. Och "överspelade stycken står kvar": M10:s
+  block är rättat i samma ändring)
+- **M10b punkt 2b: `.intro` behåller `font-size: var(--text-lg)`** — koden och A5
+  steg 2 stämde, och det var M10:s block som saknade raden. (påverkat av lärdom:
+  **ja** — 2026-10-05 "två bindande avståndsbeslut genomfördes med andra tokens":
+  ett block som är bindande tecken för tecken måste vara fullständigt, annars
+  ställs byggaren inför ett val mellan block och kod)
+- **M10b punkt 3: `scrollbar-gutter: stable` på `html`, i P5 omgång 2** — låset
+  tog bort den reserverade rullningslisten och stängknappen flyttade sig 15 px. En
+  CSS-rad i stället för en kompensation i JS. Måtten i M18 är oförändrade.
+  (påverkat av lärdom: **ja** — 2026-10-08: mät i det villkor där felet syns,
+  alltså med reserverad rullningslist, och skriv ut villkoret)
+- **M1: textstilarna sätts i JSX, `composes` utgår** — en varning i varje bygge som
+  alla lär sig läsa förbi. (påverkat av lärdom: **ja** — 2026-10-05 "Grindar")
+- **M1: `.meta` skapas i P5, inte P7** — rollraden är första konsumenten.
+  Texten rättad där den stod. (påverkat av lärdom: **ja** — 2026-10-02 ÅTERFALL
+  "överspelade stycken står kvar")
+- **M7: hover i pillen blir understrykning i `--ink`** — orange på en genomskinlig
+  pill över vitt innehåll gav 2,20:1. (påverkat av lärdom: **ja** — 2026-10-08
+  "kontrast mäts mot den faktiska bakgrunden")
+- **M8/M8b: efter länkklick fortsätter Tab i målsektionen; P4:s övriga markeringar
+  godkända som byggda** — den som valde en sektion ska fortsätta där.
+  ~~`profile-export-saknas` väntar på att P6 lämnar `validate-data.mjs`.~~
+  **UPPHÄVT 2026-11-07, se R6:** genomförs i G1-rättningen. (påverkat av
+  lärdom: **ja** — 2026-10-02 "godkända markeringar står kvar", ÅTERKOMMANDE)
+
+### Beslutslogg — efter G1, 2026-11-07
+
+- **R1: scroll-marginalen på `.item` (`<li>`), godkänd som byggd, och `index` i
+  `ProjectCard` först i P10** — A4:s invariant är att ankarmålet får marginalen,
+  och efter M4 är ankarmålet `<li>`, inte `.card`. Jag sökte på `.card {` i hela
+  dokumentet och rättade den enda träff som gällde projektkortet. (påverkat av
+  lärdom: **ja** — 2026-11-07 "A4:s deklaration pekar på fel element", ÅTERFALL:
+  ett klassnamn i en deklaration är ett påstående om markupen, och en signatur
+  anges med paketet där parametern får sin konsument)
+- **R2: en grind för alla id på sidan, med listan härledd ur `*_ID`-exporterna i
+  `sections.js`, och `cardIds(slug)` i `src/lib/`** — en lista som skrivs i
+  valideringen hade blivit inaktuell vid nästa fasta id. Därför flyttar `MENU_ID`
+  till `sections.js` och `ROOT_ID` läggs till. Kortets id-suffix står i en funktion
+  som både kortet och valideringen läser. Skillgruppernas id ingår, eftersom de
+  också är data som blir id. Avvisat: att läsa id ur JSX-källan med regex. Det är
+  skört och fångar inte beräknade id. (påverkat av lärdom: **ja** — 2026-11-07
+  "en slug som krockar med sidans egna id passerar", och 2026-10-02 "`hero` står
+  skrivet på tre ställen": ett id står på ett ställe)
+- **R2: dubbla tekniker fälls, jämförda utan skiftläge** — listan blir React-nycklar
+  och filterchips. `Zod` och `zod` är samma teknik för en läsare. (påverkat av
+  lärdom: **ja** — 2026-11-07, "varje lista vars element blir en React-nyckel ska ha
+  en unikhetsgrind")
+- **R3: brickan är en rad med ellips, `display: block` och `padding-block: 9px`**
+  — fast höjd med data i kräver ett angivet överflöde. Ellipsen ritas inte i en
+  flexcontainer, därför `block`. Golvet mäts mot `.media` och med
+  `scrollHeight <= clientHeight`, eftersom `scrollWidth` på brickan är större än
+  `clientWidth` med avsikt. (påverkat av lärdom: **ja** — 2026-11-07 "logo-brickans
+  fasta höjd")
+- **R4: layoutgrinden mäter `getBoundingClientRect().width` på roten, `#projects`
+  och panelen, inte rotens `clientWidth`** — `clientWidth` beskriver
+  rullningslisten och faller med `overflow: hidden` fast layouten står still.
+  Talen i grindarna är G1:s mätning. Talen för den negativa kontrollen är
+  **inte** uppmätta, och det står vid dem. (påverkat av lärdom: **ja** — 2026-11-07
+  "grinden larmar av fel skäl": en förväntad siffra skrivs in först när den är
+  mätt, och 2026-10-08 "Ett larm är inte ett kvitto")
+- **R5: de sex tokens tas bort nu och kommer tillbaka i P9, P10 och P12, utom
+  `--space-9`. Tokengrinden fäller en deklaration utan konsument (M5h)** — M1:s
+  princip om döda fält gäller tokens. Avvisat: att låta dem stå med en kommentar om
+  framtiden, eftersom det är exakt det påstående om nuläget som var fel. Grinden
+  byggs före borttagningen så att den visar att den hittar just de sex. (påverkat
+  av lärdom: **ja** — 2026-11-07 "sex tokens utan konsument", och 2026-10-05 "en
+  invariant som bara står i prosa")
+- **R6: M8b:s form gäller alla fem exportmarkeringar, och alla genomförs i
+  G1-rättningen** — de fyra stod redan i samma form. Att ge profile ett eget
+  villkor var det som lät den bli kvar. (påverkat av lärdom: **ja** — 2026-11-07
+  "`profile-export-saknas` står kvar": ett uppskjutet genomförande ska ha ett
+  namngivet paket)
+
 ## Öppna punkter som INTE är arkitektens att besluta
+
+**Nya 2026-11-07, ur paket P1. Frågor till Jelal. Inget av dem blockerar bygget:**
+
+1. **h1 i hero.** Byggt med uppdragets exempel "Jag bygger webb- och mobilappar,
+   från gränssnitt till API." som markerat förslag (M10). Det upprepar början av
+   din nuvarande ingress ("Jag bygger webb- och mobilappar i React, React Native
+   och .NET …"). Vilken text ska h1 ha, och ska ingressen stå kvar som den är?
+2. **Ditt namn i hero.** I dag är h1 "Jelal Qaiumi". Med det nya h1 syns namnet
+   inte längre som rubrik på sidan (bara i fliktiteln, i footern och för
+   skärmläsare i loggan). Är det okej, eller ska namnet synas i hero?
+3. **År i branschen.** Nyckeltalet är utelämnat tills du anger ett tal och från
+   vilket år det räknas (M14).
+4. **GitHub.** Bekräfta att GitHub-länken ska vara borta tills vidare. Den visas
+   inte någonstans så länge `contact.js` har `null` (M16).
+5. **Accentfärgen.** Uppdraget anger `#ff6b00`, och loggan är uppmätt till
+   `#FC6F03`. Skillnaden är knappt synlig, men de står bredvid varandra i naven.
+   Byggt som `#ff6b00` (M5).
+6. **Footerns tagline.** Byggd med din rollrad "Systemutvecklare · Fullstack" så att
+   ingen ny text hittas på (M16). Vill du ha en annan?
 
 **Nya 2026-10-08, ur paket A:**
 
@@ -6718,8 +9201,8 @@ punkter:**
 - **"Längre ner på sidan" stämmer inte med hans egen sektionsordning** — projektet
   ligger ovanför Om mig. Ordningen är hans beslut från 2026-10-07 och ändras inte
   av oss.
-- **Chipsen blir neutrala i stället för orange** — en synlig förändring han inte
-  bett om. Hans specifikation säger "chips" utan att nämna färg.
+- ~~**Chipsen blir neutrala i stället för orange**~~ — **UPPHÄVT 2026-11-07:**
+  chipsen får filterchipsens stil enligt uppdraget (M15).
 
 **Äldre punkter:**
 
@@ -6737,11 +9220,13 @@ punkter:**
   avviker därmed från Jelals formulering. Ska läggas fram.
 - ~~**Om mig-sektionens innehåll**~~ — **BESVARAD 2026-10-07:** Jelal har skrivit
   texten ordagrant i sitt uppdrag. Skrivs in i paket F, tecken för tecken.
-- **Den ljusa ytans placering efter omordningen** — A, B eller C. Byggt som A.
+- ~~**Den ljusa ytans placering efter omordningen**~~ — **UPPHÄVT 2026-11-07:**
+  ingen ljus yta finns (M2).
 - **Länkspaltens `h3` "Kontaktuppgifter"** är min text, inte Jelals. Ska godkännas.
-- **Länkarna hamnar under formuläret på mobil** efter tvåspaltsflytten. Följden ska
-  läggas fram för Jelal — han har sannolikt bara sett bred skärm.
-- **Navlänkarnas träffyta på 19 px** ska rättas som en egen, godkänd ändring.
+- ~~**Länkarna hamnar under formuläret på mobil**~~ — **UPPHÄVT 2026-11-07:**
+  kontaktuppgifterna står först (M16).
+- ~~**Navlänkarnas träffyta på 19 px**~~ — **UPPHÄVT 2026-11-07:** rättas i P3 med
+  `min-height: 40px` (M7).
 - **Inget verkligt meddelande har skickats** genom formuläret, och hCaptcha i
   Web3Forms instrumentpanel är obekräftad. Formuläret är inte verifierat förrän
   ett meddelande landat i inkorgen.

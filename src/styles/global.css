@@ -14,6 +14,10 @@
 html {
   scroll-behavior: smooth;
 
+  /* Menyns scroll-lås får inte ändra layoutbredden, så rullningslistens plats
+   * hålls även när overflow är hidden. Beslutat i ARKITEKTUR.md, M10b punkt 3. */
+  scrollbar-gutter: stable;
+
   /* EJ I ARKITEKTUR: ska webbläsarens egen textuppskalning stängas av?
    *
    * iOS/Safari blåser upp textstorleken i liggande läge. Golvet "360 px utan
@@ -29,16 +33,11 @@ html {
 
 body {
   min-height: 100vh;
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  font-family: var(--font-sans);
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
   font-size: var(--text-base);
-
-  /* VIKTEN SÄTTS HÄR OCH ÄRVS NEDÅT. 400 är teckensnittets enda vikt.
-   * Beslutat i ARKITEKTUR.md, "Typsnittet - Didact Gothic, en enda vikt".
-   * Litteralen 400 och inget token: ett token hade antytt att det finns ett
-   * alternativ att välja, och det gör det inte. */
-  font-weight: 400;
+  font-weight: var(--weight-regular);
   line-height: var(--leading-normal);
 
   /* 360 px-GOLVETS GARANT. Beslutat i ARKITEKTUR.md, "360 px-golvet och grid".
@@ -59,58 +58,43 @@ body {
    * min-content-bredden. `anywhere` räknas in, så elementet får faktiskt bli
    * smalare än sitt längsta ord.
    *
-   * UNDANTAGEN ligger i Header.module.css på .navList, .navLink och .logoName.
+   * UNDANTAGEN ligger i Header.module.css på .navList, .navLink och .cta.
    * `overflow-wrap` saknar verkan där `white-space: nowrap` är satt, så de
    * behöver inte häva något här - headern har låst höjd och får inte radbryta. */
   overflow-wrap: anywhere;
 }
 
-/* STÄNGER AV WEBBLÄSARENS EGEN FETNING. Utan denna regel gör webbläsaren
- * h1-h4, strong och b feta utan att någon bett om det - och eftersom
- * teckensnittet bara finns i vikt 400 kan den fetningen bara bli SYNTETISK:
- * konturerna smetas ut algoritmiskt. Det läses som grötighet, värst i stora
- * grader mot mörk botten. En fetning som webbläsaren hittar på är inget
- * designval.
- *
- * `inherit`, INTE `400`: det säger vad vi menar - vikt ärvs, den väljs inte.
- * Ett upprepat 400 hade sett ut som ett värde man kan ändra på just den raden.
- * Sätt aldrig font-weight till något annat än det ärvda, någonstans i
- * projektet. Beslutat i ARKITEKTUR.md, "Typsnittet". */
-h1,
-h2,
-h3,
-h4,
-strong,
-b {
-  font-weight: inherit;
-}
-
+/* Grundtypografin. Beslutat i ARKITEKTUR.md, "M1 - Typsnitten". Vikterna
+ * måste ligga inom det viktintervall fonts.css deklarerar för respektive
+ * familj, annars fetar webbläsaren syntetiskt. */
 h1,
 h2,
 h3 {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-semibold);
   line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
 }
 
-/* Hierarkin bärs av storlek, spärrning, färg, versaler och luft - inte av vikt.
- * Den negativa spärrningen på h1 och h2 är ny och hör till enviktsskärningen. */
 h1 {
   font-size: var(--text-3xl);
-  letter-spacing: var(--tracking-tight);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
 }
 
-h2 {
-  font-size: var(--text-2xl);
-  letter-spacing: var(--tracking-tight);
-}
+h2 { font-size: var(--text-2xl); }
+h3 { font-size: var(--text-xl); }
 
-h3 {
-  font-size: var(--text-xl);
+strong,
+b {
+  font-weight: var(--weight-semibold);
 }
 
 a {
   color: inherit;
   text-decoration: none;
-  transition: color var(--transition);
+  transition: color var(--duration-fast) var(--ease-out);
 }
 
 ul {
@@ -125,8 +109,8 @@ svg {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 3px;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* Sidomarginalen ägs HÄR, globalt, för header, sektioner och footer. Beslutat i
@@ -140,7 +124,7 @@ section[id] {
 }
 
 /* Sticky header skulle annars täcka rubriken man hoppar till. Måttet kommer
- * från samma token som låser headerns höjd i Header.module.css. */
+ * från samma token som beskriver det headern tar i flödet (Header.module.css). */
 section[id] {
   scroll-margin-top: calc(var(--header-height) + var(--space-4));
   padding-block: clamp(var(--space-8), 10vw, var(--space-10));
@@ -153,9 +137,8 @@ section[id] {
  * SYSKONSELEKTORN ÄR AVSIKTLIG och får inte förenklas till `section[id]`.
  * Invarianten: linjen markerar en GRÄNS MELLAN två sektioner, aldrig en kant
  * mot något annat. Första sektionen gränsar inte uppåt mot en sektion utan mot
- * headern, som bär sin egen border-bottom - en regel på alla sektioner hade
- * därför gett två linjer med bara headerns höjd emellan. `+` uttrycker det
- * villkoret direkt, utan ett hårdkodat undantag för ett id.
+ * headern, och där hör ingen sektionslinje hemma. `+` uttrycker det villkoret
+ * direkt, utan ett hårdkodat undantag för ett id.
  *
  * TYST FELMEKANISM: regeln förutsätter att sektionerna är DIREKTA syskon i
  * DOM. Läggs ett främmande element in mellan två sektioner i App.jsx bryts
@@ -163,13 +146,13 @@ section[id] {
  * renderingen varje gång App.jsx ändras.
  *
  * Linjen går kant i kant, eftersom border-top ligger utanför sektionens
- * padding-inline. Det är samma uttryck som headerns linje.
+ * padding-inline.
  *
  * Färgen är samma token som headern och footern använder. Behöver linjen bli
  * svagare är åtgärden ett eget token för avgränsaren, inte ett inline-värde och
- * inte en sänkning av --color-border, som också bär varje annan ram. */
+ * inte en ändring av --line, som också bär varje annan dekorativ linje. */
 section[id] + section[id] {
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--line);
 }
 
 /* Tillgänglighetsprimitiv. MEDVETET UNDANTAG från regeln att global.css bara
@@ -180,8 +163,8 @@ section[id] + section[id] {
  * Döljer visuellt men behåller elementet i tillgänglighetsträdet. Aldrig
  * display: none - det tar bort elementet för skärmläsaren också.
  *
- * KONSUMENTER: logga-namnet i Header.jsx och skip-länken i App.jsx. Båda
- * behöver texten i tillgänglighetsträdet men inte på skärmen.
+ * KONSUMENTER: varje element vars text ska finnas i tillgänglighetsträdet men
+ * inte synas på skärmen. Listan står inte här - sök på klassnamnet i src/.
  *
  * Här låg även varianten .visually-hidden-until-sm, som visade namnet från
  * 600 px. BORTTAGEN 2026-10-07: när Jelal bad om att dölja namnet i alla
@@ -204,14 +187,14 @@ section[id] + section[id] {
  * aria-current": den döljs med samma .visually-hidden som headerns namn och
  * blir synlig vid :focus.
  *
- * INGEN TREDJE GLOBAL KLASS. ARKITEKTUR.md stängde dörren för det
- * ("den andra och sista sanktionerade globala klassen"), så detta är ett
- * :focus-tillstånd på den befintliga primitiven, inte ett nytt namn.
+ * INGET NYTT GLOBALT KLASSNAMN FÖR FOKUSLÄGET. Detta är ett :focus-tillstånd
+ * på den befintliga primitiven, inte en egen klass. En global klass införs
+ * bara genom ett beslut i ARKITEKTUR.md.
  *
  * Begränsad till `a`, inte till .visually-hidden i största allmänhet: en
  * framtida användning av primitiven på något som SKA förbli dolt även i fokus
- * påverkas då inte. I dag finns två användningar - denna länk och headerns
- * namn-span, som inte är fokuserbar.
+ * påverkas då inte. Primitiven sitter även på element som inte är länkar, och
+ * de ska förbli dolda.
  *
  * :focus och inte :focus-visible. En skip-länk ska synas för var och en som
  * når den med tangentbord, och :focus-visible är webbläsarens heuristik för
@@ -235,16 +218,11 @@ a.visually-hidden:focus {
   padding: var(--space-3) var(--space-4);
   overflow: visible;
   clip-path: none;
-  /* MÖRK panel med ljus text, INTE orange. Första försöket gav länken
-   * --color-accent som botten, och eftersom fokusringen också är orange blev
-   * ringen osynlig mot sin egen panel - uppmätt 1,000:1. Det är exakt samma fel
-   * som headerns kant hade när --color-border råkade bli lika med bandet.
-   *
-   * Med mörk panel ligger den orange ringen mot headerbandet i gapet som
-   * outline-offset lämnar, och mäter 5,047:1. Panelen har dessutom 19,7:1 mellan
-   * text och botten. Ringen får behålla sitt enda jobb: att vara en ring. */
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  /* MÖRK panel med ljus text, INTE orange. Fokusringen är orange, så en orange
+   * panel hade gjort ringen osynlig mot sin egen botten. Invarianten: ringen
+   * står aldrig mot en yta i sin egen färg. */
+  background-color: var(--bg);
+  color: var(--ink);
   border-radius: var(--radius-sm);
   font-size: var(--text-base);
 }

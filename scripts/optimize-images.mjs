@@ -686,7 +686,8 @@ if (alphaSoft === 0) {
  * nedskalning. Uppmatt i paket 2B: 106 / 204 / 219 distinkta RGB-varden bland
  * pixlar med alfa > 0, daribland 255,0,0 och 255,255,0, och 15 steg fel i
  * gronkanalen pa en HELT OPAK pixel. Foljden hade blivit rod- och gulstick i
- * kanterna och en heltackande orange som inte langre matchar --color-accent.
+ * kanterna och en heltackande orange som inte langre matchar loggans uppmatta
+ * accentfarg.
  *
  * Steget upprattholler bara den invariant dokumentet redan beskriver - "ett
  * rent orange marke". Galler BADE de kvadratiska och de tajta filerna.

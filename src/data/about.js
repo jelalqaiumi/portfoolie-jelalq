@@ -22,9 +22,9 @@
 
 /**
  * @typedef {Object} AboutLink
- * @property {string} phrase     OBLIGATORISK när link finns. Måste förekomma EXAKT en gång i något stycke.
- * @property {string} projectId  OBLIGATORISK när link finns. Ett id ur projects.js. Finns projektet inte
- *                               renderas frasen som vanlig text - ingen länk, inget trasigt ankare.
+ * @property {string} phrase       OBLIGATORISK när link finns. Måste förekomma EXAKT en gång i något stycke.
+ * @property {string} projectSlug  OBLIGATORISK när link finns. Ett slug ur projects.js. Finns projektet inte
+ *                                 renderas frasen som vanlig text - ingen länk, inget trasigt ankare.
  *
  * @typedef {Object} About
  * @property {string[]}       paragraphs  OBLIGATORISK. Ett stycke per post. Minst ett.
@@ -47,16 +47,16 @@ export const about = {
    * phrase är den text som ska bli klickbar. Den måste förekomma exakt en gång
    * i styckena ovan, annars fäller valideringen bygget och säger varför.
    *
-   * projectId är id:t på projektet i projects.js som länken ska hoppa till.
+   * projectSlug är slug på projektet i projects.js som länken ska hoppa till.
    *
    * SÅ LÄNGE PROJEKTET INTE FINNS I projects.js renderas frasen som vanlig
    * text - ingen länk, och inget ankare som pekar på något som inte finns.
-   * Lägger du in projektet med detta id tänds länken av sig själv, och varken
+   * Lägger du in projektet med detta slug tänds länken av sig själv, och varken
    * denna fil eller någon komponent behöver ändras.
    *
    * Vill du ingen länk alls: skriv  link: null,  och frasen blir vanlig text. */
   link: {
     phrase: 'Hem och Ekonomi',
-    projectId: 'hem-och-ekonomi',
+    projectSlug: 'hem-och-ekonomi',
   },
 };

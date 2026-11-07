@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
-import { sections, HERO_ID } from '../data/sections.js';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { sections, HERO_ID, CONTACT_ID, MENU_ID } from '../data/sections.js';
+import MenuIcon from './MenuIcon.jsx';
+import MobileMenu from './MobileMenu.jsx';
 import styles from './Header.module.css';
 
 /* HELA listan mappas - "sections" ÄR de navigerbara sektionerna, i ordning
@@ -74,14 +76,13 @@ function useCurrentSection(ids) {
     /* ===== LÄSRADENS LÄGE LÄSES UR SEKTIONERNAS EGEN scroll-margin-top =====
      * Inte ur --header-height, och det är ett UPPMÄTT fel som ligger bakom.
      *
-     * Första versionen lade bandet direkt under --header-height, alltså på
-     * y 64-72. Då markerades fel länk vid varje klick, systematiskt en sektion
-     * efter: klick på "Projekt" gav scrollY 660 och bandet skars av HERO, klick
-     * på "Kompetenser" gav bandet skuret av PROJECTS. Orsaken är att
-     * global.css ger varje sektion
-     * `scroll-margin-top: calc(var(--header-height) + var(--space-4))`, alltså
-     * 80 px: en klickad sektion kommer till vila 16 px LÄGRE än headerns
-     * underkant, och i de 16 pixlarna ligger fortfarande föregående sektion.
+     * Första versionen lade bandet direkt under --header-height. Då markerades
+     * fel länk vid varje klick, systematiskt en sektion efter: klick på
+     * "Projekt" gav bandet skuret av HERO, klick på "Kompetenser" gav bandet
+     * skuret av PROJECTS. Orsaken är att global.css ger varje sektion en
+     * scroll-margin-top som är STÖRRE än headerns höjd (headern plus ett
+     * avstånd): en klickad sektion kommer till vila en bit LÄGRE än headerns
+     * underkant, och i det glappet ligger fortfarande föregående sektion.
      * Bandet låg i glappet.
      *
      * Felet syntes bara för att länkarna KLICKADES. Med window.scrollTo till
@@ -94,14 +95,18 @@ function useCurrentSection(ids) {
      * --header-height följer bandet med utan att denna fil behöver röras. Det
      * är samma skäl som att headerns höjd aldrig skrivs som ett tal.
      *
-     * Reservvärdet är --header-height, för det fall en sektion saknar regeln. */
+     * Reservvärdet är det headern tar i flödet, för det fall en sektion saknar
+     * regeln. Det läses som summan av de två token --header-height härleds ur
+     * (ARKITEKTUR.md, M6), inte ur --header-height självt: det är en calc(),
+     * och getPropertyValue ger då uttrycket som text, som parseFloat gör till
+     * NaN. */
     const probe = elements.find((el) => el.matches('section[id]')) ?? elements[0];
+    const rootStyle = getComputedStyle(document.documentElement);
+    const headerSpace =
+      parseFloat(rootStyle.getPropertyValue('--nav-offset')) +
+      parseFloat(rootStyle.getPropertyValue('--nav-height'));
     const bandTop =
-      parseFloat(getComputedStyle(probe).scrollMarginTop) ||
-      parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue('--header-height'),
-      ) ||
-      0;
+      parseFloat(getComputedStyle(probe).scrollMarginTop) || headerSpace || 0;
 
     /* Sparas utanför callbacken: en observer rapporterar bara de poster som
      * ÄNDRATS, inte alla. Utan ett minne hade en sektion som slutat ändras
@@ -218,12 +223,27 @@ function useCurrentSection(ids) {
  * som kommer först på sidan. */
 const observedIds = [HERO_ID, ...navSections.map((section) => section.id)];
 
+/* CTA:n är en länk till kontaktsektionen och renderas bara om den sektionen
+ * finns i datan - en länk får aldrig peka på ett id som inte renderas.
+ * Beslutat i ARKITEKTUR.md, "M7 - Aktiv länk". */
+const ctaText = 'Kontakta mig';
+const contactExists = sections.some((s) => s.id === CONTACT_ID);
+
+/* Samma länkar och samma CTA som i pillen, ur samma filtrerade lista. */
+const menuLinks = navSections.map((section) => ({ id: section.id, label: section.label }));
+const menuCta = contactExists ? { href: `#${CONTACT_ID}`, text: ctaText } : null;
+
 function Header() {
   const currentId = useCurrentSection(observedIds);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef(null);
+  /* Stabil referens: panelens lyssnare beror på den och ska inte kopplas om
+   * vid varje rendering. */
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
 
   return (
     <header className={styles.header}>
-      <div className={styles.inner}>
+      <div className={styles.pill}>
         {/* Hero-sektionen renderas alltid av App, oberoende av sections.js, så
             detta ankare har alltid ett mål.
 
@@ -275,7 +295,7 @@ function Header() {
               Beslutat i ARKITEKTUR.md, "Namnet döljs i alla bredder". */}
           <span className="visually-hidden">Jelal Qaiumi</span>
         </a>
-        <nav aria-label="Huvudnavigering">
+        <nav className={styles.nav} aria-label="Huvudnavigering">
           <ul className={styles.navList}>
             {navSections.map((section) => (
               <li key={section.id}>
@@ -298,7 +318,35 @@ function Header() {
             ))}
           </ul>
         </nav>
+        {/* Ordningen i DOM och för Tab: logga, navlänkarna, CTA, och sist
+            hamburgern. Under brytpunkten syns bara loggan och hamburgern. */}
+        {contactExists && (
+          <a className={styles.cta} href={`#${CONTACT_ID}`}>
+            {ctaText}
+          </a>
+        )}
+        {/* Hamburgern syns bara under brytpunkten (M8). */}
+        <button
+          ref={menuButtonRef}
+          type="button"
+          className={styles.menuButton}
+          aria-expanded={menuOpen}
+          aria-controls={MENU_ID}
+          onClick={() => setMenuOpen(true)}
+        >
+          <MenuIcon />
+          <span className="visually-hidden">Öppna meny</span>
+        </button>
       </div>
+      <MobileMenu
+        id={MENU_ID}
+        open={menuOpen}
+        onClose={closeMenu}
+        links={menuLinks}
+        currentId={currentId}
+        cta={menuCta}
+        triggerRef={menuButtonRef}
+      />
     </header>
   );
 }

@@ -7,8 +7,9 @@ import './styles/fonts.css';
 import './styles/tokens.css';
 import './styles/global.css';
 import App from './App.jsx';
+import { ROOT_ID } from './data/sections.js';
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById(ROOT_ID)).render(
   <StrictMode>
     <App />
   </StrictMode>,

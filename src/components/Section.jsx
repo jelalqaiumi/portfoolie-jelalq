@@ -13,7 +13,7 @@ function Section({ id, title, children, className }) {
    * linjen mellan sektioner ligger också där, som syskonselektorn
    * section[id] + section[id]. Behöver roten egen stil läggs klassen tillbaka
    * i Section.module.css och sätts före className här - jämför .hero i
-   * Hero.module.css, som bär heros gråa bakgrund på samma sätt. */
+   * Hero.module.css, som bär heros bakgrund på samma sätt. */
   return (
     <section id={id} className={className}>
       <div className={styles.inner}>

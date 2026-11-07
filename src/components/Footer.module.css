@@ -6,7 +6,7 @@
    *
    * Bredd och färg MÅSTE vara identiska med den regeln - annars syns två
    * olika linjetoner på samma sida. */
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--line);
   padding-block: var(--space-6);
   /* Sidomarginalen kommer från den gemensamma regeln i global.css. */
 }
@@ -17,6 +17,6 @@
 }
 
 .text {
-  color: var(--color-text-muted);
+  color: var(--ink-muted);
   font-size: var(--text-sm);
 }

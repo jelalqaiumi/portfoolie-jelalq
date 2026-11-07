@@ -1,5 +1,5 @@
 import Section from './Section.jsx';
-import { isComplete } from './ProjectCard.jsx';
+import { isComplete } from '../lib/projectRules.js';
 import { about } from '../data/about.js';
 import { projects } from '../data/projects.js';
 import { sections, ABOUT_ID } from '../data/sections.js';
@@ -57,7 +57,7 @@ function About() {
    * eller utan ett <a> runt en del av den. */
   const target = about?.link;
   const linked = target != null && projects.some(
-    (project) => isComplete(project) && project.id === target.projectId,
+    (project) => isComplete(project) && project.slug === target.projectSlug,
   );
 
   return (
@@ -82,9 +82,9 @@ function About() {
               <>
                 {parts.before}
                 {/* Frasen står INTE i den här filen. Både texten som visas och
-                    id:t som länkas hämtas ur datan, så ett omskrivet stycke kan
+                    slug som länkas hämtas ur datan, så ett omskrivet stycke kan
                     aldrig tappa länken tyst. */}
-                <a className={styles.link} href={`#${target.projectId}`}>
+                <a className={styles.link} href={`#${target.projectSlug}`}>
                   {target.phrase}
                 </a>
                 {parts.after}

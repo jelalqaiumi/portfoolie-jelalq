@@ -1,128 +1,90 @@
 /* Designtokens. Enda stället där färg, spacing, typografi och radier bestäms.
  * Ändra här - aldrig i en komponentmodul.
  *
+ * Namnen och värdena är beslutade i ARKITEKTUR.md, "M5 - Tokens: uppdragets
+ * namn ersätter de gamla". Ett token deklareras i samma paket som dess första
+ * var()-konsument, och ett token utan konsument är dött fält och tas bort.
+ * Tokens för chips, reveal och nyckeltal deklareras alltså i det paket som
+ * bygger dem. scripts/validate-tokens.mjs fäller en deklaration utan konsument
+ * (ARKITEKTUR.md, M5h).
+ *
  * Brytpunkter: CSS-variabler fungerar inte i @media, så dessa är fasta tal.
  * Använd exakt dessa, inga andra:
  *
  *   (bas)                              360-599 px. En kolumn överallt.
  *   @media (min-width: 600px)    sm    Två kolumner skills, större hero-typografi
  *   @media (min-width: 900px)    md    Hero två kolumner, nav alltid synlig, tre kolumner skills
- *   @media (min-width: 1200px)   lg    Max bredd slår in, fyra kolumner skills
+ *   @media (min-width: 1200px)   lg    Reserverad. Maxbredden kommer från sitt token, inte från en brytpunkt
  *
  * Golvet är 360 px utan horisontell scroll.
  */
 
 :root {
-  /* Färger - mörk bas, orange som ENDA accent.
-   * --color-accent är pixelmätt ur assets-source/logo.png. Ändra den inte.
-   * Källbilderna ligger utanför public/ och publiceras därför aldrig. */
-  --color-bg: #0b0b0c;
-  --color-surface: #141416;
-
-  /* Sidans ÖVRE GRÅA FÄLT: headern och hero tillsammans, en sammanhängande
-   * yta. Parar med --color-bg: den mörka bottnen och det gråa övre fältet,
-   * båda sidbakgrunder. Beslutat av Jelal 2026-10-05, se ARKITEKTUR.md
-   * "Hero får grå bakgrund".
+  /* Färger - mörk bas rakt igenom, orange som ENDA accent. Sidan har ingen
+   * ljus yta och ingen ombindning av färgtokens.
    *
-   * AVSIKTLIGT ett eget token. Det bröts ut ur ett token som också bar
-   * hover-läget på kort, och testet var inte "ser de likadana ut" utan "vill vi
-   * ändra dem tillsammans". Att de divergerade redan vid första tonändringen är
-   * beviset: bandet ljusnade till #2A2A2E 2026-10-05 och hover-tonen följde
-   * inte med. (Hover-tokenet är sedan dess borttaget - det hade ingen
-   * konsument.)
-   *
-   * ⚠️ SAMMANTRÄFFANDE, INTE KOPPLING: detta token har nu samma hexvärde som
-   * --color-border. Slå inte ihop dem och ersätt inte det ena med det andra.
-   * Den ena är sidans övre bakgrundsyta, den andra är varje hårfin linje och
-   * varje ram. De ska kunna röra sig oberoende. */
-  --color-bg-top: #2a2a2e;
-
-  /* Här låg --color-surface-raised. BORTTAGET 2026-10-05: det hade noll
-   * konsumenter efter att --color-bg-top bröts ut, och projektkorten har ingen
-   * hover (de är inte interaktiva). Ett token ska införas av en komponent som
-   * behöver det, inte i väntan på en. Behöver korten hover någon gång införs
-   * det då, med en verklig användning bakom sig. */
-  --color-border: #2a2a2e;
-
-  /* HEADERNS UNDERKANT, och bara den. Eget token sedan 2026-10-05.
-   *
-   * Varför det behövdes: när bandet ljusnade till #2A2A2E blev --color-border
-   * exakt samma färg som sin egen bakgrund - kontrast 1,00:1, alltså en helt
-   * osynlig linje. Kantens uppgift är att visa var den klibbande headern
-   * slutar, så att innehåll som glider in under den inte ser ut att kapas
-   * mitt i tecknen.
-   *
-   * Denna kant är LJUSARE än bandet, till skillnad från sidans övriga linjer
-   * som är ljusare än den mörka bottnen. Riktningen är omvänd av nödvändighet:
-   * mörkare än #2A2A2E hade krockat med --color-surface. */
-  --color-header-border: #45454b;
-
-  /* RAM PÅ FORMULÄRFÄLT. Eget token sedan 2026-10-06, med en verklig konsument
-   * - ContactForm. Det är skillnaden mot de två token som togs bort: det här
-   * införs av en komponent som behöver det, inte i väntan på en.
-   *
-   * Varför inget befintligt token duger: ett inmatningsfälts ram är en
-   * gränssnittskomponents avgränsning och omfattas av WCAG 1.4.11:s 3:1 mot
-   * omgivningen. Mot --color-bg ger --color-surface 1,07:1 och --color-border
-   * 1,38:1. Detta värde ger 3,16:1.
-   *
-   * --color-border duger alltså för dekorativa linjer men inte här. Ändra inte
-   * till den "för enhetlighetens skull". */
-  --color-field-border: #606068;
-
-  /* FORMULÄRETS UPPMÄRKSAMHETSFÄRG. Bär BÅDE asterisken vid obligatoriska
-   * fält och felmeddelandena under dem. Jelals beslut 2026-10-07.
-   *
-   * Det är INGEN accent. Regeln "orange är sidans enda accentfärg" gäller
-   * fortfarande om accenten - det röda är en annan sorts signal, och Jelal har
-   * beslutat att sidan ska ha en. Återinför inte orange här med hänvisning till
-   * accentregeln.
-   *
-   * 5,87:1 mot --color-bg, alltså över AA:s 4,5 för liten text.
-   *
-   * Varför separationen mot accenten håller, trots att rött och orange är
-   * grannar på färgcirkeln: den bärs av tre saker tillsammans, inte av kulören
-   * ensam. Kulör 2,7 grader mot accentens 26,0. Blåkanal 73 mot accentens 3 -
-   * accenten är en bränd orange med praktiskt taget noll blått, det röda är
-   * svalare, och det är den skillnaden ögat faktiskt läser när de står i samma
-   * formulär. Ljushet 0,263 mot 0,321.
-   *
-   * En mättad #FF0000 är avfärdad: den vibrerar mot nästan svart och läses som
-   * larm i stället för som markering. */
-  --color-error: #f85149;
-  /* Uppmätta kontrastkvoter, en rad per bakgrund tokenet faktiskt står mot.
+   * Uppmätta kontrastkvoter, en rad per bakgrund tokenet faktiskt står mot.
    * Ett tokennamn är ingen motivering för ett kontrastvärde - kvoten är det.
    * Ändras ett värde här räknas varje rad om; raden tas aldrig bort för att
    * den är lång. */
-  /* --color-text mot --color-bg-top: 12,226:1 — AA normal */
-  /* --color-text mot --color-surface: 15,736:1 — AA normal */
-  --color-text: #ededef;
+  --bg: #101010;
+  --surface: #181818;
+  --surface-2: #222222;
 
-  /* --color-text-muted mot --color-bg-top: 5,567:1 — AA normal */
-  /* --color-text-muted mot --color-bg: 7,662:1 — AA normal */
-  --color-text-muted: #a1a1a8;
-  --color-accent: #fc6f03;
-  --color-accent-hover: #fd9140;
+  /* Dekorativa linjer. Duger INTE som avgränsning av en gränssnittskomponent
+   * (WCAG 1.4.11 kräver 3:1) - där gäller --line-strong. */
+  --line: #2e2e2e;
+  /* --line-strong mot --bg: 4,169:1 — 1.4.11 uppfyllt */
+  /* --line-strong mot --surface: 3,891:1 — 1.4.11 uppfyllt */
+  --line-strong: #7a756f;
 
-  /* Här låg --color-accent-soft. BORTTAGET 2026-10-05: noll användningar i
-   * src/. Det infördes "vid behov" - alltså utan behov. Samma regel som ovan. */
-  --color-on-accent: #0b0b0c;
-  --color-overlay-grey: rgba(32, 32, 36, 0.45);
-  --color-focus: #fc6f03;
+  /* --ink mot --bg: 16,890:1 — AA normal */
+  /* --ink mot --surface: 15,761:1 — AA normal */
+  /* --ink mot --surface-2: 14,122:1 — AA normal */
+  --ink: #f4f1ec;
 
-  /* Projektkortet ligger ovanpå en bild och är alltid mörkt, även inuti
-   * .surface-light. Därför egna tokens som INTE binds om där. Texten står på
-   * den mörkaste delen av toningen (scrim-strong). */
-  --color-media-text: #ffffff;
-  --color-media-text-muted: #d6d6da;
-  --color-media-scrim: rgba(11, 11, 12, 0.35);
-  --color-media-scrim-strong: rgba(11, 11, 12, 0.92);
-  --color-media-fallback: #141416;
-  --color-media-pill-border: rgba(255, 255, 255, 0.45);
-  --color-media-pill-bg: rgba(11, 11, 12, 0.35);
-  --color-media-accent: #fc6f03;
-  --color-media-accent-hover: #fd9140;
-  --color-media-shadow: #9a9aa2;
+  /* --ink-muted mot --bg: 7,597:1 — AA normal */
+  /* --ink-muted mot --surface: 7,089:1 — AA normal */
+  --ink-muted: #a8a39c;
+
+  /* --ink-subtle mot --bg: 5,355:1 — AA normal */
+  /* --ink-subtle mot --surface: 4,997:1 — AA normal */
+  --ink-subtle: #8d8780;
+
+  /* Mörk text på orange yta. */
+  /* --ink-inverse mot --accent: 6,452:1 — AA normal */
+  /* --ink-inverse mot --accent-hover: 7,856:1 — AA normal */
+  --ink-inverse: #141414;
+
+  /* --accent som text mot --bg: 6,664:1 — AA normal */
+  --accent: #ff6b00;
+
+  /* Hover rör sig bort från underlaget: på mörk yta ljusnar den. */
+  /* --accent-hover som text mot --bg: 8,114:1 — AA normal */
+  --accent-hover: #ff8a3d;
+
+  --positive: #5dbb7e;
+
+  /* FORMULÄRETS UPPMÄRKSAMHETSFÄRG, asterisken och felmeddelandena. Det är
+   * ingen accent: det röda är en annan sorts signal, beslutad av Jelal. */
+  /* --error mot --bg: 5,676:1 — AA normal */
+  /* --error mot --surface: 5,297:1 — AA normal */
+  --error: #f85149;
+
+  /* Porträttets tonplatta. */
+  --overlay-grey: rgba(32, 32, 36, 0.45);
+
+  /* Radier */
+  --radius-badge: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-pill: 999px;
+
+  /* Rörelse och skugga */
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --duration-fast: .16s;
+  --duration-base: .32s;
+  --shadow-lift: 0 24px 60px rgba(0,0,0,.55);
 
   /* Spacing - 8 px-rytm, 4 px som finsteg */
   --space-1: 0.25rem;
@@ -133,213 +95,57 @@
   --space-6: 2rem;
   --space-7: 3rem;
   --space-8: 4rem;
-  --space-9: 6rem;
   --space-10: 8rem;
 
-  /* Typografi.
-   * 'Didact Gothic' först, systemstacken som reserv. @font-face står i
-   * fonts.css, som main.jsx importerar före denna fil. Laddas filen aldrig är
-   * sidan fullt läsbar i reserven - den är en systemfont som alltid finns, inte
-   * ett andra nedladdat typsnitt. */
-  --font-sans: 'Didact Gothic', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* Typsnitt. @font-face står i fonts.css, som main.jsx importerar före denna
+   * fil. Laddas en fil aldrig är sidan fullt läsbar i reserven - den är en
+   * systemfont som alltid finns, inte ett andra nedladdat typsnitt. */
+  --font-heading: 'Urbanist', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
 
+  /* Vikterna måste ligga inom det intervall fonts.css deklarerar för den
+   * familj de används i, annars fetar webbläsaren syntetiskt. */
+  --weight-regular: 400;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --text-2xs: 0.6875rem;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
   --text-lg: 1.125rem;
+  --text-title: 1.375rem;
   --text-xl: clamp(1.25rem, 2.5vw, 1.5rem);
   --text-2xl: clamp(1.75rem, 4vw, 2.5rem);
-  --text-3xl: clamp(2.5rem, 8vw, 4.5rem);
+  --text-3xl: clamp(2.75rem, 1.6rem + 5.2vw, 4.5rem);
 
+  --leading-display: 0.98;
   --leading-tight: 1.1;
+  --leading-snug: 1.55;
   --leading-normal: 1.6;
-  --tracking-wide: 0.08em;
 
-  /* Negativ spärrning på h1 och h2. En enviktsskärning i stora grader får lätt
-   * glesa, luckiga ordbilder; detta stramar upp dem. Verktyget behövdes inte
-   * när vikten fanns. */
+  --tracking-display: -0.04em;
   --tracking-tight: -0.02em;
-
-  /* --weight-regular / --weight-medium / --weight-bold är BORTTAGNA, inte
-   * omvärderade. Didact Gothic har en enda vikt (400), så ett viktvärde är
-   * inget val längre, och ett token utan alternativ är dött fält. Vikten
-   * hanteras i global.css med font-weight: inherit - lägg inte tillbaka ett
-   * vikttoken här. Beslutat i ARKITEKTUR.md, "Typsnittet". */
+  --tracking-title: -0.01em;
+  --tracking-mono: 0.04em;
+  --tracking-eyebrow: 0.16em;
 
   /* Max radlängd för brödtext */
   --measure: 62ch;
 
-  /* Layout, radier och övrigt */
-  --content-max: 1120px;
-  --content-padding: clamp(1rem, 5vw, 3rem);
-  --header-height: 64px;
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-pill: 999px;
-  --transition: 150ms ease;
+  /* Layout. Sidmarginalen ägs av global.css, se ARKITEKTUR.md "Var
+   * sidmarginalen bor". */
+  --content-max: 1180px;
+  --content-padding: 1.5rem;
 
-  /* Sticky headerns lagernivå. Enda z-index-värdet i projektet. */
+  /* Headerns höjd är avståndet till toppen plus naven, och båda delarna är
+   * låsta här. scroll-margin-top räknar på samma token, så de två måtten kan
+   * inte glida isär. */
+  --nav-offset: 16px;
+  --nav-height: 58px;
+  --header-height: calc(var(--nav-offset) + var(--nav-height));
+
+  /* Sticky headerns lagernivå. Enda fristående z-index-värdet i projektet. */
   --z-header: 10;
-}
-
-/* ===== LJUS YTA ==========================================================
- * Binder om färgtokenen för en sektion med vit bakgrund. Beslutat av Jelal
- * 2026-10-05, se ARKITEKTUR.md "Ljus yta - Kompetenser får vit bakgrund".
- *
- * OMBINDNING, INTE NYA TOKENNAMN. Med --color-text-on-light och liknande hade
- * varje regel i varje komponentmodul behövt byta variabelnamn, och komponenten
- * hade fått kunskap om ljus botten inbakad i sig. Med ombindning behöver INGEN
- * komponent ändras: den frågar efter --color-text-muted och får rätt svar för
- * den yta den står på.
- *
- * --color-text betyder ett enda jobb - textens färg mot den yta den står på.
- * Ombindning ger den inte en andra betydelse, den löser in dess enda betydelse
- * mot ett annat underlag. Det är skillnaden mot ett token som bär två
- * obesläktade jobb: ett sådant ska DELAS i två, inte bindas om.
- *
- * VÄRDENA ÄR HÄRLEDDA UR KVOTEN, inte valda ur en palett. Målet är att en ram
- * och en dämpad text ska ha samma upplevda tyngd på båda ytorna:
- *   ram mot bakgrund   #2A2A2E/mörkt = 1,38:1  ->  #CFCFD4/#F4F4F6 = 1,41:1
- *   text mot bakgrund  #A1A1A8/mörkt = 7,01:1  ->  #55555C/#F4F4F6 = 6,73:1
- *
- * Ramen är omräknad efter bytet till brutet vitt och träffar målet. TEXTEN gör
- * det inte längre - den sjönk från 7,40 till 6,73 av samma byte. Avvikelsen är
- * känd och ligger hos arkitekten: den kan välja att kompensera eller acceptera.
- * Ändra inte #55555C här innan beslutet kommer.
- *
- * ~~--color-accent är MEDVETET INTE ombunden.~~ UPPHÄVT 2026-10-07. Skälet
- * byggde på att den ljusa ytan bar PILLARNA, där orange är en YTA och alltså
- * omfattas av WCAG 1.4.11:s 3:1 - ett krav ingen orange klarar mot en ljus
- * botten. Den ljusa ytan ligger sedan 2026-10-07 på PROJEKTSEKTIONEN, och där
- * är orange inte en yta utan LÄNKTEXT. Då gäller 1.4.3 och 4,5:1, och det är
- * ett krav som går att uppfylla. Se ombindningen längre ner i blocket.
- *
- * Kompetenssektionen är mörk igen och bar aldrig med sig något avsteg hit. Det
- * utskrivna avsteget från 1.4.11 upphörde av sig självt i och med flytten, och
- * efter 2026-10-08 finns inte längre någon orange yta i den sektionen alls.
- *
- * KVAR SOM GÄLLANDE ur det upphävda stycket: orange är sidans ENDA accentfärg
- * och root-värdet är pixelmätt ur loggan. Jelal återtog en andra, mörkare
- * orange 2026-10-05 ("återgå till den vanliga orange"). Det beslutet gäller
- * fortfarande för DEN MÖRKA YTAN, där märket i den klibbande headern syns
- * samtidigt som sidans övriga orange och måste matcha det. Ombindningen nedan
- * gäller bara inuti en ljus yta, där märket inte är i bild på samma underlag.
- *
- * --color-bg-top binds om trots att ingen regel i sektionen använder den:
- * den är ärvd, och utan ombindningen hade ett framtida element inuti en ljus
- * yta kunnat plocka upp den gråa headerbottnen.
- * ======================================================================== */
-.surface-light {
-  /* BRUTET VITT, valt av Jelal 2026-10-05 efter att han sett rent vitt i
-   * renderingen. Sektionen är sidans största ljusa yta - 2410 px på desktop
-   * och drygt 6600 px på mobil - och rent vitt läste som för hårt. */
-  --color-bg: #f4f4f6;
-  --color-bg-top: #f4f4f6;
-  --color-text: #0b0b0c;
-  --color-text-muted: #4f4f56;
-
-  /* RAMEN ÄR OMRÄKNAD, INTE OMVALD. En ram ska ha samma upplevda tyngd på båda
-   * ytorna, och den kvoten går sönder av ett bakgrundsbyte:
-   *
-   *   #D9D9DE mot vitt      1,4065:1   <- målkvoten, satt mot mörk botten
-   *   #D9D9DE mot #F4F4F6   1,280:1    <- för ljus, ramen tappar sin tyngd
-   *   #CFCFD4 mot #F4F4F6   1,413:1    <- närmast målet
-   *
-   * KONSUMENTERNA BYTTE NAMN 2026-10-08, värdet står kvar. Tokenet bär numera
-   * ramen på kompetenskortet och chipset, och ärvs av sektionsavgränsaren.
-   * Invarianten är densamma som när det räknades fram, och den är inte knuten
-   * till vad ramen sitter på.
-   *
-   * Byts bakgrunden igen måste detta värde räknas om på samma sätt. Det är
-   * KVOTEN som är beslutet, hexvärdet är en härledning. */
-  --color-border: #cfcfd4;
-
-  /* KORTETS EGNA YTA. Rent vitt, inte sektionens brutna vitt: 1,10:1 mot
-   * bakgrunden ovan, vilket speglar den mörka ytans 1,07:1 mellan
-   * --color-surface och --color-bg. Kortet får alltså en egen ton på båda
-   * ytorna, och lika svag på båda.
-   *
-   * RÄTTAT 2026-10-07. Tokenet hade samma värde som bakgrunden, och när den
-   * ljusa ytan flyttades till projektsektionen blev den latenta buggen akut:
-   * kortet mätte 1,000:1 mot sektionen och skildes enbart av sin ram. Det var
-   * exakt samma fel som headerns kant hade när --color-border råkade bli lika
-   * med bandet - ett token vars värde sammanfaller med sitt underlag.
-   *
-   * Här får det alltså vara RENT vitt trots att Jelal valde brutet vitt för
-   * sektionen. De två besluten rör olika ytor: hans gällde den stora
-   * bakgrunden som läste för hård, detta gäller en liten upphöjd platta som
-   * måste gå att skilja från den. */
-  --color-surface: #ffffff;
-
-  /* FOKUSRINGEN binds om, till skillnad från --color-accent ovan. Att de två
-   * behandlas olika ser godtyckligt ut men är det inte, och skälet är värt att
-   * läsa innan någon "städar" bort skillnaden:
-   *
-   *   Accenten     bär aldrig ensam ett budskap. Där den används står samma
-   *                sak också som text eller form, så sviker kontrasten går
-   *                ingen information förlorad.
-   *   Fokusringen  är EN enda signal. Sviker kontrasten försvinner
-   *                markeringen helt, och tangentbordsanvändaren vet inte var
-   *                på sidan den står.
-   *
-   * En kontrastkvot är alltså inte godtagbar eller ogiltig i sig - det beror på
-   * om signalen är redundant. Mot den ljusa ytan ger #FC6F03 bara 2,58:1;
-   * #C25102 ger 4,28:1 och klarar WCAG 1.4.11:s 3:1 med marginal. Kulören är
-   * 24,7 grader mot originalets 26,0 - samma orange, mörkare valör.
-   *
-   * Ringen ligger utanför elementet (outline-offset) och har därför ingen mörk
-   * text inuti sig att ta hänsyn till. Det är varför den tål en mörkare ton än
-   * en fylld yta skulle göra. */
-  --color-focus: #c25102;
-
-  /* DET RÖDA binds om här också. #F85149 ger bara 2,47:1 mot #F4F4F6 och faller
-   * på AA; #C0271E ger 5,39:1.
-   *
-   * OMBUNDEN I FÖRVÄG, trots att ingen regel använder färgen i den ljusa ytan i
-   * dag - formuläret ligger på den mörka. Det är avsiktligt: exakt den
-   * underlåtenheten gjorde fokusringen till en latent bugg, som bara upptäcktes
-   * därför att det råkade inte finnas något fokuserbart i den ljusa ytan.
-   * Flyttas formuläret, eller får en ljus yta ett fält, är färgen redan rätt. */
-  --color-error: #c0271e;
-
-  /* ACCENTEN binds om, sedan den ljusa ytan flyttades till projektsektionen.
-   * Där är orange LÄNKTEXT, inte en yta: projektkortens två länkar är enda
-   * konsumenterna av tokenet inuti klassen. Kravet är därför 1.4.3:s 4,5:1 och
-   * inte 1.4.11:s 3:1, och root-orangen föll på 2,579:1 respektive 2,056:1 i
-   * hover - uppmätt på ett kort innan ombindningen fanns.
-   *
-   * ⚠️ FOKUSRINGENS #C25102 DUGER INTE HÄR, trots att den redan finns i filen
-   * några rader upp och ser ut att vara "den mörkare orangen vi valt". Den ger
-   * 4,28:1 mot #F4F4F6 och faller på 4,5. Den valdes för ett krav på 3:1.
-   * ETT TOKEN SOM KLARAR ETT KRAV KLARAR INTE AUTOMATISKT ETT HÅRDARE - det är
-   * hela skälet att de två är olika värden, och att återanvända ringens färg
-   * här vore att återinföra felet med en färg som ser beprövad ut.
-   *
-   * HOVER MÖRKNAR HÄR, medan den LJUSNAR på den mörka ytan (#FD9140). Det ser
-   * ut som en inkonsekvens och är det inte: regeln är att hover rör sig BORT
-   * FRÅN UNDERLAGET, inte att hover är ljusare. Räta inte ut det - att låta
-   * hover ljusna mot en ljus yta hade sänkt kontrasten i det läge användaren
-   * just pekat på. */
-  --color-accent: #ae4802;
-  --color-accent-hover: #8f3a01;
-
-  /* DE TVÅ RADERNA NEDAN ÄR NÖDVÄNDIGA, inte dekoration. Utan dem gör
-   * ombindningen ovan ingenting synligt, och det är UPPMÄTT:
-   *
-   * global.css sätter `background-color: var(--color-bg)` och
-   * `color: var(--color-text)` på BODY. En custom property löses in där den
-   * används, inte där den deklareras - så bodys regler tog :root-värdena och
-   * blev aldrig vita. Sektionen mätte `rgba(0, 0, 0, 0)`, alltså genomskinlig,
-   * och visade den mörka bottnen igenom.
-   *
-   * `color` är dessutom ärvt som ETT INLÖST VÄRDE: h2 ärvde bodys färdiga
-   * #EDEDEF och blev ljus text, medan varje element som sätter
-   * `color: var(--color-text-muted)` i sin egen regel plockade upp
-   * ombindningen och blev mörkt. Resultatet var ljus rubrik och mörk brödtext
-   * på mörk botten, alltså oläsligt.
-   *
-   * De här två raderna löser in samma två egenskaper en gång till, nu mot de
-   * ombundna värdena, så att allt under klassen får rätt underlag. */
-  background-color: var(--color-bg);
-  color: var(--color-text);
 }

@@ -1,187 +1,164 @@
-/* Projektkortet: projektets bild fyller hela kortet, och texten ligger
- * ovanpå en mörk toning längst ner.
- *
- * Kortet är ALLTID mörkt, även inuti .surface-light, och använder därför
- * bildytans egna färgtokens, som inte binds om där (se tokens.css). Saknas
- * bild står texten på kortets reservbakgrund i stället. */
-.card {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  display: flex;
-  min-width: 0;
-  background-color: var(--color-media-fallback);
-  border: 2px solid var(--color-media-fallback);
-  border-radius: var(--radius-md);
-  box-shadow: 4px 4px 0 var(--color-media-shadow);
-  transition: transform var(--transition), box-shadow var(--transition);
+/* Projektkortet: mediadel i 4:3 överst, text under. Hela kortet är en länk när
+ * projektet har ett mål, annars ett vanligt block utan hover.
+ * Beslutat i ARKITEKTUR.md: M4 "Projektbilden och kortet". */
 
-  /* KORTETS TAK. Härlett, inte valt - se ARKITEKTUR.md, "Projektkortens
-   * bredd": taket = var(--measure) + kortets vågräta padding x 2. calc() mot
-   * tokenen, ALDRIG ett pixelvärde.
-   *
-   * x 0,55: Jelal bad 2026-11-06 om en femtedel smalare och 2026-11-07 om
-   * ett kort som är hälften så stort på sidan. Hälften av YTAN, inte av
-   * bredden: halv bredd hade gett en textremsa på ca 240 px. Kortet blir
-   * därför både smalare och lägre (ingen min-height, tätare text). */
-  max-width: calc((var(--measure) + var(--space-5) * 2) * 0.55);
-
-  /* Kortet är ett ankarmål. Uttrycket är ORDAGRANT det som global.css
-   * använder för section[id], så att ett byte av headerns höjd flyttar båda. */
+/* Kortets <li> är ankarmålet för Om mig-länken. Uttrycket är ordagrant det som
+ * global.css använder för section[id], så att ett byte av headerns höjd flyttar
+ * båda (ARKITEKTUR.md, A4). */
+/* Beslutat i ARKITEKTUR.md: A4 (R1) */
+.item {
   scroll-margin-top: calc(var(--header-height) + var(--space-4));
 }
 
-.card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 var(--color-media-shadow);
+.card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100%;
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background-color: var(--surface-2);
+  overflow: hidden;
 }
 
 .image {
-  /* Bilden ligger i sitt eget 16:10-format upptill, inte beskuren till hela
-   * kortets höjd: skärmdumpar har egen text, och beskuren hade den hamnat
-   * rakt bakom kortets titel. Toningen nedan tar över där bilden slutar. */
-  position: absolute;
-  inset: 0 0 auto 0;
-  z-index: -2;
   width: 100%;
-  height: auto;
-  max-width: none;
-  aspect-ratio: 16 / 10;
+  height: 100%;
   object-fit: cover;
-  object-position: top center;
-  transform-origin: top center;
-
-  /* Bildens egen nederkant tonas ut, så att den aldrig slutar i en hård kant
-   * - på smal skärm är bilden lägre än toningen hinner bli mörk. */
-  mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
-  transition: transform 400ms ease;
 }
 
-.card:hover .image {
-  transform: scale(1.04);
-}
-
-/* Toningen: bilden syns klart överst och tonar ut i kortets mörka botten
- * ungefär där bilden slutar. Texten står alltid på den mörka delen. */
-.card::before {
-  content: '';
+/* Logo-brickan är EN rad. En titel som inte ryms klipps med ellips inom
+ * mediadelen, i stället för att flöda ut ur brickans fasta höjd. Ingen text
+ * går förlorad: brickan är aria-hidden och hela titeln står i h3. Ellipsen
+ * ritas bara i ett blockelement, därför display: block, och texten centreras
+ * vertikalt av padding i stället för flex.
+ * Beslutat i ARKITEKTUR.md: M4 (R3) */
+.brand {
   position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    var(--color-media-scrim) 25%,
-    var(--color-media-fallback) 62%,
-    var(--color-media-fallback) 100%
-  );
+  left: var(--space-4);
+  bottom: var(--space-4);
+  display: block;
+  height: 40px;
+  max-width: calc(100% - 2 * var(--space-4));
+  padding: 9px var(--space-3);
+  border-radius: var(--radius-sm);
+  background-color: rgba(255, 255, 255, .92);
+  color: var(--ink-inverse);
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  line-height: 22px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.content {
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--space-2);
+  padding: var(--space-5);
+}
+
+.meta {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  min-width: 0;
-  width: 100%;
-  /* Toppmarginalen ger bilden plats ovanför texten. Den är härledd ur
-   * bildens 16:10-format: bildens höjd är 62,5 % av kortets bredd, och
-   * texten börjar när fyra femtedelar av bilden har passerat, nedanför
-   * skärmdumpens egen rubrik. */
-  padding: var(--space-4);
-  padding-top: calc(100% * 10 / 16 * 0.8);
-  color: var(--color-media-text);
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
 }
 
-/* Graden är h3:s --text-xl, som ARKITEKTUR.md anger för projekttitel. */
+.category {
+  min-width: 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 2px var(--space-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-badge);
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+}
+
+.dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--ink-subtle);
+}
+
+.dot[data-status='Live'] {
+  background-color: var(--positive);
+}
+
 .title {
-  font-size: var(--text-xl);
-  line-height: var(--leading-tight);
-  color: var(--color-media-text);
-  margin-bottom: var(--space-2);
-  overflow-wrap: anywhere;
+  font-size: var(--text-title);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-title);
 }
 
 .description {
   font-size: var(--text-sm);
-  color: var(--color-media-text-muted);
-  max-width: var(--measure);
-  overflow-wrap: anywhere;
+  line-height: var(--leading-snug);
+  color: var(--ink-muted);
 }
 
-.tech {
+.tags {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-  margin-top: var(--space-3);
-
-  /* BESLUTAD REGEL (ARKITEKTUR.md, "Kort i samma rad får inte sträckas ut"):
-   * innehåll inuti kortet får aldrig ärva kortets utsträckta höjd. Städa inte
-   * bort dessa två rader. */
-  align-content: flex-start;
-  align-items: flex-start;
+  margin-top: var(--space-2);
 }
 
-.techItem {
-  font-size: var(--text-xs);
-  padding: var(--space-1) var(--space-2);
-  border: 1px solid var(--color-media-pill-border);
-  border-radius: var(--radius-pill);
-  background-color: var(--color-media-pill-bg);
-  color: var(--color-media-text);
+/* I JSX: className={`${typeStyles.meta} ${styles.category}`} på kategorin och
+ * className={`${typeStyles.tag} ${styles.tag}`} på varje tagg (M1, "Hur stilen
+ * når elementet"). */
+.tag {
   max-width: 100%;
-  overflow-wrap: anywhere;
 }
 
-/* Länkraden är en <div> och ALDRIG ett <footer>: den globala sidmarginalregeln
- * träffar elementselektorn footer (ARKITEKTUR.md, "Var sidmarginalen bor"). */
-.links {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  margin-top: var(--space-4);
-}
-
-.button {
-  display: block;
-  text-align: center;
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-sm);
-  background-color: var(--color-media-accent);
-  color: var(--color-on-accent);
-  font-size: var(--text-sm);
-  text-decoration: none;
-  overflow-wrap: anywhere;
-  transition: background-color var(--transition);
-}
-
-.button:hover {
-  background-color: var(--color-media-accent-hover);
-}
-
-.secondary {
-  align-self: center;
-  color: var(--color-media-text);
-  font-size: var(--text-sm);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-.secondary:hover {
-  color: var(--color-media-accent-hover);
-}
-
-.button:focus-visible,
-.secondary:focus-visible {
-  outline: 2px solid var(--color-media-text);
+a.card:focus-visible {
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .card,
-  .card:hover,
-  .image,
-  .card:hover .image {
-    transition: none;
-    transform: none;
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card {
+    transition: transform var(--duration-base) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out),
+      border-color var(--duration-base) var(--ease-out);
+  }
+
+  .image {
+    transition: transform .9s var(--ease-out);
+  }
+
+  a.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
+    border-color: var(--line-strong);
+  }
+
+  a.card:hover .image {
+    transform: scale(1.05);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: reduce) {
+  a.card:hover {
+    box-shadow: var(--shadow-lift);
+    border-color: var(--line-strong);
   }
 }

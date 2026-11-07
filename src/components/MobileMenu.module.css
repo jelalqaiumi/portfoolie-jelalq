@@ -1,0 +1,130 @@
+/* Fullskärmspanelen. Beslutat i ARKITEKTUR.md, "M8 - Mobilmenyn".
+ *
+ * Panelen ligger i <header> men UTANFÖR pillen: pillens backdrop-filter gör
+ * pillen till inneslutande block för fixed-element, och då hade inset: 0
+ * räknats mot pillen i stället för mot vyporten. Headerns omslag släpper
+ * igenom klick, så panelen tar själv emot pekaren igen. */
+.panel {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding-inline: var(--content-padding);
+  background-color: var(--bg);
+  pointer-events: auto;
+
+  /* Beslutat i ARKITEKTUR.md: M8b */
+  /* Panelen rullar själv när innehållet är högre än vyporten, t.ex. i
+   * liggande läge, så att CTA:n alltid går att nå. */
+  overflow-y: auto;
+}
+
+/* Beslutat i ARKITEKTUR.md: M8b */
+/* Raden återger pillens geometri - samma avstånd från toppen, samma höjd,
+ * samma inre marginal och en osynlig kant lika bred som pillens - så att
+ * knappen hamnar exakt där hamburgern står. */
+.bar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
+  height: var(--nav-height);
+  margin-top: var(--nav-offset);
+  padding: 8px;
+  border: 1px solid transparent;
+}
+
+/* Samma knapp som hamburgern i Header.module.css. */
+.iconButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+/* Beslutat i ARKITEKTUR.md: M8b */
+/* Ett osynligt lager runt knappen gör träffytan större än det synliga måttet,
+ * så att den når WCAG 2.5.5:s minsta storlek. Lagret räknas från knappens
+ * insida, innanför kanten. */
+.iconButton::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+}
+
+/* Beslutat i ARKITEKTUR.md: M8b */
+.nav {
+  margin-top: var(--space-6);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+/* Länktexten får radbryta var som helst: panelen har ingen låst höjd, och ett
+ * långt ord får aldrig ge horisontell scroll. */
+.link {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 44px;
+  color: var(--ink);
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.link:hover {
+  color: var(--accent);
+}
+
+.link[aria-current='true'] {
+  text-decoration-line: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
+
+/* Beslutat i ARKITEKTUR.md: M8b */
+/* Samma utseende som CTA:n i pillen, men med träffyta i full storlek. */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  max-width: 100%;
+  min-height: 44px;
+  margin-block: var(--space-6);
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-pill);
+  background-color: var(--accent);
+  color: var(--ink-inverse);
+  font-weight: var(--weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.cta:hover {
+  background-color: var(--accent-hover);
+}
+
+/* Med reducerad rörelse byter länkarna färg utan övergång. Panelen själv
+ * öppnas och stängs alltid utan animation. */
+@media (prefers-reduced-motion: reduce) {
+  .link,
+  .cta {
+    transition: none;
+  }
+}

@@ -1,54 +1,51 @@
 import { HERO_ID, PROJECTS_ID, CONTACT_ID } from '../data/sections.js';
+import { profile } from '../data/profile.js';
 import styles from './Hero.module.css';
+import typeStyles from '../styles/type.module.css';
 
-/* Sidans enda <h1>. Skrivs HÄR och får aldrig läsas ur sections.js "label"
- * (ARKITEKTUR.md, rättelse 2). */
-const name = 'Jelal Qaiumi';
+/* Raden ovanför rubriken. Står med gemener i DOM - versalerna kommer från
+ * .eyebrow i CSS, så att en skärmläsare läser ett ord och inte bokstäver. */
+const eyebrowText = 'Portfolio';
 
-/* Rollraden är Jelals egna ord och bara hans att ändra. Samma sträng står i
- * <title> i index.html - ändras den här ändras den där, i samma redigering. */
-const role = 'Systemutvecklare · Fullstack';
+/* Sidans enda <h1>. Skrivs HÄR och får aldrig läsas ur sections.js "label".
+ *
+ * ⚠️ FÖRSLAG - VÄNTAR PÅ JELALS GODKÄNNANDE. Texten är uppdragets exempeltext
+ * ("t.ex.") och inte Jelals egna ord. Ingen agent ändrar den utan hans svar;
+ * när han svarat byts strängen och denna rad tas bort. */
+const headline = 'Jag bygger webb- och mobilappar, från gränssnitt till API.';
 
 /* Ingressen är Jelals egna ord och bara hans att ändra.
  *
  * EN sträng, aldrig konkatenerad: en konkatenering är det enklaste sättet att
- * tappa ett mellanslag mitt i en text som ska vara exakt. Beslutat i
- * ARKITEKTUR.md, "A5 - Hero: knapparna, mätserien och 360 px". */
+ * tappa ett mellanslag mitt i en text som ska vara exakt. */
 const intro =
   'Jag bygger webb- och mobilappar i React, React Native och .NET, hela vägen från databas till app.';
 
 /* Knapptexterna är också Jelals egna ord. De står som konstanter här, intill de
- * tre andra texterna, så att varje sträng han äger går att jämföra mot
+ * andra texterna, så att varje sträng han äger går att jämföra mot
  * uppdragsfilen utan att någon behöver läsa JSX. */
 const primaryActionText = 'Se mina projekt';
 const secondaryActionText = 'Kontakta mig';
 
-/* EJ I ARKITEKTUR: vilket sizes-värde profilbilden ska ha.
- *
- * Varför det behövs alls: utan sizes antar webbläsaren 100vw och hämtar alltid
- * den största filen.
- *
- * Varför just dessa tal: cirkelns tak är 360 px under brytpunkten och 420 px
- * från 900 px (Hero.module.css .media). 400px täcker enspaltsläget med
- * marginal. Från 900 px är bildspåret (min(100vw, --content-max) - 2 x
- * sidmarginal - gap) / 2, vilket ligger mellan 43 och 47 vw mellan 900 och
- * 1600 px bredd; 45vw ligger mitt i det.
+/* sizes är cirkelns tak i varje läge: cirkelns renderade bredd når aldrig över
+ * taket, så ett större sizes-värde hade bara hämtat en större fil än som visas.
+ * Beslutat i ARKITEKTUR.md, "M10 - Hero".
  *
  * Samma sträng till <source> och <img>: olika sizes på de två hade kunnat få
  * dem att välja olika bredder. */
-const IMAGE_SIZES = '(min-width: 900px) 45vw, 400px';
+const IMAGE_SIZES = '(min-width: 900px) 420px, 360px';
 
 function Hero() {
   return (
     /* Hero renderar sin EGEN <section> och använder inte <Section>: den har ett
-     * <h1> och ingen <h2>-rubrik (ARKITEKTUR.md, komponenttabellen).
-     * Sidomarginalen kommer från den gemensamma regeln i global.css - modulen
-     * äger bara centreringen i .inner. */
+     * <h1> och ingen <h2>-rubrik. Sidomarginalen kommer från den gemensamma
+     * regeln i global.css - modulen äger bara centreringen i .inner. */
     <section id={HERO_ID} className={styles.hero}>
       <div className={styles.inner}>
         <div className={styles.text}>
-          <h1>{name}</h1>
-          <p className={styles.role}>{role}</p>
+          <p className={typeStyles.eyebrow}>{eyebrowText}</p>
+          <h1 className={styles.headline}>{headline}</h1>
+          <p className={typeStyles.meta}>{profile.role}</p>
           <p className={styles.intro}>{intro}</p>
 
           {/* TVÅ <a>, INTE <button>. Knapparna navigerar till en sektion på
@@ -61,10 +58,8 @@ function Hero() {
               sektions-id får aldrig skrivas av som bokstavlig sträng i en
               .jsx-fil - då kan länken peka på en sektion som inte finns.
 
-              Ordningen primär före sekundär och båda knapparnas placering
-              efter ingressen är beslutade i ARKITEKTUR.md, "A5 - Hero:
-              knapparna, mätserien och 360 px". Avståndet upp till ingressen
-              kommer ur .text-gridens gap och sätts inte här. */}
+              Avståndet upp till ingressen kommer ur .text-gridens gap och
+              sätts inte här. */}
           <div className={styles.actions}>
             <a className={styles.actionPrimary} href={`#${PROJECTS_ID}`}>
               {primaryActionText}
@@ -75,14 +70,16 @@ function Hero() {
           </div>
         </div>
 
-        {/* Gråskalan och den grå tonplattan ligger i CSS, inte i bildfilen -
-            medvetet beslut i ARKITEKTUR.md ("Vad som INTE görs i bildskriptet")
-            så att tonen kan justeras efter Leverans 1 utan att bilderna
-            genereras om. Tonplattan är .media::after i modulen.
+        {/* Gråskalan och den grå tonplattan ligger i CSS, inte i bildfilen,
+            så att tonen kan justeras utan att bilderna genereras om.
+            Tonplattan är .media::after i modulen.
 
             <picture> med en WebP-source och JPEG som fallback: webbläsaren
             laddar exakt EN fil. width/height är den valda src-filens egna mått
-            (profile-800.jpg, 800 x 1000) så att ingen layout shift uppstår. */}
+            så att ingen layout shift uppstår.
+
+            Ingen loading="lazy": porträttet ligger i första skärmen från
+            brytpunkten, och en lat bild där fördröjer det största elementet. */}
         <div className={styles.media}>
           <picture>
             <source
@@ -97,12 +94,8 @@ function Hero() {
               sizes={IMAGE_SIZES}
               width="800"
               height="1000"
-              /* EJ I ARKITEKTUR: vilken alt-text profilbilden ska ha, och om
-               * den ska vara tom.
-               *
-               * Beskrivande alt vald eftersom bilden bär information - den
-               * visar vem sidan handlar om. Tom alt hör till rent dekorativa
-               * bilder, som headerns monogram. */
+              /* Beskrivande alt, eftersom bilden bär information: den visar vem
+               * sidan handlar om. Beslutat i ARKITEKTUR.md, "M10 - Hero". */
               alt="Porträtt av Jelal Qaiumi"
             />
           </picture>

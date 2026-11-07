@@ -1,0 +1,33 @@
+/* De återanvändbara textstilarna. Importeras i JSX som `typeStyles` och sätts
+ * i className, typklassen först när elementet också har en egen modulklass.
+ * Aldrig genom en sammansättning i CSS och aldrig som globala klasser. En
+ * modulklass på samma element får inte deklarera någon egenskap som typklassen
+ * sätter: två klasser med samma specificitet avgörs annars av buntordningen.
+ * Beslutat i ARKITEKTUR.md, M1 "Hur stilen når elementet".
+ *
+ * En stil läggs till här i det paket som först har en konsument för den. En
+ * stil utan konsument är ett dött fält. */
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--accent);
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-mono);
+  color: var(--ink-subtle);
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-mono);
+  color: var(--ink-subtle);
+}

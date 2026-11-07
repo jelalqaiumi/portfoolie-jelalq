@@ -10,19 +10,21 @@
   overflow: hidden;
   display: flex;
   min-width: 0;
-  min-height: 36rem;
   background-color: var(--color-media-fallback);
   border: 2px solid var(--color-media-fallback);
   border-radius: var(--radius-md);
-  box-shadow: 6px 6px 0 var(--color-media-accent);
+  box-shadow: 4px 4px 0 var(--color-media-shadow);
   transition: transform var(--transition), box-shadow var(--transition);
 
   /* KORTETS TAK. Härlett, inte valt - se ARKITEKTUR.md, "Projektkortens
    * bredd": taket = var(--measure) + kortets vågräta padding x 2. calc() mot
    * tokenen, ALDRIG ett pixelvärde.
    *
-   * x 0,8: Jelal bad 2026-11-06 om ett kort som är en femtedel smalare. */
-  max-width: calc((var(--measure) + var(--space-5) * 2) * 0.8);
+   * x 0,55: Jelal bad 2026-11-06 om en femtedel smalare och 2026-11-07 om
+   * ett kort som är hälften så stort på sidan. Hälften av YTAN, inte av
+   * bredden: halv bredd hade gett en textremsa på ca 240 px. Kortet blir
+   * därför både smalare och lägre (ingen min-height, tätare text). */
+  max-width: calc((var(--measure) + var(--space-5) * 2) * 0.55);
 
   /* Kortet är ett ankarmål. Uttrycket är ORDAGRANT det som global.css
    * använder för section[id], så att ett byte av headerns höjd flyttar båda. */
@@ -31,7 +33,7 @@
 
 .card:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 8px 8px 0 var(--color-media-accent);
+  box-shadow: 6px 6px 0 var(--color-media-shadow);
 }
 
 .image {
@@ -81,21 +83,26 @@
   justify-content: flex-end;
   min-width: 0;
   width: 100%;
-  padding: var(--space-5);
+  /* Toppmarginalen ger bilden plats ovanför texten. Den är härledd ur
+   * bildens 16:10-format: bildens höjd är 62,5 % av kortets bredd, och
+   * texten börjar när fyra femtedelar av bilden har passerat, nedanför
+   * skärmdumpens egen rubrik. */
+  padding: var(--space-4);
+  padding-top: calc(100% * 10 / 16 * 0.8);
   color: var(--color-media-text);
 }
 
-/* Graden höjs från h3:s --text-xl: titeln är kortets rubrik över en bild och
- * behöver bära den. */
+/* Graden är h3:s --text-xl, som ARKITEKTUR.md anger för projekttitel. */
 .title {
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
   line-height: var(--leading-tight);
   color: var(--color-media-text);
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
   overflow-wrap: anywhere;
 }
 
 .description {
+  font-size: var(--text-sm);
   color: var(--color-media-text-muted);
   max-width: var(--measure);
   overflow-wrap: anywhere;
@@ -105,7 +112,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-  margin-top: var(--space-4);
+  margin-top: var(--space-3);
 
   /* BESLUTAD REGEL (ARKITEKTUR.md, "Kort i samma rad får inte sträckas ut"):
    * innehåll inuti kortet får aldrig ärva kortets utsträckta höjd. Städa inte
@@ -116,7 +123,7 @@
 
 .techItem {
   font-size: var(--text-xs);
-  padding: var(--space-1) var(--space-3);
+  padding: var(--space-1) var(--space-2);
   border: 1px solid var(--color-media-pill-border);
   border-radius: var(--radius-pill);
   background-color: var(--color-media-pill-bg);
@@ -131,13 +138,13 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  margin-top: var(--space-5);
+  margin-top: var(--space-4);
 }
 
 .button {
   display: block;
   text-align: center;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-sm);
   background-color: var(--color-media-accent);
   color: var(--color-on-accent);

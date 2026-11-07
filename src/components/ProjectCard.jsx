@@ -71,7 +71,7 @@ function ProjectCard({ project }) {
           className={styles.image}
           src={imageSrc(PROJECT_IMAGE_WIDTHS[0])}
           srcSet={PROJECT_IMAGE_WIDTHS.map((w) => `${imageSrc(w)} ${w}w`).join(', ')}
-          sizes="(min-width: 640px) 485px, 100vw"
+          sizes="(min-width: 640px) 340px, 100vw"
           width={PROJECT_IMAGE_WIDTHS[0]}
           height={PROJECT_IMAGE_WIDTHS[0] * 10 / 16}
           alt={`Startsidan för ${title}`}

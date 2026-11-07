@@ -72,7 +72,7 @@ export const projects = [
     title: 'Awle',
     description:
       'En svensk rekryteringsplattform som matchar arbetssökande och arbetsgivare utifrån personlighet i stället för CV. Kandidater skapar en anonym profil, och arbetsgivare filtrerar på yrke, län och erfarenhet. Ett samarbetsprojekt där jag och en annan utvecklare byggde plattformen tillsammans.',
-    tech: ['Next.js', 'React', 'Supabase'],
+    tech: ['Next.js', 'React', 'TypeScript', 'Supabase', 'TanStack Query', 'Zod'],
     url: 'https://awle.se',
     repoUrl: null,
     image: 'awle',

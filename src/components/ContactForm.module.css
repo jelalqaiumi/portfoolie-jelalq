@@ -160,10 +160,16 @@
   cursor: not-allowed;
 }
 
-/* CAPTCHAN. Egen klass bara för luften runt - widgetens inre utseende ägs av
- * hCaptcha och ska inte stylas härifrån. */
+/* CAPTCHAN. Widgetens inre utseende ägs av hCaptcha och ska inte stylas
+ * härifrån.
+ *
+ * Platsen reserveras med widgetens höjd, eftersom widgeten monteras först när
+ * formuläret närmar sig. "Kontakta mig" hoppar rakt hit, och utan reserverad
+ * plats hade widgeten knuffat knappen och statusraden nedåt medan de syns.
+ * Mätningen står i ARKITEKTUR.md: M21 punkt 1. */
 .captcha {
   margin-bottom: var(--space-5);
+  min-height: 146px;
 }
 
 /* STATUSRADEN finns alltid i DOM, tom i vilande läge. Därför ingen margin som

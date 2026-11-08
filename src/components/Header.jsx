@@ -247,54 +247,20 @@ function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.pill}>
-        {/* Hero-sektionen renderas alltid av App, oberoende av sections.js, så
-            detta ankare har alltid ett mål.
-
-            Beslutat i ARKITEKTUR.md, "Headerns logotyp": loggan är EN länk som
-            innehåller två saker - det beskurna JQ-monogrammet som ikon och
-            namnet som riktig HTML-text. Lockupen logo.png visas inte längre i
-            headern; dess ordbild var oläslig i ikonens storlek.
-
-            Ikonen är den TAJTA, icke-kvadratiska varianten (ARKITEKTUR.md,
-            "Ikonens optiska storlek"). width/height är filens egna mått, så
-            att ingen layout shift uppstår. CSS sätter höjden ("Ikonens
-            optiska storlek"). Den kvadratiska varianten
-            används fortfarande där kvadrat KRÄVS: favicon och apple-touch.
-
-            Ikonen har alt="" + aria-hidden i ALLA bredder, så att länkens
-            tillgängliga namn kommer helt från textnoden och "Jelal Qaiumi"
-            läses upp exakt en gång. Ingen aria-label - den hade dubblerat
-            textnoden. */}
+        {/* Bilden ÄR namnet i text, så alt är namnet, och länkens tillgängliga
+            namn kommer ur alt. Ingen dold text och ingen aria-label: båda hade
+            gett namnet två gånger. width/height är 1x-filens mått, så att ingen
+            layout shift uppstår. CSS sätter höjden. Hero renderas alltid av App,
+            så ankaret har alltid ett mål. Beslutat i ARKITEKTUR.md: M20. */}
         <a className={styles.logoLink} href={`#${HERO_ID}`}>
           <img
             className={styles.logo}
-            src="/assets/logo-mark-tight-96.png"
-            srcSet="/assets/logo-mark-tight-96.png 96w, /assets/logo-mark-tight-192.png 192w"
-            /* sizes = ikonens CSS-bredd ("Ikonens optiska storlek"). Utan
-               sizes antar webbläsaren 100vw och hämtar alltid den största
-               filen. */
-            sizes="48px"
-            alt=""
-            aria-hidden="true"
-            width="96"
-            height="72"
+            src="/assets/jq-logo-34.png"
+            srcSet="/assets/jq-logo-34.png 1x, /assets/jq-logo-68.png 2x, /assets/jq-logo-102.png 3x"
+            alt="Jelal Qaiumi"
+            width="159"
+            height="34"
           />
-          {/* ⚠️ TA INTE BORT DENNA SPAN. Den ser ut som död markup - texten är
-              visuellt dold i alla bredder sedan Jelal bad om det 2026-10-07 -
-              men den är det ENDA som ger logga-länken ett tillgängligt namn.
-              Utan den annonseras sidans andra fokuserbara element som bara
-              "länk", eftersom ikonen har alt="" + aria-hidden.
-
-              Det är projektets enda enbärarsignal, och därför den enda plats
-              där en borttagning som ser ofarlig ut gör en mätbar skada.
-
-              Varför visuellt dold text och inte aria-label: aria-label
-              degraderar till INGENTING om något går fel, medan dold text
-              degraderar till SYNLIG text om CSS inte laddas. En namnlös länk är
-              ett sämre felläge än ett namn som syns.
-
-              Beslutat i ARKITEKTUR.md, "Namnet döljs i alla bredder". */}
-          <span className="visually-hidden">Jelal Qaiumi</span>
         </a>
         <nav className={styles.nav} aria-label="Huvudnavigering">
           <ul className={styles.navList}>

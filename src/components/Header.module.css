@@ -38,23 +38,23 @@
   .pill { background-color: rgba(20, 20, 20, .94); }
 }
 
-/* EN länk, två barn: ikonen och det visuellt dolda namnet. */
+/* EN länk, ett barn: loggan. */
 .logoLink {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
   flex-shrink: 0;
 
-  /* TRÄFFYTAN. Ikonen ensam är lägre än WCAG 2.5.5:s 44 x 44; blocket över
-   * och under ger träffytan den höjden utan att något syns. Ta inte bort
-   * raden med motiveringen att den inte syns. */
-  padding-block: 4px;
+  /* TRÄFFYTAN. Loggan är lägre än WCAG 2.5.5:s 44 px; blocket över och under
+   * ger länken den höjden utan att något syns. Ta inte bort raden med
+   * motiveringen att den inte syns. */
+  padding-block: 5px;
 }
 
-/* Det tajta märket renderas på HÖJD; bredden följer av filens proportion.
- * Beslutat i ARKITEKTUR.md, "Ikonens optiska storlek". */
+/* Loggan renderas på HÖJD; bredden följer av filens proportion. Höjden hör
+ * ihop med de genererade filerna (1x, 2x, 3x), så den ändras bara tillsammans
+ * med dem. Beslutat i ARKITEKTUR.md: M20. */
 .logo {
-  height: 36px;
+  height: 34px;
   width: auto;
   flex-shrink: 0;
 }

@@ -155,8 +155,8 @@ section[id] + section[id] {
 }
 
 /* Tillgänglighetsprimitiv. MEDVETET UNDANTAG från regeln att global.css bara
- * innehåller reset och baselement - beslutat i ARKITEKTUR.md, "Headerns
- * logotyp": mönstret behövs igen av skip-länken i paket 7 och ska inte
+ * innehåller reset och baselement - beslutat i ARKITEKTUR.md, "Fyra
+ * noteringar från paket 2B" och M20 (klassen står kvar) och ska inte
  * kopieras in i varje modul.
  *
  * Döljer visuellt men behåller elementet i tillgänglighetsträdet. Aldrig
@@ -227,8 +227,7 @@ section[id] + section[id] {
 }
 
 /* SKIP-LÄNKEN syns när den får fokus. Beslutat i ARKITEKTUR.md, "Skip-länk och
- * aria-current": den döljs med samma .visually-hidden som headerns namn och
- * blir synlig vid :focus.
+ * aria-current": den döljs med .visually-hidden och blir synlig vid :focus.
  *
  * INGET NYTT GLOBALT KLASSNAMN FÖR FOKUSLÄGET. Detta är ett :focus-tillstånd
  * på den befintliga primitiven, inte en egen klass. En global klass införs

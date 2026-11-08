@@ -45,7 +45,7 @@ function ProjectCard({ project, index }) {
             className={styles.image}
             src={imageSrc(PROJECT_IMAGE_WIDTHS[0])}
             srcSet={PROJECT_IMAGE_WIDTHS.map((w) => `${imageSrc(w)} ${w}w`).join(', ')}
-            sizes="(min-width: 900px) 380px, (min-width: 600px) 50vw, 100vw"
+            sizes="(min-width: 900px) 380px, (min-width: 600px) 50vw, calc(100vw - 3rem)"
             width={PROJECT_IMAGE_WIDTHS[0]}
             height={PROJECT_IMAGE_WIDTHS[0] * 3 / 4}
             alt=""

@@ -2,23 +2,23 @@
 <html lang="sv">
   <head>
     <meta charset="UTF-8" />
-    <!-- Monogram-ikonen med genomskinlig botten, inte lockupen. Flikfältet har
-         en egen färg vi inte styr över, så ikonen får inte ha inbakad botten.
+    <!-- Ikonen är JQ-rutan ur loggan, opak och utan luft runt rutan: rutan är
+         märket, och en genomskinlig kant hade fyllts med svart av iOS.
 
-         Alla tre genererade ikonfilerna refereras här. Gränsen "noll
-         orefererade filer i dist/" gäller utan undantag, och 96-filen ger
-         skarp favicon vid hög pixeltäthet i stället för att strykas.
-         apple-touch-icon låg tidigare i paket 7; den placeringen är UPPHÄVD,
-         eftersom detta är resurslänkar till filer vi redan levererar.
-         <noscript> och skip-länken ligger kvar i paket 7 - de är beteende. -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo-mark-32.png" />
-    <link rel="icon" type="image/png" sizes="96x96" href="/assets/logo-mark-96.png" />
-    <link rel="apple-touch-icon" href="/assets/logo-mark-192.png" />
+         Varje genererad ikonfil refereras här, eftersom dist/ inte får ha
+         orefererade filer. Beslutat i ARKITEKTUR.md: M20. -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/jq-icon-32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/jq-icon-96.png" />
+    <link rel="apple-touch-icon" href="/assets/jq-icon-192.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Rollen efter första mittpunkten är samma sträng som "role" i
          src/data/profile.js. Ändras den där ändras den här, i samma
          redigering. -->
     <title>Jelal Qaiumi · Systemutvecklare · Fullstack</title>
+    <!-- FÖRSLAG som väntar på Jelals godkännande. Texten bygger på heros
+         ingress i src/components/Hero.jsx och ska läsas om när ingressen
+         ändras. Beslutat i ARKITEKTUR.md: M21 punkt 3. -->
+    <meta name="description" content="Jelal Qaiumi, systemutvecklare. Jag bygger webbappar och mobilappar i React, React Native och .NET, hela vägen från databas till app." />
     <!-- Heros bild hämtas innan JavaScript har renderat sidan, eftersom den är
          det största elementet i första skärmen. imagesrcset och imagesizes ska
          vara exakt samma som srcSet och sizes på bilden i
@@ -27,9 +27,9 @@
     <link rel="preload" as="image" type="image/webp" href="/assets/hero/hero-1440.webp" imagesrcset="/assets/hero/hero-960.webp 960w, /assets/hero/hero-1440.webp 1440w, /assets/hero/hero-1672.webp 1672w" imagesizes="(min-width: 900px) 100vw, 178vw" fetchpriority="high" />
   </head>
   <body>
-    <!-- Sidan är helt klientrenderad och blir blank utan JavaScript. Det är en
-         känd följd av stackvalet, inte ett fel, men ett meddelande kostar
-         ingenting. Texten är ORDAGRANN ur ARKITEKTUR.md - formulera inte om
+    <!-- Sidan förrenderas vid bygget och syns därför utan JavaScript, men det
+         som är interaktivt kräver JavaScript. Meddelandet säger vad som inte
+         fungerar. Texten är ORDAGRANN ur ARKITEKTUR.md - formulera inte om
          den. Ligger direkt före <div id="root"> enligt samma beslut.
 
          INGEN styling, med avsikt. I bygget länkas CSS:en med <link rel
@@ -41,13 +41,15 @@
          global.css för ett element som redan är läsbart i båda lägena. -->
     <noscript>
       <p>
-        Den här sidan behöver JavaScript för att visas. Slå på JavaScript i
-        webbläsaren och ladda om sidan.
+        Menyn, projektfiltret och kontaktformuläret behöver JavaScript. Slå på
+        JavaScript i webbläsaren och ladda om sidan.
       </p>
     </noscript>
     <div id="root"></div>
     <!-- id:t ovan är ROOT_ID i src/data/sections.js, som main.jsx renderar i.
-         Ändras det ändras det på båda ställena, i samma redigering. -->
+         Ändras det ändras det på båda ställena, i samma redigering. Roten ska
+         stå tom och på en rad: scripts/prerender.mjs letar efter exakt den
+         markeringen i bygget och fyller den med den förrenderade sidan. -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

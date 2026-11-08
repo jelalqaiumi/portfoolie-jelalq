@@ -26,20 +26,18 @@ function Footer() {
       <div className={styles.inner}>
         <div className={styles.top}>
           <div className={styles.brand}>
-            {/* Samma tajta märke som headern. Det är dekor: namnet står i
-                copyrightraden, så ikonen har alt="" + aria-hidden.
-                width/height är filens egna mått, så att ingen layout shift
-                uppstår. CSS sätter höjden. */}
+            {/* Samma logga som headern. Den är dekor här: namnet står i
+                copyrightraden. width/height är 1x-filens mått, så att ingen
+                layout shift uppstår. CSS sätter höjden. Beslutat i
+                ARKITEKTUR.md: M20. */}
             <img
               className={styles.logo}
-              src="/assets/logo-mark-tight-96.png"
-              srcSet="/assets/logo-mark-tight-96.png 96w, /assets/logo-mark-tight-192.png 192w"
-              /* sizes = ikonens CSS-bredd, samma som i headern. */
-              sizes="48px"
+              src="/assets/jq-logo-34.png"
+              srcSet="/assets/jq-logo-34.png 1x, /assets/jq-logo-68.png 2x, /assets/jq-logo-102.png 3x"
               alt=""
               aria-hidden="true"
-              width="96"
-              height="72"
+              width="159"
+              height="34"
             />
             {/* Taglinen är rollraden ur profile.js, Jelals egen godkända text.
                 Ingen ny text hittas på. Beslutat i ARKITEKTUR.md, M16. */}

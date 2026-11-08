@@ -1,5 +1,5 @@
 /**
- * Engangsskript: genererar heros svartvita bild och monogram-ikonerna.
+ * Engangsskript: genererar heros svartvita bild, loggan och ikonerna.
  *
  *   npm run optimize:images
  *
@@ -30,6 +30,7 @@
  */
 
 import sharp from 'sharp';
+import { readFileSync } from 'node:fs';
 import { mkdir, readdir, stat, writeFile } from 'node:fs/promises';
 import { dirname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -40,7 +41,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 /* Kallbilderna. Utanfor public/, publiceras aldrig, skrivs aldrig over. */
 const ASSETS_SOURCE_DIR = resolve(ROOT, 'assets-source');
 const HERO_SOURCE = resolve(ASSETS_SOURCE_DIR, 'hero-portrait.jpg');
-const LOGO_SOURCE = resolve(ASSETS_SOURCE_DIR, 'logo.png');
+const LOGO_SOURCE = resolve(ASSETS_SOURCE_DIR, 'jq-logo-light.png');
 
 /** Alla kanda kallor. Varje utdatasokvag provas mot HELA listan. */
 const SOURCES = [HERO_SOURCE, LOGO_SOURCE];
@@ -288,716 +289,598 @@ console.log('Heros bild klar: ' + heroFiles.length +
   ' buffertar i skrivkon (skrivs langst ner, efter ikonens grindar).');
 
 // ===========================================================================
-//  MONOGRAM-IKONEN  (paket 2B, tajta varianter tillagda i paket 3)
+//  LOGGAN OCH IKONERNA  (M20, P14c)
 //
-//  Harleder JQ-monogrammet ur `assets-source/logo.png` till FEM PNG-filer med
-//  GENOMSKINLIG botten, direkt i `public/assets/` (de ar inga derivat av
-//  heros bild och ligger darfor inte i hero/):
+//  `assets-source/jq-logo-light.png` -> direkt i `public/assets/`:
 //
-//    logo-mark-{32,96,192}.png      kvadratiska  - favicon och apple-touch
-//    logo-mark-tight-{96,192}.png   tajta        - HEADERN, 48 x 36 px
+//    jq-logo-{34,68,102}.png   hela loggan, PNG med alfa, 1x/2x/3x for naven
+//                              och footern. Rutan ar opak, ordmarket ar --ink
+//                              pa genomskinlig botten.
+//    jq-icon-{32,96,192}.png   JQ-rutan ensam, opak och utan luft: favicon och
+//                              apple-touch-icon.
 //
-//  De tajta harleds FORE extend()-steget, ur samma uttag.
+//  Fargerna lases ur tokens.css och star aldrig skrivna har. Kallan LASES bara
+//  och skrivs aldrig over, precis som heros kalla.
 //
-//  `logo.png` LASES bara och skrivs aldrig over, precis som heros kalla.
+//  GRINDARNA SAMLAS: S2-S6, L1-L8 och I1-I5 skriver var sin GRIND-rad och
+//  laggs i `failedGates` om de inte haller. Korningen fallerar EN gang, fore
+//  skrivfasen, med listan over fallna grindar. Da syns varje grind som en
+//  injicerad avvikelse faller, inte bara den forsta. S1 fallerar direkt: alla
+//  koordinater nedan forutsatter kallans matt.
 // ===========================================================================
 
-const ICON_OUT_DIR = assertSafeOutput(resolve(ROOT, 'public/assets'));
+const LOGO_OUT_DIR = assertSafeOutput(resolve(ROOT, 'public/assets'));
 
-/** Forvantade matt pa logo.png. Avvikelse = avbryt, beskar aldrig blint. */
-const LOGO_EXPECTED_WIDTH = 1254;
-const LOGO_EXPECTED_HEIGHT = 1254;
+const TOKENS_FILE = resolve(ROOT, 'src/styles/tokens.css');
 
-/**
- * Blockdetektering enligt ARKITEKTUR.md, "Beskarningen - blockdetektering,
- * inte en hojdtroskel": en rad raknas som orange om nagon pixel passerar
- * troskeln, rader grupperas i block, ett glapp pa MER an 4 rader bryter ett
- * block, och det HOGSTA blocket ar monogrammet.
- */
-const ORANGE_ROW_GAP = 4;
+/** Forvantade matt pa kallan. Avvikelse = avbryt, beskar aldrig blint. */
+const LOGO_EXPECTED_WIDTH = 2000;
+const LOGO_EXPECTED_HEIGHT = 774;
 
-/**
- * Orange-troskeln. SKARPT av arkitekten efter paket 2B (ARKITEKTUR.md,
- * "Rattad troskel"): fran `R > G && R > 120` till `R - G >= 30 && R > 120`.
- *
- * `R > G` ar inget mattnadstest - det slapper igenom vilken nastan-neutral
- * ljus pixel som helst. Uppmatt i paket 2B: 732 pixlar ur den VITA ordbilden
- * (y 836..872) passerade, t.ex. rgb(255,252,254) med R - G = 1, vilket gav
- * TRE block i stallet for tva. Verklig orange i loggan har R - G = 62..159,
- * sa 30 ligger 24 steg over den vitaste storningen och 32 steg under den
- * minst mattade orangen.
- */
-const ORANGE_MIN_DELTA = 30;
-const ORANGE_MIN_RED = 120;
+/** Kallans botten och ordmarkets farg, uppmatta i kallan (M20). */
+const LOGO_BG_RGB = { r: 246, g: 244, b: 240 };
+const LOGO_TEXT_RGB = { r: 20, g: 20, b: 20 };
 
-/** @returns {boolean} true om pixeln vid byteoffset `i` ar orange. */
-const isOrange = (data, i) =>
-  data[i] - data[i + 1] >= ORANGE_MIN_DELTA && data[i] > ORANGE_MIN_RED;
+/** Raderna dar kallan ar opak, inklusive. Raderna utanfor lases aldrig. */
+const LOGO_OPAQUE_ROWS = { top: 1, bottom: 772 };
 
 /**
- * Uppmatt facit (BRIEF.md + ARKITEKTUR.md "Forvantat utfall"). Detekteringen
- * jamfors mot detta och skriptet AVBRYTER vid avvikelse - talen justeras
- * aldrig for hand, for da ar det detekteringen som gor nagot annat an
- * matningen gjorde.
- *
- * BADA ar harda kontroller sedan troskeln rattades (ARKITEKTUR.md, "Tva
- * oberoende kontroller, bada ska stamma"). I paket 2B lat byggaren blockantalet
- * bara bli en utskriven upplysning - rimligt sa lange troskeln var trasig, men
- * nu stoppar en avvikelse korningen. Blockantal och bbox kontrollerar samma sak
- * fran tva hall: stammer bboxen men inte blockantalet har nagot i bilden andrats
- * som vi inte forstar.
+ * JQ-rutans rena yta i kallans koordinater. Kantringen ar 1 px utanfor den och
+ * raknas ut nedan, ingen egen konstant.
  */
-const EXPECTED_BLOCKS = 2;
-const EXPECTED_MARK_BBOX = { x0: 323, x1: 914, y0: 338, y1: 779 };
+const LOGO_SQUARE = { left: 219, top: 220, width: 335, height: 334 };
+
+/** Forsta kolumnen efter mellanrummet mellan ruta och ordmarke. */
+const LOGO_GAP_END = 648;
+
+/** Uttaget for loggan: rutans rena yta och hela ordmarket. */
+const LOGO_CROP = { left: 219, top: 220, width: 1565, height: 334 };
+
+/** Uttaget for ikonerna: kvadraten inom rutans rena yta. */
+const ICON_CROP = { left: 220, top: 220, width: 334, height: 334 };
+
+/** Hur langt sharps standardkarna lanczos3 nar, i utdatapixlar. */
+const LANCZOS_REACH = 3;
+
+const LOGO_HEIGHTS = [34, 68, 102];
+const LOGO_EXPECTED_WIDTHS = { 34: 159, 68: 319, 102: 478 };
+const ICON_SIZES = [32, 96, 192];
+
+/** Tak i kB, nycklade pa hojd respektive sida (M20). */
+const LOGO_SIZE_LIMIT_KB = { 34: 6, 68: 14, 102: 24 };
+const ICON_SIZE_LIMIT_KB = { 32: 2, 96: 6, 192: 14 };
+
+/** Tolerans per kanal for fargjamforelserna. */
+const COLOR_TOLERANCE = 2;
 
 /**
- * BRIEF.md, "RATTELSE 2026-10-02 - ikonens beskarning far INTE vara kvadratisk
- * mot kallan": den gamla rutan left=283 top=223 672x672 spanner y 223..894 och
- * fangar den VITA ordbilden (x 403..849, y 836..872). Alfa-formeln ger vita
- * pixlar alfa ~1 och hade fargat ordet "JelalQaiumi" orange langst ner i
- * ikonen. Felet kan inte kramas bort: monogrammet ar 592 brett men 442 hogt, sa
- * varje KVADRATISK ruta som rymmer bredden maste na ner till y 854.
+ * Laser `--<name>: #rrggbb;` ur tokens.css. Fargerna har EN kalla: andras
+ * --accent ska loggans grindar falla, for da matchar loggan inte sidan.
  *
- * Darfor: beskar TAJT till monogrammets bbox, kor alfa-steget, och gor
- * kvadraten med GENOMSKINLIG utfyllnad (extend) i stallet.
+ * @returns {{ r: number, g: number, b: number }}
  */
-const ICON_SIDE = 672;
+function readTokenHex(name) {
+  let css;
+  try {
+    css = readFileSync(TOKENS_FILE, 'utf8');
+  } catch (error) {
+    fail('tokens.css: kunde inte läsas (' + error.message + ')');
+  }
+  const match = css.match(new RegExp('--' + name + ':\\s*#([0-9a-fA-F]{6})\\s*;'));
+  if (!match) {
+    fail('tokens.css: --' + name + ' saknas eller är inte #rrggbb');
+  }
+  const hex = match[1];
+  return {
+    r: parseInt(hex.slice(0, 2), 16),
+    g: parseInt(hex.slice(2, 4), 16),
+    b: parseInt(hex.slice(4, 6), 16),
+  };
+}
 
-/** Accentfargen, pixelmatt ur loggan (ARKITEKTUR.md). Satts rakt av. */
-const ACCENT = { r: 252, g: 111, b: 3 };
+/** Luminans pa 8-bitarsvarden, ingen linjarisering. */
+function lum(r, g, b) {
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
 
-/**
- * Loggans botten ar #020202 och market #FC6F03. Roda kanalen bar hela
- * overgangen 2 -> 252, sa alfa = (R - 2) / 250 klamrat till 0..1.
- */
-const LOGO_BASE_R = 2;
-const ALPHA_SPAN = 250;
+/** true om varje kanal ligger inom tol. */
+function nearRgb(actual, expected, tol) {
+  return (
+    Math.abs(actual.r - expected.r) <= tol &&
+    Math.abs(actual.g - expected.g) <= tol &&
+    Math.abs(actual.b - expected.b) <= tol
+  );
+}
 
-/** Nedskalning sker FRAN 672-underlaget, aldrig fore alfa-steget. */
-const ICON_SIZES = [192, 96, 32];
+/** "r,g,b" for GRIND-raderna. */
+function rgbText({ r, g, b }) {
+  return r + ',' + g + ',' + b;
+}
 
-/** Maxstorlek i kB enligt ARKITEKTUR.md, "Utdatafiler for ikonen". */
-const ICON_SIZE_LIMIT_KB = {
-  'logo-mark-32.png': 1,
-  'logo-mark-96.png': 4,
-  'logo-mark-192.png': 10,
-};
+/** Pixeln (x, y) i en raw-buffert med sharps info. a = 255 nar channels === 3. */
+function pixelAt(raw, { width, channels }, x, y) {
+  const o = (y * width + x) * channels;
+  return {
+    r: raw[o],
+    g: raw[o + 1],
+    b: raw[o + 2],
+    a: channels === 4 ? raw[o + 3] : 255,
+  };
+}
 
-/**
- * TAJTA, ICKE-KVADRATISKA varianter for HEADERN (ARKITEKTUR.md, "Ikonens
- * optiska storlek - rattat efter paket 2B").
- *
- * Den kvadratiska 672-ikonen har 115 px genomskinlig luft upptill och nedtill,
- * sa i en 44-ruta blir det SYNLIGA market bara ca 39 x 29 px. Headern anvander
- * darfor ett tajt uttag, renderat med `height: 36px; width: auto` -> ca
- * 48 x 36 px. Kvadraten behalls dar kvadrat KRAVS: favicon och apple-touch.
- *
- * Samma script, samma tajta uttag - filerna skrivs bara ut FORE extend()-steget.
- * Hojden foljer av bredden och bevarad proportion (592 : 442) och jamfors mot
- * arkitekturens tabell:
- *
- *   logo-mark-tight-96.png    96 x 72
- *   logo-mark-tight-192.png   192 x 143
- *
- * ARKITEKTUR.md anger inget storlekstak for dessa tva (tabellen i "Utdatafiler
- * for ikonen" galler de kvadratiska). Storlekarna skrivs darfor ut utan gate.
- */
-const TIGHT_SIZES = [
-  { width: 192, height: 143 },
-  { width: 96, height: 72 },
-];
+/** Vanligaste RGB bland pixlar i rektangeln med alfa === 255. raw har 3 eller 4 kanaler. */
+function modeRgb(raw, { x0, y0, x1, y1 }) {
+  const counts = new Map();
+  for (let y = y0; y <= y1; y++) {
+    for (let x = x0; x <= x1; x++) {
+      const p = pixelAt(raw.data, raw.info, x, y);
+      if (p.a !== 255) continue;
+      const key = rgbText(p);
+      counts.set(key, (counts.get(key) ?? 0) + 1);
+    }
+  }
+  let best = null;
+  let bestCount = 0;
+  for (const [key, count] of counts) {
+    if (count > bestCount) {
+      best = key;
+      bestCount = count;
+    }
+  }
+  if (best === null) return null;
+  const [r, g, b] = best.split(',').map(Number);
+  return { r, g, b };
+}
+
+/** Distinkta RGB bland pixlar med alfa > 0 i rektangeln. */
+function distinctVisibleRgb(raw, { x0, y0, x1, y1 }) {
+  const seen = new Map();
+  for (let y = y0; y <= y1; y++) {
+    for (let x = x0; x <= x1; x++) {
+      const p = pixelAt(raw.data, raw.info, x, y);
+      if (p.a === 0) continue;
+      const key = rgbText(p);
+      if (!seen.has(key)) seen.set(key, { r: p.r, g: p.g, b: p.b });
+    }
+  }
+  return [...seen.values()];
+}
+
+/** Mått, kanaler, hasAlpha och storlek för en kodad buffert. Skriver GRIND-raderna, returnerar antal fel. */
+async function checkPng(name, buffer, { width, height, hasAlpha, limitKb }) {
+  const m = await sharp(buffer).metadata();
+  const channels = hasAlpha ? 4 : 3;
+  const size = kB(buffer.length);
+
+  const dimsOk = m.width === width && m.height === height;
+  const alphaOk = m.channels === channels && m.hasAlpha === hasAlpha;
+  const sizeOk = size <= limitKb;
+
+  console.log('    GRIND: matt             : ' + m.width + ' x ' + m.height +
+    '   (ska vara ' + width + ' x ' + height + ': ' + (dimsOk ? 'ja' : 'NEJ') + ')');
+  console.log('    GRIND: kanaler/hasAlpha : ' + m.channels + ' / ' + m.hasAlpha +
+    '   (ska vara ' + channels + ' / ' + hasAlpha + ': ' + (alphaOk ? 'ja' : 'NEJ') + ')');
+  console.log('    GRIND: storlek          : ' + size.toFixed(2) + ' kB' +
+    '   (tak ' + limitKb + ' kB: ' + (sizeOk ? 'ja' : 'NEJ') + ')');
+
+  return (dimsOk ? 0 : 1) + (alphaOk ? 0 : 1) + (sizeOk ? 0 : 1);
+}
+
+/** Grindar som inte holl. Korningen fallerar pa listan, fore skrivfasen. */
+const failedGates = [];
+
+/** Text for en grinds forsta avvikande pixel. */
+const firstText = (first) =>
+  first ? ', forsta (' + first.x + ', ' + first.y + ') = ' + rgbText(first.p) : '';
+
+const ACCENT_RGB = readTokenHex('accent');
+const INK_RGB = readTokenHex('ink');
 
 console.log('');
 console.log('=========================================================');
-console.log(' Monogram-ikon -> logo-mark-{32,96,192}.png + logo-mark-tight-{96,192}.png');
+console.log(' Loggan -> jq-logo-{34,68,102}.png, ikonen -> jq-icon-{32,96,192}.png  (M20)');
 console.log('=========================================================');
 
 const logoStat = await readSourceStat(LOGO_SOURCE);
 
 console.log('kalla : ' + LOGO_SOURCE);
 console.log('        ' + kB(logoStat.size).toFixed(0) + ' kB, andrad ' + logoStat.mtime.toISOString());
-console.log('utdata: ' + ICON_OUT_DIR);
+console.log('utdata: ' + LOGO_OUT_DIR);
+console.log('UPPLYSNING: --accent ' + rgbText(ACCENT_RGB) + ', --ink ' + rgbText(INK_RGB) + ' (ur tokens.css)');
 
+// --- 1. Kallgrindarna S1-S6, bara i LOGO_OPAQUE_ROWS ----------------------
 const logoMeta = await sharp(LOGO_SOURCE).metadata();
+const sourceRaw = await sharp(LOGO_SOURCE).raw().toBuffer({ resolveWithObject: true });
+const src = sourceRaw.data;
+const srcInfo = sourceRaw.info;
+
 console.log('');
-console.log('--- INDATA ---');
-console.log('  format                : ' + logoMeta.format);
-console.log('  matt                  : ' + logoMeta.width + ' x ' + logoMeta.height);
+console.log('--- KALLGRINDAR ---');
+console.log('  UPPLYSNING: format, kanaler, hasAlpha : ' + logoMeta.format + ', ' +
+  logoMeta.channels + ', ' + logoMeta.hasAlpha);
 
-/* GRIND, inte upplysning. Alfa-formeln lanedan laser ENBART roda kanalen:
- * alfa = (R - 2) / 250. Hade kallan haft en alfakanal vore roda varder i
- * genomskinliga omraden godtyckliga, och formeln hade gett dem alfa utan att
- * nagot larmat. Raden skrevs tidigare ut utan jamforelse. */
-const logoHasAlpha = logoMeta.hasAlpha === true;
-console.log('  GRIND: kanaler/hasAlpha : ' + logoMeta.channels + ' / ' + logoMeta.hasAlpha +
-  '   (ska vara utan alfa: ' + (logoHasAlpha ? 'NEJ' : 'ja') + ')');
-
-if (logoHasAlpha) {
+/* S1. Allt nedan ar matt i just dessa koordinater. */
+const s1Ok = logoMeta.width === LOGO_EXPECTED_WIDTH && logoMeta.height === LOGO_EXPECTED_HEIGHT;
+console.log('  GRIND: S1 matt : ' + logoMeta.width + ' x ' + logoMeta.height +
+  '   (ska vara ' + LOGO_EXPECTED_WIDTH + ' x ' + LOGO_EXPECTED_HEIGHT + ': ' + (s1Ok ? 'ja' : 'NEJ') + ')');
+if (!s1Ok) {
   fail(
-    'kallan logo.png har en alfakanal. Alfa-formeln (R - 2) / 250 laser enbart\n' +
-      '  roda kanalen och ar inte giltig da - roda varden i genomskinliga\n' +
-      '  omraden ar godtyckliga. STANNA och lamna tillbaka till arkitekten.',
-  );
-}
-
-if (logoMeta.width !== LOGO_EXPECTED_WIDTH || logoMeta.height !== LOGO_EXPECTED_HEIGHT) {
-  fail(
-    'ovantade matt pa logo.png.\n' +
+    'S1: ovantade matt pa jq-logo-light.png.\n' +
       '  forvantat: ' + LOGO_EXPECTED_WIDTH + ' x ' + LOGO_EXPECTED_HEIGHT + '\n' +
       '  faktiskt : ' + logoMeta.width + ' x ' + logoMeta.height + '\n' +
-      '  Den uppmatta monogram-bboxen galler just dessa matt. Mat om loggan\n' +
-      '  i stallet for att kora vidare.',
+      '  Ar loggan bytt ska ARKITEKTUR.md, M20, ses over forst.',
   );
 }
 
-// --- 1. Blockdetektering: hitta monogrammet, gissa ingen troskel -----------
-const logoRaw = await sharp(LOGO_SOURCE).raw().toBuffer({ resolveWithObject: true });
-const logoChannels = logoRaw.info.channels;
+/* Rutans rena yta och kantringen 1 px utanfor den, inklusive andpunkter. */
+const sqX0 = LOGO_SQUARE.left;
+const sqY0 = LOGO_SQUARE.top;
+const sqX1 = LOGO_SQUARE.left + LOGO_SQUARE.width - 1;
+const sqY1 = LOGO_SQUARE.top + LOGO_SQUARE.height - 1;
+const ringX0 = sqX0 - 1;
+const ringY0 = sqY0 - 1;
+const ringX1 = sqX1 + 1;
+const ringY1 = sqY1 + 1;
+const inSquare = (x, y) => x >= sqX0 && x <= sqX1 && y >= sqY0 && y <= sqY1;
+const inRing = (x, y) =>
+  x >= ringX0 && x <= ringX1 && y >= ringY0 && y <= ringY1 && !inSquare(x, y);
 
-const orangeRows = [];
-for (let y = 0; y < logoRaw.info.height; y++) {
-  const rowStart = y * logoRaw.info.width * logoChannels;
-  for (let x = 0; x < logoRaw.info.width; x++) {
-    const i = rowStart + x * logoChannels;
-    if (isOrange(logoRaw.data, i)) {
-      orangeRows.push(y);
-      break;
+const cropX1 = LOGO_CROP.left + LOGO_CROP.width - 1;
+const cropY1 = LOGO_CROP.top + LOGO_CROP.height - 1;
+const inCrop = (x, y) => x >= LOGO_CROP.left && x <= cropX1 && y >= LOGO_CROP.top && y <= cropY1;
+
+/* S2. Uttagen och kantringen ligger i de opaka raderna, och de raderna ar
+ * opaka. Transparensformeln forutsatter en opak botten. */
+const rowsInside = (top, bottom) =>
+  top >= LOGO_OPAQUE_ROWS.top && bottom <= LOGO_OPAQUE_ROWS.bottom;
+const s2Rects =
+  rowsInside(LOGO_CROP.top, cropY1) &&
+  rowsInside(ICON_CROP.top, ICON_CROP.top + ICON_CROP.height - 1) &&
+  rowsInside(ringY0, ringY1);
+let s2Transparent = 0;
+if (srcInfo.channels === 4) {
+  for (let y = LOGO_OPAQUE_ROWS.top; y <= LOGO_OPAQUE_ROWS.bottom; y++) {
+    for (let x = 0; x < srcInfo.width; x++) {
+      if (pixelAt(src, srcInfo, x, y).a !== 255) s2Transparent++;
     }
   }
 }
+const s2Ok = s2Rects && s2Transparent === 0;
+console.log('  GRIND: S2 uttag och kantring inom rad ' + LOGO_OPAQUE_ROWS.top + '-' +
+  LOGO_OPAQUE_ROWS.bottom + ' : ' + (s2Rects ? 'ja' : 'NEJ') +
+  ', pixlar med alfa < 255 i raderna : ' + s2Transparent +
+  '   (ska vara ja och 0: ' + (s2Ok ? 'ja' : 'NEJ') + ')');
+if (!s2Ok) failedGates.push('S2');
 
-/* Ett glapp pa MER an 4 omarkerade rader bryter ett block. Mellan tva
- * markerade rader y och yPrev ligger (y - yPrev - 1) omarkerade rader, sa
- * samma block fortsatter sa lange y - yPrev <= 5. */
-const blocks = [];
-for (const y of orangeRows) {
-  const open = blocks[blocks.length - 1];
-  if (open && y - open.y1 <= ORANGE_ROW_GAP + 1) open.y1 = y;
-  else blocks.push({ y0: y, y1: y });
-}
-
-const tallest = blocks.reduce(
-  (best, b) => (b.y1 - b.y0 > best.y1 - best.y0 ? b : best),
-  blocks[0] ?? { y0: 0, y1: -1 },
-);
-
-/* Omslutande rektangel i x-led for ENBART det valda blocket. */
-let markX0 = logoRaw.info.width;
-let markX1 = -1;
-for (let y = tallest.y0; y <= tallest.y1; y++) {
-  const rowStart = y * logoRaw.info.width * logoChannels;
-  for (let x = 0; x < logoRaw.info.width; x++) {
-    const i = rowStart + x * logoChannels;
-    if (isOrange(logoRaw.data, i)) {
-      if (x < markX0) markX0 = x;
-      if (x > markX1) markX1 = x;
+/* S3. Allt utanfor uttaget och kantringen ar botten: uttaget klipper inte
+ * ordmarket. */
+let s3Off = 0;
+let s3First = null;
+for (let y = LOGO_OPAQUE_ROWS.top; y <= LOGO_OPAQUE_ROWS.bottom; y++) {
+  for (let x = 0; x < srcInfo.width; x++) {
+    if (inCrop(x, y) || inRing(x, y)) continue;
+    const p = pixelAt(src, srcInfo, x, y);
+    if (!nearRgb(p, LOGO_BG_RGB, COLOR_TOLERANCE)) {
+      s3Off++;
+      if (!s3First) s3First = { x, y, p };
     }
   }
 }
+const s3Ok = s3Off === 0;
+console.log('  GRIND: S3 pixlar utanfor uttaget och kantringen som inte ar botten : ' + s3Off +
+  '   (ska vara 0: ' + (s3Ok ? 'ja' : 'NEJ' + firstText(s3First)) + ')');
+if (!s3Ok) failedGates.push('S3');
 
-const bbox = { x0: markX0, x1: markX1, y0: tallest.y0, y1: tallest.y1 };
-const MARK_CROP = {
-  left: bbox.x0,
-  top: bbox.y0,
-  width: bbox.x1 - bbox.x0 + 1,
-  height: bbox.y1 - bbox.y0 + 1,
-};
-
-console.log('');
-console.log('--- BLOCKDETEKTERING (orange: R - G >= ' + ORANGE_MIN_DELTA +
-  ' && R > ' + ORANGE_MIN_RED + ') ---');
-console.log('  GRIND: antal orange block : ' + blocks.length +
-  '   (ARKITEKTUR.md anger ' + EXPECTED_BLOCKS + ')' +
-  (blocks.length === EXPECTED_BLOCKS ? '  ok' : '  <- AVVIKER'));
-for (const b of blocks) {
-  console.log('    block y ' + b.y0 + '..' + b.y1 + '  (' + (b.y1 - b.y0 + 1) + ' rader)' +
-    (b === tallest ? '  <- hogst, valt' : ''));
+/* S4. Den rena ytans fyra yttre linjer ar --accent: rutans lage pa pixeln. */
+let s4Off = 0;
+let s4First = null;
+for (let y = sqY0; y <= sqY1; y++) {
+  for (let x = sqX0; x <= sqX1; x++) {
+    if (y !== sqY0 && y !== sqY1 && x !== sqX0 && x !== sqX1) continue;
+    const p = pixelAt(src, srcInfo, x, y);
+    if (!nearRgb(p, ACCENT_RGB, COLOR_TOLERANCE)) {
+      s4Off++;
+      if (!s4First) s4First = { x, y, p };
+    }
+  }
 }
-const bboxOk =
-  bbox.x0 === EXPECTED_MARK_BBOX.x0 &&
-  bbox.x1 === EXPECTED_MARK_BBOX.x1 &&
-  bbox.y0 === EXPECTED_MARK_BBOX.y0 &&
-  bbox.y1 === EXPECTED_MARK_BBOX.y1;
-console.log('  GRIND: orange bbox        : x ' + bbox.x0 + '..' + bbox.x1 +
-  ', y ' + bbox.y0 + '..' + bbox.y1 +
-  '   (' + MARK_CROP.width + ' x ' + MARK_CROP.height + ' px)');
-console.log('         uppmatt facit      : x ' + EXPECTED_MARK_BBOX.x0 + '..' + EXPECTED_MARK_BBOX.x1 +
-  ', y ' + EXPECTED_MARK_BBOX.y0 + '..' + EXPECTED_MARK_BBOX.y1 +
-  '   (' + (bboxOk ? 'ok' : 'AVVIKER') + ')');
+const s4Ok = s4Off === 0;
+console.log('  GRIND: S4 pixlar pa rena ytans yttre linjer (x ' + sqX0 + '-' + sqX1 + ', y ' +
+  sqY0 + '-' + sqY1 + ') som inte ar --accent : ' + s4Off +
+  '   (ska vara 0: ' + (s4Ok ? 'ja' : 'NEJ' + firstText(s4First)) + ')');
+if (!s4Ok) failedGates.push('S4');
 
-/* Tva oberoende HARDA kontroller: blockantalet och bboxen. Ingen av dem far
- * bara skrivas ut (ARKITEKTUR.md, "Tva oberoende kontroller, bada ska stamma").
- * Talen justeras ALDRIG for hand - en avvikelse betyder att detekteringen gor
- * nagot annat an matningen gjorde, och da lamnas paketet tillbaka. */
-if (blocks.length !== EXPECTED_BLOCKS) {
-  fail(
-    'antalet orange block ar ' + blocks.length + ', forvantat ' + EXPECTED_BLOCKS + '.\n' +
-      '  Nagot i bilden har andrats som vi inte forstar. STANNA och lamna\n' +
-      '  tillbaka till arkitekten - justera inte troskeln for hand.',
-  );
+/* S5. Varje pixel i kantringen ligger pa linjen botten-accent. Med S3 och S4
+ * ar kanten da hogst 1 px bred. */
+let s5Off = 0;
+let s5First = null;
+for (let y = ringY0; y <= ringY1; y++) {
+  for (let x = ringX0; x <= ringX1; x++) {
+    if (!inRing(x, y)) continue;
+    const p = pixelAt(src, srcInfo, x, y);
+    let c = (LOGO_BG_RGB.b - p.b) / (LOGO_BG_RGB.b - ACCENT_RGB.b);
+    if (c < 0) c = 0;
+    else if (c > 1) c = 1;
+    const mix = {
+      r: Math.round(LOGO_BG_RGB.r + c * (ACCENT_RGB.r - LOGO_BG_RGB.r)),
+      g: Math.round(LOGO_BG_RGB.g + c * (ACCENT_RGB.g - LOGO_BG_RGB.g)),
+      b: Math.round(LOGO_BG_RGB.b + c * (ACCENT_RGB.b - LOGO_BG_RGB.b)),
+    };
+    if (!nearRgb(p, mix, COLOR_TOLERANCE)) {
+      s5Off++;
+      if (!s5First) s5First = { x, y, p };
+    }
+  }
 }
+const s5Ok = s5Off === 0;
+console.log('  GRIND: S5 pixlar i kantringen (x ' + ringX0 + '-' + ringX1 + ', y ' + ringY0 + '-' +
+  ringY1 + ') som inte ar en blandning botten-accent : ' + s5Off +
+  '   (ska vara 0: ' + (s5Ok ? 'ja' : 'NEJ' + firstText(s5First)) + ')');
+if (!s5Ok) failedGates.push('S5');
 
-if (!bboxOk) {
-  fail(
-    'detekteringen avviker fran den uppmatta monogram-bboxen.\n' +
-      '  Justera INTE talen for hand. Avvikelsen betyder att detekteringen gor\n' +
-      '  nagot annat an matningen gjorde - lamna tillbaka till arkitekten.',
-  );
+/* S6. Mellanrummet ar botten: ruta och ordmarke ar atskilda, sa delningen
+ * i steg 3 och 5 ar giltig. */
+let s6Off = 0;
+let s6First = null;
+for (let y = sqY0; y <= sqY1; y++) {
+  for (let x = ringX1 + 1; x < LOGO_GAP_END; x++) {
+    const p = pixelAt(src, srcInfo, x, y);
+    if (!nearRgb(p, LOGO_BG_RGB, COLOR_TOLERANCE)) {
+      s6Off++;
+      if (!s6First) s6First = { x, y, p };
+    }
+  }
 }
+const s6Ok = s6Off === 0;
+console.log('  GRIND: S6 pixlar i mellanrummet x ' + (ringX1 + 1) + '-' + (LOGO_GAP_END - 1) +
+  ', y ' + sqY0 + '-' + sqY1 + ' som inte ar botten : ' + s6Off +
+  '   (ska vara 0: ' + (s6Ok ? 'ja' : 'NEJ' + firstText(s6First)) + ')');
+if (!s6Ok) failedGates.push('S6');
 
-// --- 2. Kvadraten gors med genomskinlig utfyllnad, inte ur kallan ----------
-const padX = (ICON_SIDE - MARK_CROP.width) / 2;
-const padY = (ICON_SIDE - MARK_CROP.height) / 2;
+// --- 2-3. Uttaget och transparensen ---------------------------------------
+const LUM_BG = lum(LOGO_BG_RGB.r, LOGO_BG_RGB.g, LOGO_BG_RGB.b);
+const LUM_TEXT = lum(LOGO_TEXT_RGB.r, LOGO_TEXT_RGB.g, LOGO_TEXT_RGB.b);
 
-console.log('');
-console.log('--- BESKARNING OCH UTFYLLNAD ---');
-/* Uppmatta lagen i kallan (BRIEF.md). Uttagets underkant maste ligga OVANFOR
- * bada - annars kan alfa-formeln farga den vita ordbilden orange. Dessa tva
- * rader skrevs tidigare ut som "ja/NEJ" utan att ett NEJ stoppade nagot. */
-const WORDMARK_TOP_ROW = 836;
-const STREAK_TOP_ROW = 915;
+const cropRaw = await sharp(LOGO_SOURCE)
+  .extract(LOGO_CROP)
+  .ensureAlpha()
+  .raw()
+  .toBuffer({ resolveWithObject: true });
 
-const cropBottomRow = MARK_CROP.top + MARK_CROP.height - 1;
-const wordmarkOutside = cropBottomRow < WORDMARK_TOP_ROW;
-const streakOutside = cropBottomRow < STREAK_TOP_ROW;
-const padOk = Number.isInteger(padX) && Number.isInteger(padY) && padX >= 0 && padY >= 0;
+const cropPixels = LOGO_CROP.width * LOGO_CROP.height;
+const rgba = Buffer.allocUnsafe(cropPixels * 4);
 
-console.log('  extract (tajt mot market) : left=' + MARK_CROP.left + ' top=' + MARK_CROP.top +
-  ' width=' + MARK_CROP.width + ' height=' + MARK_CROP.height);
-console.log('  GRIND: ordbilden (vit) y ' + WORDMARK_TOP_ROW + '..872 utanfor uttaget (' +
-  MARK_CROP.top + '..' + cropBottomRow + ') : ' + (wordmarkOutside ? 'ja' : 'NEJ'));
-console.log('  GRIND: korta strecket y ' + STREAK_TOP_ROW + '..920 utanfor uttaget : ' +
-  (streakOutside ? 'ja' : 'NEJ'));
-console.log('  GRIND: extend till ' + ICON_SIDE + ' x ' + ICON_SIDE + ' : top=' + padY +
-  ' bottom=' + padY + ' left=' + padX + ' right=' + padX + '  (alfa 0, jamnt ut: ' +
-  (padOk ? 'ja' : 'NEJ') + ')');
-
-if (!wordmarkOutside || !streakOutside) {
-  fail(
-    'uttaget nar ned i ordbilden eller det korta strecket.\n' +
-      '  uttagets underkant : rad ' + cropBottomRow + '\n' +
-      '  ordbilden borjar   : rad ' + WORDMARK_TOP_ROW + '\n' +
-      '  strecket borjar    : rad ' + STREAK_TOP_ROW + '\n' +
-      '  Alfa-formeln hade fargat de vita pixlarna orange. STANNA och lamna\n' +
-      '  tillbaka till arkitekten.',
-  );
-}
-
-if (!padOk) {
-  fail(
-    'utfyllnaden gar inte jamnt ut mot ' + ICON_SIDE + ' px: padX=' + padX + ' padY=' + padY + '.',
-  );
-}
-
-// --- 3. Alfa-steget pa det tajta uttaget -----------------------------------
-const markRaw = await sharp(LOGO_SOURCE).extract(MARK_CROP).raw().toBuffer({ resolveWithObject: true });
-const markChannels = markRaw.info.channels;
-const markPixels = MARK_CROP.width * MARK_CROP.height;
-
-const rgba = Buffer.allocUnsafe(markPixels * 4);
-let alphaZero = 0;
-let alphaFull = 0;
-let alphaSoft = 0;
-
-for (let p = 0; p < markPixels; p++) {
-  const red = markRaw.data[p * markChannels];
-  let alpha = (red - LOGO_BASE_R) / ALPHA_SPAN;
-  if (alpha < 0) alpha = 0;
-  else if (alpha > 1) alpha = 1;
-  const a = Math.round(alpha * 255);
-
+for (let p = 0; p < cropPixels; p++) {
   const o = p * 4;
-  rgba[o] = ACCENT.r;
-  rgba[o + 1] = ACCENT.g;
-  rgba[o + 2] = ACCENT.b;
-  rgba[o + 3] = a;
+  const x = p % LOGO_CROP.width;
+  const r = cropRaw.data[o];
+  const g = cropRaw.data[o + 1];
+  const b = cropRaw.data[o + 2];
 
-  if (a === 0) alphaZero++;
-  else if (a === 255) alphaFull++;
-  else alphaSoft++;
+  if (x < LOGO_SQUARE.width) {
+    /* Rutan: egna RGB, opak. */
+    rgba[o] = r;
+    rgba[o + 1] = g;
+    rgba[o + 2] = b;
+    rgba[o + 3] = 255;
+  } else {
+    /* Ordmarket och rutans hogra kantkolumn: --ink, alfa ur luminansen mellan
+     * botten och text. */
+    let alpha = (LUM_BG - lum(r, g, b)) / (LUM_BG - LUM_TEXT);
+    if (alpha < 0) alpha = 0;
+    else if (alpha > 1) alpha = 1;
+    rgba[o] = INK_RGB.r;
+    rgba[o + 1] = INK_RGB.g;
+    rgba[o + 2] = INK_RGB.b;
+    rgba[o + 3] = Math.round(alpha * 255);
+  }
 }
 
 console.log('');
-console.log('--- ALFA-STEGET (alfa = (R - 2) / 250, RGB = #FC6F03) ---');
-console.log('  UPPLYSNING: kanaler i uttaget         : ' + markChannels);
-console.log('  UPPLYSNING: helt genomskinliga pixlar : ' + alphaZero);
-console.log('  UPPLYSNING: helt tacka pixlar         : ' + alphaFull);
+console.log('--- TRANSPARENS ---');
+console.log('  UPPLYSNING: LUM_BG ' + LUM_BG.toFixed(2) + ', LUM_TEXT ' + LUM_TEXT.toFixed(2));
 
-/* GRIND, inte upplysning. Raden skrevs tidigare ut med texten "0 skulle betyda
- * trappad kant" utan att 0 stoppade nagot - alltsa en grans i text men ingen i
- * kod. Kallan ar en 1254 px kantutjamnad PNG dar roda kanalen bar hela
- * overgangen 2 -> 252, sa noll mellanlagen betyder att alfa-formeln kollapsat
- * till tva niva och att market far trappad kant. */
-console.log('  GRIND: mellanlagen (mjuk kant)        : ' + alphaSoft +
-  '   (ska vara > 0: ' + (alphaSoft > 0 ? 'ja' : 'NEJ') + ')');
-
-if (alphaSoft === 0) {
-  fail(
-    'noll mellanlagen i alfakanalen - market far trappad kant.\n' +
-      '  Alfa-formeln (R - 2) / 250 har kollapsat till tva nivaer. Troligen har\n' +
-      '  nedskalningen skett FORE alfa-steget.',
-  );
-}
-
-/**
- * STEG 8 i ARKITEKTUR.md:s steglista: satt RGB till accentfargen IGEN efter
- * resize(), utan att rora alfakanalen.
- *
- * `resize()` interpolerar alla fyra kanalerna, sa RGB driver isar vid
- * nedskalning. Uppmatt i paket 2B: 106 / 204 / 219 distinkta RGB-varden bland
- * pixlar med alfa > 0, daribland 255,0,0 och 255,255,0, och 15 steg fel i
- * gronkanalen pa en HELT OPAK pixel. Foljden hade blivit rod- och gulstick i
- * kanterna och en heltackande orange som inte langre matchar loggans uppmatta
- * accentfarg.
- *
- * Steget upprattholler bara den invariant dokumentet redan beskriver - "ett
- * rent orange marke". Galler BADE de kvadratiska och de tajta filerna.
- *
- * @returns {number} storsta avvikelsen per kanal fore atersattningen.
- */
-function resetAccentRgb(data, pixels) {
-  let drift = 0;
-  for (let p = 0; p < pixels; p++) {
-    const o = p * 4;
-    if (data[o + 3] > 0) {
-      const err = Math.max(
-        Math.abs(data[o] - ACCENT.r),
-        Math.abs(data[o + 1] - ACCENT.g),
-        Math.abs(data[o + 2] - ACCENT.b),
-      );
-      if (err > drift) drift = err;
-    }
-    data[o] = ACCENT.r;
-    data[o + 1] = ACCENT.g;
-    data[o + 2] = ACCENT.b;
-  }
-  return drift;
-}
-
-/**
- * Verifiering av steg 8: antalet distinkta RGB-varden bland pixlar med
- * alfa > 0 ska vara EXAKT 1, och det ska vara 252, 111, 3.
- *
- * @returns {string[]} de distinkta varden som faktiskt finns i bufferten.
- */
-function distinctVisibleRgb(data, pixels) {
-  const seen = new Set();
-  for (let p = 0; p < pixels; p++) {
-    const o = p * 4;
-    if (data[o + 3] > 0) seen.add(data[o] + ',' + data[o + 1] + ',' + data[o + 2]);
-  }
-  return [...seen];
-}
-
-const ACCENT_KEY = ACCENT.r + ',' + ACCENT.g + ',' + ACCENT.b;
-
-// --- 3b. TAJTA filer for headern, harledda FORE extend() ------------------
+// --- 4-6. Loggan per hojd -------------------------------------------------
 console.log('');
-console.log('--- TAJTA HEADER-FILER (harleds FORE extend, ingen kvadratisk luft) ---');
-console.log('  GRIND: fil                matt         storlek   resize-drift');
+console.log('--- LOGGAN (kodad till buffert, inte skriven an) ---');
 
-const tightIcons = [];
+const logoFiles = [];
 
-for (const want of TIGHT_SIZES) {
-  const name = 'logo-mark-tight-' + want.width + '.png';
-  const target = resolve(ICON_OUT_DIR, name);
+for (const h of LOGO_HEIGHTS) {
+  const w = LOGO_EXPECTED_WIDTHS[h];
+  const name = 'jq-logo-' + h + '.png';
+  const squareEnd = Math.ceil((LOGO_SQUARE.width * w) / LOGO_CROP.width);
+  /* Rutans inre slutar LANCZOS_REACH utdatapixlar fore dess hogra kant:
+   * karnans negativa lob vid kanten mot den genomskinliga luckan ar inte ett
+   * hal i rutan. */
+  const innerEnd = Math.floor((LOGO_SQUARE.width * w) / LOGO_CROP.width - LANCZOS_REACH - 0.5);
 
-  /* Enbart bredden anges - sharp raknar hojden ur bevarad proportion
-   * (592 : 442). Hojden JAMFORS mot arkitekturens tabell i stallet for att
-   * tvingas fram, sa att en avvikelse syns i stallet for att doljas av en
-   * beskarning. */
   const resized = await sharp(rgba, {
-    raw: { width: MARK_CROP.width, height: MARK_CROP.height, channels: 4 },
+    raw: { width: LOGO_CROP.width, height: LOGO_CROP.height, channels: 4 },
   })
-    .resize({ width: want.width })
+    .resize({ width: w, height: h, fit: 'fill' })
     .raw()
     .toBuffer({ resolveWithObject: true });
 
-  if (resized.info.width !== want.width || resized.info.height !== want.height) {
-    fail(
-      'tajta varianten blev ' + resized.info.width + ' x ' + resized.info.height +
-        ', ARKITEKTUR.md anger ' + want.width + ' x ' + want.height + '.',
-    );
+  /* Steg 5: resize() interpolerar RGB, sa ordmarkets farg aterstalls. Alfa
+   * rors inte, rutans pixlar rors inte. */
+  for (let y = 0; y < resized.info.height; y++) {
+    for (let x = squareEnd; x < resized.info.width; x++) {
+      const o = (y * resized.info.width + x) * 4;
+      resized.data[o] = INK_RGB.r;
+      resized.data[o + 1] = INK_RGB.g;
+      resized.data[o + 2] = INK_RGB.b;
+    }
   }
-
-  const drift = resetAccentRgb(resized.data, resized.info.width * resized.info.height);
 
   const encoded = await sharp(resized.data, {
     raw: { width: resized.info.width, height: resized.info.height, channels: 4 },
   })
     .png({ compressionLevel: 9 })
-    .toBuffer({ resolveWithObject: true });
+    .toBuffer();
 
-  queueWrite(target, encoded.data);
+  queueWrite(resolve(LOGO_OUT_DIR, name), encoded);
+  logoFiles.push({ name, kb: kB(encoded.length) });
 
-  tightIcons.push({
-    name,
-    buffer: encoded.data,
-    width: want.width,
-    height: want.height,
-    kb: kB(encoded.info.size),
-    drift,
-  });
+  console.log('  ' + name);
 
-  console.log(
-    '  ' + name.padEnd(26) +
-    (encoded.info.width + 'x' + encoded.info.height).padEnd(13) +
-    (kB(encoded.info.size).toFixed(2) + ' kB').padStart(9) +
-    ('   ' + drift + ' steg').padEnd(12),
-  );
-}
+  /* L1. Bredden ur proportionen ska vara tabellens bredd. */
+  const formulaWidth = Math.round((h * LOGO_CROP.width) / LOGO_CROP.height);
+  const l1Ok = formulaWidth === w;
+  console.log('    GRIND: L1 bredd ur proportionen : ' + formulaWidth +
+    '   (ska vara ' + w + ': ' + (l1Ok ? 'ja' : 'NEJ') + ')');
+  if (!l1Ok) failedGates.push('L1 ' + name);
 
-console.log('');
-console.log('--- KONTROLL AV DE TAJTA FILERNA (last ur buffertarna) ---');
-
-let tightProblems = 0;
-
-for (const icon of tightIcons) {
-  const m = await sharp(icon.buffer).metadata();
-  const raw = await sharp(icon.buffer).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-  const pixels = raw.info.width * raw.info.height;
-  const distinct = distinctVisibleRgb(raw.data, pixels);
-
-  let softPixels = 0;
-  let visible = 0;
-  for (let p = 0; p < pixels; p++) {
-    const a = raw.data[p * 4 + 3];
-    if (a > 0) visible++;
-    if (a > 0 && a < 255) softPixels++;
+  /* L1 matt, L2 och L3. */
+  if (
+    (await checkPng(name, encoded, {
+      width: w,
+      height: h,
+      hasAlpha: true,
+      limitKb: LOGO_SIZE_LIMIT_KB[h],
+    })) > 0
+  ) {
+    failedGates.push('L1-L3 ' + name);
   }
 
-  const dimsOk = m.width === icon.width && m.height === icon.height;
-  const alphaOk = m.channels === 4 && m.hasAlpha === true;
-  const rgbOk = distinct.length === 1 && distinct[0] === ACCENT_KEY;
-  const softOk = softPixels > 0;
-  if (!dimsOk || !alphaOk || !rgbOk || !softOk) tightProblems++;
+  const out = await sharp(encoded).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const inner = { x0: 1, y0: 1, x1: innerEnd, y1: h - 2 };
+  const word = { x0: squareEnd, y0: 0, x1: w - 1, y1: h - 1 };
 
-  console.log('  ' + icon.name);
-  console.log('    GRIND: matt             : ' + m.width + ' x ' + m.height +
-    '   (' + (dimsOk ? 'ok' : 'FEL, forvantat ' + icon.width + ' x ' + icon.height) + ')');
-  console.log('    GRIND: kanaler/hasAlpha : ' + m.channels + ' / ' + m.hasAlpha +
-    '   (' + (alphaOk ? 'ok, PNG med alfa' : 'FEL, ska vara 4 / true') + ')');
-  console.log('    GRIND: distinkta RGB    : ' + distinct.length + ' st  [' + distinct.join('] [') + ']' +
-    '   (' + (rgbOk ? 'ok, exakt 1 och = ' + ACCENT_KEY : 'FEL, ska vara exakt 1 = ' + ACCENT_KEY) + ')');
-  console.log('    GRIND: mellanlagen      : ' + softPixels +
-    '   (ska vara > 0: ' + (softOk ? 'ja' : 'NEJ, trappad kant') + ')');
-  console.log('    UPPLYSNING: pixlar med alfa > 0 : ' + visible);
-  console.log('    UPPLYSNING: hornpixel (0,0) alfa: ' + raw.data[3] +
-    '   (tajt uttag - ingen kvadratisk luft, vardet ar inte grindat)');
-  console.log('    UPPLYSNING: storlek     : ' + icon.kb.toFixed(2) +
-    ' kB  (ARKITEKTUR.md anger inget tak for de tajta)');
-}
+  /* L4. */
+  const innerMode = modeRgb(out, inner);
+  const l4Ok = innerMode !== null && nearRgb(innerMode, ACCENT_RGB, COLOR_TOLERANCE);
+  console.log('    GRIND: L4 rutans vanligaste RGB (x 1-' + innerEnd + ', y 1-' + (h - 2) + ') : ' +
+    (innerMode ? rgbText(innerMode) : 'ingen') +
+    '   (ska vara --accent ' + rgbText(ACCENT_RGB) + ' +-' + COLOR_TOLERANCE + ': ' +
+    (l4Ok ? 'ja' : 'NEJ') + ')');
+  if (!l4Ok) failedGates.push('L4 ' + name);
 
-if (tightProblems > 0) {
-  fail('en eller flera kontroller av de tajta filerna slog fel - se ovan.');
-}
-
-// --- 4. Tillbaka till sharp som raw, sedan extend till 672 ----------------
-const iconBase = await sharp(rgba, {
-  raw: { width: MARK_CROP.width, height: MARK_CROP.height, channels: 4 },
-})
-  .extend({
-    top: padY,
-    bottom: padY,
-    left: padX,
-    right: padX,
-    background: { r: 0, g: 0, b: 0, alpha: 0 },
-  })
-  .raw()
-  .toBuffer({ resolveWithObject: true });
-
-if (iconBase.info.width !== ICON_SIDE || iconBase.info.height !== ICON_SIDE || iconBase.info.channels !== 4) {
-  fail(
-    'underlaget efter extend ar ' + iconBase.info.width + ' x ' + iconBase.info.height +
-      ' med ' + iconBase.info.channels + ' kanaler, forvantat ' + ICON_SIDE + ' x ' + ICON_SIDE + ' x 4.',
-  );
-}
-
-/* KRITISK KONTROLL (BRIEF.md): inga pixlar med alfa > 0 nedanfor market.
- * Market slutar pa rad padY + height - 1 = 556, sa rad 557 och nedat ska vara
- * helt genomskinlig. Finns alfa dar har ordbilden kommit med. */
-const markBottomRow = padY + MARK_CROP.height; // 557
-let belowCount = 0;
-let belowMaxAlpha = 0;
-for (let y = markBottomRow; y < ICON_SIDE; y++) {
-  for (let x = 0; x < ICON_SIDE; x++) {
-    const a = iconBase.data[(y * ICON_SIDE + x) * 4 + 3];
-    if (a > 0) {
-      belowCount++;
-      if (a > belowMaxAlpha) belowMaxAlpha = a;
+  /* L5. */
+  let innerNotOpaque = 0;
+  for (let y = inner.y0; y <= inner.y1; y++) {
+    for (let x = inner.x0; x <= inner.x1; x++) {
+      if (pixelAt(out.data, out.info, x, y).a !== 255) innerNotOpaque++;
     }
   }
-}
+  const l5Ok = innerNotOpaque === 0;
+  console.log('    GRIND: L5 rutans pixlar med alfa < 255 (samma rektangel) : ' + innerNotOpaque +
+    '   (ska vara 0: ' + (l5Ok ? 'ja' : 'NEJ') + ')');
+  if (!l5Ok) failedGates.push('L5 ' + name);
 
-let padCount = 0;
-for (let y = 0; y < ICON_SIDE; y++) {
-  for (let x = 0; x < ICON_SIDE; x++) {
-    const insideMark = y >= padY && y < markBottomRow && x >= padX && x < padX + MARK_CROP.width;
-    if (insideMark) continue;
-    if (iconBase.data[(y * ICON_SIDE + x) * 4 + 3] > 0) padCount++;
-  }
-}
+  /* L6. */
+  const wordColours = distinctVisibleRgb(out, word);
+  const l6Ok = wordColours.length === 1 && nearRgb(wordColours[0], INK_RGB, 0);
+  console.log('    GRIND: L6 ordmarkets distinkta RGB (x >= ' + squareEnd + ') : ' +
+    wordColours.length + ' st [' + wordColours.slice(0, 4).map(rgbText).join('] [') + ']' +
+    '   (ska vara exakt 1 = --ink ' + rgbText(INK_RGB) + ': ' + (l6Ok ? 'ja' : 'NEJ') + ')');
+  if (!l6Ok) failedGates.push('L6 ' + name);
 
-console.log('');
-console.log('--- KRITISK KONTROLL PA ' + ICON_SIDE + '-UNDERLAGET ---');
-console.log('  UPPLYSNING: marketsunderkant (rad) : ' + (markBottomRow - 1) +
-  '  (' + MARK_CROP.height + ' + ' + padY + ' = ' + markBottomRow + ')');
-console.log('  GRIND: pixlar med alfa > 0 under   : ' + belowCount +
-  '   (ska vara 0: ' + (belowCount === 0 ? 'ja (ordbilden ar inte med)' : 'NEJ, HOGSTA ALFA ' + belowMaxAlpha) + ')');
-console.log('  GRIND: alfa > 0 i hela utfyllnaden : ' + padCount +
-  '   (ska vara 0: ' + (padCount === 0 ? 'ja' : 'NEJ') + ')');
-console.log('  GRIND: hornpixel (0,0) alfa        : ' + iconBase.data[3] +
-  '   (ska vara 0: ' + (iconBase.data[3] === 0 ? 'ja' : 'NEJ') + ')');
-
-if (belowCount > 0 || padCount > 0 || iconBase.data[3] !== 0) {
-  fail(
-    'utfyllnaden ar inte helt genomskinlig - ' + belowCount + ' pixlar nedanfor rad ' +
-      markBottomRow + ' och ' + padCount + ' i utfyllnaden har alfa > 0.\n' +
-      '  Har ordbilden kommit med ar beskarningen fel. STANNA och lamna tillbaka.',
-  );
-}
-
-// --- 5. Nedskalning FRAN underlaget, sedan PNG ----------------------------
-console.log('');
-console.log('--- UTDATAFILER (kodade till buffert, inte skrivna an) ---');
-console.log('  GRIND: fil             matt          storlek         tak   utfall');
-
-const icons = [];
-const iconRgbDrift = [];
-let iconsOverLimit = 0;
-
-for (const size of ICON_SIZES) {
-  const name = 'logo-mark-' + size + '.png';
-  const target = resolve(ICON_OUT_DIR, name);
-
-  const resized = await sharp(iconBase.data, {
-    raw: { width: ICON_SIDE, height: ICON_SIDE, channels: 4 },
-  })
-    .resize(size, size)
-    .raw()
-    .toBuffer({ resolveWithObject: true });
-
-  /* Steg 8 i ARKITEKTUR.md:s steglista - samma atersattning som de tajta
-   * filerna far. Se kommentaren vid resetAccentRgb(). */
-  const rgbDrift = resetAccentRgb(resized.data, size * size);
-
-  const encoded = await sharp(resized.data, {
-    raw: { width: size, height: size, channels: 4 },
-  })
-    .png({ compressionLevel: 9 })
-    .toBuffer({ resolveWithObject: true });
-
-  queueWrite(target, encoded.data);
-
-  iconRgbDrift.push({ size, drift: rgbDrift });
-
-  const limit = ICON_SIZE_LIMIT_KB[name];
-  const size_kb = kB(encoded.info.size);
-  const ok = size_kb <= limit;
-  if (!ok) iconsOverLimit++;
-
-  icons.push({ name, buffer: encoded.data, expected: size, kb: size_kb, limit, ok });
-
-  console.log(
-    '  ' + name.padEnd(22) +
-    (encoded.info.width + 'x' + encoded.info.height).padEnd(13) +
-    (size_kb.toFixed(2) + ' kB').padStart(10) +
-    ('<= ' + limit + ' kB').padStart(12) + '   ' +
-    (ok ? 'ok' : 'OVER TAKET'),
-  );
-}
-
-// --- 6. Kontroller lasta UR BUFFERTARNA, inte ur skriptets avsikt ---------
-console.log('');
-console.log('--- KONTROLL (last ur buffertarna med sharp().metadata() + raw) ---');
-
-let iconProblems = 0;
-
-for (const icon of icons) {
-  const m = await sharp(icon.buffer).metadata();
-  const raw = await sharp(icon.buffer).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-
-  const cornerAlpha = raw.data[3];
-
-  /* Alla pixlar ska ha exakt accentfargen, aven de halvgenomskinliga. */
-  let offAccent = 0;
-  let softPixels = 0;
-  for (let p = 0; p < raw.info.width * raw.info.height; p++) {
-    const o = p * 4;
-    const a = raw.data[o + 3];
-    if (a > 0 && a < 255) softPixels++;
-    if (
-      raw.data[o] !== ACCENT.r ||
-      raw.data[o + 1] !== ACCENT.g ||
-      raw.data[o + 2] !== ACCENT.b
-    ) {
-      offAccent++;
-    }
-  }
-
-  let lastRowWithAlpha = -1;
-  for (let y = 0; y < raw.info.height; y++) {
-    for (let x = 0; x < raw.info.width; x++) {
-      if (raw.data[(y * raw.info.width + x) * 4 + 3] > 0) {
-        lastRowWithAlpha = y;
+  /* L7. Botten ar genomskinlig, och mellanrummet har minst en tom kolumn. */
+  const cornerTop = pixelAt(out.data, out.info, w - 1, 0).a;
+  const cornerBottom = pixelAt(out.data, out.info, w - 1, h - 1).a;
+  const gapLast = Math.floor(((LOGO_GAP_END - LOGO_CROP.left) * w) / LOGO_CROP.width);
+  let emptyColumns = 0;
+  for (let x = squareEnd; x <= gapLast; x++) {
+    let empty = true;
+    for (let y = 0; y < h; y++) {
+      if (pixelAt(out.data, out.info, x, y).a !== 0) {
+        empty = false;
         break;
       }
     }
+    if (empty) emptyColumns++;
   }
-  /* REFERENSVARDE, INGEN GRANS. Market slutar pa rad markBottomRow - 1 i
-   * 672-underlaget; omraknat till denna skala blir det talet nedan.
-   *
-   * Det UPPMATTA lastRowWithAlpha ligger normalt EN rad lagre (uppmatt: 28 mot
-   * 27, 81 mot 80, 161 mot 160) och det ar korrekt utdata: nedskalningens
-   * interpolation sprider alfan ett steg. Talet far darfor INTE lasas som en
-   * grans - en tidigare version skrev ut paret som om det vore ett testutfall,
-   * och den naturliga lasningen (gora det till en grind) hade stoppat skriptet
-   * pa en helt riktig ikon.
-   *
-   * Den riktiga grinden for samma sak ligger pa 672-underlaget ovan
-   * ("KRITISK KONTROLL"): noll pixlar med alfa > 0 nedanfor market och noll i
-   * utfyllnaden. Haller den kan de nedskalade filerna bara ha alfa dar
-   * underlaget hade det. Den har raden ar en upplysning om just det. */
-  const scaledMarkBottom = Math.ceil((markBottomRow * icon.expected) / ICON_SIDE);
+  const l7Ok = cornerTop === 0 && cornerBottom === 0 && emptyColumns >= 1;
+  console.log('    GRIND: L7 alfa i (' + (w - 1) + ', 0) och (' + (w - 1) + ', ' + (h - 1) + ') : ' +
+    cornerTop + ' och ' + cornerBottom + ', tomma kolumner x ' + squareEnd + '-' + gapLast + ' : ' +
+    emptyColumns + '   (ska vara 0, 0 och minst 1: ' + (l7Ok ? 'ja' : 'NEJ') + ')');
+  if (!l7Ok) failedGates.push('L7 ' + name);
 
-  /* Verifiering av steg 8 (ARKITEKTUR.md): exakt 1 distinkt RGB bland pixlar
-   * med alfa > 0, och det ska vara 252, 111, 3. */
-  const distinct = distinctVisibleRgb(raw.data, raw.info.width * raw.info.height);
-
-  const dimsOk = m.width === icon.expected && m.height === icon.expected;
-  const alphaOk = m.channels === 4 && m.hasAlpha === true;
-  const cornerOk = cornerAlpha === 0;
-  const accentOk = offAccent === 0;
-  const distinctOk = distinct.length === 1 && distinct[0] === ACCENT_KEY;
-  const softOk = softPixels > 0;
-  if (!dimsOk || !alphaOk || !cornerOk || !accentOk || !distinctOk || !softOk) iconProblems++;
-
-  const drift = iconRgbDrift.find((d) => d.size === icon.expected);
-
-  console.log('  ' + icon.name);
-  console.log('    GRIND: matt             : ' + m.width + ' x ' + m.height +
-    '   (' + (dimsOk ? 'ok' : 'FEL, forvantat ' + icon.expected + ' x ' + icon.expected) + ')');
-  console.log('    GRIND: kanaler/hasAlpha : ' + m.channels + ' / ' + m.hasAlpha +
-    '   (' + (alphaOk ? 'ok, PNG med alfa' : 'FEL, ska vara 4 / true') + ')');
-  console.log('    GRIND: hornpixel (0,0)  : alfa ' + cornerAlpha +
-    '   (ska vara 0: ' + (cornerOk ? 'ja' : 'NEJ') + ')');
-  console.log('    GRIND: RGB = #FC6F03    : ' + (accentOk ? 'ja, overallt' : 'NEJ, ' + offAccent + ' pixlar avviker') +
-    '   (resize-drift fore atersattning: ' + (drift ? drift.drift : '?') + ' steg)');
-  console.log('    GRIND: distinkta RGB    : ' + distinct.length + ' st  [' + distinct.join('] [') + ']' +
-    '   (' + (distinctOk ? 'ok, exakt 1 och = ' + ACCENT_KEY : 'FEL, ska vara exakt 1 = ' + ACCENT_KEY) + ')');
-  console.log('    GRIND: mellanlagen      : ' + softPixels +
-    '   (ska vara > 0: ' + (softOk ? 'ja' : 'NEJ, trappad kant') + ')');
-  console.log('    GRIND: storlek          : ' + icon.kb.toFixed(2) + ' kB' +
-    '   (tak ' + icon.limit + ' kB: ' + (icon.ok ? 'ok' : 'OVER TAKET') + ')');
-  console.log('    UPPLYSNING: nedersta rad med alfa > 0 : ' + lastRowWithAlpha);
-  console.log('                marketsunderkant omraknad till denna skala: ' + scaledMarkBottom +
-    ' (referens, INGEN grans - interpolationen flyttar alfan ca 1 rad ned)');
+  /* L8. Mjuk kant, inte trappad. */
+  let soft = 0;
+  for (let y = word.y0; y <= word.y1; y++) {
+    for (let x = word.x0; x <= word.x1; x++) {
+      const a = pixelAt(out.data, out.info, x, y).a;
+      if (a > 0 && a < 255) soft++;
+    }
+  }
+  const l8Ok = soft > 0;
+  console.log('    GRIND: L8 ordmarkets mellanlagen : ' + soft +
+    '   (ska vara > 0: ' + (l8Ok ? 'ja' : 'NEJ') + ')');
+  if (!l8Ok) failedGates.push('L8 ' + name);
 }
 
-const logoUntouched = await sourceUntouched(LOGO_SOURCE, logoStat, 'logo.png');
+// --- Ikonerna: JQ-rutan rakt ur kallan, opak, ingen utfyllnad -------------
+console.log('');
+console.log('--- IKONERNA (kodade till buffert, inte skrivna an) ---');
 
-if (iconsOverLimit > 0 || iconProblems > 0 || !logoUntouched) {
-  fail('en eller flera ikonkontroller slog fel - se ovan.');
+const iconFiles = [];
+
+for (const n of ICON_SIZES) {
+  const name = 'jq-icon-' + n + '.png';
+
+  const encoded = await sharp(LOGO_SOURCE)
+    .extract(ICON_CROP)
+    .removeAlpha()
+    .resize(n, n)
+    .png({ compressionLevel: 9 })
+    .toBuffer();
+
+  queueWrite(resolve(LOGO_OUT_DIR, name), encoded);
+  iconFiles.push({ name, kb: kB(encoded.length) });
+
+  console.log('  ' + name);
+
+  /* I1, I2, I3. */
+  if (
+    (await checkPng(name, encoded, {
+      width: n,
+      height: n,
+      hasAlpha: false,
+      limitKb: ICON_SIZE_LIMIT_KB[n],
+    })) > 0
+  ) {
+    failedGates.push('I1-I3 ' + name);
+  }
+
+  const out = await sharp(encoded).raw().toBuffer({ resolveWithObject: true });
+
+  /* I4. Rutan gar ut i alla fyra kanterna: ingen luft och ingen blek kant. */
+  const corners = [[0, 0], [n - 1, 0], [0, n - 1], [n - 1, n - 1]].map(([x, y]) => ({
+    x,
+    y,
+    p: pixelAt(out.data, out.info, x, y),
+  }));
+  const i4Ok = corners.every((c) => nearRgb(c.p, ACCENT_RGB, COLOR_TOLERANCE));
+  console.log('    GRIND: I4 hornen : ' +
+    corners.map((c) => '(' + c.x + ', ' + c.y + ') ' + rgbText(c.p)).join(', ') +
+    '   (ska vara --accent ' + rgbText(ACCENT_RGB) + ' +-' + COLOR_TOLERANCE + ': ' +
+    (i4Ok ? 'ja' : 'NEJ') + ')');
+  if (!i4Ok) failedGates.push('I4 ' + name);
+
+  /* I5. */
+  const mode = modeRgb(out, { x0: 0, y0: 0, x1: n - 1, y1: n - 1 });
+  const i5Ok = mode !== null && nearRgb(mode, ACCENT_RGB, COLOR_TOLERANCE);
+  console.log('    GRIND: I5 vanligaste RGB : ' + (mode ? rgbText(mode) : 'ingen') +
+    '   (ska vara --accent ' + rgbText(ACCENT_RGB) + ' +-' + COLOR_TOLERANCE + ': ' +
+    (i5Ok ? 'ja' : 'NEJ') + ')');
+  if (!i5Ok) failedGates.push('I5 ' + name);
+}
+
+if (failedGates.length > 0) {
+  fail('foljande grindar for loggan eller ikonerna slog fel - se ovan:\n  ' +
+    failedGates.join('\n  '));
+}
+
+// --- Kallorna orda, sist fore skrivfasen ----------------------------------
+console.log('');
+console.log('--- KALLORNA ---');
+const heroStillUntouched = await sourceUntouched(HERO_SOURCE, heroStat, 'hero-portrait.jpg');
+const logoUntouched = await sourceUntouched(LOGO_SOURCE, logoStat, 'jq-logo-light.png');
+
+if (!heroStillUntouched || !logoUntouched) {
+  fail('en kallbild andrades under korningen - se ovan.');
 }
 
 // ===========================================================================
@@ -1025,10 +908,9 @@ for (const write of pendingWrites) {
 
 console.log('  filer skrivna            : ' + pendingWrites.length);
 console.log('  public/assets/hero/      : ' + (await readdir(OUT_DIR)).sort().join(', '));
-console.log('  public/assets/ (ikoner)  : ' +
-  (await readdir(ICON_OUT_DIR)).filter((f) => f.endsWith('.png')).sort().join(', '));
+console.log('  public/assets/ (PNG)     : ' +
+  (await readdir(LOGO_OUT_DIR)).filter((f) => f.endsWith('.png')).sort().join(', '));
 
 console.log('');
-console.log('Klart. ' + heroFiles.length + ' hero-filer + ' +
-  (icons.length + tightIcons.length) + ' ikonfiler (' + icons.length +
-  ' kvadratiska + ' + tightIcons.length + ' tajta for headern).');
+console.log('Klart. ' + heroFiles.length + ' hero-filer + ' + logoFiles.length +
+  ' logofiler + ' + iconFiles.length + ' ikonfiler.');

@@ -3,7 +3,8 @@
 Gäller projektet **Portfolio för Jelal Qaiumi** (React + Vite, ren CSS, mörk bas
 med orange som enda accentfärg).
 
-Underlag: `BRIEF.md`, `PLAN.md`, `UPPDRAG-2026-10-07.md`, `assets-source/logo.png`
+Underlag: `BRIEF.md`, `PLAN.md`, `UPPDRAG-2026-10-07.md`, ~~`assets-source/logo.png`~~
+(**UPPHÄVT 2026-11-07, se M20:** loggans källa är `assets-source/jq-logo-light.png`)
 och — ~~`skills.txt` (93) och `skills-full.txt` (292 poster, 267 unika)~~ **UPPHÄVT
 2026-10-08 av A1: båda filerna är historik och är inte underlag för något beslut
 och inte källa för någon grind. Genomfört i paket D.**
@@ -34,12 +35,12 @@ fynd.
 
 | Förbjuden sträng | Gäller i stället | Beslutet står i |
 |------------------|------------------|-----------------|
-| `44 × 44` / `44x44` (om loggan) | 48 × 36 px, tajt märke | "Ikonens optiska storlek" |
-| `/assets/logo.png` (som bildkälla i app) | `logo-mark-tight-*.png` i headern | "Headerns logotyp" |
-| `alt="Jelal Qaiumi"` (på loggan) | `alt=""` + `aria-hidden="true"` | "Headerns uppbyggnad" |
+| `44 × 44` / `44x44` (om loggan) | ~~48 × 36 px, tajt märke~~ **UPPHÄVT 2026-11-07:** hela loggan, 34 px hög | ~~"Ikonens optiska storlek"~~ M20 |
+| `/assets/logo.png` (som bildkälla i app) | ~~`logo-mark-tight-*.png` i headern~~ **UPPHÄVT 2026-11-07:** `jq-logo-{34,68,102}.png` | ~~"Headerns logotyp"~~ M20 |
+| ~~`alt="Jelal Qaiumi"` (på loggan)~~ **RADEN UPPHÄVD 2026-11-07, se M20:** strängen är nu det gällande värdet på headerns logga. Förbjudet i stället: `alt=""` på **headerns** logga (footerns har `alt=""` med avsikt) | ~~`alt=""` + `aria-hidden="true"`~~ `alt="Jelal Qaiumi"`, ingen dold text | ~~"Headerns uppbyggnad"~~ M20 punkt 3 |
 | `label: 'Start'` / hero-post i `sections` | hero ligger inte i `sections` | "Hero-posten tas bort ur `sections`" |
 | `public/assets/profile.jpg` som källa | `assets-source/profile.jpg` | "Källbilder bor utanför `public/`" |
-| `public/assets/logo.png` som källa | `assets-source/logo.png` | "Källbilder bor utanför `public/`" |
+| `public/assets/logo.png` som källa | ~~`assets-source/logo.png`~~ **UPPHÄVT 2026-11-07:** `assets-source/jq-logo-light.png` | "Källbilder bor utanför `public/`", M20 |
 | `left: 283` / `top: 223` (beskärning) | tajt uttag + `extend()` | "Kvadratisk form skapas med genomskinlig utfyllnad" |
 | `overflow-wrap: break-word` | `overflow-wrap: anywhere` | "360 px-golvet och grid" |
 | `h1, h2, h3, p, li { overflow-wrap` (selektorlistan) | `body { overflow-wrap: anywhere }`, ärvt | "360 px-golvet och grid" |
@@ -167,8 +168,24 @@ fynd.
 | "Kortets rubrik är `--text-lg`" / "Ingen `text-transform`" (om kompetenskortets `h3`) | `typeStyles.meta` på `h3`, versaler och mono, vikt 400 ur typklassen | M15, M15b punkt 3 och 4 |
 | **Tillagt 2026-11-07, M19 (före G2):** | | |
 | `<h2 className={styles.columnHeading}>` / `.columnHeading` (footerns kolumnrubrik) | ``<p className={`${typeStyles.meta} ${styles.columnLabel}`}>Kontakt</p>``, ingen rubrik i footern | M19 punkt 1 |
-| `emailLabel` / `'Mejl'` (footerns e-postlänk) | adressen i klartext, `{contact.email}`, som i kontaktsektionen | M19 punkt 2 |
+| `emailLabel` / `'Mejl'` (footerns e-postlänk) | adressen i klartext, `{contact.email}`, som i kontaktsektionen. **Förtydligat 2026-11-07, M20 punkt 7:** `'Mejl'` är förbjudet **bara i `Footer.jsx`**. I `ContactForm.jsx` är det fältets etikett (Jelals beslut 7) | M19 punkt 2 |
 | `rel="noreferrer"` ensamt | `rel="noopener noreferrer"` på varje `target="_blank"` | M19 punkt 3 |
+| **Tillagt 2026-11-07, M20 (ny logga):** | | |
+| `logo-mark` (varje filnamn `logo-mark-*.png` och `logo-mark-tight-*.png`) | `jq-logo-{34,68,102}.png` i naven och footern, `jq-icon-{32,96,192}.png` som favicon och apple-touch-icon | M20 punkt 1 och 2 |
+| `assets-source/logo.png` som källa | `assets-source/jq-logo-light.png`. `logo.png` tas bort ur trädet (finns i git-historiken) | M20 punkt 5 |
+| `<span className="visually-hidden">Jelal Qaiumi</span>` (i logglänken) | `alt="Jelal Qaiumi"` på loggans `<img>`, ingen dold text | M20 punkt 3 |
+| `sizes="48px"` / `96w` / `192w` (loggan) | `srcSet` med `1x`, `2x`, `3x`, inget `sizes` | M20 punkt 1 och 3 |
+| `height: 36px` (loggan) / `48 × 36` (loggans mått) | `height: 34px`, 159 × 34 | M20 punkt 3 |
+| `MARK_CROP` / `EXPECTED_MARK_BBOX` / `EXPECTED_BLOCKS` / `ORANGE_MIN_DELTA` / `TIGHT_SIZES` / `LOGO_BASE_R` / `ALPHA_SPAN` / `ICON_SIDE` | `LOGO_CROP`, `LOGO_SQUARE`, luminansformeln | M20 punkt 1 |
+| `#FC6F03` / `252, 111, 3` (som ikonens eller loggans färg) | `--accent`, läst ur `tokens.css` | M20 punkt 1 |
+| `extend(` (i bildskriptet) / `672` (ikonens underlag) | ingen utfyllnad, rutan rakt ur källan | M20 punkt 2 |
+| **Tillagt 2026-11-08, M21 (prestanda före G2):** | | |
+| "median av tre" / "Tre körningar per läge" (Lighthouse) | fem körningar per läge, medianen och alla fem värdena redovisas | M21 punkt 0 |
+| `import HCaptcha from '@hcaptcha/react-hcaptcha'` (statisk import) | `lazy(() => import('@hcaptcha/react-hcaptcha')...)`, monteras först när den behövs | M21 punkt 1 |
+| `(min-width: 600px) 50vw, 100vw"` (projektbildens `sizes`) | `(min-width: 600px) 50vw, calc(100vw - 3rem)"` | M21 punkt 2 |
+| "Den här sidan behöver JavaScript för att visas" / "helt klientrenderad" / "blir blank utan JavaScript" | sidan förrenderas vid bygget och syns utan JavaScript. `<noscript>` har texten i M21 punkt 5 | M21 punkt 5 |
+| "anropar den före `createRoot`" / "före `createRoot(...).render`" (om `enableReveal`) | före `hydrateRoot` i bygget och före `createRoot` i dev | M21 punkt 5 |
+| "varje fil i `dist/` har en referens" utan undantag | ett undantag: `robots.txt` | M21 punkt 4 |
 
 Jag skriver in nya rader här varje gång jag upphäver något. Raderna tas aldrig
 bort — en tom tabell går inte att skilja från en obevakad.
@@ -240,9 +257,11 @@ krockar gäller M-avsnittet, och motsägelsen lämnas tillbaka hit.
 | M14 | Nyckeltalen är "Projekt" och "Kompetenser", båda härledda; "år i branschen" utgår tills Jelal svarat. M14b: kompetensurvalet bor i `src/lib/skillRules.js`, och ett tal som är 0 visas inte | P12, P12b | M14:s "unika namn" |
 | M15 | Kompetenschipsen får filterchipsens stil via en gemensam `Chip`-komponent. M15b: `--space-1` är borttaget, och mono-typklasserna sätter vikten 400 själva | P9 (Chip), P11, P11b | "A6" (chipset och `.cardTitle`), "Chipsens färg", Spacing-raden `--space-1` |
 | M16 | Kontakt: uppgifterna till vänster, formuläret i en panel till höger, hCaptcha `compact`. Footer: GitHub renderas inte så länge den är `null` | P13, P14 | "Kontaktsektionen blir tvåspaltig" med underavsnitt |
-| M17 | Lighthouse körs med `npx` mot `vite preview` och installerad Chrome, mobil och dator, median av tre | P15 | Teknikval (inget verktyg fanns) |
+| M17 | Lighthouse körs med `npx` mot `vite preview` och installerad Chrome, mobil och dator. ~~median av tre~~ **Ändrat 2026-11-08, M21 punkt 0:** fem körningar per läge, medianen | P15 | Teknikval (inget verktyg fanns) |
 | M18 | `--content-max: 1180px` och `--content-padding: 1.5rem` | P2 | "Layout, radier och övrigt", värdet i "Var sidmarginalen bor" |
 | M19 | De sista öppna markeringarna före G2: footerns kolumnetikett är ett `p` utan rubrik, e-posten i klartext, ett `rel`-mönster för hela sidan, tio markeringar och knappens dämpade läge godkända som byggda, och sju kommentarer med uppmätta tal omskrivna | **P14b** (före P15) | M16:s footerpunkt (rättad på plats), R6:s "fortfarande öppna", "Markeringarna från före P2" |
+| M20 | **Ny logga (Jelal 2026-11-07, "Kör på B"):** hela loggan (JQ-rutan plus ordmärket i `--ink`, genomskinlig botten) i naven och footern, 34 px hög, `alt="Jelal Qaiumi"` i headerns länk utan dold text. JQ-rutan ensam, opak och utan luft, är favicon och apple-touch-icon. Källan är `assets-source/jq-logo-light.png`. Dessutom formulärtexterna efter Jelals beslut 7 | **P14c** (efter P14b, före P15) | "Headerns logotyp" med alla underavsnitt, M10c:s ikondel och ikongrind (rad 14), M16:s footermärke, M19 punkt 12:s rader om loggan, mappstrukturens loggrader, "Källbilder bor utanför `public/`" (loggraden), "Vad som INTE görs i bildskriptet" (loggstycket), Öppen punkt 5 (accentfärgen) |
+| M21 | **Prestanda före G2 (2026-11-08):** fem Lighthouse-körningar per läge; hCaptcha laddas först när formuläret närmar sig vyn eller får fokus; projektbildens `sizes` rättas; `meta description` (förslag) och `robots.txt`; sidan förrenderas vid bygget med `react-dom/server` och hydreras | **P15-fix** (efter P15 del A, före resten av P15) | M17:s antal körningar, "Tre noteringar från granskningen" punkt 1 (`<noscript>`-texten), M12:s och M12b punkt 3:s "före `createRoot`", Teknikval-raden React (skälet "ingen SSR"), mappstrukturens rader för `index.html`, `package.json`, `public/` och `main.jsx`, "Leveransens storlek" (undantaget `robots.txt`) |
 
 **Efter G1 (2026-11-07):** besluten R1–R6 står i "Besluten efter G1", sist i
 M-avsnittet, och genomförs i paketet G1-rättningen. De rättar A4, M3, M4, M5,
@@ -704,11 +723,14 @@ function checkFontSubset(fileName, mod, coverage)
   `awle-640.webp` och `awle-1280.webp` tas bort i P6, eftersom de annars blir
   orefererade i `dist/`.
 - **`<img>` i kortet:** `src` = 600-varianten, `srcSet` med båda bredderna,
-  `sizes="(min-width: 900px) 380px, (min-width: 600px) 50vw, 100vw"`,
+  ~~`sizes="(min-width: 900px) 380px, (min-width: 600px) 50vw, 100vw"`~~
+  (**UPPHÄVT 2026-11-08, se M21 punkt 2:** sista grenen är `calc(100vw - 3rem)`),
   `width="600"`, `height="450"`, `loading="lazy"`, `decoding="async"`, `alt=""`.
   **Lazy även för första kortet:** hero fyller första skärmen från 900 px ("Hero
   fyller första skärmen på dator"), och under 900 px står hero ovanför. Kortet
-  ligger alltså under vikningen i alla mätserier, och heros text är LCP-elementet.
+  ligger alltså under vikningen i alla mätserier, och ~~heros text är LCP-elementet~~
+  (**UPPHÄVT 2026-11-08, se M21:** uppmätt är LCP-elementet heros `<img>`. Kortet
+  ligger fortfarande under vikningen).
   **`alt=""` är ett beslut, inte en lucka:** bilden är en dekorativ skärmdump
   inuti en länk vars namn är titeln (se nedan). En beskrivande alt hade blivit en
   del av länkens namn och upprepat titeln.
@@ -2015,9 +2037,14 @@ Kommentaren beskriver invarianten och inte vad ARKITEKTUR.md säger (LARDOMAR
 2026-10-02 och 2026-11-07 "`index.html` hävdar fortfarande"). Före överlämning:
 `grep -rn "tredje global\|global klass" src scripts index.html` ger 0 träffar.
 
-##### `scripts/optimize-images.mjs`
+##### `scripts/optimize-images.mjs` — ikondelen och `LOGO_SOURCE` UPPHÄVDA 2026-11-07, se M20 (heros del gäller)
 
-**Profildelen ersätts av heros del. Ikondelen rörs inte.** Skriptet behåller
+> **Gäller i stället för ikondelen:** M20 punkt 1 och 2. `LOGO_SOURCE` är
+> `assets-source/jq-logo-light.png`, och ikondelen ersätts av logodelen i P14c.
+> Raderna om heros del nedan gäller som de står.
+
+**Profildelen ersätts av heros del. ~~Ikondelen rörs inte.~~ (UPPHÄVT 2026-11-07,
+se M20: ikondelen ersätts i P14c.)** Skriptet behåller
 namnet och scriptraden `optimize:images`, eftersom ikonerna fortfarande genereras
 där. Ett nytt skript hade dubblerat skyddsräcket och kökedjan (LARDOMAR 2026-10-02,
 "parallell dubblering").
@@ -2178,8 +2205,10 @@ tabellen.
 13. **Tvinga en grind att fallera** (sätt `EXPECTED_WIDTH` till 1673 i en isolerad
     kopia) och visa att `public/assets/hero/` och `public/assets/` är orörda,
     jämfört med en fillista med sha256 före och efter (LARDOMAR 2026-10-02).
-14. **Ikonerna är oförändrade:** sha256 för de fem `logo-mark-*.png` är identiska
-    före och efter körningen. Annars har profilborttagningen rört ikondelen.
+14. ~~**Ikonerna är oförändrade:** sha256 för de fem `logo-mark-*.png` är identiska
+    före och efter körningen. Annars har profilborttagningen rört ikondelen.~~
+    **UPPHÄVT 2026-11-07, se M20:** filerna tas bort i P14c. Den spegelvända
+    grinden gäller där: heros filer är byte-identiska före och efter (M20, grind 3).
 15. `grep -c` på varje `fail(`-meddelande i skriptet. Inget meddelande förekommer
     mer än en gång (LARDOMAR 2026-10-02).
 16. Bygg om och mät `dist/` i samma körning (LARDOMAR 2026-10-05): totalt `<= 1 MB`,
@@ -2745,7 +2774,8 @@ P10 ändrar `Projects.jsx`. Kan gå parallellt med P5 omgång 4: ingen fil nedan
   avregistrerar vid avmontering.
 - **`function enableReveal()`** är en **lokal, icke-exporterad** funktion i
   `src/main.jsx` (ändrat i M12b punkt 3, P9b; tidigare en export i `Reveal.jsx`).
-  Den anropas **före** `createRoot(...).render` och sätter
+  Den anropas **före första renderingen** (ändrat 2026-11-08, M21 punkt 5: före
+  `hydrateRoot` i bygget, före `createRoot` i dev) och sätter
   `document.documentElement.dataset.revealReady = 'true'` **bara om**
   `'IntersectionObserver' in window` och
   `!matchMedia('(prefers-reduced-motion: reduce)').matches`.
@@ -2922,7 +2952,8 @@ skrivs in i överlämningen som uppmätt. Återställ raden och kör om.
 ##### Punkt 3 — `enableReveal` utan avstängd lintregel
 
 - `src/main.jsx` definierar `function enableReveal()` lokalt, utan `export`, med
-  samma villkor som i M12, och anropar den före `createRoot`. Importen ur
+  samma villkor som i M12, och anropar den före första renderingen (ändrat
+  2026-11-08, M21 punkt 5: före `hydrateRoot` eller `createRoot`). Importen ur
   `Reveal.jsx` tas bort.
 - `Reveal.jsx` exporterar bara `default Reveal` och `REVEAL_INDEX_MAX`. Raden
   `// oxlint-disable-next-line react/only-export-components` och markeringen
@@ -3268,8 +3299,10 @@ Visuell ordning och Tab-ordning är då densamma, alltså samma princip som för
 
 **Footer (P14):**
 
-- Överst `border-top: 1px solid var(--line)`. Därefter JQ-märket (samma tajta PNG
-  som headern, `alt=""` + `aria-hidden="true"`) med taglinen **`profile.role`**.
+- Överst `border-top: 1px solid var(--line)`. Därefter ~~JQ-märket (samma tajta PNG
+  som headern, `alt=""` + `aria-hidden="true"`)~~ (**märket UPPHÄVT 2026-11-07, se
+  M20:** hela loggan `jq-logo-*.png`, 34 px hög, fortfarande `alt=""` +
+  `aria-hidden="true"`) med taglinen **`profile.role`** (står kvar, M20 punkt 4).
   Det är Jelals egen godkända text och ingen ny påhittad. Sedan en länkkolumn
   "Kontakt" med `contact.links` där `url !== null` och e-posten, och sist
   copyright-raden `© {år} {profile.name}`, där året är `new Date().getFullYear()`.
@@ -3291,10 +3324,12 @@ Visuell ordning och Tab-ordning är då densamma, alltså samma princip som för
 - **Prövas först:** P15 kör `npx --yes lighthouse@12 --version` och klistrar in
   utfallet. Faller det (inget nätverk, blockerat) stannar P15 för den punkten och
   lämnar tillbaka hit. Ingen siffra uppskattas.
-- **Inställningar:** `--only-categories=performance,accessibility`,
-  `--chrome-flags="--headless=new"`, `--output=json`. Två lägen: standard (mobil,
-  simulerad strypning) och `--preset=desktop`. **Tre körningar per läge, medianen
-  redovisas.** Kravet ≥ 90 gäller **båda** kategorierna i **båda** lägena.
+- **Inställningar — ÄNDRADE 2026-11-08, se M21 punkt 0** (antal körningar,
+  kategorier och accessibility-kravet). Gäller oförändrat: `--chrome-flags="--headless=new"`,
+  `--output=json`, två lägen: standard (mobil, simulerad strypning) och
+  `--preset=desktop`. ~~`--only-categories=performance,accessibility`~~ ~~Tre
+  körningar per läge, medianen redovisas.~~ ~~Kravet ≥ 90 gäller båda kategorierna i
+  båda lägena.~~
 - Servern startas och stoppas enligt `netstat`-regeln (LARDOMAR 2026-10-02 och
   2026-10-05). Ingen flagga sätts med `=false`.
 
@@ -3351,7 +3386,7 @@ märkta där.
 
 | Fil | Signatur | Paket | Ansvar |
 |-----|----------|-------|--------|
-| `src/components/Header.jsx` | `function Header()` | P3, P4, P9b | Pill-naven (M6), logga, navlänkar ur `sections` med `aria-current` (M7, och utan observer ingen markering, M12b punkt 2), CTA, hamburgern och `MobileMenu` (M8) |
+| `src/components/Header.jsx` | `function Header()` | P3, P4, P9b, P14c | Pill-naven (M6), logga (M20: hela loggan, `alt="Jelal Qaiumi"`, ingen dold text), navlänkar ur `sections` med `aria-current` (M7, och utan observer ingen markering, M12b punkt 2), CTA, hamburgern och `MobileMenu` (M8) |
 | `src/components/MobileMenu.jsx` | `function MobileMenu({ id, open, onClose, links, currentId, cta, triggerRef })` | P4 | Panelen i M8. `links` är `{ id, label }[]`, `cta` är `{ href, text }` eller `null` |
 | `src/components/MenuIcon.jsx`, `CloseIcon.jsx`, `SearchIcon.jsx` | `function MenuIcon()` etc. | P4, P9 | M9 |
 | `src/components/Hero.jsx` | `function Hero()` | P5, P5 omgång 4, P5 omgång 5 | M10, M10b. Bakgrundsbilden och profilbilden enligt M10c, bilden överst på mobil enligt M10d |
@@ -3362,11 +3397,13 @@ märkta där.
 | `src/components/Chip.jsx` | `function Chip({ children, pressed, onToggle })` | P9 | M15 |
 | `src/components/SkillChip.jsx` | `function SkillChip({ name })` | P11 | `<li><Chip>{name}</Chip></li>` |
 | `src/components/Reveal.jsx` | `function Reveal({ as, index, className, children, ...rest })` (default) + `export const REVEAL_INDEX_MAX`. **Ingen annan export** (M12b punkt 3) | P10, P9b | M12 |
-| `src/main.jsx` | Lokal `function enableReveal()`, ingen export | P10, P9b | M12, M12b punkt 3 |
+| `src/main.jsx` | Lokal `function enableReveal()`, ingen export | P10, P9b, P15-fix | M12, M12b punkt 3. **M21 punkt 5:** `hydrateRoot` när `#root` har ett barnelement (bygget), annars `createRoot` (dev) |
+| `src/prerender.jsx` | `export function render()` → `string`. **Ingen annan export** | P15-fix | M21 punkt 5. Importeras bara av `scripts/prerender.mjs`, aldrig av något i `src/` |
+| `src/components/ContactForm.jsx` | `function ContactForm()` (oförändrad) | P13, P15-fix | M16. **M21 punkt 1:** `HCaptcha` laddas med `lazy` och monteras först när platsen närmar sig vyn eller formuläret får fokus |
 | `src/components/KeyFigures.jsx` | `function KeyFigures()` | P12 | M14 |
 | `src/components/About.jsx` | `function About()` | P6, P12 | Importerar `isComplete` ur `src/lib/projectRules.js` och läser `about.link.projectSlug`. Renderar `KeyFigures` |
 | `src/components/Contact.jsx` | `function Contact()` | P13 | M16 |
-| `src/components/Footer.jsx` | `function Footer()` | P14, P14b | M16, M19. Importerar `typeStyles` ur `src/styles/type.module.css` från P14b |
+| `src/components/Footer.jsx` | `function Footer()` | P14, P14b, P14c | M16, M19, M20 (loggan). Importerar `typeStyles` ur `src/styles/type.module.css` från P14b |
 | `src/lib/projectRules.js` | `isComplete`, `projectHref` (P6), `cardIds` (G1-rättningen, R2), `EMPTY_FILTER`, `countByCategory`, `filterProjects` (P8), `collectTech`, `normalizeText` (P9), `sameSlugs` (P9b, M12b punkt 5) | P6–P9, P9b | Ren JS, ingen React |
 | `src/data/sections.js` | `HERO_ID`, `PROJECTS_ID`, `SKILLS_ID`, `ABOUT_ID`, `CONTACT_ID`, `MAIN_ID`, `MENU_ID`, `ROOT_ID`, `PROJECT_SEARCH_ID`, `sections` | G1-rättningen (`MENU_ID`, `ROOT_ID`), P9 (`PROJECT_SEARCH_ID`) | Varje fast id på sidan (R2). `Header.jsx` importerar `MENU_ID`, `main.jsx` importerar `ROOT_ID`, `ProjectFilter.jsx` importerar `PROJECT_SEARCH_ID` (M11b punkt 9) |
 | `src/lib/sectionLabel.js` | `sectionIndexLabel(sections, id)` | P11 | M13 |
@@ -3694,9 +3731,9 @@ Skrivs om till invarianten i P14b, med hänvisning till avsnittet här:
 | `Header.jsx:47-50` | `scrollY 676`, `351 px`, `485` | Felet: med sektioner av olika höjd vann den sektion som täckte mest av vyporten, inte den man läste. Man klickade "Projekt" och navet lyste "Kompetenser". Inga tal |
 | `Header.jsx:142` | `8 px-band` | "det tunna bandet (`READING_BAND`)" |
 | `Header.jsx:157` | `minus 64 px` | "minus headerns höjd" (64 är ett upphävt värde, M6) |
-| `Header.jsx:257` | `44 px` | "dess ordbild var oläslig i ikonens storlek" |
-| `Header.jsx:260-262` | `96 x 72`, `36 px`, `48 x 36 px` | Samma form som `Footer.jsx`: width/height är filens egna mått, så att ingen layout shift uppstår. CSS sätter höjden ("Ikonens optiska storlek") |
-| `Header.jsx:274-277` | `48px`, `48`, `96`, `144-192 px` | "sizes = ikonens CSS-bredd ("Ikonens optiska storlek"). Utan sizes antar webbläsaren 100vw och hämtar alltid den största filen." |
+| `Header.jsx:257` | `44 px` | "dess ordbild var oläslig i ikonens storlek" — **UPPHÄVT 2026-11-07, se M20:** hela kommentarsblocket ersätts i P14c |
+| `Header.jsx:260-262` | `96 x 72`, `36 px`, `48 x 36 px` | Samma form som `Footer.jsx`: width/height är filens egna mått, så att ingen layout shift uppstår. CSS sätter höjden ("Ikonens optiska storlek") — **UPPHÄVT 2026-11-07, se M20:** ersätts i P14c |
+| `Header.jsx:274-277` | `48px`, `48`, `96`, `144-192 px` | "sizes = ikonens CSS-bredd ("Ikonens optiska storlek"). Utan sizes antar webbläsaren 100vw och hämtar alltid den största filen." — **UPPHÄVT 2026-11-07, se M20:** `sizes` och kommentaren tas bort i P14c |
 | `global.css:47-49` | `60 tecken`, `scrollWidth 398`, `clientWidth 345` | En uppräkning täcker bara de element vi räknar upp, och en lång obruten sträng i ett element utanför listan (till exempel ett `<span>`) spräckte golvet. Inga tal |
 
 **Står kvar, med skäl:**
@@ -3760,7 +3797,10 @@ servern startad och stoppad enligt `netstat`-regeln):
 1. `grep -rn "EJ I ARKITEKTUR\|OPEN-KEY" src scripts index.html` ger **0** träffar.
 2. `grep -rn 'rel="noreferrer"' src` ger 0. Antalet rader med `target="_blank"` i
    `src` är lika med antalet med `rel="noopener noreferrer"`.
-3. `grep -rn "columnHeading\|emailLabel\|Mejl" src` ger 0.
+3. ~~`grep -rn "columnHeading\|emailLabel\|Mejl" src` ger 0.~~ **RÄTTAT 2026-11-07,
+   se M20 punkt 7:** `grep -rn "columnHeading\|emailLabel" src` ger 0, och
+   `grep -n "Mejl" src/components/Footer.jsx` ger 0. "Mejl" är formulärets etikett
+   (Jelals beslut 7) och får stå i `ContactForm.jsx`.
 4. Renderad sida vid 360 × 640 och 1280 × 800: `h1`–`h6` på sidan har texten
    "Kontakt" **exakt en gång**. `footer` har inget `h1`–`h6`. Footerns
    e-postlänk har adressen som text. Varje `a[target="_blank"]` i `footer` och
@@ -3785,6 +3825,798 @@ servern startad och stoppad enligt `netstat`-regeln):
 **PLAN.md:** P14b står inte där. Det är projektledarens att lägga in mellan P14
 och P15, med `Ingår:` enligt tabellen ovan och grindarna ovan som `Godkänt när:`.
 P15:s förutsättning får P14b. Jag rör inte `PLAN.md`.
+
+### M20 — ny logga (Jelal 2026-11-07, genomförs i P14c före P15)
+
+**Jelals beslut 2026-11-07, bindande: "Kör på B".** Naven och footern visar den
+**hela loggan**: den orange JQ-rutan plus ordmärket "JELAL QAIUMI" i ljus text på
+genomskinlig botten. **JQ-rutan ensam** är favicon och apple-touch-icon. Det
+upphäver Jelals beslut 2026-10-02 (alternativ (b), monogram plus dold HTML-text)
+och 2026-10-07 ("namnet döljs i alla bredder"). Varje äldre stycke som krockar är
+märkt `UPPHÄVT 2026-11-07, se M20` på sin egen rubrik eller rad.
+
+**Källan, kontrollerad av mig 2026-11-07:** `assets-source/jq-logo-light.png` finns
+(otrackad i git), och bilden visar rutan till vänster och ordmärket till höger på
+ljus botten. ~~Måtten och färgerna nedan är **samordnarens mätning**, inte min.~~
+**RÄTTAT 2026-11-08:** samordnarens stickprov stämde inte med källan (P14c steg 1
+stoppades vid S2). Tabellen nedan är **byggarens mätning med sharp**, och P14c:s
+källgrindar (S1–S6) prövar varje tal innan något genereras.
+
+| Del i källan | Läge (inklusive ändpunkter) | Färg |
+|--------------|-----------------------------|------|
+| Hela bilden | 2000 × 774, PNG, alfakanal. ~~opak~~ **RÄTTAT 2026-11-08:** rad 0 har alfa 55 och rad 773 alfa 154 på alla 2000 pixlar. Rad 1–772 är opaka | botten `rgb(246,244,240)` |
+| JQ-rutan, ren yta | ~~x 219–553, y 219–553 (335 × 335)~~ **RÄTTAT 2026-11-08:** x 219–553, y 220–553 (335 × 334) | `rgb(255,107,0)` = `--accent` `#ff6b00`, "JQ" i `rgb(20,20,20)` = `--ink-inverse` |
+| JQ-rutans kant (**tillagt 2026-11-08**) | 1 px utanför den rena ytan: rad 219 och rad 554 (x 218–554), kolumn 218 och kolumn 554 (y 219–554) | blandning botten–accent: rad 219 `250,188,141`, rad 554 `253,134,47`, kolumn 218 `248,216,192`, kolumn 554 `246,242,236` |
+| Mellanrummet | ~~x 554–647~~ **RÄTTAT 2026-11-08:** x 555–647 (kolumn 554 är rutans kant) | botten |
+| Ordmärket | ~~ca x 648–1782, y 344–432~~ **RÄTTAT 2026-11-08:** x 648–1781, y 343–435 | `rgb(20,20,20)` |
+
+**Samordnarens test, variant B (godkänt av Jelal):** skärmbilderna
+`nav-B-1280.png` och `nav-B-390.png` i
+`C:\Users\qaium\AppData\Local\Temp\claude\C--Users-qaium-source-repos-Portfoolie-Jelalq\2976d642-d53a-4f4f-b63b-0cbef3977385\scratchpad\logo-test\`.
+Jag har sett 390-bilden: rutan, ordmärket och hamburgern ryms i pillen.
+
+| # | Fråga | Beslut i en mening |
+|---|-------|--------------------|
+| 1 | Generering | `scripts/optimize-images.mjs` byter ikondelen mot en logodel: PNG med alfa i höjderna 34, 68 och 102 (1x, 2x, 3x), `srcSet` med x-deskriptorer, luminansformeln med uppmätta ändpunkter, och grindar på källa, mått, storlek, rutans färg och ordmärkets färg |
+| 2 | Favicon och apple-touch-icon | JQ-rutan rakt ur källan i 32, 96 och 192, **opak och utan luft** |
+| 3 | Markup | Ett `<img alt="Jelal Qaiumi">` ensamt i headerns länk, ingen dold text och ingen `aria-label`. `width="159" height="34"`, CSS `height: 34px; width: auto`. Naven behåller sin låsta höjd. Vid 360 px ryms loggan bredvid hamburgern med ca 48 px över (uträknat, P14c mäter) |
+| 4 | Footerns tagline | Står kvar under loggan |
+| 5 | Gamla filer | `assets-source/logo.png` och de fem `public/assets/logo-mark*.png` tas bort |
+| 6 | Kontrast | Ordmärket i `--ink` mäts mot pillen med samma metod och krav som navlänkarna (≥ 4,5:1). I footern 16,890:1 ur `tokens.css`. Rutan mot `--bg` 6,664:1 |
+| 7 | Formulärtexterna | "E-post" rättas till "Mejl" med Jelals platshållare och felmeddelanden där de står |
+
+#### Punkt 1 — genereringen i `scripts/optimize-images.mjs`
+
+**Format: PNG med alfa, inte webp.** Loggan är platt grafik med skarpa kanter och
+liten text. PNG är förlustfri, så grinden "rutan är `--accent` ±2" mäter källans
+färg och inte en kodares avrundning. Lossy webp lagrar färg i YUV och flyttar en
+mättad orange flera steg (heros grind 5 behövde tolerans 2 för grått). Lossless
+webp hade gett ett andra format för samma sak utan uppmätt vinst. Inget nytt
+beroende: sharp finns.
+
+**Storlekarna: tre filer på höjd, x-deskriptorer.** Loggan visas alltid med CSS-höjd
+34 px, i naven och i footern. Bredden följer av proportionen ~~1571 : 335~~
+**1565 : 334 (RÄTTAT 2026-11-08, uttaget nedan)**. Med fast
+CSS-storlek är `1x/2x/3x` exakt, och inget `sizes` behövs. 3x tas med: telefoner med
+pixeltäthet 3 är vanliga, och liten text blir annars mjuk.
+
+| Fil | Höjd × bredd | Täthet | Tak (inte uppmätt) |
+|-----|--------------|--------|--------------------|
+| `public/assets/jq-logo-34.png` | 34 × 159 | 1x | ≤ 6 kB |
+| `public/assets/jq-logo-68.png` | 68 × 319 | 2x | ≤ 14 kB |
+| `public/assets/jq-logo-102.png` | 102 × 478 | 3x | ≤ 24 kB |
+| `public/assets/jq-icon-32.png` | 32 × 32 | favicon | ≤ 2 kB |
+| `public/assets/jq-icon-96.png` | 96 × 96 | favicon | ≤ 6 kB |
+| `public/assets/jq-icon-192.png` | 192 × 192 | apple-touch-icon | ≤ 14 kB |
+
+Bredden är ~~`Math.round(h × 1571 / 335)`~~ **`Math.round(h * LOGO_CROP.width / LOGO_CROP.height)` = `Math.round(h * 1565 / 334)` (RÄTTAT 2026-11-08; ger samma 159, 319 och 478)**. Skriptet räknar ut den och jämför med
+tabellen (grind L1). Nya namn (`jq-`) i stället för `logo-mark-` så att en sökning
+på det gamla namnet ger 0 träffar när bytet är klart.
+
+**Konstanter** (ersätter hela ikondelens konstanter, se "Tas bort ur skriptet"):
+
+| Konstant | Värde |
+|----------|-------|
+| `LOGO_SOURCE` | `resolve(ASSETS_SOURCE_DIR, 'jq-logo-light.png')` |
+| `SOURCES` | `[HERO_SOURCE, LOGO_SOURCE]` |
+| `LOGO_EXPECTED_WIDTH` / `LOGO_EXPECTED_HEIGHT` | `2000` / `774` |
+| `LOGO_BG_RGB` | `{ r: 246, g: 244, b: 240 }` |
+| `LOGO_TEXT_RGB` | `{ r: 20, g: 20, b: 20 }` |
+| `LOGO_OPAQUE_ROWS` (**tillagt 2026-11-08**) | `{ top: 1, bottom: 772 }` (inklusive; rad 0 och 773 läses aldrig) |
+| `LOGO_SQUARE` | ~~`{ left: 219, top: 219, side: 335 }`~~ **RÄTTAT 2026-11-08:** `{ left: 219, top: 220, width: 335, height: 334 }`, rutans rena yta (x 219–553, y 220–553). Kanten är ringen 1 px utanför den, x 218–554 × y 219–554, och räknas ut ur `LOGO_SQUARE` i skriptet, ingen egen konstant |
+| `LOGO_GAP_END` | `648` (första kolumnen efter mellanrummet, i källans koordinater) |
+| `LOGO_CROP` | ~~`{ left: 219, top: 219, width: 1571, height: 335 }` (x 219–1789, y 219–553)~~ **RÄTTAT 2026-11-08:** `{ left: 219, top: 220, width: 1565, height: 334 }` (x 219–1783, y 220–553). Vänster, topp och botten är rutans rena yta, så kantringen ligger utanför uttaget. Höger: ordmärket slutar på 1781, 2 px luft |
+| `ICON_CROP` (**tillagt 2026-11-08**) | `{ left: 220, top: 220, width: 334, height: 334 }` (x 220–553, y 220–553), kvadraten inom den rena ytan |
+| `LANCZOS_REACH` (**tillagt 2026-11-08**) | `3` (sharps standardkärna `lanczos3` når 3 utdatapixlar åt varje håll. `kernel` sätts inte i `resize()`) |
+| `LOGO_HEIGHTS` | `[34, 68, 102]` |
+| `LOGO_EXPECTED_WIDTHS` | `{ 34: 159, 68: 319, 102: 478 }` |
+| `ICON_SIZES` | `[32, 96, 192]` |
+| `LOGO_SIZE_LIMIT_KB` / `ICON_SIZE_LIMIT_KB` | taken i tabellen ovan, nycklade på höjd respektive sida |
+| `COLOR_TOLERANCE` | `2` (per kanal) |
+| `TOKENS_FILE` | `resolve(ROOT, 'src/styles/tokens.css')` |
+
+**Färgerna läses ur `tokens.css`, aldrig skrivna i skriptet.** En funktion,
+`readTokenHex(name)`, läser filen (i `try/catch`, LARDOMAR 2026-10-05) och
+returnerar `{ r, g, b }` för `--<name>: #rrggbb;`. Den anropas för `accent` och
+`ink`. Saknas tokenet eller är värdet inte sex hexsiffror:
+`tokens.css: --<name> saknas eller är inte #rrggbb`. Ändrar Jelal `--accent` fäller
+grind L4 och I4, och det är rätt: då matchar loggan inte längre sidan.
+
+**Transparensen: testets form, men med uppmätta ändpunkter.** Testet räknade
+`alpha = clamp((245 − lum) / (245 − 20))`. Med bottnens luminans 244,14 blir det
+0,0038, alltså alfa 1 av 255 efter avrundning **på varje bottenpixel**. Hela
+rektangeln hade fått en osynlig men inte genomskinlig botten, och grind L7 hade
+fallit på korrekt utdata. Därför:
+
+```
+lum(rgb)   = 0.2126 * r + 0.7152 * g + 0.0722 * b      (8-bitarsvärden, ingen linjärisering)
+LUM_BG     = lum(LOGO_BG_RGB)     // 244,14, räknas i skriptet
+LUM_TEXT   = lum(LOGO_TEXT_RGB)   // 20
+alpha      = clamp((LUM_BG - lum(pixel)) / (LUM_BG - LUM_TEXT), 0, 1)
+a          = Math.round(alpha * 255)
+```
+
+Bottnen får exakt 0, texten exakt 255, och skillnaden mot testet är högst 0,4 %
+alfa. Det syns inte, och Jelals godkännande gäller utseendet.
+
+**Kedjan, i denna ordning:**
+
+1. Källgrindarna ~~S1–S5~~ **S1–S6 (RÄTTAT 2026-11-08)** (nedan). ~~på hela källan~~
+   De läser bara rad `LOGO_OPAQUE_ROWS.top`–`LOGO_OPAQUE_ROWS.bottom`.
+2. `sharp(LOGO_SOURCE).extract(LOGO_CROP).ensureAlpha().raw()`.
+3. Per pixel i uttaget: x < ~~`LOGO_SQUARE.side`~~ **`LOGO_SQUARE.width` (335; RÄTTAT
+   2026-11-08)** (rutan) behåller sina RGB och får alfa 255. Övriga får RGB = `--ink`
+   och alfa enligt formeln. **Rutans kantpixlar (tillagt 2026-11-08):** de behålls
+   inte och får ingen alfa ur andelen accent. De ligger utanför uttaget på vänster
+   sida, topp och botten (en kant på 25–88 % accent är under 0,13 utdatapixel i 1x,
+   och behållen hade den gett en blek ram mot pillen). Höger kantkolumn 554 (≈ 2 %
+   accent) är uttagets x 335 och går genom formeln som mellanrummet: alfa ≈ 2, och
+   steg 5 färgar den.
+4. ~~`sharp(rgba, { raw: { width: 1571, height: 335, channels: 4 } })`~~
+   **`sharp(rgba, { raw: { width: LOGO_CROP.width, height: LOGO_CROP.height, channels: 4 } })` (RÄTTAT 2026-11-08)**`.resize({ width: w, height: h, fit: 'fill' }).raw()`
+   per höjd. `fill` med tabellens bredd ger exakt mått. Proportionsfelet är under
+   0,3 % och syns inte.
+5. **Återställ ordmärkets färg efter `resize()`** (samma skäl som steg 8 i det gamla
+   ikonbeslutet: `resize()` interpolerar RGB). Varje pixel med
+   `x >= squareEnd`, där ~~`squareEnd = Math.ceil(335 * w / 1571)`~~
+   **`squareEnd = Math.ceil(LOGO_SQUARE.width * w / LOGO_CROP.width)` (RÄTTAT 2026-11-08)**,
+   får RGB = `--ink`. Alfa rörs inte. Rutans pixlar rörs inte.
+6. `png({ compressionLevel: 9 })`, sedan `queueWrite`.
+
+Ikonerna: ~~`sharp(LOGO_SOURCE).extract({ left: 219, top: 219, width: 335, height: 335 })`~~
+**`sharp(LOGO_SOURCE).extract(ICON_CROP)` (RÄTTAT 2026-11-08)**`.removeAlpha().resize(n, n).png({ compressionLevel: 9 })`.
+Ingen alfa, ingen utfyllnad. Uttaget ligger helt i den rena ytan, så ingen blek kant
+följer med.
+
+**Funktioner** (LARDOMAR 2026-10-02, "parallell dubblering": en kontroll som behövs
+två gånger är en funktion):
+
+```js
+/** @returns {{ r: number, g: number, b: number }} */
+function readTokenHex(name) {}
+/** Luminansen ovan. */
+function lum(r, g, b) {}
+/** true om varje kanal ligger inom tol. */
+function nearRgb(actual, expected, tol) {}
+/** Vanligaste RGB bland pixlar i rektangeln med alfa === 255. raw har 3 eller 4 kanaler. */
+function modeRgb(raw, { x0, y0, x1, y1 }) {}
+/** Distinkta RGB bland pixlar med alfa > 0 i rektangeln. */
+function distinctVisibleRgb(raw, { x0, y0, x1, y1 }) {}
+/** Mått, kanaler, hasAlpha och storlek för en kodad buffert. Skriver GRIND-raderna, returnerar antal fel. */
+async function checkPng(name, buffer, { width, height, hasAlpha, limitKb }) {}
+/** Tillagt 2026-11-08 (byggarens tillägg, godkänt). Pixeln (x, y) i en raw-buffert
+ *  med sharps info. a = 255 när channels === 3. */
+function pixelAt(raw, { width, channels }, x, y) {} // → { r, g, b, a }
+/** Tillagt 2026-11-08 (byggarens tillägg, godkänt). "r,g,b" för GRIND-raderna. */
+function rgbText({ r, g, b }) {} // → string
+```
+
+`assertSafeOutput`, `queueWrite`, `readSourceStat` och `sourceUntouched` står kvar
+oförändrade och används för den nya källan. **Godkänt 2026-11-08:** `sourceUntouched`
+körs för båda källorna (`SOURCES`). Har byggarens `pixelAt` en annan parameterform
+skrivs den om till formen ovan.
+
+**Källgrindarna**, var och en `GRIND:` följd av `fail()`:
+
+**RÄTTAT 2026-11-08:** S2–S5 byggde på stickprovet och fälls av den korrekta
+källan. Tabellen är omskriven efter byggarens mätning, och S6 är tillagd. Gamla
+lydelser står överstrukna.
+
+| # | Kontroll | Legitim ändring som får fälla den |
+|---|----------|-----------------------------------|
+| S1 | Källan är 2000 × 774 | En ny loggfil. Då ses M20 över först |
+| S2 | ~~Har källan alfa är **varje** pixels alfa 255~~ **RÄTTAT:** `LOGO_CROP`, `ICON_CROP` och kantringen ligger inom `LOGO_OPAQUE_ROWS`, och har källan alfa är varje pixel i rad 1–772 alfa 255. Rad 0 och 773 prövas inte och läses av ingen annan grind | En ny källa med verklig transparens i bildytan. Formeln förutsätter opak botten |
+| S3 | ~~Varje pixel **utanför** `LOGO_CROP` är `LOGO_BG_RGB` ±2~~ **RÄTTAT:** varje pixel i rad 1–772 som ligger utanför `LOGO_CROP` och utanför kantringen är `LOGO_BG_RGB` ±2. Bevisar att uttaget inte klipper ordmärket | En ny källa |
+| S4 | ~~Rutans fyra kantlinjer (rad 219 och 553 …) … botten ±2~~ **RÄTTAT:** den rena ytans fyra yttre linjer (rad 220 och 553 för x 219–553, kolumn 219 och 553 för y 220–553) är `--accent` ±2. Bevisar rutans läge på pixeln, och att `ICON_CROP`:s hörn är rena | En ny källa eller ett ändrat `--accent` |
+| S5 | ~~Kolumnerna 554–647, rad 219–553, är botten ±2~~ **RÄTTAT, ny innebörd:** varje pixel i kantringen (rad 219 och 554 för x 218–554, kolumn 218 och 554 för y 219–554) är en blandning av botten och accent: med `c = clamp((LOGO_BG_RGB.b − p.b) / (LOGO_BG_RGB.b − accent.b), 0, 1)` ligger varje kanal inom ±2 från `Math.round(bg + c * (accent − bg))`. Med S3 (utanför ringen är botten) och S4 (innanför är accent) bevisar det att kanten är högst 1 px bred | En ny källa eller ett ändrat `--accent` |
+| S6 (**tillagt 2026-11-08**, var S5) | Kolumnerna 555–647, rad 220–553, är botten ±2. Bevisar att ruta och ordmärke är åtskilda, så att delningen i steg 3 och 5 är giltig | En ny källa |
+
+**Utdatagrindarna för loggan**, per fil:
+
+| # | Kontroll |
+|---|----------|
+| L1 | Mått = `LOGO_EXPECTED_WIDTHS[h]` × `h`, och ~~`Math.round(h * 1571 / 335)`~~ **`Math.round(h * LOGO_CROP.width / LOGO_CROP.height)` (RÄTTAT 2026-11-08)** = samma bredd |
+| L2 | 4 kanaler, `hasAlpha === true` |
+| L3 | Storlek ≤ taket |
+| L4 | `modeRgb` i rutans inre ~~(x 1 till `squareEnd − 2`, y 1 till `h − 2`)~~ **(RÄTTAT 2026-11-08:** x 1 till `innerEnd`, y 1 till `h − 2`, där `innerEnd = Math.floor(LOGO_SQUARE.width * w / LOGO_CROP.width - LANCZOS_REACH - 0.5)`, dvs. 30, 64 och 98) är `--accent` ±2 |
+| L5 | Varje pixel i samma rektangel har alfa 255. **RÄTTAT 2026-11-08:** rektangeln slutar `LANCZOS_REACH` utdatapixlar före rutans högra kant. Orsaken till fallet var lanczos3:s negativa lob vid en verklig kant mot den genomskinliga luckan (alfa strax under 255, osynligt), inte ett hål i rutan. Grinden skyddar mot att steg 3 gör rutan genomskinlig, och det fångar rektangeln fortfarande |
+| L6 | `distinctVisibleRgb` för x ≥ `squareEnd` är **exakt en** färg och den är `--ink` |
+| L7 | Pixlarna (`w − 1`, 0) och (`w − 1`, `h − 1`) har alfa 0, och minst en hel kolumn mellan `squareEnd` och ~~`Math.floor(429 * w / 1571)`~~ **`Math.floor(429 * w / LOGO_CROP.width)` (RÄTTAT 2026-11-08)** har alfa 0 i alla rader (429 = `LOGO_GAP_END − LOGO_CROP.left`, oförändrat) |
+| L8 | Antal pixlar med 0 < alfa < 255 för x ≥ `squareEnd` är > 0 (mjuk kant, inte trappad) |
+
+**Utdatagrindarna för ikonerna**, per fil: I1 mått n × n, I2 3 kanaler och
+`hasAlpha === false`, I3 storlek ≤ taket, I4 ~~pixeln (0, 0) är `--accent` ±2~~
+**RÄTTAT 2026-11-08: alla fyra hörnpixlarna, (0, 0), (n − 1, 0), (0, n − 1) och
+(n − 1, n − 1), är `--accent` ±2** (rutan går ut i kanten, ingen luft och ingen blek
+kant. Gäller med `ICON_CROP`), I5 `modeRgb` över hela bilden är `--accent` ±2.
+
+**Grundkörningen (tillagt 2026-11-08):** skriptet körs först en gång på den korrekta
+källan, och varje grind S1–S6, L1–L8 och I1–I5 ska gå igenom. Först därefter görs de
+negativa kontrollerna. Faller en grind i grundkörningen stoppar byggaren och lämnar
+tillbaka hit med de uppmätta värdena. Ingen konstant, tolerans eller rektangel
+justeras på eget beslut.
+
+Sist, före skrivfasen: `sourceUntouched` för båda källorna. Skrivfasen är
+oförändrad: ingenting skrivs innan alla grindar passerat.
+
+**Taken är inte uppmätta.** Faller L3 eller I3 på den korrekta källan i första
+körningen stoppar byggaren och lämnar tillbaka hit med de uppmätta storlekarna.
+Taket lossas inte på eget beslut, och komprimeringen ändras inte.
+
+**Tas bort ur skriptet:** `LOGO_EXPECTED_WIDTH = 1254`, `ORANGE_ROW_GAP`,
+`ORANGE_MIN_DELTA`, `ORANGE_MIN_RED`, `isOrange`, `EXPECTED_BLOCKS`,
+`EXPECTED_MARK_BBOX`, `ICON_SIDE`, `ACCENT` (`252, 111, 3`), `LOGO_BASE_R`,
+`ALPHA_SPAN`, den gamla `ICON_SIZE_LIMIT_KB`, `TIGHT_SIZES`, blockdetekteringen,
+`MARK_CROP`, `WORDMARK_TOP_ROW`, `STREAK_TOP_ROW`, `extend()`-steget, kontrollen
+"KRITISK KONTROLL PÅ 672-UNDERLAGET", `resetAccentRgb` och varje kommentar om
+monogrammet, 672, `#FC6F03`, blocken och de tajta filerna. Kommentaren överst i
+skriptet skrivs om: "genererar heros svartvita bild, loggan och ikonerna".
+Heros del rörs inte.
+
+**Källorna skyddas** av samma `assertSafeOutput` som i dag, nu med
+`jq-logo-light.png` i `SOURCES`, och `sourceUntouched` bevisar efteråt att den är
+orörd (storlek och mtime).
+
+#### Punkt 2 — favicon och apple-touch-icon
+
+**Ingen luft runt rutan, i någon storlek.** iOS rundar själv hörnen på
+apple-touch-icon och fyller genomskinliga pixlar med svart, så ikonen ska vara
+opak och fylla hela ytan. Bokstäverna ligger ca 14 % av sidan in från kanten
+(x 267–506 i en ruta som ~~börjar på 219~~ **i ikonen börjar på 220, `ICON_CROP`, RÄTTAT 2026-11-08; bokstävernas läge är stickprov, inte uppmätt**), och iOS-hörnens kurva når ca 7 % in vid
+diagonalen, så "JQ" klipps inte. En luftkant i 192 hade gjort rutan mindre på
+hemskärmen utan att skydda något. Favicon får samma regel: rutan är märket.
+
+```html
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/jq-icon-32.png" />
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/jq-icon-96.png" />
+<link rel="apple-touch-icon" href="/assets/jq-icon-192.png" />
+```
+
+Kommentaren ovanför i `index.html` skrivs om till invarianten: ikonen är JQ-rutan
+ur loggan, opak och utan luft, och varje genererad ikonfil refereras här eftersom
+`dist/` inte får ha orefererade filer.
+
+#### Punkt 3 — markupen i Header och Footer
+
+**`Header.jsx`, tecken för tecken** (ersätter `<a className={styles.logoLink} …>`
+till och med `</a>`, inklusive bilden, `<span className="visually-hidden">Jelal Qaiumi</span>`
+och de två kommentarsblocken):
+
+```jsx
+        {/* Bilden ÄR namnet i text, så alt är namnet, och länkens tillgängliga
+            namn kommer ur alt. Ingen dold text och ingen aria-label: båda hade
+            gett namnet två gånger. width/height är 1x-filens mått, så att ingen
+            layout shift uppstår. CSS sätter höjden. Hero renderas alltid av App,
+            så ankaret har alltid ett mål. Beslutat i ARKITEKTUR.md: M20. */}
+        <a className={styles.logoLink} href={`#${HERO_ID}`}>
+          <img
+            className={styles.logo}
+            src="/assets/jq-logo-34.png"
+            srcSet="/assets/jq-logo-34.png 1x, /assets/jq-logo-68.png 2x, /assets/jq-logo-102.png 3x"
+            alt="Jelal Qaiumi"
+            width="159"
+            height="34"
+          />
+        </a>
+```
+
+- `alt="Jelal Qaiumi"`, inte "Jelal Qaiumi, till startsidan": länken går till
+  sidans topp, inte till en startsida, och loggans namn är webbplatsens namn.
+  WCAG 1.1.1 för bild av text: alt är texten i bilden.
+- Länkens namn har fortfarande **en** bärare, nu alt. Den degraderar till synlig
+  text om bilden inte laddas, vilket den dolda texten gjorde om CSS inte laddades.
+  Distinktionsregistret är rättat.
+
+**`Header.module.css`, tecken för tecken:**
+
+```css
+/* EN länk, ett barn: loggan. */
+.logoLink {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  /* TRÄFFYTAN. Loggan är lägre än WCAG 2.5.5:s 44 px; blocket över och under
+   * ger länken den höjden utan att något syns. Ta inte bort raden med
+   * motiveringen att den inte syns. */
+  padding-block: 5px;
+}
+
+/* Loggan renderas på HÖJD; bredden följer av filens proportion. Höjden hör
+ * ihop med de genererade filerna (1x, 2x, 3x), så den ändras bara tillsammans
+ * med dem. Beslutat i ARKITEKTUR.md: M20. */
+.logo {
+  height: 34px;
+  width: auto;
+  flex-shrink: 0;
+}
+```
+
+`gap` tas bort ur `.logoLink`: länken har ett barn. **Inget token för 34 px:** talet
+är bundet till filernas höjder i skriptet och till `height="34"` i JSX, och ett
+token hade sett ut att gå att ändra ensamt.
+
+**Naven har låst höjd och den ändras inte:** `.pill { height: var(--nav-height) }`
+står kvar. Loggan (34) ryms i pillens innerhöjd (58 − 2 × 8 − 2 = 40). Länken blir
+44 px hög och går 2 px ut i pillens padding på var sida, precis som i dag (36 + 8).
+
+**`Footer.jsx`:** bilden byts, attributen i övrigt är oförändrade (`alt=""` och
+`aria-hidden="true"`: namnet står i copyrightraden, så loggan är dekor där):
+
+```jsx
+            {/* Samma logga som headern. Den är dekor här: namnet står i
+                copyrightraden. width/height är 1x-filens mått, så att ingen
+                layout shift uppstår. CSS sätter höjden. Beslutat i
+                ARKITEKTUR.md: M20. */}
+            <img
+              className={styles.logo}
+              src="/assets/jq-logo-34.png"
+              srcSet="/assets/jq-logo-34.png 1x, /assets/jq-logo-68.png 2x, /assets/jq-logo-102.png 3x"
+              alt=""
+              aria-hidden="true"
+              width="159"
+              height="34"
+            />
+```
+
+**`Footer.module.css`:** `.logo { height: 34px; width: auto; }`.
+
+**360 px, uträknat (inte uppmätt, P14c mäter och grinden är olikheten, inte
+talet):** vyport 360, rullningslist 15 reserverad → `clientWidth` 345, minus
+sidmarginal 2 × 24 → pillen 297, minus ram 2 och padding 24 + 8 → innerbredd 263.
+Loggan 159 + `gap` 16 + hamburgern 40 = 215. **Kvar: 48 px.** Utan rullningslist
+63 px, vid 390 px 78 px. Från 900 px: innerbredd 803 vid 900 × 700, och loggan tar
+111 px mer än det gamla märket (159 mot 48). Navlänkarna och CTA:n mäts, de
+uppskattas inte.
+
+#### Punkt 4 — footerns tagline
+
+**Står kvar under loggan.** Taglinen är `profile.role` ("Systemutvecklare ·
+Fullstack"), inte namnet, så den upprepar inte ordmärket. Den säger vad Jelal gör,
+och det gör inte loggan. M16 och M19 gäller oförändrade för den.
+
+#### Punkt 5 — de gamla filerna
+
+| Fil | Beslut | Skäl |
+|-----|--------|------|
+| `assets-source/logo.png` | **Tas bort** ur trädet | Ingen läsare efter skriptbytet. Finns i git-historiken. Samma väg som `profile.jpg` i M10c |
+| `public/assets/logo-mark-{32,96,192}.png` | **Tas bort** | Ingen referens efter `index.html`. Orefererade filer i `dist/` är förbjudna |
+| `public/assets/logo-mark-tight-{96,192}.png` | **Tas bort** | Ingen referens efter `Header.jsx` och `Footer.jsx` |
+| `assets-source/jq-logo-light.png` | **Läggs till** i git | Källan. Läses, skrivs aldrig över |
+
+`README.md` och `BRIEF.md` nämner de gamla filerna och `#FC6F03`. De är
+dokumentatorns (P17) respektive projektledarens och rörs inte i P14c.
+
+#### Punkt 6 — kontrast
+
+| Par | Kvot | Källa | Krav |
+|-----|------|-------|------|
+| Ordmärket `--ink` mot pillen över heros bild | mäts | M10c rad 10:s metod, ordmärkets rektangel (utan rutan) som textrektangel | `>= 4,5`, GRIND. Logotyper är undantagna i WCAG 1.4.3, men ordmärket står bredvid navlänkarna i samma färg och ska hålla samma krav |
+| Ordmärket `--ink` mot `--bg` i footern | 16,890:1 | `tokens.css` | AA |
+| Rutan `--accent` mot `--bg` | 6,664:1 | `tokens.css` | ≥ 3:1 (1.4.11) |
+| "JQ" `rgb(20,20,20)` mot rutan | 6,452:1 | `--ink-inverse` mot `--accent` i `tokens.css` | AA |
+
+Legitim ändring som får fälla grinden i rad 1: en ljusare hero-bild, och den fäller
+då navlänkarna i rad 10 också. Ordmärkets versalhöjd blir ca 9 px i 1x (~~89 av 335~~
+**93 av 334, RÄTTAT 2026-11-08: ordmärket y 343–435**
+källpixlar). UPPLYSNING, ingen grind: Jelal har godkänt utseendet i 34 px.
+
+#### Punkt 7 — formulärtexterna efter Jelals beslut 7
+
+Rättat på plats i "Fälten: fem, varav fyra obligatoriska" och i "Validering: båda,
+i lager": etiketten är **"Mejl"**, platshållaren **"Skriv in din mejladress"**,
+och felmeddelandena är **`Skriv din mejladress.`** (tomt) och
+**`Kontrollera mejladressen. Den ska se ut som namn@exempel.se.`** (ogiltigt).
+Texterna står redan så i `ContactForm.jsx:24`, `:51` och `:53`, så P14c ändrar ingen
+kod för detta. P14b:s grind 3 sökte på `Mejl` i hela `src` och hade fällts av
+etiketten. Den är rättad på plats.
+
+#### Exakt vad P14c ändrar
+
+Förutsättning: P14b är överlämnat, ingen `GRANSKNING-PAGAR` finns. Inga andra filer
+än dessa rörs.
+
+| Fil | Ändring | Punkt |
+|-----|---------|-------|
+| `scripts/optimize-images.mjs` | Ikondelen ersätts av logodelen enligt punkt 1. Heros del rörs inte | 1, 2 |
+| `index.html` | De tre ikonraderna och kommentaren ovanför enligt punkt 2 | 2 |
+| `src/components/Header.jsx` | Logglänken enligt punkt 3, tecken för tecken | 3 |
+| `src/components/Header.module.css` | `.logoLink` och `.logo` enligt punkt 3 | 3 |
+| `src/components/Footer.jsx` | Bilden och kommentaren enligt punkt 3 | 3 |
+| `src/components/Footer.module.css` | `.logo { height: 34px; width: auto; }` | 3 |
+| `src/styles/global.css` | Kommentaren vid `.visually-hidden` (`:157-160`): "beslutat i ARKITEKTUR.md, 'Headerns logotyp': mönstret behövs igen av skip-länken i paket 7" → "beslutat i ARKITEKTUR.md, 'Fyra noteringar från paket 2B' och M20 (klassen står kvar)". **Godkänt 2026-11-08 (byggarens tillägg):** kommentaren om skip-länken skrivs om till "den döljs med .visually-hidden och blir synlig vid :focus", eftersom den gamla texten blev falsk när headerns dolda namn försvann (LARDOMAR 2026-11-07, "falsk kommentar"). Ingen regel ändras | 3 |
+| `public/assets/jq-logo-{34,68,102}.png`, `jq-icon-{32,96,192}.png` | Nya, genererade | 1, 2 |
+| `public/assets/logo-mark-*.png` (fem filer) | Tas bort | 5 |
+| `assets-source/logo.png` | Tas bort | 5 |
+| `assets-source/jq-logo-light.png` | Läggs till i git | 5 |
+
+**Rörs inte:** `tokens.css`, `MobileMenu*`, `Hero*`, `Contact*`, `validate-*.mjs`,
+`package.json`, `README.md`, `BRIEF.md`.
+
+**Grindar för P14c** (färskt bygge, `vite preview`, servern startad och stoppad
+enligt `netstat`-regeln, varje mått med vyport och `innerWidth - clientWidth`
+utskrivet med menyn stängd):
+
+1. `npm run optimize:images` en gång, **grundkörningen** (punkt 1). Varje `GRIND:`-rad
+   redovisas, ~~S1–S5~~ **S1–S6 (RÄTTAT 2026-11-08)**, L1–L8 per logofil och I1–I5
+   per ikonfil, med uppmätt storlek. Alla ska gå igenom innan punkt 2 påbörjas.
+2. **Negativa kontroller i en isolerad kopia** av repot, med sha256-lista över
+   `public/assets/` och `assets-source/` före och efter varje körning (ska vara
+   identiska). Varje kontroll prövas korrekt (tyst), injicerad (larmar med rätt
+   meddelande) och återställd (tyst):
+   a. `LOGO_EXPECTED_WIDTH = 2001` → S1.
+   b. `--accent: #ff7000` i kopians `tokens.css` → S4, L4 och I4.
+   c. `LOGO_CROP.width = 1500` → S3.
+   d. Steg 5 (återställningen till `--ink`) bortkommenterat → L6.
+   e. En utdatasökväg satt till `LOGO_SOURCE` → `assertSafeOutput`, och källan orörd.
+   f. (**Tillagt 2026-11-08**) `LOGO_SQUARE.top = 219`, övriga konstanter orörda → S4 (rad 219 är kant, inte accent).
+   g. (**Tillagt 2026-11-08**) `ICON_CROP.left = 219, top = 219` → I4 (blek hörnpixel).
+3. **Heros filer är oförändrade:** sha256 för `public/assets/hero/*` identiska före
+   och efter körningen.
+4. `grep -c` på varje `fail(`-meddelande i skriptet: inget förekommer mer än en gång.
+5. `grep -rn "logo-mark\|logo\.png\|MARK_CROP\|EXPECTED_MARK_BBOX\|TIGHT_SIZES\|ORANGE_MIN\|FC6F03\|252, 111, 3\|sizes=\"48px\"" src scripts index.html`
+   ger **0**.
+6. **Logglänkens namn**, vid 360 × 640 och 1280 × 800: `header a[href="#hero"]` finns
+   exakt en gång, har inget `aria-label`, `textContent.trim() === ''`, exakt ett
+   `img` med `alt === 'Jelal Qaiumi'`, och inget `.visually-hidden`. Det beräknade
+   namnet ur CDP `Accessibility.getPartialAXTree` är exakt `Jelal Qaiumi`.
+7. **Naven, under 900 px**, vid 360 × 640, 390 × 844 och 899 × 700, med
+   rullningslist 15 och vid 360 × 640 också med 0: loggans rektangel är 34 ± 0,5
+   hög och 159 ± 0,5 bred. `logo.right + 16 <= knapp.left + 0,5`. Loggans vänsterkant
+   och knappens högerkant ligger inom pillens content-box (rektangeln minus ram och
+   padding ur `getComputedStyle`) ±0,5. Utskrift: luften `knapp.left − logo.right − 16`
+   (förväntat ca 48 vid 360 med rullningslist, uträknat).
+8. **Naven, från 900 px**, vid 900 × 700, 1000 × 700 och 1280 × 800: `logo.right <= nav.left`,
+   `nav.right + 16 <= cta.left + 0,5`, `cta.right` inom pillens content-box ±0,5,
+   och `.navList` har `scrollWidth === clientWidth`.
+9. **Låst höjd**, vid samma vyporter: pillens höjd är 58 ± 0,5 och headerns
+   `--header-height` (74) enligt LARDOMAR 2026-10-02. Loggans `bottom <= pill.bottom`.
+10. **Negativa kontroller i sidan**, var och en korrekt, injicerad och borttagen,
+    med `querySelectorAll(sel).length === 1` bekräftat före injektionen:
+    a. `header a[href="#hero"] img { width: 300px !important; height: 34px !important }`
+       vid 360 × 640 → grind 7 larmar med loggan utskriven.
+    b. `header a[href="#hero"] img { height: 60px !important }` → grind 9 larmar.
+    c. `img.alt = ''` på loggan → grind 6 larmar.
+11. **Kontrast:** punkt 6 rad 1 vid 360 × 640 och 1280 × 800, rullat som M10c rad 10.
+12. **Footern** vid 360 × 640 och 1280 × 800: loggan 34 ± 0,5 hög, taglinen står
+    under den, och `documentElement.scrollWidth <= clientWidth`.
+13. **Favicon:** `document.querySelectorAll('link[rel~="icon"], link[rel="apple-touch-icon"]')`
+    ger tre element vars `href` hämtas med status 200 i `vite preview`.
+14. **Bygget:** `npm run validate:data`, `npm run validate:tokens`, `npm run build`
+    och `npm run lint` gröna. `dist/` ≤ 1 MB, ingen fil över 300 kB, de tre största
+    redovisade, inget `logo-mark` i `dist/`, och varje fil i `dist/` har en referens
+    i `src/` eller `index.html` (**UPPHÄVT i den delen 2026-11-08, se M21 punkt 4:**
+    undantaget `robots.txt`).
+15. `grep -rnE "[0-9]+ ?px" src/components/Header.jsx src/components/Header.module.css src/components/Footer.jsx src/components/Footer.module.css`:
+    varje träff i en kommentar läses, och ett uppmätt tal skrivs om till
+    invarianten (LARDOMAR 2026-10-02 och 2026-11-07).
+16. Varje deklaration och markup i M20 besvaras i överlämningen med `fil:rad`
+    (LARDOMAR 2026-10-05). Skärmbilder vid 360 × 640, 390 × 844, 1280 × 800 och
+    footern vid 1280 × 800, med absoluta sökvägar.
+
+**PLAN.md:** P14c står inte där. Det är projektledarens att lägga in efter P14b och
+före P15, med `Ingår:` enligt tabellen ovan och grindarna som `Godkänt när:`. P15:s
+förutsättning får P14c. Jag rör inte `PLAN.md`.
+
+### M21 — prestanda före G2 (2026-11-08, genomförs i P15-fix)
+
+**Varför:** P15 del A föll. Mobilens median var performance **86** (78/86/97),
+accessibility 100, LCP 3,99 s. Kravet är 90+ (Jelals uppdrag). Datorn var 98.
+
+**Diagnosen, läst ur rapporterna** (`p15a/mobile-1..3.json` i samordnarens
+scratchpad). Inget av följande är antaget:
+
+- LCP-elementet är heros `<img>` (`section#hero > img`). Bilden är hämtad efter
+  ca 60 ms (observerat i `network-requests`), men **render delay är 74–80 % av
+  LCP**. Skälet är att `#root` är tom tills bundlen har körts.
+- hCaptchas `api.js` begärs efter ca 100 ms, alltså **före** LCP. Den drar med sig
+  `hcaptcha.html` (214 kB överfört) och 280 ms skripttid i simulerad strypning, och
+  ligger därmed i LCP:s beroendegraf. Paketet sätter in skriptet i
+  `componentDidMount`, utan villkor. `loadAsync` styr bara `script.async`, inte NÄR
+  skriptet laddas (läst i `node_modules/@hcaptcha/react-hcaptcha/lib/dist/esm/index.js`).
+  Skriptet går alltså bara att skjuta upp genom att komponenten inte monteras.
+- Den renderblockerande CSS:en är 5,3 kB. Den rörs inte i M21 (punkt 6).
+
+#### Punkt 0 — Mätkravet (ersätter M17:s antal körningar och kategorier)
+
+- **Fem körningar per läge**, mobil och dator. Körningarna görs i följd, en åt
+  gången, mot samma `vite preview` av samma färska bygge. Redovisa **medianen per
+  kategori, alla fem värdena och spridningen (min–max)**.
+- **Krav:** performance-medianen ska vara **≥ 90** i båda lägena, och
+  accessibility ska vara **100 i alla fem körningarna** i båda lägena.
+  Best practices och SEO körs med och redovisas som UPPLYSNING. De har inget krav.
+- **Varför fem:** med tre körningar och spridningen 78–97 räcker en avvikande
+  körning för att flytta medianen. Med fem krävs tre avvikande.
+- **Kommandot:** `npx --yes lighthouse@12 http://localhost:<port>/ --only-categories=performance,accessibility,best-practices,seo --chrome-flags="--headless=new" --output=json --output-path=<scratchpad>/p15fix/mobile-<n>.json`.
+  För datorn läggs `--preset=desktop` till, och filen heter `desktop-<n>.json`.
+- **Ogiltig körning:** en rapport med `runtimeError`, eller med
+  `categories.performance.score === null`, räknas inte. Körningen görs om, och den
+  ogiltiga redovisas.
+- Servern sköts enligt `netstat`-regeln (LARDOMAR 2026-10-02 och 2026-10-05).
+
+#### Punkt 1 — hCaptcha monteras först när den behövs
+
+**Filer:** `src/components/ContactForm.jsx`, `src/components/ContactForm.module.css`.
+
+Den statiska importen av `HCaptcha` tas bort.
+Modulnivå i `ContactForm.jsx`, tecken för tecken:
+
+```js
+import { lazy, Suspense, useEffect, useId, useRef, useState } from 'react';
+
+const HCaptcha = lazy(() =>
+  import('@hcaptcha/react-hcaptcha').catch(() => ({ default: CaptchaUnavailable })),
+);
+
+const CAPTCHA_ROOT_MARGIN = '600px 0px';
+
+function CaptchaUnavailable() { /* returnerar null */ }
+```
+
+I `ContactForm()`:
+
+- `const [captchaWanted, setCaptchaWanted] = useState(false);`
+- `const captchaSlotRef = useRef(null);`
+- `function wantCaptcha()` anropar `setCaptchaWanted(true)` och gör inget annat.
+- En `useEffect(..., [])`. Saknas `'IntersectionObserver' in window` köas
+  `wantCaptcha` i en mikrotask (**ändrat 2026-11-08, P15-fix steg 1:** state sätts
+  aldrig synkront i effektens kropp, regeln `react(set-state-in-effect)`). Grenen
+  är tecken för tecken:
+
+  ```js
+  if (!('IntersectionObserver' in window)) {
+    queueMicrotask(wantCaptcha);
+    return undefined;
+  }
+  ```
+
+  Ingen städfunktion i den grenen: en köad `setCaptchaWanted(true)` efter
+  avmontering gör ingenting, och två körningar i StrictMode ger samma värde.
+  Kommentaren ovanför effekten får invarianten "effekten sätter aldrig state
+  synkront, därför köas anropet". **Valt bort:** ett lat startvärde i `useState`
+  (servern saknar `window` och ger `false`, så en klient utan observer hade fått
+  en skillnad vid hydreringen, M21 punkt 5), `setTimeout` (gav `no-unreachable`)
+  och `oxlint-disable` (M12b punkt 3).
+  Annars skapas en `IntersectionObserver` med
+  `{ rootMargin: CAPTCHA_ROOT_MARGIN }` som observerar `captchaSlotRef.current`.
+  Vid första `isIntersecting` anropas `wantCaptcha()` och observern kopplas från
+  (`disconnect()`). Städfunktionen gör `disconnect()`.
+
+Markup. Allt annat i formuläret är oförändrat:
+
+```jsx
+<form onSubmit={handleSubmit} onFocus={wantCaptcha} noValidate aria-busy={sending}>
+  ...
+  <div className={styles.captcha} ref={captchaSlotRef}>
+    {captchaWanted && (
+      <Suspense fallback={null}>
+        <HCaptcha /* exakt dagens props: ref, sitekey, size, reCaptchaCompat, onVerify, onExpire, onError */ />
+      </Suspense>
+    )}
+  </div>
+```
+
+- `onFocus` på `<form>`: React:s `onFocus` bubblar (focusin), så fokus i vilket
+  fält som helst räcker.
+- `resetCaptcha()` är oförändrad. Den anropar redan `captchaRef.current?.`, så den
+  tål att widgeten inte är monterad.
+- **Platsen reserveras:** `.captcha { margin-bottom: var(--space-5); min-height: <H>px; }`.
+  **H mäts före ändringen** i dagens bygge, med `vite preview`, vid 360 × 640 och
+  1280 × 800, sedan widgeten har laddats: `document.querySelector('form iframe').closest('div[class*="captcha"]').getBoundingClientRect().height`,
+  avrundat uppåt till heltal. Skiljer sig de två värdena åt stannar steget och
+  lämnas tillbaka hit. Talet står i CSS-deklarationen, aldrig i en kommentar
+  (LARDOMAR 2026-10-02). Skälet: "Kontakta mig" hoppar rakt till `#contact`, och
+  utan reserverad plats knuffar widgeten knappen och statusraden nedåt medan
+  de syns.
+- Kommentarer skrivs som invarianter: "laddas en bit innan formuläret syns, eller
+  när det får fokus". Ingen px-siffra.
+
+**Risk:** att chunken inte går att ladda. `CaptchaUnavailable` renderar då ingenting,
+och ett inskick ger "Bekräfta att du är människa …". Det är samma utfall som
+när `api.js` inte går att ladda i dag, och en Suspense utan felgräns hade
+annars rivit hela sidan. En andra risk är att `ref` inte når klasskomponenten
+genom `lazy`. Den prövas i 1g.
+
+**Mätning** (färskt bygge, `vite preview`, vyport 412 × 823 om inget annat sägs):
+
+| # | Kontroll | Godkänt | Negativ kontroll |
+|---|----------|---------|------------------|
+| 1a | Den JS-fil i `dist/assets/` som innehåller `hCaptchaOnLoad` | Exakt en fil, och det är **inte** filen som `index.html` laddar | Före ändringen: entryfilen innehåller strängen |
+| 1b | Färsk laddning överst, vänta 5 s: `performance.getEntriesByType('resource')` med `hcaptcha.com`, och `form iframe` | 0 och 0 | Före ändringen: ≥ 1 och 1 |
+| 1c | Rulla tills `.captcha` ligger 600 px under vyportens underkant eller närmare | `form iframe` finns inom 3 s | — |
+| 1d | Färsk laddning, `document.querySelector('form input').focus({ preventScroll: true })` | `form iframe` finns inom 3 s, och `scrollY` är 0 | Utan `onFocus` på `<form>` (isolerad ändring, återställs): ingen iframe |
+| 1e | `delete window.IntersectionObserver` via `Page.addScriptToEvaluateOnNewDocument` | `form iframe` finns utan att man rullat. **Mäts om efter `queueMicrotask` (2026-11-08), och `npx oxlint` ger 0 varningar och 0 fel** | Lint före ändringen: 1 varning, `react(set-state-in-effect)` |
+| 1f | Höjden på `.captcha` före och efter att widgeten laddats, vid 360 × 640 och 1280 × 800 | Lika, ±0,5 px | Utan `min-height` (isolerad ändring, återställs): olika |
+| 1g | Formulärflödet: tomt inskick, ifyllt inskick utan captcha, och captcha med hCaptchas testnyckel `10000000-ffff-ffff-ffff-000000000001` i ett **separat bygge** (`vite build --outDir <scratchpad>/p15fix/testkey`, nyckeln ändrad tillfälligt och återställd, `git diff --exit-code src/data/contact.js` efteråt) med ändpunkten blockerad (`Network.setBlockedURLs`) | Fyra fältfel och fokus på Namn. Statusen "Bekräfta att du är människa innan du skickar.". Med testnyckeln: iframens `data-hcaptcha-response` är ifylld efter klicket, felstatusen visas efter inskicket, och attributet är tomt igen, vilket bevisar att `resetCaptcha` nådde widgeten genom `lazy` | — |
+
+#### Punkt 2 — projektbildens `sizes`
+
+**Fil:** `src/components/ProjectCard.jsx`, attributet på `<img>`:
+
+```jsx
+sizes="(min-width: 900px) 380px, (min-width: 600px) 50vw, calc(100vw - 3rem)"
+```
+
+- Under 600 px är kortet en kolumn innanför sidmarginalerna, som är
+  2 × `--content-padding` = 3rem. I `mobile-1` var bilden 362 px bred vid 412 px
+  vyport, alltså 100vw − 50 px (de 2 px som skiljer är kortets kant). `sizes` får
+  överskatta men aldrig underskatta, och 3rem överskattar med 2 px. Grenarna från
+  600 px och uppåt överskattar redan och ändras inte.
+- **Ingen ny bredd (t.ex. 800).** Bilden laddas lazy under vecket, och
+  Lighthouse uppskattar själv effekten på LCP till högst 50 ms.
+- **Mätning:** vid 360 × 640, DPR 1,75, `mobile: true` (CDP `Emulation.setDeviceMetricsOverride`),
+  kortet inrullat och bilden laddad, ska `img.currentSrc` sluta på `awle-600.webp`.
+  **Negativ kontroll:** med den gamla strängen blir det `awle-1200.webp`.
+  **UPPLYSNING:** `currentSrc` vid 412 × 823 och DPR 1,75 (Lighthouse-läget). Där
+  väntas `awle-1200`, eftersom 364 × 1,75 > 600. Inget krav.
+
+#### Punkt 3 — `<meta name="description">` (FÖRSLAG, väntar på Jelal)
+
+**Fil:** `index.html`, raden direkt efter `<title>`:
+
+```html
+<meta name="description" content="Jelal Qaiumi, systemutvecklare. Jag bygger webbappar och mobilappar i React, React Native och .NET, hela vägen från databas till app." />
+```
+
+- Texten är Jelals egen ingress ur `Hero.jsx`, med namnet och rollordet ur
+  `profile.js` framför. Den innehåller inget streck (Jelals beslut 7).
+  **⚠️ FÖRSLAG.** Kommentaren ovanför raden säger att texten väntar på Jelals
+  godkännande, och att den bygger på heros ingress och ska läsas om när ingressen
+  ändras. Ingressen återges inte i kommentaren.
+- **Mätning:** Lighthouse-granskningen `meta-description` har `score` 1, och
+  `grep -n 'name="description"' index.html | grep -P '[-\x{2010}-\x{2015}]'` ger
+  0 träffar. **Negativ kontroll:** samma grep mot en kopia av raden där
+  `React Native` är skrivet med bindestreck ger 1 träff.
+
+#### Punkt 4 — `public/robots.txt`
+
+Exakt innehåll, LF-radslut, med radslut efter sista raden:
+
+```
+User-agent: *
+Allow: /
+```
+
+- Ingen `Sitemap`-rad, eftersom det inte finns någon sitemap och ingen fastställd
+  domän.
+- **Undantag från regeln "varje fil i `dist/` har en referens"** (Leveransens
+  storlek): `robots.txt` läses av sökrobotar på en fast adress och refereras
+  aldrig. Det är det **enda** undantaget. Regeln i LARDOMAR 2026-10-02 bör skrivas
+  om med undantaget av den som äger filen. Jag rör den inte.
+- **Mätning:** `curl -i http://localhost:<port>/robots.txt` ger 200,
+  `Content-Type: text/plain` och exakt de två raderna. Lighthouse-granskningen
+  `robots-txt` har `score` 1. **Negativ kontroll:** före ändringen är kroppen
+  `index.html` (börjar med `<!doctype html>`).
+
+#### Punkt 5 — förrendering vid bygget
+
+**Filer:** `src/prerender.jsx` (ny), `scripts/prerender.mjs` (ny), `src/main.jsx`,
+`package.json`, `index.html`. **Inget nytt beroende.** `react-dom/server` ingår i
+`react-dom`, och SSR-bygget är en del av `vite`.
+
+**`src/prerender.jsx`:** importerar `StrictMode` ur `react`, `renderToString` ur
+`react-dom/server` och `App` ur `./App.jsx`. Den enda exporten är
+`export function render()`, som returnerar `renderToString(<StrictMode><App /></StrictMode>)`
+(en `string`). Ingen CSS-import. Ingenting i `src/` importerar filen.
+
+**`scripts/prerender.mjs`:** inga exporter. Körs som `node scripts/prerender.mjs`.
+Alla fel skrivs som `prerender: <vad som är fel>` och ger exitkod 1. Varje läsning,
+`build()` och `import()` ligger i `try/catch` och översätts till det formatet
+(LARDOMAR 2026-10-05). Ordningen:
+
+1. Läs `dist/index.html`. Saknas filen: `prerender: dist/index.html saknas (kör vite build först)`.
+2. Markören är `` `<div id="${ROOT_ID}"></div>` ``, där `ROOT_ID` importeras ur
+   `src/data/sections.js`. Dela filen med `split(markör)`. Blir det inte exakt 2
+   delar: `prerender: dist/index.html: markören <div id="…"></div> finns N gånger, ska finnas 1`.
+3. Kör SSR-bygget med Vites JS-API `build()`:
+   `{ logLevel: 'warn', build: { ssr: 'src/prerender.jsx', outDir: 'node_modules/.cache/prerender', emptyOutDir: true, copyPublicDir: false, minify: false } }`.
+   Projektets `vite.config.js` läses som vanligt. Utkatalogen ligger under
+   `node_modules` så att `react` och `react-dom` hittas därifrån, och den är redan
+   git-ignorerad.
+4. Utkatalogens rot ska innehålla exakt en `.js`- eller `.mjs`-fil. Den importeras
+   med `pathToFileURL`, och `render()` anropas.
+5. GRINDAR mot den renderade strängen `html`:
+   - **G1:** exakt ett `<h1`.
+   - **G2:** `` `id="${HERO_ID}"` `` förekommer exakt en gång.
+   - **G3:** varje klassnamn i varje `class="…"` finns som selektor `.<namn>`,
+     följt av ett tecken som inte får ingå i ett klassnamn, i den sammanlagda
+     texten av `dist/assets/*.css`. Annars:
+     `prerender: klassen <namn> finns inte i bygget CSS (SSR- och klientbygget har olika klassnamn)`,
+     med högst tio namn. Grinden fångar att SSR-bygget hashar CSS Modules
+     annorlunda än klientbygget. **Legitim ändring som får fälla den:** en klass
+     utan regel, och det är ett dött klassnamn som ska bort.
+   - **G4:** `html` innehåller inte `hcaptcha` (skiftlägesokänsligt).
+6. Ny fil = `delar[0] + '<div id="' + ROOT_ID + '">' + html + '</div>' + delar[1]`.
+   **Aldrig `String.replace` med en sträng som ersättning**, eftersom `$` i den
+   renderade texten då tolkas som mönster.
+7. Skriv till `node_modules/.cache/prerender/index.html` och flytta sedan till
+   `dist/index.html` med `renameSync` (LARDOMAR 2026-10-02: skriv till en
+   temporärkatalog och flytta först när allt har gått igenom).
+8. `finally`: `rmSync('node_modules/.cache/prerender', { recursive: true, force: true })`.
+
+UPPLYSNING-raden: antalet tecken i `html`. Fallerar något steg är `dist/index.html`
+byte-identisk med hur den var före körningen.
+
+**`package.json`**, scriptet `build`, tecken för tecken:
+
+```json
+"build": "node scripts/validate-data.mjs && node scripts/validate-tokens.mjs && vite build && node scripts/prerender.mjs"
+```
+
+Inget nytt npm-script.
+
+**`src/main.jsx`:** `import { createRoot, hydrateRoot } from 'react-dom/client';`.
+`enableReveal()` anropas först, som i dag. Därefter
+`const container = document.getElementById(ROOT_ID);`. Är
+`container.firstElementChild !== null` anropas `hydrateRoot(container, <StrictMode><App /></StrictMode>)`,
+annars `createRoot(container).render(<StrictMode><App /></StrictMode>)`. I bygget
+är roten fylld och hydreras. I `npm run dev` är den tom och renderas som i dag.
+
+**`index.html`:** `<noscript>` står kvar på sin plats med den nya texten, tecken
+för tecken:
+
+> Menyn, projektfiltret och kontaktformuläret behöver JavaScript. Slå på
+> JavaScript i webbläsaren och ladda om sidan.
+
+Kommentarsblocket ovanför skrivs om till invarianten: sidan förrenderas och syns
+utan JavaScript, men det som är interaktivt kräver JavaScript. Ingen mening om
+att sidan "blir blank". Preloaden av heros bild står kvar oförändrad.
+
+**Hydreringens villkor:** varje komponents rendering ska vara ren. `window`,
+`document` och `matchMedia` får bara läsas i effekter och händelsehanterare,
+aldrig i rendering eller i en `useState`-initierare. Så är det i dag. Sökt med
+`grep -rn "window\.\|document\.\|matchMedia" src`: varje träff ligger i en
+effekt, en hanterare eller i `main.jsx`.
+
+**Risker:** en hydreringsavvikelse, som React 19 tar igen genom att rendera om
+på klienten med ett konsolfel. Mäts i 5c. Ett `.reveal`-element i första vyn
+som blinkar, eftersom det syns i den förrenderade sidan och döljs när
+`enableReveal()` körs. Mäts i 5e. Och ett SSR-bygge som hashar klassnamnen
+annorlunda. Fångas av G3.
+
+**Mätning:**
+
+| # | Kontroll | Godkänt | Negativ kontroll |
+|---|----------|---------|------------------|
+| 5a | `npm run build` | Grön. `dist/index.html` har exakt ett `<h1` och `hero-1440.webp` inuti `#root` | — |
+| 5b | JS avstängt (`Emulation.setScriptExecutionDisabled({ value: true })`) | `h1` har höjd > 0, heros `img.complete && naturalWidth > 0`, `<noscript>`-texten syns, inget `.reveal` har `opacity` 0 | Ett bygge utan prerender-steget: `#root` är tom |
+| 5c | JS på. `Runtime.consoleAPICalled` och `Log.entryAdded` samlas från navigeringen tills sidan rullats till botten | 0 poster av typen error, och 0 poster på någon nivå som matchar `/hydrat\|did not match\|mismatch/i` | En kopia av `dist/` i scratchpad där `h1`-texten i `index.html` har ändrats, serverad med `vite preview --outDir <kopia> --port <annan>`: ≥ 1 träff. Kopian raderas och porten frigörs |
+| 5d | Nätverket vid en laddning | Exakt en begäran mot `/assets/hero/` | — |
+| 5e | JS avstängt, `scrollY` 0, vid 360 × 640, 412 × 823, 1280 × 800, 1350 × 940 och 1600 × 900: antalet `.reveal` med `getBoundingClientRect().top < innerHeight` | 0 i varje vyport. Annars stannar steget och lämnas tillbaka hit | — |
+| 5f | Grindarna, var och en med tre indata (LARDOMAR 2026-10-05): korrekt, fel och åtgärden som felmeddelandet föreskriver | Markören borttagen ur `dist/index.html` efter `vite build`: körningen fallerar och sha256 för `dist/index.html` är oförändrad. `vite build` igen: tyst. G1 och G3 prövas i en isolerad kopia av skriptet, som lägger till `<h1>x</h1>` respektive `<span class="zz-saknas">`: körningen fallerar och felet nämner `zz-saknas` | (detta är den negativa kontrollen) |
+| 5g | Efter körningen, både lyckad och fallerad | `node_modules/.cache/prerender` finns inte. Fillistan i `dist/` är densamma som före P15-fix, plus `robots.txt` | — |
+| 5h | Lighthouse `largest-contentful-paint-element` | Render delay < 30 % av LCP i medianrapporten (UPPLYSNING, ger skälet om punkt 0 faller) | Rapporterna i `p15a`: 74–80 % |
+
+#### Punkt 6 — avvisat nu
+
+- **Inlinad eller kritisk CSS.** Vite har inget inbyggt för det, och det behövs
+  inte förrän mätningen visar det. Faller punkt 0 efter steg 4 lämnas
+  rapporterna tillbaka hit. Inlinad CSS är då nästa kandidat, men den är inte
+  beslutad.
+- **`hero-1440` "13 kB för stor".** `sizes` beskriver den ritade bredden, eftersom
+  `object-fit: cover` ritar bilden bredare än lådan (M10c, M10d). Lighthouse mäter
+  lådan. Ingen ändring.
+- **Statisk kopia av hero i `index.html`, och heros `<img>` utanför `#root`.** Se
+  Teknikval, raden "Förrendering vid bygget".
+- **`sentry={false}` och andra hCaptcha-props.** De behövs inte för kravet.
+
+#### Punkt 7 — paketet P15-fix, fyra steg
+
+Varje steg är ett eget byggaruppdrag och slutar med `npm run build` och
+`npm run lint` gröna, `netstat` före start och efter stopp, en `grep` efter
+`[0-9]+ ?px` i de kommentarer steget har rört (LARDOMAR 2026-11-07), och
+`fil:rad` för varje deklaration i sin punkt (LARDOMAR 2026-10-05).
+
+| Steg | Innehåll | Filer | Klart när |
+|------|----------|-------|-----------|
+| 1 | hCaptcha (punkt 1). H mäts **först**, i dagens bygge | `ContactForm.jsx`, `ContactForm.module.css` | 1a–1g redovisade |
+| 2 | `sizes`, `description`, `robots.txt` (punkt 2–4) | `ProjectCard.jsx`, `index.html`, `public/robots.txt` | Mätningarna i punkt 2–4 redovisade |
+| 3 | Förrendering (punkt 5) | `src/prerender.jsx`, `scripts/prerender.mjs`, `package.json`, `src/main.jsx`, `index.html` | 5a–5g redovisade |
+| 4 | Lighthouse enligt punkt 0 | inga | Kravet i punkt 0 uppfyllt, och 5h redovisad. Annars lämnas rapporterna tillbaka hit |
+
+Därefter körs **resten av P15 (punkt 1–3 och 5–7)** på det färska bygget från
+steg 4, eftersom steg 3 ändrar `index.html` och `main.jsx`.
+`PLAN.md` är projektledarens. Jag rör den inte.
 
 ---
 
@@ -3853,31 +4685,36 @@ skriver; mätningen gällde de strängar jag kunde läsa.
 
 ```
 Portfoolie-Jelalq/
-├─ index.html                     Vites entry. <html lang="sv">, <title>, favicon → /assets/logo-mark-32.png
-├─ package.json                   Scripts: dev, build, preview (paket 1) + optimize:images (läggs till i paket 2)
+├─ index.html                     Vites entry. <html lang="sv">, <title>, <meta name="description"> (M21, P15-fix), favicon → /assets/jq-icon-32.png (M20, P14c; var logo-mark-32.png). <div id="root"></div> är markören som scripts/prerender.mjs fyller i dist/ (M21).
+├─ package.json                   Scripts: dev, build, preview (paket 1) + optimize:images (läggs till i paket 2). build slutar med node scripts/prerender.mjs (M21, P15-fix)
 ├─ vite.config.js                 Enbart @vitejs/plugin-react. Ingen extra konfiguration.
 ├─ ARKITEKTUR.md                  Detta dokument
 ├─ BRIEF.md / PLAN.md / skills.txt
 ├─ scripts/
-│  ├─ optimize-images.mjs         Heros bild, svartvit webp (M10c, P5 omgång 4), och logoikonerna (paket 2B). Körs manuellt, ingår INTE i build.
+│  ├─ optimize-images.mjs         Heros bild, svartvit webp (M10c, P5 omgång 4), och loggan och ikonerna ur jq-logo-light.png (M20, P14c; ersätter logoikonerna från paket 2B). Körs manuellt, ingår INTE i build.
 │  ├─ validate-data.mjs           Grindar src/data/. Första steget i build.
 │  ├─ font-coverage.mjs           Läser cmap ur en woff2-fil. Anropas av validate-data.mjs, en gång per fil (M1d).
 │  ├─ optimize-project-images.mjs Projektbilder 4:3, webp, vänsterförankrad beskärning (M4, P6). Manuellt, inte i build.
-│  └─ validate-tokens.mjs         Grindar att varje custom property som nämns är deklarerad i tokens.css (M5g, P2). I build.
+│  ├─ validate-tokens.mjs         Grindar att varje custom property som nämns är deklarerad i tokens.css (M5g, P2). I build.
+│  └─ prerender.mjs               Förrenderar <App /> in i dist/index.html efter vite build (M21, P15-fix). Sista steget i build.
 ├─ assets-source/                 KÄLLBILDER. Publiceras ALDRIG — ligger utanför public/.
-│  ├─ logo.png                    ORIGINAL 1254x1254 — läses, skrivs aldrig över
+│  ├─ jq-logo-light.png           ORIGINAL 2000x774 — läses, skrivs aldrig över (M20, P14c)
+│  │                              (logo.png UPPHÄVD 2026-11-07, se M20: tas bort i P14c)
 │  ├─ hero-portrait.jpg           ORIGINAL 1672x941 — läses, skrivs aldrig över (M10c, P5 omgång 4)
 │  │                              (profile.jpg UPPHÄVD 2026-11-07, se M10c: tas bort i P5 omgång 4)
 │  └─ projects/                   En PNG per projekt, t.ex. awle.png (M4)
-├─ public/                        Allt här kopieras rakt ut i dist/. Endast genererat.
+├─ public/                        Allt här kopieras rakt ut i dist/. Endast genererat, med ETT undantag: robots.txt (M21).
+│  ├─ robots.txt                  Handskriven, två rader (M21 punkt 4, P15-fix)
 │  └─ assets/
 │     ├─ hero/                    hero-{960,1440,1672}.webp, svartvita (M10c, P5 omgång 4)
 │     │                           (profile/ UPPHÄVD 2026-11-07, se M10c: tas bort i P5 omgång 4)
 │     ├─ projects/                <namn>-{600,1200}.webp (M4, P6)
-│     ├─ logo-mark-{32,96,192}.png        Kvadratisk ikon, favicon/apple-touch (paket 2B)
-│     └─ logo-mark-tight-{96,192}.png     Tajt märke för headern och footern (paket 3, M16)
+│     ├─ jq-logo-{34,68,102}.png  Hela loggan, 1x/2x/3x, naven och footern (M20, P14c)
+│     └─ jq-icon-{32,96,192}.png  JQ-rutan, opak: favicon och apple-touch-icon (M20, P14c)
+│                                 (logo-mark-*.png och logo-mark-tight-*.png UPPHÄVDA 2026-11-07, se M20: tas bort i P14c)
 └─ src/
-   ├─ main.jsx                    Monterar <App />. Importerar fonts.css, tokens.css, global.css i den ordningen. Definierar och anropar den lokala enableReveal() före render (M12, P10; flyttad hit i M12b punkt 3, P9b).
+   ├─ main.jsx                    Monterar <App />: hydrateRoot om #root har innehåll (bygget), annars createRoot (dev) (M21, P15-fix). Importerar fonts.css, tokens.css, global.css i den ordningen. Definierar och anropar den lokala enableReveal() före första renderingen (M12, P10; flyttad hit i M12b punkt 3, P9b).
+   ├─ prerender.jsx               export function render(): renderToString av <App /> för scripts/prerender.mjs (M21, P15-fix). Importeras inte av något i src/.
    ├─ App.jsx                     Komponerar sidan: Header, <main> med Hero och sections.map(...), Footer.
    ├─ components/                 En komponent per fil + en .module.css per komponent (ikonerna har ingen, M9)
    ├─ data/                       Ren data. Innehåll som Jelal redigerar. Ingen JSX här. Ny: profile.js (M10, P5).
@@ -3918,7 +4755,7 @@ ut ändå. Att ett original "aldrig rörs" betyder inte att det ska publiceras.
 | Vad | Från | Till |
 |-----|------|------|
 | Profilbilden (**UPPHÄVD 2026-11-07, se M10c:** källan är `assets-source/hero-portrait.jpg`, och `profile.jpg` tas bort) | `public/assets/profile.jpg` | `assets-source/profile.jpg` |
-| Loggan | `public/assets/logo.png` | `assets-source/logo.png` |
+| Loggan (**källan UPPHÄVD 2026-11-07, se M20:** `assets-source/jq-logo-light.png`, och `logo.png` tas bort i P14c. Regeln att källor bor utanför `public/` gäller) | `public/assets/logo.png` | `assets-source/logo.png` |
 
 Följdändringar som ingår i samma åtgärd:
 
@@ -3948,7 +4785,7 @@ skrivs ut:
 |----------|-------|
 | `dist/` totalt | **≤ 1 MB** |
 | Enskild fil i `dist/` | **≤ 300 kB** |
-| Filer i `dist/` som ingen kod refererar | **0** |
+| Filer i `dist/` som ingen kod refererar | **0**. **Ett undantag sedan 2026-11-08 (M21 punkt 4):** `robots.txt`, som läses av sökrobotar på en fast adress och därför aldrig refereras |
 
 Förväntat utfall efter flytten: ca 0,4–0,5 MB totalt (bildvarianter ~177 kB,
 ikoner ~10 kB, JS och CSS resten). Hamnar siffran nära 1 MB är något fel även om
@@ -3963,7 +4800,8 @@ regression som upptäcks fyra paket senare är dyr att spåra.
 
 | Val | Varför | Vad vi valde bort |
 |-----|--------|-------------------|
-| React 19 + Vite (mall `react`, JavaScript) | Beslutat i briefen. Portfolion demonstrerar den stack som står i kompetenslistan. Mallen `react` (Babel-plugin) framför `react-swc` eftersom skillnaden bara är byggtid på ett projekt av den här storleken och Babel-varianten är den som är bäst dokumenterad. | TypeScript (inte efterfrågat, Jelals lista säger JavaScript), Next.js (ingen SSR eller routing behövs för en one-pager) |
+| React 19 + Vite (mall `react`, JavaScript) | Beslutat i briefen. Portfolion demonstrerar den stack som står i kompetenslistan. Mallen `react` (Babel-plugin) framför `react-swc` eftersom skillnaden bara är byggtid på ett projekt av den här storleken och Babel-varianten är den som är bäst dokumenterad. | TypeScript (inte efterfrågat, Jelals lista säger JavaScript), Next.js (ingen ~~SSR eller~~ routing behövs för en one-pager. **Skälet ändrat 2026-11-08, M21:** sidan förrenderas vid bygget, men det kräver ingen server och inget ramverk, se raden "Förrendering vid bygget") |
+| **Förrendering vid bygget** med `react-dom/server` (`renderToString`) och Vites inbyggda SSR-bygge (tillagt 2026-11-08, M21) | Mobilens LCP väntade på att bundlen kört, eftersom `#root` var tom. Båda verktygen finns redan: `react-dom` är ett beroende och SSR-bygget är en del av `vite`. **Noll nya beroenden** | Next.js, `vite-plugin-ssr`/Vike, `react-snap` (nya beroenden, `react-snap` drar in en webbläsare), en handskriven kopia av hero i `index.html` (CSS Modules hashar klassnamnen, och två kopior av samma markup glider isär), heros `<img>` utanför `#root` (två bilder, två `alt`, layouten ägs av två ställen) |
 | **CSS Modules** (`*.module.css`), inbyggt i Vite | Noll nya beroenden — Vite kompilerar `.module.css` direkt. Klassnamn skopas automatiskt, så sex komponenter kan använda `.title` utan att krocka och utan att vi måste upprätthålla en namnkonvention med disciplin. Stilen ligger bredvid komponenten, vilket gör den lätt att hitta och lätt att ta bort. | Global BEM-fil (växer till en enda lång fil, kräver mänsklig disciplin för att inte läcka), Tailwind/UI-ramverk (förbjudet i briefen), CSS-in-JS (runtime-beroende utan nytta här) |
 | Designtokens som CSS-variabler i `:root` i `styles/tokens.css` | Variabler kaskaderar rakt in i CSS Modules, så de två strategierna krockar inte. Ett ställe att ändra färg/spacing på. | SASS-variabler (hade krävt `sass` som beroende och tappat runtime-kaskaden) |
 | ~~Systemfont-stack, ingen webbfont~~ — **UPPHÄVT 2026-11-07, se M1.** Gäller: tre självhostade woff2 (Urbanist, Manrope, JetBrains Mono), latin, i `src/styles/fonts/`. Inget beroende, inget externt anrop | ~~Noll nätverksbegäran, ingen FOUT, inget beroende. Loggan bär den grafiska identiteten — texten ska vara neutral och lugn.~~ | Google Fonts CDN (externt anrop, render-blockerande, och ingen fil för teckengrinden att mäta), `@fontsource/*` via npm (tre nya beroenden för filer som kan hämtas en gång) |
@@ -3981,7 +4819,7 @@ Inget mer.**
 
 ## Designtokens
 
-### Accentfärg — mätning — accenttokenets värde UPPHÄVT 2026-11-07, se M5
+### Accentfärg — mätning — accenttokenets värde UPPHÄVT 2026-11-07, se M5 — källan `logo.png` och `#FC6F03` som loggans färg UPPHÄVDA 2026-11-07, se M20 (loggans ruta är `--accent` `#ff6b00`)
 
 > Mätningen av loggans orange står kvar som fakta om loggan. **Sidans accenttoken
 > är `--accent: #ff6b00`** enligt uppdraget och Jelals beslut 4. Raden "Ändra den
@@ -6402,7 +7240,7 @@ Tjänst: **Web3Forms**, gratisplan, 250 meddelanden/månad, inget konto.
 | Fält | Namn i formuläret | Typ | Obligatoriskt | Platshållare |
 |------|-------------------|-----|---------------|--------------|
 | Namn | `name` | `text` | ja | Skriv in ditt namn |
-| E-post | `email` | `email` | ja | Skriv in din e-postadress |
+| Mejl (**rättat 2026-11-07, Jelals beslut 7, se M20 punkt 7**; var "E-post") | `email` | `email` | ja | Skriv in din mejladress |
 | Företag/Organisation | `company` | `text` | **nej** | Skriv in ditt företag/organisation |
 | Ämne för förfrågan | `subject` | `text` | ja | Skriv in ditt ämne för förfrågan |
 | Meddelande | `message` | `textarea` | ja | — |
@@ -6749,8 +7587,13 @@ tre meddelanden själv.
 | Fält | Regel |
 |------|-------|
 | Namn | icke-tomt efter `trim()` |
-| E-post | icke-tomt, exakt ett `@`, icke-tomma delar på båda sidor, minst en `.` efter `@` |
+| Mejl | icke-tomt, exakt ett `@`, icke-tomma delar på båda sidor, minst en `.` efter `@` |
 | Meddelande | icke-tomt efter `trim()`, högst 5000 tecken |
+
+**Mejlfältets meddelanden (rättat 2026-11-07, Jelals beslut 7, se M20 punkt 7):**
+tomt fält ger `Skriv din mejladress.`, en adress som inte klarar regeln ger
+`Kontrollera mejladressen. Den ska se ut som namn@exempel.se.` Fältet heter "Mejl",
+inte "E-post".
 
 **E-postregeln ska vara medvetet tillåtande.** Att avvisa en giltig adress är
 värre än att släppa igenom en ogiltig — den ogiltiga studsar bara, den giltiga
@@ -7783,7 +8626,12 @@ tillbaka.
    linjen försvinner utan felmeddelande. Kontrollera punkt 1 på nytt varje gång
    `App.jsx` ändras.
 
-### Headerns logotyp — beslutat efter paket 1
+### Headerns logotyp — beslutat efter paket 1 — UPPHÄVT 2026-11-07 av Jelal, se M20 (hela loggan i naven, ingen dold text; mätmetoden för naven och regeln om låst höjd gäller)
+
+> **Gäller i stället:** M20. Naven visar hela loggan `jq-logo-*.png` (JQ-rutan och
+> ordmärket), 34 px hög, som enda barn i länken till `#hero`, med
+> `alt="Jelal Qaiumi"`. Monogrammet, den dolda texten, det tajta märket och
+> ikongenereringen nedan är historik. Varje underavsnitt bär sin egen märkning.
 
 `logo.png` är en **lockup**, inte ett rent monogram: JQ-märket, texten
 "JelalQaiumi" i vitt och ett kort orange streck. I 44 × 44 px blir ordbilden en
@@ -7797,7 +8645,12 @@ Vinsten: ordbilden blir läsbar i stället för suddig, texten skalar med
 användarens egen typsnittsstorlek, den går att markera och söka i, och
 skärmläsaren får en riktig textnod i stället för att vara utlämnad åt en alt-text.
 
-#### Headerns uppbyggnad
+#### Headerns uppbyggnad — UPPHÄVT 2026-11-07, se M20 punkt 3
+
+> **Gäller i stället:** `<a href="#hero">[img jq-logo-34/68/102, alt="Jelal Qaiumi", 159 × 34]</a>`,
+> `.logo { height: 34px; width: auto; }`, `srcSet` med `1x/2x/3x` och inget
+> `sizes`, träffytan 159 × 44 via `padding-block: 5px`. Markupen står tecken för
+> tecken i M20. Tabellen nedan är historik.
 
 Loggan är **en enda länk** till `#hero` som innehåller två saker: ikonen och
 namnet.
@@ -7890,7 +8743,7 @@ bär.
 | Skillnad eller signal | Bärs i dag av | Bars tidigare av |
 |-----------------------|---------------|------------------|
 | ~~Namn mot navlänkar~~ | **utgår** — namnet syns inte längre | vikt (500) → färg → placering |
-| **Logga-länkens tillgängliga namn** | **enbart den visuellt dolda texten** ⚠ | synlig text |
+| **Logga-länkens tillgängliga namn** | ~~enbart den visuellt dolda texten~~ **enbart `alt="Jelal Qaiumi"` på loggans bild** ⚠ (M20, 2026-11-07). Fortfarande en bärare, men den degraderar till synlig text om bilden inte laddas, och P14c:s grind 6 mäter namnet | den visuellt dolda texten (2026-10-07 – 2026-11-07), synlig text före det |
 | Navlänk viloläge mot hover | kulör **och** ljushet (vit → orange) | enbart kulör (grått → orange) |
 | Rubriknivå mot brödtext | storlek + spärrning + luft | vikt + storlek |
 | Grupprubrik mot pills | versaler + spärrning + grad + dämpad färg | samma, plus vikt |
@@ -7913,7 +8766,11 @@ Registret har redan bevisat sitt värde: namn-mot-nav-raden var det som gjorde a
 den här ändringens följd upptäcktes innan den byggdes, i stället för efteråt. Det
 är tredje gången den distinktionen flyttar — vikt, färg, och nu bort helt.
 
-#### Namnet döljs i alla bredder — beslutat av Jelal 2026-10-07
+#### Namnet döljs i alla bredder — beslutat av Jelal 2026-10-07 — UPPHÄVT 2026-11-07 av Jelal, se M20 (namnet syns i loggans ordmärke, och `alt` bär länkens namn. Ingen `aria-label` gäller fortfarande)
+
+> **Gäller i stället:** den dolda `<span>`-en tas bort i P14c, och bilden får
+> `alt="Jelal Qaiumi"`. Skälet mot `aria-label` nedan gäller: den hade gett namnet
+> två gånger. Punktlistan "Kvar gäller" är historik.
 
 Jelal: *"Bredvid loggan står det jelalqaiumi, den kan du plocka bort."* Han menar
 den synliga texten.
@@ -7943,7 +8800,7 @@ Kvar gäller:
   aldrig två, aldrig noll.
 - Ingen `aria-label` på länken.
 
-#### Följderna av att namnet försvinner
+#### Följderna av att namnet försvinner — UPPHÄVT 2026-11-07, se M20 (principen att träffytan hålls på 44 px gäller: `padding-block: 5px` runt 34 px)
 
 **1. Träffytan krymper, och det ska kompenseras.** Länkens box var tidigare ikon
 plus text; nu är den bara ikonen, 48 × 36 px. Det klarar WCAG 2.5.8:s 24 × 24 men
@@ -7997,7 +8854,7 @@ bred skärm blir det mer luft mellan märket och navet.
 passa på att omfördela utrymmet vore en andra ändring han inte bett om, och den
 sortens tillägg är hur en enkel begäran blir en omdesign.
 
-#### Ikonens optiska storlek — rättat efter paket 2B — headerhöjden UPPHÄVD 2026-11-07, se M6 (märket 48 × 36 px gäller och ryms i pillens 40 px)
+#### Ikonens optiska storlek — rättat efter paket 2B — headerhöjden UPPHÄVD 2026-11-07, se M6 — HELT UPPHÄVT 2026-11-07, se M20 (ingen tajt ikon: hela loggan, 159 × 34 px, ryms i pillens 40 px)
 
 Den kvadratiska 672-ikonen har 115 px genomskinlig luft upptill och nedtill,
 eftersom märket är 592 × 442, alltså bredare än högt. I en 44 × 44-ruta blir det
@@ -8199,7 +9056,7 @@ Använd `Emulation.setDeviceMetricsOverride` eller motsvarande, och låt sidan
 rapportera sitt eget `window.innerWidth` i samma mätning. **Mät elementens
 rektanglar, tolka inte en bild.**
 
-#### Fyra noteringar från paket 2B — tokennamnen UPPHÄVDA 2026-11-07, se M5 (noteringarna gäller)
+#### Fyra noteringar från paket 2B — tokennamnen UPPHÄVDA 2026-11-07, se M5 — logga-namnet som konsument av `.visually-hidden` UPPHÄVT 2026-11-07, se M20 (klassen och dess motivering gäller, och noteringen om React 19:s preload gäller nu loggan)
 
 - ~~**`apple-touch-icon`** hör hemma i paket 7 tillsammans med `<noscript>`.~~
   **UPPHÄVT** — läggs in **nu**, tillsammans med de två `rel="icon"`-raderna. Se
@@ -8209,7 +9066,8 @@ rektanglar, tolka inte en bild.**
   2026-10-07 — noll konsumenter** sedan namnet döljs i alla bredder. Klassen var
   motiverad så länge något använde den; en global klass utan användning är dött
   fält, samma regel som fällde `--color-surface-raised` och `--color-accent-soft`.
-  `.visually-hidden` står kvar och används av logga-namnet och skip-länken.
+  `.visually-hidden` står kvar och används av ~~logga-namnet och~~ skip-länken
+  (**logga-namnet UPPHÄVT 2026-11-07, se M20:** loggan har `alt`, ingen dold text).
   Ursprunglig motivering, nu utan föremål: en CSS-modul kan varken
   `composes` inuti en media query eller nå en global klass, så mönstret hade annars
   behövt stå på ett ställe och hävningen på ett annat. Markeringen
@@ -8224,7 +9082,7 @@ Det är ett **medvetet undantag** från regeln att `global.css` bara innehåller
 reset och baselement: det är en tillgänglighetsprimitiv som paket 7 med stor
 sannolikhet behöver igen, och den ska inte kopieras in i varje modul.
 
-#### Beskärningen — blockdetektering, inte en höjdtröskel
+#### Beskärningen — blockdetektering, inte en höjdtröskel — UPPHÄVT 2026-11-07, se M20 (ingen blockdetektering: uttaget är `LOGO_CROP`, och källgrindarna ~~S1–S5~~ S1–S6 (rättat 2026-11-08) bevisar läget)
 
 `logo.png` är 1254 × 1254 px. De oranga pixlarna bildar **två skilda block** med
 den vita ordbilden i glappet mellan dem:
@@ -8272,7 +9130,7 @@ Valet av blockdetektering framför en höjdtröskel: en tröskel någonstans mel
 råkar sitta i en bild. Blockdetekteringen vilar bara på att monogrammet är det
 största sammanhängande oranga partiet, vilket håller även om loggan görs om.
 
-#### Kvadratisk form skapas med genomskinlig utfyllnad, inte mot källan
+#### Kvadratisk form skapas med genomskinlig utfyllnad, inte mot källan — UPPHÄVT 2026-11-07, se M20 punkt 2 (JQ-rutan är redan kvadratisk och tas rakt ur källan, opak och utan utfyllnad)
 
 > **Rättad regel.** En tidigare version sa att uttaget skulle göras kvadratiskt
 > **mot källbilden**: `left=283 top=223 width=672 height=672`, alltså y 223..894.
@@ -8316,7 +9174,12 @@ Metoden har dessutom en egenskap den gamla saknade: den är **okänslig för vad
 råkar ligga runt monogrammet i källbilden**. Görs loggan om med ordbilden närmare
 märket spelar det ingen roll.
 
-#### Förväntat utfall — byggaren jämför mot detta
+#### Förväntat utfall — byggaren jämför mot detta — UPPHÄVT 2026-11-07, se M20
+
+> **Gäller i stället:** källgrindarna S1–S5 och utdatagrindarna L1–L8 och I1–I5 i
+> M20 punkt 1. Utskriften nedan gäller en källa som tas bort i P14c och är historik.
+> Regeln "avviker utdraget: stanna och lämna tillbaka, justera inte talen för hand"
+> gäller.
 
 Skriptet ska skriva ut sina framräknade värden. De ska bli **exakt** dessa:
 
@@ -8340,7 +9203,7 @@ bli en utskriven upplysning — rimligt när tröskeln var trasig, men nu när d
 rättad ska **båda vara hårda kontroller**. Stämmer bboxen men inte blockantalet
 har något i bilden ändrats som vi inte förstår, och det ska stoppa körningen.
 
-#### Verifiering som fångar just detta fel
+#### Verifiering som fångar just detta fel — UPPHÄVT 2026-11-07, se M20 (motsvarigheten är S3 och L7: inget innehåll utanför uttaget, och genomskinlig botten)
 
 I den färdiga 672 × 672-bilden upptar märket raderna y 115–557 (`115 + 442 = 557`).
 
@@ -8349,7 +9212,11 @@ ordbilden kommit med. Kontrollen körs på den genererade bilden, inte på käll
 och är det enda steget som skiljer en korrekt ikon från en som ser rimlig ut i
 alla andra kontroller.
 
-#### Utdatafiler för ikonen
+#### Utdatafiler för ikonen — filerna, taken och favicon-raderna UPPHÄVDA 2026-11-07, se M20 (regeln "alla genererade filer refereras från `index.html`, noll orefererade filer i `dist/`" och "ingen `.ico`" gäller)
+
+> **Gäller i stället:** `jq-icon-{32,96,192}.png`, opaka, med taken och
+> favicon-raderna i M20 punkt 1 och 2. Tabellen, html-raderna och "Endast PNG …
+> `96w`/`192w`" nedan är historik.
 
 Produceras av **samma** `scripts/optimize-images.mjs`, i paket 2B.
 **`assets-source/logo.png` lämnas orört** — det bara läses, precis som
@@ -8403,7 +9270,7 @@ Ingen `.ico` genereras. `<link rel="icon" type="image/png" href="/assets/logo-ma
 räcker i alla webbläsare som är aktuella, och ICO hade krävt ett beroende till
 utöver sharp.
 
-#### Ikonen genereras med genomskinlig botten — tokennamnen UPPHÄVDA 2026-11-07, se M5 (beslutet gäller)
+#### Ikonen genereras med genomskinlig botten — tokennamnen UPPHÄVDA 2026-11-07, se M5 — HELT UPPHÄVT 2026-11-07, se M20 (ikonen är opak. Loggans ordmärke får genomskinlig botten med luminansformeln i M20 punkt 1. Principen att återställa färgen efter `resize()` gäller där)
 
 Kontrollen av loggans bottenton är gjord och utfallet var negativt:
 
@@ -8481,7 +9348,7 @@ Detta ligger i **paket 2B** enligt omskrivna PLAN.md, som delar paket 2 i 2A
 (profilbilden) och 2B (monogram-ikonen + headerns ombyggnad). Lockup-frågan är
 avgjord av Jelal och ska inte tas upp igen vid Leverans 1.
 
-#### Känd skuld från paket 1
+#### Känd skuld från paket 1 — historik, betald i paket 2B och 3 — UPPHÄVT 2026-11-07, se M20 (lockupen är tillbaka i naven, nu som den nya loggan)
 
 Paket 1:s header är byggd med **hela lockupen** `logo.png` i 44 × 44 px. Det var
 rätt enligt arkitekturen som den såg ut då, och det är **inte ett nytt fel** —
@@ -8611,7 +9478,7 @@ att det inte uppstår en ny tvetydighet när markeringarna städas bort:
 | "namnet skiljs från navlänkarna med färg" | ingen färgskillnad; placering + spärrning | "Headern är enfärgad" |
 | `z-index: 10` på headern | Avgjort — blir token `--z-header: 10` | Rättelse 7 ovan + tokentabellen |
 | `padding-inline` globalt | Avgjort — **ligger kvar globalt** | "Var sidmarginalen bor" |
-| Loggans visningsstorlek | Avgjort — **48 × 36 px**, tajt märke | "Ikonens optiska storlek" |
+| Loggans visningsstorlek | Avgjort — ~~**48 × 36 px**, tajt märke~~ **UPPHÄVT 2026-11-07:** hela loggan, **159 × 34 px** | ~~"Ikonens optiska storlek"~~ M20 |
 | `<title>`-texten | Avgjort — `Jelal Qaiumi — Systemutvecklare` | "Bekräftat från paket 1" |
 
 De fyra återstående markeringarna rör värden jag ännu inte tagit ställning till.
@@ -9301,14 +10168,16 @@ stödd. Den permanenta kostar en rad och inget annat.
 
 ### Tre noteringar från granskningen
 
-**1. `<noscript>` — ja, i paket 7.**
-Sidan är helt klientrenderad och blir blank utan JavaScript. Det är en känd följd
+**1. `<noscript>` — ja, i paket 7. Texten och skälet UPPHÄVDA 2026-11-08, se M21
+punkt 5** (sidan förrenderas och syns utan JavaScript; platsen direkt före
+`<div id="root">` gäller).
+~~Sidan är helt klientrenderad och blir blank utan JavaScript.~~ Det är en känd följd
 av stackvalet, inte ett fel, men ett meddelande kostar ingenting. Läggs i
-`index.html` direkt före `<div id="root">`. Exakt text, så att ingen formulerar
-om den:
+`index.html` direkt före `<div id="root">`. ~~Exakt text, så att ingen formulerar
+om den:~~
 
-> Den här sidan behöver JavaScript för att visas. Slå på JavaScript i
-> webbläsaren och ladda om sidan.
+> ~~Den här sidan behöver JavaScript för att visas. Slå på JavaScript i
+> webbläsaren och ladda om sidan.~~ UPPHÄVT, se M21 punkt 5.
 
 Paket 7 och inte paket 2, därför att paket 2 ska hållas på bilder. Det hör ihop
 med robusthetsgenomgången.
@@ -9385,7 +10254,8 @@ rätt och gäller nu som fastställda beslut** — de är inte längre något by
 
 - `<title>` = `Jelal Qaiumi — Systemutvecklare`. Namn + titel rakt ur briefen.
 - ~~Logotypens visningsstorlek i headern = 44 × 44 px.~~ **UPPHÄVT** — gäller nu
-  **48 × 36 px** med det tajta märket, se "Ikonens optiska storlek". Principen som
+  ~~**48 × 36 px** med det tajta märket, se "Ikonens optiska storlek"~~
+  **159 × 34 px, hela loggan, se M20 (UPPHÄVT 2026-11-07)**. Principen som
   står kvar: explicita `width`/`height` på `<img>` så att ingen layout shift
   uppstår.
 
@@ -9747,7 +10617,7 @@ olika layoutpåverkan och olika förhållande till tonplattan.
    larmar — enligt regeln att en kontroll som aldrig setts fallera inte är en
    kontroll.
 
-### Vad som INTE görs i bildskriptet — tokennamnen UPPHÄVDA 2026-11-07, se M5 — gråskalan och tonplattan UPPHÄVDA 2026-11-07, se M10c (stycket om loggan gäller)
+### Vad som INTE görs i bildskriptet — tokennamnen UPPHÄVDA 2026-11-07, se M5 — gråskalan och tonplattan UPPHÄVDA 2026-11-07, se M10c — stycket om loggan UPPHÄVT 2026-11-07, se M20 (källan är `jq-logo-light.png`, som läses och aldrig skrivs över)
 
 > **Gäller i stället:** gråskalan bakas in i filerna med sharp `grayscale()`, och
 > tonplattan finns inte. Jelal bad uttryckligen om en svartvit bild, och en bild
@@ -9825,21 +10695,25 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   pekar på en fil som inte finns ser ut som ett trasigt projekt i stället för en
   uppgift som ligger längre fram. Script, skriptfil och `sharp` tillkommer
   samtidigt. (påverkat av lärdom: nej)
-- **Headern: beskuret JQ-monogram som bild + namnet som HTML-text** — Jelals eget
+- **UPPHÄVT 2026-11-07 av Jelal, se M20 (hela loggan, `alt="Jelal Qaiumi"`):**
+  **Headern: beskuret JQ-monogram som bild + namnet som HTML-text** — Jelals eget
   beslut 2026-10-02. Lockupens ordbild blir oläslig i 44 px. Texten blir läsbar,
   markerbar och skalar med användarens typsnittsstorlek. Ikonen får `alt=""` +
   `aria-hidden`, så att namnet läses upp exakt en gång. (påverkat av lärdom: nej)
-- **Namnet döljs med "visually hidden", inte `display: none`, under 600 px** — på
+- **UPPHÄVT 2026-11-07, se M20:**
+  **Namnet döljs med "visually hidden", inte `display: none`, under 600 px** — på
   360 px finns inte plats för ikon, namn och tre navlänkar, men länken får inte
   bli namnlös för en skärmläsare just på den smalaste skärmen. (påverkat av
   lärdom: nej)
-- **Ikonens beskärning hittas med blockdetektering, inte med en höjdtröskel** —
+- **UPPHÄVT 2026-11-07, se M20 (fast uttag bevisat av källgrindar):**
+  **Ikonens beskärning hittas med blockdetektering, inte med en höjdtröskel** —
   en första version av regeln sa "översta 60 %", men monogrammets botten ligger på
   62,1 %. Q:ets svans hade klippts av utan att något larmat. Blockdetektering
   vilar bara på att monogrammet är det största sammanhängande oranga partiet.
   Förväntat utfall står utskrivet så att avvikelse syns direkt. (påverkat av
   lärdom: se mönstret nedan)
-- **Ikonen genereras med genomskinlig botten, `--color-bg` förblir `#0B0B0C`** —
+- **UPPHÄVT 2026-11-07, se M20 (ikonen är opak):**
+  **Ikonen genereras med genomskinlig botten, `--color-bg` förblir `#0B0B0C`** —
   loggans botten är uppmätt till `#020202`, nio steg mörkare än sidan, så en
   inbakad botten hade synts som en svagt mörkare kvadrat mot en helt plan yta.
   Att i stället låsa `--color-bg` till `#020202` avfärdades: det löser symptomet
@@ -10041,14 +10915,16 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   osynlig, men fokusringen växer med träffytan och det syns. Att bunta ihop den
   med kontaktflytten vore precis det jag avvisade när headerns utrymme frigjordes.
   (påverkat av lärdom: ja)
-- **Namnet bredvid märket döljs i alla bredder, men tas inte ur DOM** — Jelals val
+- **UPPHÄVT 2026-11-07, se M20 (ingen dold text, `alt` på loggan):**
+  **Namnet bredvid märket döljs i alla bredder, men tas inte ur DOM** — Jelals val
   2026-10-07. `.visually-hidden-until-sm` blir `.visually-hidden`. `aria-label`
   avfärdades trots att mitt gamla skäl mot den fallit: **`aria-label` degraderar
   till ingenting om något går fel, medan visuellt dold text degraderar till synlig
   text om CSS inte laddas.** En namnlös länk är ett sämre felläge än ett synligt
   namn. Vald väg upphäver ingenting och återanvänder en primitiv som redan är mätt.
   (påverkat av lärdom: ja)
-- **Träffytan kompenseras till 48 × 44 px med `padding-block: 4px`** — länkens box
+- **UPPHÄVT 2026-11-07, se M20 (159 × 44 px med `padding-block: 5px`):**
+  **Träffytan kompenseras till 48 × 44 px med `padding-block: 4px`** — länkens box
   var tidigare ikon plus text och är nu bara ikonen, 48 × 36, vilket faller under
   WCAG 2.5.5. **Det är den sortens försämring som smyger in när något tas bort:
   ingen mätning går sönder och ingenting larmar.** (påverkat av lärdom: ja)
@@ -10203,7 +11079,8 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
   importera från JS, så en konstant hade täckt två av tre förekomster och sett ut
   som en enda sanning utan att vara det. En checklista över de tre ställena är
   ärligare än en abstraktion som inte håller. (påverkat av lärdom: nej)
-- **Ikonen görs kvadratisk med `extend()` och genomskinlig utfyllnad, inte med en
+- **UPPHÄVT 2026-11-07, se M20 (rutan tas rakt ur källan, ingen utfyllnad):**
+  **Ikonen görs kvadratisk med `extend()` och genomskinlig utfyllnad, inte med en
   kvadratisk `extract()` mot källan** — ordbilden ligger på y 836–872 och hamnade
   37 px inuti den gamla rutan y 223–894, där alfa-formeln hade färgat de vita
   pixlarna orange. Problemet går inte att krympa sig ur: monogrammet är 592 × 442,
@@ -10373,7 +11250,8 @@ den gamla PLAN.md; den var i direkt konflikt med ikonbeslutet och är struken.
 - **Tröskeln skärpt från `R > G` till `R − G ≥ 30`** — `R > G` är inget
   mättnadstest och släppte igenom 732 nästan-neutrala vita pixlar ur ordbilden.
   (påverkat av lärdom: ja)
-- **Headerns ikon blir tajt och icke-kvadratisk, 48 × 36** — den kvadratiska
+- **UPPHÄVT 2026-11-07, se M20 (hela loggan, och en opak ruta som favicon):**
+  **Headerns ikon blir tajt och icke-kvadratisk, 48 × 36** — den kvadratiska
   varianten gav ett synligt märke på bara ca 39 × 29 px i en 44-ruta, eftersom
   märket är bredare än högt. Kvadraten behålls där kvadrat krävs: favicon och
   apple-touch. (påverkat av lärdom: nej)
@@ -10733,6 +11611,8 @@ punkter:**
   deklarationen")
 - **Preload i `index.html` med samma `imagesrcset`/`imagesizes` som bilden** —
   sidan är klientrenderad, så bilden upptäcks annars först efter JavaScript.
+  (**Skälet UPPHÄVT 2026-11-08, se M21 punkt 5:** sidan förrenderas. Preloaden
+  behålls och kravet "hämtas exakt en gång" gäller.)
   Strängen står på två ställen, och därför grindar rad 9 på att bilden hämtas
   exakt en gång. (påverkat av lärdom: **ja** — 2026-10-02 "`hero` står skrivet på
   tre ställen": går dubbleringen inte att undvika ska den mätas)
@@ -10914,6 +11794,143 @@ punkter:**
   komponenttabellen, plus tre rader i tabellen över förbjudna strängar (påverkat av
   lärdom: **ja**, 2026-10-02 "överspelade stycken står kvar", ÅTERKOMMANDE)
 
+### Beslutslogg — M20, ny logga, 2026-11-07
+
+- **PNG med alfa, inte webp.** Förlustfri färg gör att rutans grind mäter källan och
+  inte kodaren; inget nytt beroende (påverkat av lärdom: nej)
+- **Tre höjder, 34/68/102, med `1x/2x/3x` och inget `sizes`.** Fast CSS-höjd gör
+  x-deskriptorer exakta; `sizes` var en följd av breddeskriptorer och försvinner
+  med dem (påverkat av lärdom: nej)
+- **Testets transparens, men ändpunkterna är bottnens och textens uppmätta
+  luminans.** Med 245 fick varje bottenpixel alfa 1 (påverkat av lärdom: **ja**,
+  2026-10-05 "en grind som fälls av fel skäl": grind L7 hade fallit på korrekt utdata)
+- **Färgerna läses ur `tokens.css`, och ordmärkets RGB återställs efter `resize()`.**
+  Den gamla ikonen bar en egen accent (`#FC6F03`) som gled från tokenet (påverkat av
+  lärdom: **ja**, 2026-10-02 "definierad på två oberoende ställen")
+- **Källgrindar på varje uppmätt läge (S1–S5) innan något genereras.** Talen är
+  samordnarens, inte mina (påverkat av lärdom: **ja**, 2026-10-02 "inget namnges
+  okontrollerat" och 2026-11-07 "mät innan en siffra skrivs in")
+- **Funktioner i stället för upprepade kontroller** (`checkPng`, `modeRgb`,
+  `distinctVisibleRgb`, `readTokenHex`) (påverkat av lärdom: **ja**, 2026-10-02
+  "parallell dubblering")
+- **Favicon och apple-touch-icon opaka och utan luft.** iOS rundar hörnen själv och
+  fyller genomskinligt med svart, och "JQ" ligger 14 % in (påverkat av lärdom: nej)
+- **`alt="Jelal Qaiumi"`, ingen dold text, ingen `aria-label`.** Bild av text får
+  textens alt, och en andra bärare hade läst namnet två gånger (påverkat av lärdom:
+  **ja**, 2026-10-02 "logga-länken": länken ska ha exakt ett namn)
+- **Inget token för 34 px.** Talet är bundet till de genererade filerna (påverkat av
+  lärdom: **ja**, 2026-11-07 "token deklareras med sin konsument": ett token hade
+  sett ut att gå att ändra ensamt)
+- **Naven behåller sin låsta höjd, och 360 px mäts mot pillens content-box.**
+  Uträknat 48 px luft, mätt i P14c (påverkat av lärdom: **ja**, 2026-10-02
+  "headerns höjd" och "mät mot den egna behållaren")
+- **Taglinen står kvar.** Den säger rollen, loggan säger namnet (påverkat av lärdom:
+  nej)
+- **`logo.png` och de fem `logo-mark`-filerna tas bort, nya namn med `jq-`.** Så går
+  bytet att grinda med en sökning (påverkat av lärdom: **ja**, 2026-10-02
+  "`dist/` levererar oanvända bilder")
+- **Formulärtexterna rättade på plats, och P14b:s grind 3 rättad.** Den hade fällts
+  av Jelals egen etikett "Mejl" (påverkat av lärdom: **ja**, 2026-10-05 "en grind som
+  fälls av fel skäl")
+- **Äldre stycken märkta på sina egna rubriker:** "Headerns logotyp" och varje
+  underavsnitt, M10c:s skriptdel och rad 14, M16, M19 punkt 12 och grind 3,
+  mappstrukturen, källbildstabellen, "Accentfärg — mätning", "Bekräftat från
+  paket 1", rättelsetabellen, "Vad som INTE görs i bildskriptet", Öppen punkt 5,
+  underlagsraden och tabellen över förbjudna strängar (påverkat av lärdom: **ja**,
+  2026-10-02 "överspelade stycken står kvar", ÅTERKOMMANDE)
+
+### Beslutslogg — M20 rättad efter byggarens mätning, 2026-11-08
+
+- **Källtabellen, konstanterna och S2–S5 rättade på plats, gamla lydelser
+  överstrukna.** Stickprovet var aldrig uppmätt, och P14c stoppades vid S2 (påverkat
+  av lärdom: **ja**, 2026-11-07 "mät innan en siffra skrivs in", och 2026-10-02
+  "överspelade stycken står kvar")
+- **S2 prövar rad 1–772, och varje uttag ska ligga där.** Rad 0 och 773 läses inte av
+  någon grind eller något uttag (påverkat av lärdom: **ja**, 2026-10-05 "en grind som
+  fälls av fel skäl")
+- **Uttaget börjar på rutans rena yta, `LOGO_CROP` x 219–1783, y 220–553.** Kantpixlarna
+  varken behålls eller får alfa: de hamnar utanför uttaget och är under 0,13
+  utdatapixel. Kanten blir skarp utan blek ram, och bredderna blir oförändrade 159,
+  319 och 478 (påverkat av lärdom: nej)
+- **Ikonerna ur `ICON_CROP` x 220–553, y 220–553, och I4 prövar alla fyra hörnen.**
+  Ett hörn hade bara bevisat två av fyra kanter (påverkat av lärdom: nej)
+- **S5 mäter kantringen mot linjen botten–accent, och S6 är det gamla mellanrumsprovet.**
+  Med S3 och S4 bevisar det att kanten är högst 1 px (påverkat av lärdom: nej)
+- **L5: rektangeln ändras, kärnan behålls.** Fallet var lanczos3:s lob vid en verklig
+  kant. Att byta kärna hade mjukat upp ordmärket, och alfa efter skalningen krockar
+  med "JQ" i rutan (påverkat av lärdom: **ja**, 2026-10-05 "en grind som fälls av fel
+  skäl")
+- **Grundkörningen före de negativa kontrollerna, och ett fall i den lämnas tillbaka.**
+  (påverkat av lärdom: **ja**, 2026-10-05 "korrekt indata ska tiga")
+- **Byggarens tillägg godkända:** skip-länkens kommentar i `global.css`, `pixelAt()`,
+  `rgbText()` och `sourceUntouched` för båda källorna (påverkat av lärdom: **ja**,
+  2026-11-07 "falsk kommentar" och 2026-10-02 "parallell dubblering")
+
+### Beslutslogg — M21, prestanda före G2, 2026-11-08
+
+- **ARKITEKTUR.md ändras under P15.** `PLAN.md` fryser dokumentet under P15, men
+  P15 del A föll, och enligt P15 går fyndet då tillbaka. Samordnaren bad om M21
+  (påverkat av lärdom: **ja**, 2026-11-07 "uppskjutet beslut utan ägare": stegen
+  har ett namngivet paket, P15-fix)
+- **Fem körningar och medianen. Accessibility ska vara 100 i alla fem.** Med tre
+  körningar och spridningen 78–97 räckte en avvikande körning (påverkat av lärdom:
+  **ja**, 2026-10-05 "ett larm är inte ett kvitto": ett mått som en enda körning
+  kan välta är inget kvitto)
+- **hCaptcha laddas med `lazy` och monteras via `IntersectionObserver` eller vid
+  fokus.** `loadAsync` skjuter inte upp något, enligt paketets källkod (påverkat
+  av lärdom: **ja**, 2026-10-02 "inget namnges okontrollerat": propen lästes i
+  källan innan den valdes bort)
+- **`.catch` till en tom komponent i `lazy`.** Utan felgräns hade en chunk som
+  inte går att ladda rivit hela sidan. Utfallet blir detsamma som när `api.js`
+  inte går att ladda i dag (påverkat av lärdom: nej)
+- **Utan observer köas `wantCaptcha` med `queueMicrotask`, inget lat startvärde.**
+  Ett startvärde ur `window` ger `false` på servern och `true` i en klient utan
+  observer, alltså en skillnad vid hydreringen (påverkat av lärdom: **ja**,
+  2026-11-07 M12b punkt 3: ingen avstängd lintregel, så formen ändras i stället)
+- **Captchans plats reserveras med en uppmätt höjd.** "Kontakta mig" hoppar rakt
+  dit, och widgeten hade knuffat knappen medan den syns (påverkat av lärdom:
+  **ja**, 2026-11-07 "mät innan en siffra skrivs in": H mäts i P15-fix och inte
+  av mig)
+- **`sizes` får `calc(100vw - 3rem)`, och ingen ny bildbredd.** Rättelsen gäller
+  den bredd som faktiskt mäts. 600 väljs vid 360 px men inte i Lighthouse-läget,
+  och det står uttryckligen (påverkat av lärdom: **ja**, 2026-10-05 "mät
+  artefakten, inte deklarationen")
+- **`description` är heros ingress plus namn och roll, märkt som FÖRSLAG**
+  (påverkat av lärdom: **ja**, 2026-10-02 "rubriken lyder Start": ingen text
+  hittas på, och en härledd text flaggas)
+- **`robots.txt` är det enda undantaget från "ingen orefererad fil i `dist/`".**
+  Regeln i LARDOMAR bör skrivas om av sin ägare (påverkat av lärdom: **ja**,
+  2026-10-05 "en bindande regel får aldrig bli inaktuell i tysthet")
+- **Förrendering med `renderToString` och Vites SSR-bygge, och `hydrateRoot`.**
+  Orsaken till LCP är den tomma roten, och verktygen finns redan. En handskriven
+  kopia av hero hade haft hashade klassnamn som går isär med koden (påverkat av
+  lärdom: **ja**, 2026-10-02 "definierad på två oberoende ställen")
+- **Förrenderingen görs alltid, inte bara om steg 1–2 inte räcker.** Den angriper
+  orsaken (74–80 % render delay), och en median strax över 90 med spridningen
+  78–97 går inte att upprepa (påverkat av lärdom: nej)
+- **G3 jämför klassnamnen i den förrenderade markupen med bygget CSS.** SSR- och
+  klientbygget kan hasha olika, och det märks inte förrän i webbläsaren (påverkat
+  av lärdom: **ja**, 2026-10-05 "mät artefakten, inte deklarationen")
+- **Utdata skrivs till `node_modules/.cache/prerender` och flyttas sist.**
+  (påverkat av lärdom: **ja**, 2026-10-02 "skriptet kontrollerar efter att filerna
+  redan är skrivna")
+- **`split` och inte `String.replace`.** `$` i den renderade texten hade tolkats
+  som mönster (påverkat av lärdom: nej)
+- **`enableReveal` stannar i `main.jsx`.** Ett inline-skript i `<head>` hade dolt
+  allt under hero för alltid om bundlen inte går att ladda. Risken för blink mäts
+  i 5e i stället för att antas (påverkat av lärdom: **ja**, 2026-10-05 "en
+  invariant som bara står i prosa")
+- **`<noscript>`-texten skrivs om.** Det gamla löftet "sidan visas inte" blir falskt
+  (påverkat av lärdom: **ja**, 2026-10-05 "ett löfte i en fil får aldrig vara osant")
+- **Ingen inlinad CSS nu.** Den är nästa kandidat bara om mätningen kräver det
+  (påverkat av lärdom: nej. Planen: bygg inte för framtiden)
+- **Äldre stycken rättade i samma redigering:** M17, M-översikten, M4:s `sizes`
+  och dess LCP-mening, M12 och M12b punkt 3 ("före `createRoot`"), komponenttabellen,
+  mappstrukturen, Teknikval, "Leveransens storlek", M20 rad 14, `<noscript>` i "Tre
+  noteringar", M10c:s preloadskäl i beslutsloggen, och sex rader i tabellen över
+  förbjudna strängar (påverkat av lärdom: **ja**, 2026-10-02 "överspelade stycken
+  står kvar", ÅTERKOMMANDE)
+
 ## Öppna punkter som INTE är arkitektens att besluta
 
 **BESVARAD 2026-11-07 av Jelal, se M10d:** bilden överst och texten under, och
@@ -10938,7 +11955,9 @@ kostar det antingen knapparna ovanför skärmkanten eller en mindre rubrik.
    vilket år det räknas (M14).
 4. **GitHub.** Bekräfta att GitHub-länken ska vara borta tills vidare. Den visas
    inte någonstans så länge `contact.js` har `null` (M16).
-5. **Accentfärgen.** Uppdraget anger `#ff6b00`, och loggan är uppmätt till
+5. **BESVARAD 2026-11-07 av den nya loggan, se M20:** dess ruta är `#ff6b00`, samma
+   som `--accent`, så skillnaden finns inte längre. Historik: **Accentfärgen.**
+   Uppdraget anger `#ff6b00`, och loggan är uppmätt till
    `#FC6F03`. Skillnaden är knappt synlig, men de står bredvid varandra i naven.
    Byggt som `#ff6b00` (M5).
 6. **Footerns tagline.** Byggd med din rollrad "Systemutvecklare · Fullstack" så att

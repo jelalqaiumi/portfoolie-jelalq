@@ -1,5 +1,4 @@
-import { useId, useRef, useState } from 'react';
-import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { lazy, Suspense, useEffect, useId, useRef, useState } from 'react';
 import { contact } from '../data/contact.js';
 import styles from './ContactForm.module.css';
 
@@ -9,6 +8,25 @@ import styles from './ContactForm.module.css';
 const TIMEOUT_MS = 15000;
 
 const MESSAGE_MAX = 5000;
+
+/* ===== CAPTCHAN LADDAS FÖRST NÄR DEN BEHÖVS ============================
+ * Paketet sätter in hCaptchas skript så fort komponenten monteras, så det
+ * enda sättet att skjuta upp skriptet är att inte montera den. Den laddas en
+ * bit innan formuläret syns, eller när formuläret får fokus.
+ *
+ * Går chunken inte att ladda renderas ingenting i stället för widgeten, och
+ * ett inskick ger samma besked som när captchan inte är löst. Utan catch hade
+ * ett misslyckat import() rivit hela sidan, eftersom ingen felgräns finns.
+ * Beslutat i ARKITEKTUR.md: M21 punkt 1. */
+const HCaptcha = lazy(() =>
+  import('@hcaptcha/react-hcaptcha').catch(() => ({ default: CaptchaUnavailable })),
+);
+
+const CAPTCHA_ROOT_MARGIN = '600px 0px';
+
+function CaptchaUnavailable() {
+  return null;
+}
 
 /* ===== FÄLTEN - EN ENDA KÄLLA ===========================================
  * Renderingen, valideringen, "flytta fokus till första felande fält" och
@@ -79,6 +97,33 @@ function ContactForm() {
    * slutlägena, inte bara vid fel. */
   const [captchaToken, setCaptchaToken] = useState('');
   const captchaRef = useRef(null);
+
+  /* Om widgeten ska monteras. Blir sann en gång och förblir sann. */
+  const [captchaWanted, setCaptchaWanted] = useState(false);
+  const captchaSlotRef = useRef(null);
+
+  function wantCaptcha() {
+    setCaptchaWanted(true);
+  }
+
+  /* Utan IntersectionObserver går det inte att veta när formuläret närmar
+   * sig, och då monteras widgeten direkt i stället för aldrig. */
+  useEffect(() => {
+    if (!('IntersectionObserver' in window)) {
+      queueMicrotask(wantCaptcha);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        wantCaptcha();
+        observer.disconnect();
+      }
+    }, { rootMargin: CAPTCHA_ROOT_MARGIN });
+
+    observer.observe(captchaSlotRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const uid = useId();
   const fieldId = (name) => `${uid}-${name}`;
@@ -214,7 +259,9 @@ function ContactForm() {
         <span className={styles.required} aria-hidden="true">*</span> obligatoriskt fält
       </p>
 
-      <form onSubmit={handleSubmit} noValidate aria-busy={sending}>
+      {/* onFocus bubblar i React, så fokus i vilket fält som helst räcker för
+          att captchan ska börja laddas. */}
+      <form onSubmit={handleSubmit} onFocus={wantCaptcha} noValidate aria-busy={sending}>
         {FIELDS.map((f) => {
           const invalid = Boolean(errors[f.name]);
 
@@ -275,7 +322,7 @@ function ContactForm() {
           aria-hidden="true"
         />
 
-        <div className={styles.captcha}>
+        <div className={styles.captcha} ref={captchaSlotRef}>
           {/* reCaptchaCompat={false} så att paketet inte lägger ut globala
               grecaptcha-stubbar - sidan använder ingen reCAPTCHA.
               Token hamnar i h-captcha-response i kroppen ovan.
@@ -283,20 +330,24 @@ function ContactForm() {
               size="compact": den normala widgeten går inte att krympa och
               ryms inte i panelen på en smal skärm. Det är en presentationsprop
               och ändrar ingen formulärlogik (ARKITEKTUR.md, M16). */}
-          <HCaptcha
-            ref={captchaRef}
-            sitekey={contact.form.hcaptchaSiteKey}
-            size="compact"
-            reCaptchaCompat={false}
-            onVerify={(token) => {
-              setCaptchaToken(token);
-              /* Har besökaren redan fått "bekräfta att du är människa" ska den
-               * raden försvinna när hen gjort det. */
-              setState((prev) => (prev === 'captcha' ? 'idle' : prev));
-            }}
-            onExpire={() => setCaptchaToken('')}
-            onError={() => setCaptchaToken('')}
-          />
+          {captchaWanted && (
+            <Suspense fallback={null}>
+              <HCaptcha
+                ref={captchaRef}
+                sitekey={contact.form.hcaptchaSiteKey}
+                size="compact"
+                reCaptchaCompat={false}
+                onVerify={(token) => {
+                  setCaptchaToken(token);
+                  /* Har besökaren redan fått "bekräfta att du är människa" ska den
+                   * raden försvinna när hen gjort det. */
+                  setState((prev) => (prev === 'captcha' ? 'idle' : prev));
+                }}
+                onExpire={() => setCaptchaToken('')}
+                onError={() => setCaptchaToken('')}
+              />
+            </Suspense>
+          )}
         </div>
 
         {/* KNAPPEN BLIR ALDRIG disabled. disabled tar bort elementet ur

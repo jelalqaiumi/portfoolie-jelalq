@@ -33,7 +33,9 @@ const secondaryActionText = 'Kontakta mig';
  * ARKITEKTUR.md, M10c och M10d.
  *
  * Samma sträng och samma srcset står i preloaden i index.html. Ändras det ena
- * ändras det andra, i samma redigering - annars hämtas bilden två gånger. */
+ * ändras det andra, i samma redigering - annars hämtas bilden två gånger.
+ * Bygget stannar om imagesrcset eller href inte stämmer med HERO_IMAGE_WIDTHS i
+ * src/data/profile.js. imagesizes kontrolleras inte. */
 const HERO_IMAGE_SIZES = '(min-width: 900px) 100vw, 178vw';
 const heroImageSrc = (width) => `/assets/hero/hero-${width}.webp`;
 

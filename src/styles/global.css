@@ -245,9 +245,9 @@ section[id] + section[id] {
  * Måtten, placeringen och lagernivån: beslutat i ARKITEKTUR.md, M19 punkt 10.
  *
  * z-index måste vara HÖGRE än --z-header: headern är sticky, och länken ligger
- * före den i DOM, så vid samma lagernivå hade headern målat över den. Det är
- * därför projektet nu har ett andra z-index-värde, uttryckt som en relation
- * till det första i stället för som ett nytt löst tal. */
+ * före den i DOM, så vid samma lagernivå hade headern målat över den. Värdet
+ * staplas mot headern på sidnivå och uttrycks därför som en relation till
+ * --z-header, inte som ett eget löst tal. */
 a.visually-hidden:focus {
   position: fixed;
   top: var(--space-2);

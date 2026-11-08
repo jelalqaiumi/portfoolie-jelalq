@@ -18,8 +18,8 @@ import styles from './Projects.module.css';
 
 /* ===== TEXT SOM JELAL SKA GODKÄNNA ======================================
  * Raden som visas när projektlistan är tom. Texten är ett FÖRSLAG, inte ett
- * beslut - ARKITEKTUR.md säger bara "tomt läge på svenska" och tar inte
- * ställning till orden. Byt strängen nedan, ingen annan fil behöver röras.
+ * beslut: orden väntar på Jelals godkännande. Byt strängen nedan, ingen annan
+ * fil behöver röras.
  *
  * Avsiktligt INTE med: "kommer snart", "under uppbyggnad" och varje löfte om
  * en tidpunkt. Sidan ska inte lova något Jelal inte har sagt.

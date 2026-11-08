@@ -8,11 +8,13 @@
  * (ARKITEKTUR.md, M5h).
  *
  * Brytpunkter: CSS-variabler fungerar inte i @media, så dessa är fasta tal.
- * Använd exakt dessa, inga andra:
+ * Använd exakt dessa, inga andra. Vilka moduler som byter läge vid en
+ * brytpunkt står i modulerna själva (sök på "@media" i src/components) och
+ * räknas inte upp här: en uppräkning blir fel så fort en modul ändras.
  *
  *   (bas)                              360-599 px. En kolumn överallt.
- *   @media (min-width: 600px)    sm    Två kolumner skills, större hero-typografi
- *   @media (min-width: 900px)    md    Hero två kolumner, nav alltid synlig, tre kolumner skills
+ *   @media (min-width: 600px)    sm    Första breddsteget: rutnät och rader får gå från en kolumn till två
+ *   @media (min-width: 900px)    md    Andra breddsteget: naven visas i stället för menyknappen, sektionerna får sin breda layout
  *   @media (min-width: 1200px)   lg    Reserverad. Maxbredden kommer från sitt token, inte från en brytpunkt
  *
  * Golvet är 360 px utan horisontell scroll.
@@ -144,7 +146,10 @@
   --nav-height: 58px;
   --header-height: calc(var(--nav-offset) + var(--nav-height));
 
-  /* Sticky headerns lagernivå. Enda fristående z-index-värdet i projektet. */
+  /* Sticky headerns lagernivå. Ett z-index som staplas mot headern på
+   * sidnivå uttrycks som en relation till detta token, aldrig som ett eget
+   * löst tal. Ett z-index inne i en komponent med isolation: isolate staplas
+   * bara inom den komponenten och berör inte headern. */
   --z-header: 10;
 
   /* Scroll-revealens stagger. Stegnumret sätts inline av Reveal.jsx och har

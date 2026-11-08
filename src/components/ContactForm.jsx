@@ -89,8 +89,9 @@ function ContactForm() {
   const [values, setValues] = useState(EMPTY);
   const [errors, setErrors] = useState({});
 
-  /* Fyra tillstånd: 'idle' | 'sending' | 'sent' | 'error'. Ett enda värde, så
-   * att två av dem aldrig kan vara sanna samtidigt. */
+  /* Formulärets läge är ett enda värde och inte flera flaggor, så att två
+   * lägen aldrig kan vara sanna samtidigt. Vilka lägen som finns framgår av
+   * anropen till setState nedan. */
   const [state, setState] = useState('idle');
 
   /* Captcha-token. Engångs och kortlivad - därför nollas den i BÅDA
@@ -107,7 +108,9 @@ function ContactForm() {
   }
 
   /* Utan IntersectionObserver går det inte att veta när formuläret närmar
-   * sig, och då monteras widgeten direkt i stället för aldrig. */
+   * sig, och då monteras widgeten direkt i stället för aldrig.
+   * Invariant: effekten sätter aldrig state synkront, därför köas anropet.
+   * Beslutat i ARKITEKTUR.md, M21 punkt 1. */
   useEffect(() => {
     if (!('IntersectionObserver' in window)) {
       queueMicrotask(wantCaptcha);
@@ -183,6 +186,18 @@ function ContactForm() {
       return;
     }
 
+    /* Honeypoten läses ur formuläret vid inskicket. Är den ikryssad skickas
+     * ingenting, och formuläret visar samma tack som efter ett lyckat
+     * inskick, så att den som fyllt i den inte får veta något. Beslutat i
+     * ARKITEKTUR.md: M22 punkt 3. */
+    if (event.currentTarget.elements.botcheck.checked) {
+      setErrors({});
+      setState('sent');
+      setValues(EMPTY);
+      resetCaptcha();
+      return;
+    }
+
     setErrors({});
     setState('sending');
 
@@ -205,11 +220,6 @@ function ContactForm() {
            * kvar: två fält med samma namn ger godtyckligt utfall. */
           subject: values.subject.trim(),
           message: values.message,
-
-          /* Honeypot. Behålls UTÖVER captchan - de stoppar olika sorters
-           * robotar: captchan den som interagerar, honeypoten den som bara
-           * fyller i allt den hittar. */
-          botcheck: '',
 
           'h-captcha-response': captchaToken,
         }),
@@ -313,7 +323,7 @@ function ContactForm() {
         {/* HONEYPOT, kvar utöver captchan. tabindex="-1" och aria-hidden är
             inte valfria: ett dolt fält som går att tabba till eller som läses
             upp är en fälla för de besökare som har svårast att ta sig igenom
-            formuläret. */}
+            formuläret. Den läses i handleSubmit. */}
         <input
           className={styles.honeypot}
           type="checkbox"

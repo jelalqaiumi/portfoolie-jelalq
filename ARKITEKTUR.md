@@ -261,6 +261,7 @@ krockar gäller M-avsnittet, och motsägelsen lämnas tillbaka hit.
 | M18 | `--content-max: 1180px` och `--content-padding: 1.5rem` | P2 | "Layout, radier och övrigt", värdet i "Var sidmarginalen bor" |
 | M19 | De sista öppna markeringarna före G2: footerns kolumnetikett är ett `p` utan rubrik, e-posten i klartext, ett `rel`-mönster för hela sidan, tio markeringar och knappens dämpade läge godkända som byggda, och sju kommentarer med uppmätta tal omskrivna | **P14b** (före P15) | M16:s footerpunkt (rättad på plats), R6:s "fortfarande öppna", "Markeringarna från före P2" |
 | M20 | **Ny logga (Jelal 2026-11-07, "Kör på B"):** hela loggan (JQ-rutan plus ordmärket i `--ink`, genomskinlig botten) i naven och footern, 34 px hög, `alt="Jelal Qaiumi"` i headerns länk utan dold text. JQ-rutan ensam, opak och utan luft, är favicon och apple-touch-icon. Källan är `assets-source/jq-logo-light.png`. Dessutom formulärtexterna efter Jelals beslut 7 | **P14c** (efter P14b, före P15) | "Headerns logotyp" med alla underavsnitt, M10c:s ikondel och ikongrind (rad 14), M16:s footermärke, M19 punkt 12:s rader om loggan, mappstrukturens loggrader, "Källbilder bor utanför `public/`" (loggraden), "Vad som INTE görs i bildskriptet" (loggstycket), Öppen punkt 5 (accentfärgen) |
+| M22 | **Rättningar efter G2 (2026-11-08):** grinden 5c lyssnar på `Runtime.exceptionThrown` och på produktionsnumren; M20:s breddgrind jämför mot den laddade filen; honeypoten läses ur DOM och stoppar inskicket tyst; `.gitattributes` låser `robots.txt` till LF; bygget jämför heros preload med `HERO_IMAGE_WIDTHS`; brytpunktslistan anger avsikt, inte moduler | **G2-rättning** | M21 5c, M21 punkt 5:s riskmening, M20 punkt 3:s uträkning och grind 7, M20-tabellens rad 3, "Skräppostskydd: honeypot" (premissen), M10c:s kommentar i `profile.js`, "Brytpunkter" (raderna sm och md) |
 | M21 | **Prestanda före G2 (2026-11-08):** fem Lighthouse-körningar per läge; hCaptcha laddas först när formuläret närmar sig vyn eller får fokus; projektbildens `sizes` rättas; `meta description` (förslag) och `robots.txt`; sidan förrenderas vid bygget med `react-dom/server` och hydreras | **P15-fix** (efter P15 del A, före resten av P15) | M17:s antal körningar, "Tre noteringar från granskningen" punkt 1 (`<noscript>`-texten), M12:s och M12b punkt 3:s "före `createRoot`", Teknikval-raden React (skälet "ingen SSR"), mappstrukturens rader för `index.html`, `package.json`, `public/` och `main.jsx`, "Leveransens storlek" (undantaget `robots.txt`) |
 
 **Efter G1 (2026-11-07):** besluten R1–R6 står i "Besluten efter G1", sist i
@@ -2001,9 +2002,12 @@ oförändrad.
 
 Efter `profile`, tecken för tecken:
 
+**Kommentaren ovanför exporten UPPHÄVD 2026-11-08, se M22 punkt 5:** den sade
+att bredderna bara ändras här, och det var falskt, eftersom preloaden i
+`index.html` har samma bredder. Den gällande kommentaren står tecken för tecken i
+M22 punkt 5. Exporten är oförändrad:
+
 ```js
-/* Bredderna som bildskriptet genererar och som hero läser - ändra bara här, och
- * kör sedan npm run optimize:images. Skälet står i ARKITEKTUR.md, M10c. */
 export const HERO_IMAGE_WIDTHS = [960, 1440, 1672];
 ```
 
@@ -3859,7 +3863,7 @@ Jag har sett 390-bilden: rutan, ordmärket och hamburgern ryms i pillen.
 |---|-------|--------------------|
 | 1 | Generering | `scripts/optimize-images.mjs` byter ikondelen mot en logodel: PNG med alfa i höjderna 34, 68 och 102 (1x, 2x, 3x), `srcSet` med x-deskriptorer, luminansformeln med uppmätta ändpunkter, och grindar på källa, mått, storlek, rutans färg och ordmärkets färg |
 | 2 | Favicon och apple-touch-icon | JQ-rutan rakt ur källan i 32, 96 och 192, **opak och utan luft** |
-| 3 | Markup | Ett `<img alt="Jelal Qaiumi">` ensamt i headerns länk, ingen dold text och ingen `aria-label`. `width="159" height="34"`, CSS `height: 34px; width: auto`. Naven behåller sin låsta höjd. Vid 360 px ryms loggan bredvid hamburgern med ca 48 px över (uträknat, P14c mäter) |
+| 3 | Markup | Ett `<img alt="Jelal Qaiumi">` ensamt i headerns länk, ingen dold text och ingen `aria-label`. `width="159" height="34"`, CSS `height: 34px; width: auto`. Naven behåller sin låsta höjd. Vid 360 px ryms loggan bredvid hamburgern med 48 px över (**uppmätt i P14c, med och utan rullningslist. RÄTTAT 2026-11-08, se M22 punkt 2**) |
 | 4 | Footerns tagline | Står kvar under loggan |
 | 5 | Gamla filer | `assets-source/logo.png` och de fem `public/assets/logo-mark*.png` tas bort |
 | 6 | Kontrast | Ordmärket i `--ink` mäts mot pillen med samma metod och krav som navlänkarna (≥ 4,5:1). I footern 16,890:1 ur `tokens.css`. Rutan mot `--bg` 6,664:1 |
@@ -4161,11 +4165,15 @@ står kvar. Loggan (34) ryms i pillens innerhöjd (58 − 2 × 8 − 2 = 40). L�
 
 **`Footer.module.css`:** `.logo { height: 34px; width: auto; }`.
 
-**360 px, uträknat (inte uppmätt, P14c mäter och grinden är olikheten, inte
-talet):** vyport 360, rullningslist 15 reserverad → `clientWidth` 345, minus
+~~**360 px, uträknat (inte uppmätt, P14c mäter och grinden är olikheten, inte
+talet):**~~ **360 px, uppmätt 48 px i P14c (RÄTTAT 2026-11-08; uträkningen nedan
+står kvar som förklaring, och grinden är olikheten, inte talet):** vyport 360, rullningslist 15 reserverad → `clientWidth` 345, minus
 sidmarginal 2 × 24 → pillen 297, minus ram 2 och padding 24 + 8 → innerbredd 263.
-Loggan 159 + `gap` 16 + hamburgern 40 = 215. **Kvar: 48 px.** Utan rullningslist
-63 px, vid 390 px 78 px. Från 900 px: innerbredd 803 vid 900 × 700, och loggan tar
+Loggan 159 + `gap` 16 + hamburgern 40 = 215. **Kvar: 48 px.** ~~Utan rullningslist
+63 px~~ **RÄTTAT 2026-11-08, se M22 punkt 2: uppmätt 48 px i P14c, även utan
+rullningslist.** `scrollbar-gutter: stable` på `html` (M10b punkt 3) reserverar
+rännan, så `clientWidth` är 345 i båda fallen. Vid 390 px 78 px (uträknat på samma
+sätt, inte uppmätt). Från 900 px: innerbredd 803 vid 900 × 700, och loggan tar
 111 px mer än det gamla märket (159 mot 48). Navlänkarna och CTA:n mäts, de
 uppskattas inte.
 
@@ -4262,10 +4270,19 @@ utskrivet med menyn stängd):
    namnet ur CDP `Accessibility.getPartialAXTree` är exakt `Jelal Qaiumi`.
 7. **Naven, under 900 px**, vid 360 × 640, 390 × 844 och 899 × 700, med
    rullningslist 15 och vid 360 × 640 också med 0: loggans rektangel är 34 ± 0,5
-   hög och 159 ± 0,5 bred. `logo.right + 16 <= knapp.left + 0,5`. Loggans vänsterkant
+   hög och ~~159 ± 0,5 bred~~ **RÄTTAT 2026-11-08, se M22 punkt 2:** bredden är
+   ~~`img.naturalWidth / img.naturalHeight × rect.height` ± 0,5~~ **RÄTTAT
+   2026-11-08, se M22 punkt 2:** `filB / filH × rect.height` ± 0,5 med filens
+   verkliga pixelmått (läses ur en fristående `new Image()` med
+   `src = img.currentSrc`, eftersom `naturalWidth` vid DPR 2 avrundas nedåt),
+   alltså bredden för den fil som faktiskt laddats. Grinden körs vid DPR 1 och DPR 2
+   (`deviceScaleFactor` i `Emulation.setDeviceMetricsOverride`), och `currentSrc`,
+   DPR och den väntade bredden skrivs ut för varje mätning (vid DPR 2 är filen
+   319 × 68, och då väntas 159,5). `logo.right + 16 <= knapp.left + 0,5`. Loggans vänsterkant
    och knappens högerkant ligger inom pillens content-box (rektangeln minus ram och
    padding ur `getComputedStyle`) ±0,5. Utskrift: luften `knapp.left − logo.right − 16`
-   (förväntat ca 48 vid 360 med rullningslist, uträknat).
+   (~~förväntat ca 48 vid 360 med rullningslist, uträknat~~ **uppmätt 48 vid 360 i
+   P14c, med och utan rullningslist. RÄTTAT 2026-11-08, se M22 punkt 2**).
 8. **Naven, från 900 px**, vid 900 × 700, 1000 × 700 och 1280 × 800: `logo.right <= nav.left`,
    `nav.right + 16 <= cta.left + 0,5`, `cta.right` inom pillens content-box ±0,5,
    och `.navList` har `scrollWidth === clientWidth`.
@@ -4470,7 +4487,8 @@ sizes="(min-width: 900px) 380px, (min-width: 600px) 50vw, calc(100vw - 3rem)"
 
 #### Punkt 4 — `public/robots.txt`
 
-Exakt innehåll, LF-radslut, med radslut efter sista raden:
+Exakt innehåll, LF-radslut, med radslut efter sista raden (**tillagt 2026-11-08,
+se M22 punkt 4:** LF garanteras av `.gitattributes`, inte av hur filen skrevs):
 
 ```
 User-agent: *
@@ -4569,7 +4587,9 @@ aldrig i rendering eller i en `useState`-initierare. Så är det i dag. Sökt me
 effekt, en hanterare eller i `main.jsx`.
 
 **Risker:** en hydreringsavvikelse, som React 19 tar igen genom att rendera om
-på klienten med ett konsolfel. Mäts i 5c. Ett `.reveal`-element i första vyn
+på klienten med ~~ett konsolfel~~ ett okastat fel (**RÄTTAT 2026-11-08, se M22
+punkt 1:** i produktion kommer det som `Runtime.exceptionThrown`,
+`Minified React error #418`, och inte i konsolen). Mäts i 5c. Ett `.reveal`-element i första vyn
 som blinkar, eftersom det syns i den förrenderade sidan och döljs när
 `enableReveal()` körs. Mäts i 5e. Och ett SSR-bygge som hashar klassnamnen
 annorlunda. Fångas av G3.
@@ -4580,7 +4600,7 @@ annorlunda. Fångas av G3.
 |---|----------|---------|------------------|
 | 5a | `npm run build` | Grön. `dist/index.html` har exakt ett `<h1` och `hero-1440.webp` inuti `#root` | — |
 | 5b | JS avstängt (`Emulation.setScriptExecutionDisabled({ value: true })`) | `h1` har höjd > 0, heros `img.complete && naturalWidth > 0`, `<noscript>`-texten syns, inget `.reveal` har `opacity` 0 | Ett bygge utan prerender-steget: `#root` är tom |
-| 5c | JS på. `Runtime.consoleAPICalled` och `Log.entryAdded` samlas från navigeringen tills sidan rullats till botten | 0 poster av typen error, och 0 poster på någon nivå som matchar `/hydrat\|did not match\|mismatch/i` | En kopia av `dist/` i scratchpad där `h1`-texten i `index.html` har ändrats, serverad med `vite preview --outDir <kopia> --port <annan>`: ≥ 1 träff. Kopian raderas och porten frigörs |
+| 5c | **UPPHÄVD 2026-11-08, se M22 punkt 1** (grinden kunde inte larma i produktion). ~~JS på. `Runtime.consoleAPICalled` och `Log.entryAdded` samlas från navigeringen tills sidan rullats till botten~~ | ~~0 poster av typen error, och 0 poster på någon nivå som matchar `/hydrat\|did not match\|mismatch/i`~~ | ~~En kopia av `dist/` … ≥ 1 träff~~. Den gällande grinden, med tre källor och den negativa kontrollen, står i M22 punkt 1 |
 | 5d | Nätverket vid en laddning | Exakt en begäran mot `/assets/hero/` | — |
 | 5e | JS avstängt, `scrollY` 0, vid 360 × 640, 412 × 823, 1280 × 800, 1350 × 940 och 1600 × 900: antalet `.reveal` med `getBoundingClientRect().top < innerHeight` | 0 i varje vyport. Annars stannar steget och lämnas tillbaka hit | — |
 | 5f | Grindarna, var och en med tre indata (LARDOMAR 2026-10-05): korrekt, fel och åtgärden som felmeddelandet föreskriver | Markören borttagen ur `dist/index.html` efter `vite build`: körningen fallerar och sha256 för `dist/index.html` är oförändrad. `vite build` igen: tyst. G1 och G3 prövas i en isolerad kopia av skriptet, som lägger till `<h1>x</h1>` respektive `<span class="zz-saknas">`: körningen fallerar och felet nämner `zz-saknas` | (detta är den negativa kontrollen) |
@@ -4617,6 +4637,368 @@ Varje steg är ett eget byggaruppdrag och slutar med `npm run build` och
 Därefter körs **resten av P15 (punkt 1–3 och 5–7)** på det färska bygget från
 steg 4, eftersom steg 3 ändrar `index.html` och `main.jsx`.
 `PLAN.md` är projektledarens. Jag rör den inte.
+
+### M22 — rättningar efter G2 (2026-11-08, genomförs i G2-rättning)
+
+**Varför:** G2 gav EJ GODKÄND. Fynden står i `LARDOMAR.md`, posterna daterade
+2026-11-08. Fyndet om de sex kommentarerna rättas av en byggare för sig och står
+inte här. `PLAN.md` rättas av projektledaren. Varje äldre stycke som krockar är
+rättat eller märkt på sin plats (se M-översikten, raden M22).
+
+Samordnarens scratchpad, där all utdata i detta avsnitt sparas under `g2fix\`:
+`C:\Users\qaium\AppData\Local\Temp\claude\C--Users-qaium-source-repos-Portfoolie-Jelalq\2976d642-d53a-4f4f-b63b-0cbef3977385\scratchpad`.
+Granskarens prov ligger i `g2\hyd.mjs` där, och 5c utgår från det.
+
+#### Punkt 1 — grinden 5c lyssnar på tre källor (ersätter M21 5c)
+
+I produktion rapporterar React 19 en hydreringsavvikelse med `reportError`. Den når
+bara `Runtime.exceptionThrown`, som `Minified React error #418`. Den gamla grinden
+lyssnade inte där.
+
+**Upplägget** (färskt bygge, `vite preview`, `netstat`-regeln):
+
+- `Runtime.enable`, `Log.enable`, `Network.enable` och `Page.enable` skickas **före**
+  `Page.navigate`. Cachen är avstängd (`Network.setCacheDisabled`).
+- ~~`Fetch.enable` med mönstren `*hcaptcha*` och `*web3forms*`~~ **RÄTTAT
+  2026-11-08:** `Fetch.enable` med **bara** mönstret `*web3forms*`, och varje
+  `Fetch.requestPaused` får `Fetch.failRequest` med `BlockedByClient`, som i
+  `hyd.mjs`. hCaptcha blockeras inte. Med `*hcaptcha*` blockerat monteras widgeten
+  vid botten, `api.js` saknas, och `@hcaptcha/react-hcaptcha` skriver
+  `console.error "Failed to send event to Sentry"`. Det fäller villkor 2 på ett fel
+  som provet självt har skapat och som inte finns på den riktiga sidan. Uppmätt:
+  med bara `*web3forms*` blockerat är alla fem talen 0
+  (`g2fix\5c-diag-hcaptcha-oblockerad-412.json`).
+- **Tillagt 2026-11-08, giltighetsvillkor:** i varje vyport ska utdata visa att
+  hCaptchas `api.js` laddades (`Network.responseReceived` med status 200 för en
+  `url` som innehåller `hcaptcha.com` och `api.js`). Saknas det är körningen
+  **ogiltig**, varken godkänd eller underkänd, och körs om. Så skiljs ett
+  nätverksfel hos tredje part från ett fel i koden.
+- Tre källor samlas från navigeringen tills sidan rullats till botten och 3 s har
+  gått: `Runtime.exceptionThrown` (texten är
+  `exceptionDetails.exception?.description ?? exceptionDetails.text`),
+  `Runtime.consoleAPICalled` (argumentens `value ?? description`) och
+  `Log.entryAdded` (`entry.text`).
+- Mönstret, enligt LARDOMAR 2026-11-08: `/hydrat|did not match|mismatch|#41[89]|#42[1-5]/i`.
+  Det täcker #418, #423 och #425.
+- Vyporter: 412 × 823 (`mobile: true`) och 1280 × 800.
+
+**Godkänt**, i varje vyport:
+
+1. 0 `Runtime.exceptionThrown`, oavsett text.
+2. 0 `Runtime.consoleAPICalled` av typen `error`.
+3. 0 `Log.entryAdded` på nivån `error`, utom poster med `source: 'network'` vars
+   `url` matchar ~~något av de två avbrutna mönstren~~ **RÄTTAT 2026-11-08:** det
+   avbrutna mönstret `*web3forms*`. De undantagna räknas upp i utdata.
+4. 0 poster i någon av de tre källorna, på någon nivå, som matchar mönstret.
+5. `h1.textContent` efter laddningen är samma som i den förrenderade
+   `dist/index.html`.
+
+Utdata: `g2fix\5c-real-412.json` och `g2fix\5c-real-1280.json`, med de tre
+källorna, de fem talen och undantagen.
+
+**Negativ kontroll** (detta är det som saknades): kopiera `dist/` till
+`g2fix\dist-neg\`. Ändra `h1`-texten inuti `#root` i kopians `index.html` (lägg
+till ` X` sist i rubriken). Servera med
+`npx vite preview --outDir <kopia> --port 4347`, och kör samma prov vid 412 × 823
+(**RÄTTAT 2026-11-08:** med samma blockering som det riktiga provet, bara
+`*web3forms*`, så att kontrollen prövar just den uppställning som ska godkännas).
+**Godkänt:** villkor 1 och 4 fäller (≥ 1 `exceptionThrown` som matchar mönstret,
+väntat `#418`), och utdata anger den posten. `h1` efter laddningen är källtexten,
+utan ` X`. Utdata: `g2fix\5c-neg.json`. Därefter stoppas servern, porten bekräftas
+fri med `netstat`, och kopian raderas.
+
+#### Punkt 2 — de orättade talen i M20
+
+- **Uträkningen i M20 punkt 3:** "utan rullningslist 63 px" är ersatt på plats av
+  det uppmätta 48 px. Rännan är reserverad av `scrollbar-gutter: stable`, så
+  `clientWidth` är 345 med och utan rullningslist. M20-tabellens rad 3 och grind 7:s
+  utskrift är rättade på samma sätt.
+- **M20 grind 7:** ~~bredden jämförs med
+  `img.naturalWidth / img.naturalHeight × rect.height` ± 0,5~~ **RÄTTAT
+  2026-11-08:** bredden jämförs med `filB / filH × rect.height` ± 0,5, där `filB`
+  och `filH` är filens verkliga pixelmått för den fil som faktiskt laddats
+  (`currentSrc`). De läses med en fristående bild utan `srcset`:
+  `const probe = new Image(); probe.src = img.currentSrc; await probe.decode();`,
+  och `filB = probe.naturalWidth`, `filH = probe.naturalHeight`. Utan `srcset` har
+  bilden densiteten 1, så måtten är filpixlar. Grinden körs vid DPR 1 och DPR 2,
+  och utskriften visar `currentSrc`, `filB × filH`, `img.naturalWidth` och den
+  väntade bredden. ~~Kvoten är densamma oavsett om webbläsaren redovisar
+  `naturalWidth` i filpixlar eller delat med densiteten, eftersom båda måtten
+  delas på samma sätt.~~ **RÄTTAT 2026-11-08, påståendet var falskt:** Chrome
+  avrundar det densitetskorrigerade måttet nedåt till heltal. För
+  `jq-logo-68.png` (319 × 68) vid DPR 2 redovisas `naturalWidth` 159 och
+  `naturalHeight` 34, så kvoten blir 159/34 och den väntade bredden 159,0 mot en
+  rect på 159,5. Skillnaden 0,5 låg exakt på gränsen. Med filens mått väntas
+  319/68 × 34 = 159,5. **Valt bort:** en tolerans per DPR, eftersom den måste
+  skrivas om varje gång en ny fil genereras, och en vidgad tolerans
+  ±(0,5 + 1/DPR), eftersom den mäter samma felaktiga kvot och bara gömmer
+  avrundningen i en bredare marginal.
+- **Mätningen i G2-rättning:** grind 7 körs om vid 360 × 640, 390 × 844 och
+  899 × 700, DPR 1 och 2, och `currentSrc` slutar på `jq-logo-34.png` respektive
+  `jq-logo-68.png`. **Negativ kontroll:** M20 grind 10a (bredden 300 px) larmar
+  vid båda DPR-värdena.
+
+#### Punkt 3 — honeypoten läses, och stoppar inskicket tyst
+
+**Beslut:** i `handleSubmit` i `src/components/ContactForm.jsx` läses rutan
+**direkt efter captcha-kontrollen** (efter `if (captchaToken === '') { … return; }`,
+före `setErrors({}); setState('sending');`). Villkoret är tecken för tecken:
+
+```js
+if (event.currentTarget.elements.botcheck.checked) {
+```
+
+Är rutan ikryssad görs exakt detta och inget annat: `setErrors({})`,
+`setState('sent')`, `setValues(EMPTY)` och `resetCaptcha()`, sedan `return`.
+Ingen `fetch`. Läsningen sker före varje `await`, så `event.currentTarget` är
+fortfarande formuläret.
+
+- **`botcheck` tas bort ur JSON-kroppen.** När ett ikryssat inskick aldrig skickas
+  är fältets värde i kroppen alltid falskt, och då vore det åter en konstant
+  (LARDOMAR 2026-11-08).
+- **Kryssrutan är oförändrad**, med `name="botcheck"`, `tabIndex={-1}`,
+  `aria-hidden="true"` och klassen `.honeypot`. Den förblir okontrollerad (inget
+  `checked` eller `onChange`), eftersom den läses ur DOM.
+- **Kommentaren** på `:209-211` tas bort med fältet. Ovanför den nya grenen står
+  invarianten: "Honeypoten läses ur formuläret vid inskicket. Är den ikryssad
+  skickas ingenting, och formuläret visar samma tack som efter ett lyckat
+  inskick, så att den som fyllt i den inte får veta något. Beslutat i
+  ARKITEKTUR.md: M22 punkt 3." Kommentaren vid rutan (`:313-316`) behålls och får
+  meningen "Den läses i handleSubmit."
+- **Varför tyst stopp och inte `botcheck: true` i kroppen:** Web3Forms
+  dokumenterar `botcheck` för ett vanligt HTML-formulär. Hur tjänsten tolkar ett
+  JSON-booleskt värde har ingen här prövat. Ett stopp i klienten beror inte på
+  det, och det drar inte heller av på månadstaket på 250 meddelanden. **Varför
+  "tack" och inte ett fel:** ett fel lär roboten att något stoppade den.
+- **Varför efter captcha-kontrollen:** fram till nätverket ser flödet likadant ut
+  för en robot och en människa. Det skiljer sig först där inskicket skulle ha gått
+  iväg.
+
+**Mätning**, i ett separat bygge med hCaptchas testnyckel, som i M21 1g
+(`npx vite build --outDir <scratchpad>\g2fix\testkey`, nyckeln i
+`src/data/contact.js` ändrad tillfälligt och återställd, och
+`git diff --exit-code src/data/contact.js` efteråt). Servera med
+`vite preview --outDir`. `Fetch.enable` med mönstret `*api.web3forms.com*`, och varje
+`Fetch.requestPaused` räknas, dess `request.postData` sparas och begäran får
+`Fetch.failRequest`. **RÄTTAT 2026-11-08:**
+formuläret skickar JSON till en annan origin, så den första avlyssnade begäran är
+en CORS-preflight (`OPTIONS`) utan kropp. Följs texten ordagrant avbryts
+preflighten och någon `POST` skickas aldrig. Varje `Fetch.requestPaused` delas
+därför upp efter `request.method`: **`OPTIONS`** besvaras lokalt med
+`Fetch.fulfillRequest`, `responseCode: 204` och huvudena
+`Access-Control-Allow-Origin: http://localhost:<port>`,
+`Access-Control-Allow-Methods: POST` och
+`Access-Control-Allow-Headers: Content-Type, Accept`. **`POST`** får
+`Fetch.failRequest` med `errorReason: 'BlockedByClient'`, och dess
+`request.postData` sparas. "1 avlyssnad begäran" i tabellen nedan räknas **bara
+på `POST`**, och preflighten räknas inte. Byggarens `scratchpad\g2fix\hp.mjs` gör
+så. Fälten fylls med det inbyggda `value`-settern och en
+bubblande `input`-händelse. Captchan löses med testnyckelns klick. Svar läses
+3 s efter klicket på knappen.
+
+| # | Prov | Godkänt |
+|---|------|---------|
+| H0 | **Negativ kontroll, före ändringen:** dagens kod i testkey-bygget, rutan kryssad med `document.querySelector('form input[name="botcheck"]').checked = true`, fälten ifyllda, captchan löst, inskick | 1 avlyssnad begäran, och `postData` innehåller `"botcheck":""`. Det visar att proven ser en begäran och att rutan inte lästes |
+| H1 | Efter ändringen, rutan **inte** kryssad, samma flöde | 1 avlyssnad begäran. `JSON.parse(postData)` saknar nyckeln `botcheck`. Statusen är felmeddelandet, eftersom begäran avbröts |
+| H2 | Efter ändringen, rutan kryssad via DOM som i H0, samma flöde | **0** avlyssnade begäranden. Statusen är exakt `Tack! Jag återkommer så snart jag kan.`, och alla fem fälten är tomma |
+| H3 | Tangentbord från Namn och framåt med Tab | Rutan får aldrig fokus (oförändrat krav ur kontaktformulärets "Verifiering", punkten "Honeypot") |
+
+Utdata: `g2fix\honeypot-H0.json` till `H2.json`. Testkey-byggena raderas efteråt.
+
+#### Punkt 4 — `.gitattributes`
+
+**Ny fil i repots rot**, exakt innehåll, LF-radslut:
+
+```
+# Radslut och binarfiler. Beslutat i ARKITEKTUR.md: M22 punkt 4.
+# robots.txt levereras med LF oavsett core.autocrlf (M21 punkt 4).
+public/robots.txt text eol=lf
+*.webp binary
+*.png binary
+*.jpg binary
+*.woff2 binary
+```
+
+- **Ingen `* text=auto eol=lf`.** Den hade ändrat attributen för varje textfil i
+  repot, och varje fil som ligger med CRLF i indexet hade då visats som ändrad och
+  krävt en omnormalisering. Inget krav i projektet gäller radslutet i andra filer
+  än `robots.txt`.
+- **`binary` på bildfilerna och typsnitten** gör uttryckligt det git i dag gissar.
+  Det ändrar inga befintliga filer, eftersom git redan behandlar dem som binära.
+  `*.jpg` tas med för källbilderna i `assets-source/`.
+- Kommentarerna saknar å, ä och ö med avsikt (`binarfiler`): filen läses av git
+  och ska vara ren ASCII.
+
+**Mätning:**
+
+1. `git ls-files --eol public/robots.txt` visar `i/lf`, `w/lf` och
+   `attr/text eol=lf`.
+2. `git check-attr binary public/assets/jq-logo-34.png public/assets/hero/hero-960.webp assets-source/hero-portrait.jpg src/styles/fonts/manrope-latin-var.woff2`
+   ger `binary: set` för alla fyra.
+3. `git status --porcelain` före och efter att filen lagts till skiljer sig bara
+   på raden `?? .gitattributes`. Ingen befintlig fil blir ändrad av attributen.
+4. **Färsk utcheckning:** `git clone -c core.autocrlf=true . <scratchpad>\g2fix\clone`.
+   Kopiera `.gitattributes` in i klonen, radera klonens `public/robots.txt` och kör
+   `git -C <klon> checkout -- public/robots.txt`. `od -c` på filen visar inget `\r`.
+   **Negativ kontroll:** samma steg utan `.gitattributes` i klonen ger `\r\n` på båda
+   raderna. Klonen raderas efteråt.
+5. När ändringen är incheckad (av den som checkar in, inte av byggaren) körs
+   steg 4 utan att kopiera filen: en färsk klon ger `robots.txt` utan `\r`.
+
+#### Punkt 5 — bygget jämför heros preload med `HERO_IMAGE_WIDTHS`
+
+**Valt:** en grind i `scripts/validate-data.mjs`, inte bara en uppräkning i
+kommentaren. Med enbart en kommentar hade preloaden kunnat glida isär utan att
+något larmar, och då hämtas bilden två gånger. **Valt bort:** `prerender.mjs`, som
+körs först efter `vite build`. Felet ska stoppa bygget innan något byggs, och
+`validate-data.mjs` läser redan `profile.js`.
+
+**Ny funktion** i `scripts/validate-data.mjs`, intill `checkProfile`:
+
+```js
+/** @param {unknown} widths  HERO_IMAGE_WIDTHS ur profile.js. */
+function checkHeroPreload(widths) /* : void */
+```
+
+Den anropas som **första rad** i `checkProfile`, med
+`checkHeroPreload(mod.HERO_IMAGE_WIDTHS)`, så att den körs även när `profile`
+fälls. Ordningen, och varje meddelande tecken för tecken:
+
+1. `widths` ska vara en lista med minst två element, och varje element ett
+   positivt heltal (`Number.isInteger(w) && w > 0`). Annars
+   `profile.js: HERO_IMAGE_WIDTHS saknas eller är inte en lista med minst två positiva heltal`,
+   och funktionen avslutas utan följdfel. Minst två, eftersom `Hero.jsx` läser
+   `HERO_IMAGE_WIDTHS[1]`.
+2. Läs `join(PROJECT_ROOT, 'index.html')` med `readFileSync` i `try/catch`. Vid fel:
+   `index.html: filen kunde inte läsas (${error.message})`, och avsluta.
+3. Hitta varje tagg som matchar `/<link\b[^>]*>/g` och som innehåller både
+   `rel="preload"` och `as="image"`. Är antalet inte exakt 1:
+   `index.html: heros preload (<link rel="preload" as="image">) finns ${n} gånger, ska finnas 1`,
+   och avsluta.
+4. Väntad `imagesrcset`:
+   `` widths.map((w) => `/assets/hero/hero-${w}.webp ${w}w`).join(', ') ``. Den
+   faktiska läses med `/\bimagesrcset="([^"]*)"/`, och saknas attributet är den
+   `(saknas)`. Är de inte exakt lika:
+   `index.html: preloadens imagesrcset är "${faktisk}", men HERO_IMAGE_WIDTHS i profile.js ger "${väntad}". Skriv in den väntade strängen i imagesrcset i index.html.`
+5. Väntad `href`: `` `/assets/hero/hero-${widths[1]}.webp` ``. Den faktiska läses
+   med `/\shref="([^"]*)"/`, och saknas attributet är den `(saknas)`. Är de inte lika:
+   `index.html: preloadens href är "${faktisk}", men Hero.jsx laddar "${väntad}" (HERO_IMAGE_WIDTHS[1]). Skriv in den väntade sökvägen i href i index.html.`
+6. Går allt igenom: `summary.push('heros preload stämmer med HERO_IMAGE_WIDTHS')`.
+
+Sökvägsmönstret `/assets/hero/hero-<w>.webp` står nu både i `Hero.jsx`
+(`heroImageSrc`) och i grinden. Byts det i `Hero.jsx` utan att grinden ändras
+fäller grinden bygget, så att glida isär larmar i stället för att tiga.
+`imagesizes` jämförs inte. Den står i `Hero.jsx` (`HERO_IMAGE_SIZES`) och kan
+inte läsas av ett Node-skript utan JSX. Kommentarerna fortsätter att bära den
+regeln. `width="1672" height="941"` i `Hero.jsx` är källbildens format och inte
+en av bredderna, så de ingår inte i löftet.
+
+**Kommentaren i `src/data/profile.js:26-27`**, tecken för tecken:
+
+```js
+/* Bredderna som bildskriptet genererar och som hero läser. Samma bredder står i
+ * preloaden i index.html (imagesrcset och href). Ändra båda i samma redigering,
+ * och kör sedan npm run optimize:images. Bygget stannar om preloaden inte
+ * stämmer med listan. Skälet står i ARKITEKTUR.md, M10c och M22 punkt 5. */
+```
+
+**Kommentaren i `index.html:22-26`** får en sista mening: "Bygget stannar om
+imagesrcset eller href inte stämmer med HERO_IMAGE_WIDTHS i src/data/profile.js.
+imagesizes kontrolleras inte." **Kommentaren i `Hero.jsx:35-36`** får samma
+mening.
+
+**Mätning**, med `node scripts/validate-data.mjs`. Varje ändring görs i
+arbetsträdet och återställs, och `git diff --exit-code src/data/profile.js index.html`
+ger 0 efteråt. Varje prov med tre indata: korrekt, fel och åtgärden som
+meddelandet föreskriver (LARDOMAR 2026-10-05):
+
+| # | Indata | Godkänt |
+|---|--------|---------|
+| V1 | Oförändrat | Exitkod 0, och raden `heros preload stämmer med HERO_IMAGE_WIDTHS` står i OK-utskriften |
+| V2 | `HERO_IMAGE_WIDTHS = [960, 1440, 1600]` | Exitkod 1, och imagesrcset-meddelandet med båda strängarna. **Åtgärden:** den väntade strängen inskriven i `imagesrcset` i `index.html` → exitkod 0. `npm run build` med bara `profile.js` ändrad stannar med exitkod 1, och `dist/` har samma mtime som före |
+| V3 | `href` i preloaden ändrad till `/assets/hero/hero-960.webp` | Exitkod 1, och href-meddelandet. Återställd → exitkod 0 |
+| V4 | Preloadraden kopierad, så att den står två gånger | Exitkod 1, och `finns 2 gånger, ska finnas 1` |
+| V5 | `HERO_IMAGE_WIDTHS = [960]` | Exitkod 1, exakt ett meddelande från grinden (listmeddelandet), inget imagesrcset-meddelande |
+
+#### Punkt 6 — brytpunktslistan i `tokens.css` (tillagd 2026-11-08 på samordnarens begäran)
+
+`src/styles/tokens.css:14-15` säger att `sm` ger "större hero-typografi", men
+`Hero.module.css` har ingen fråga på 600 px (rubriken skalas med `clamp()`). Vid
+600 byter i stället `Footer`, `Projects` och `Skills` läge. Listan var föreskriven
+här, i "Brytpunkter", och är rättad där.
+
+**Beslut:** listan anger brytpunktens **avsikt** och räknar inte upp vilka
+moduler som använder den. Det var uppräkningen som blev falsk.
+
+**`src/styles/tokens.css:10-16` ersätts**, tecken för tecken (raderna `*` och
+`Golvet är …` under står kvar):
+
+```css
+ * Brytpunkter: CSS-variabler fungerar inte i @media, så dessa är fasta tal.
+ * Använd exakt dessa, inga andra. Vilka moduler som byter läge vid en
+ * brytpunkt står i modulerna själva (sök på "@media" i src/components) och
+ * räknas inte upp här: en uppräkning blir fel så fort en modul ändras.
+ *
+ *   (bas)                              360-599 px. En kolumn överallt.
+ *   @media (min-width: 600px)    sm    Första breddsteget: rutnät och rader får gå från en kolumn till två
+ *   @media (min-width: 900px)    md    Andra breddsteget: naven visas i stället för menyknappen, sektionerna får sin breda layout
+ *   @media (min-width: 1200px)   lg    Reserverad. Maxbredden kommer från sitt token, inte från en brytpunkt
+```
+
+**Mätning:**
+- `grep -rn "hero-typografi" src ARKITEKTUR.md` ger bara den överstrukna raden i
+  "Brytpunkter", denna punkt och M22:s beslutslogg. Ingen träff i `src`.
+- `grep -rnE "min-width: [0-9]+px" src --include=*.css` ger bara `600px` och
+  `900px` i modulerna, och `600px`, `900px` och `1200px` i kommentaren i
+  `tokens.css`. Ett annat tal är ett fynd.
+- Sanningen i `sm`-raden: varje träff på `min-width: 600px` i `src/components`
+  ändrar `grid-template-columns` från en kolumn till fler. Redovisas med `fil:rad`.
+
+#### Exakt vad G2-rättning ändrar
+
+Förutsättning: byggarens kommentarsrättning (LARDOMAR 2026-11-08, "sex
+kommentarer") är överlämnad, eller görs av samma byggare i samma pass.
+`ContactForm.jsx` och `Hero.jsx` rörs av båda, och två byggare redigerar aldrig
+samma fil samtidigt.
+
+| Fil | Ändring | Punkt |
+|-----|---------|-------|
+| `src/components/ContactForm.jsx` | Honeypot-grenen efter captcha-kontrollen, `botcheck` och dess kommentar ur kroppen, kommentaren vid rutan kompletterad | 3 |
+| `scripts/validate-data.mjs` | `checkHeroPreload(widths)`, anropad först i `checkProfile` | 5 |
+| `src/data/profile.js` | Kommentaren `:26-27`, tecken för tecken | 5 |
+| `index.html` | En mening sist i kommentaren `:22-26` | 5 |
+| `src/components/Hero.jsx` | En mening sist i kommentaren `:35-36` | 5 |
+| `.gitattributes` | Ny, exakt innehåll | 4 |
+| `src/styles/tokens.css` | Kommentaren `:10-16`, brytpunktslistan, tecken för tecken | 6 |
+
+**Rörs inte:** `public/robots.txt` (den är redan LF i arbetsträdet), `package.json`,
+`prerender.mjs`, `ContactForm.module.css`, `PLAN.md`, `LARDOMAR.md`. Punkt 1 och 2
+ändrar ingen kod, bara grindarna, och körs mot det färska bygget efter ändringarna.
+
+**Grindar för G2-rättning:**
+
+1. Punkt 1: 5c godkänt i båda vyportarna, och den negativa kontrollen larmar. Sökvägarna
+   till de tre JSON-filerna anges.
+2. Punkt 2: M20 grind 7 vid DPR 1 och 2 med `currentSrc` utskriven, och grind 10a
+   larmar.
+3. Punkt 3: H0–H3.
+4. Punkt 4: mätningens steg 1–4. Steg 5 redovisas av den som checkar in.
+5. Punkt 5: V1–V5. Punkt 6: de tre mätningarna där.
+6. `npm run validate:data`, `npm run validate:tokens`, `npm run build` och
+   `npm run lint` gröna. Servern startad och stoppad enligt `netstat`-regeln.
+7. ~~`grep -rn "ändra bara här" src index.html`~~ **RÄTTAT 2026-11-08:**
+   `grep -n "ändra bara här" src/data/profile.js index.html src/components/Hero.jsx`
+   och `grep -rn "botcheck: ''" src` ger 0. Greppet gäller bara de filer som bär
+   heros löfte, alltså de som M22 punkt 5 ändrar. Träffen i `src/data/projects.js`
+   (löftet om `PROJECT_IMAGE_WIDTHS`) är ett annat löfte, prövat sant i
+   G2-rättning (bredderna läses bara via import och står inte för hand någon
+   annanstans), och den ingår inte i grinden. Kommentarsgrepen ur LARDOMAR 2026-11-08 ("sex kommentarer") körs mot de
+   ändrade filerna, och varje träff redovisas med `fil:rad`.
+8. `grep -n "63 px\|159 ± 0,5\|did not match\|avvisar inlägg där" ARKITEKTUR.md PLAN.md`:
+   varje träff i `ARKITEKTUR.md` ligger i M22 eller dess beslutslogg, eller är
+   överstruken och märkt `RÄTTAT` eller `UPPHÄVD` 2026-11-08. En träff i `PLAN.md` lämnas till projektledaren (LARDOMAR 2026-11-08,
+   "en rättad grind står orättad").
+9. Varje beslut i M22 besvaras i överlämningen med `fil:rad` (LARDOMAR 2026-10-05).
 
 ---
 
@@ -4688,11 +5070,12 @@ Portfoolie-Jelalq/
 ├─ index.html                     Vites entry. <html lang="sv">, <title>, <meta name="description"> (M21, P15-fix), favicon → /assets/jq-icon-32.png (M20, P14c; var logo-mark-32.png). <div id="root"></div> är markören som scripts/prerender.mjs fyller i dist/ (M21).
 ├─ package.json                   Scripts: dev, build, preview (paket 1) + optimize:images (läggs till i paket 2). build slutar med node scripts/prerender.mjs (M21, P15-fix)
 ├─ vite.config.js                 Enbart @vitejs/plugin-react. Ingen extra konfiguration.
+├─ .gitattributes                 robots.txt med LF, bildfiler och woff2 binära. Ingen normalisering av resten (M22 punkt 4, G2-rättning).
 ├─ ARKITEKTUR.md                  Detta dokument
 ├─ BRIEF.md / PLAN.md / skills.txt
 ├─ scripts/
 │  ├─ optimize-images.mjs         Heros bild, svartvit webp (M10c, P5 omgång 4), och loggan och ikonerna ur jq-logo-light.png (M20, P14c; ersätter logoikonerna från paket 2B). Körs manuellt, ingår INTE i build.
-│  ├─ validate-data.mjs           Grindar src/data/. Första steget i build.
+│  ├─ validate-data.mjs           Grindar src/data/. Första steget i build. Jämför också heros preload i index.html med HERO_IMAGE_WIDTHS (M22 punkt 5).
 │  ├─ font-coverage.mjs           Läser cmap ur en woff2-fil. Anropas av validate-data.mjs, en gång per fil (M1d).
 │  ├─ optimize-project-images.mjs Projektbilder 4:3, webp, vänsterförankrad beskärning (M4, P6). Manuellt, inte i build.
 │  ├─ validate-tokens.mjs         Grindar att varje custom property som nämns är deklarerad i tokens.css (M5g, P2). I build.
@@ -5197,8 +5580,13 @@ andra:
 | Namn | Query | Avsikt |
 |------|-------|--------|
 | (bas) | — | 360–599 px. En kolumn överallt. |
-| sm | `@media (min-width: 600px)` | Två kolumner skills, större hero-typografi |
-| md | `@media (min-width: 900px)` | Hero blir två kolumner (text + bild), nav alltid synlig, tre kolumner skills |
+| sm | `@media (min-width: 600px)` | ~~Två kolumner skills, större hero-typografi~~ **RÄTTAT 2026-11-08, se M22 punkt 6:** första breddsteget, där rutnät och rader får gå från en kolumn till två. Hero har ingen fråga här (rubriken skalas med `clamp()`) |
+| md | `@media (min-width: 900px)` | ~~Hero blir två kolumner (text + bild), nav alltid synlig, tre kolumner skills~~ **RÄTTAT 2026-11-08, se M22 punkt 6:** andra breddsteget, där naven visas i stället för menyknappen (M8) och sektionerna får sin breda layout |
+
+Vilka moduler som byter läge vid varje brytpunkt räknas **inte** upp, varken här
+eller i `tokens.css`. Det står i modulerna själva och hittas med `grep -rn "@media" src/components`.
+En uppräkning blir fel så fort en modul ändras (LARDOMAR 2026-11-08, "sex
+kommentarer", och M22 punkt 6).
 | lg | `@media (min-width: 1200px)` | Max bredd slår in. ~~Fyra kolumner skills~~ — **UPPHÄVT av A6:** kompetenserna har kortrutnät 3/2/1 och ingen brytpunkt vid 1200 px. Genomfört i paket E |
 
 Golvet är **360 px utan horisontell scroll**. Se "360 px-golvet och grid" nedan —
@@ -7369,8 +7757,11 @@ Två villkor:
        style="display:none" />
 ```
 
-Web3Forms avvisar inlägg där `botcheck` är ikryssad. Noll friktion för en
-människa.
+~~Web3Forms avvisar inlägg där `botcheck` är ikryssad.~~ **RÄTTAT 2026-11-08, se
+M22 punkt 3:** premissen gäller ett vanligt HTML-formulär. Formuläret skickas med
+`fetch` och en egen JSON-kropp, så rutans läge följer inte med av sig själv. Rutan
+läses ur DOM vid inskicket, och är den ikryssad skickas ingenting. Noll friktion
+för en människa.
 
 **`tabindex="-1"` och `aria-hidden="true"` är inte valfria.** Ett dolt fält som
 går att tabba till eller som läses upp av en skärmläsare är en fälla för de
@@ -7780,6 +8171,8 @@ Utöver det:
 
 - **Honeypot:** bekräfta att `botcheck` varken går att tabba till eller annonseras.
   Testa med tangentbord **och** med skärmläsare, inte bara genom att läsa CSS.
+  **Tillagt 2026-11-08, se M22 punkt 3:** pröva också att den stoppar något, med
+  proven H1–H3 där.
 - **Knappen i dämpat läge:** bekräfta att den går att tabba till, att ett klick
   visar felmeddelandena och flyttar fokus till första felande fält, och att inget
   inskick sker. En knapp som ser inaktiv ut men är tyst när man trycker är sämre än
@@ -11930,6 +12323,74 @@ punkter:**
   noteringar", M10c:s preloadskäl i beslutsloggen, och sex rader i tabellen över
   förbjudna strängar (påverkat av lärdom: **ja**, 2026-10-02 "överspelade stycken
   står kvar", ÅTERKOMMANDE)
+
+### Beslutslogg — M22, rättningar efter G2, 2026-11-08
+
+- **5c samlar `Runtime.exceptionThrown` och matchar produktionsnumren, och 0
+  okastade fel är ett eget villkor.** React 19 rapporterar avvikelsen med
+  `reportError` i produktion, och den gamla grinden tystnade just där (påverkat av
+  lärdom: **ja**, 2026-11-08 "M21 5c kan inte larma", ÅTERFALL)
+- **5c:s negativa kontroll körs mot en kopia av `dist/` med ändrad `h1`, och
+  utdata sparas med sökväg.** Det fanns inget underlag för den förra kontrollen
+  (påverkat av lärdom: **ja**, 2026-11-08 samma post, och 2026-10-05 "varje
+  kontroll ska bevisas kunna fallera")
+- **Breddgrinden räknas ur ~~`naturalWidth / naturalHeight`~~ (RÄTTAT 2026-11-08:
+  filens verkliga pixelmått, se nedan) för den laddade filen, vid DPR 1 och 2.** Ett fast tal passerade vid DPR 2 bara med likhet. En
+  tolerans per DPR hade behövt skrivas om för varje ny fil (påverkat av lärdom:
+  **ja**, 2026-11-08 "en rättad grind står orättad")
+- **"63 px" ersätts med det uppmätta 48 på sin plats, och "uträknat" står kvar
+  bara där inget är mätt (390 px).** (påverkat av lärdom: **ja**, 2026-11-08 samma
+  post: ett uträknat tal ersätts med mätvärdet så snart paketet har överlämnats)
+- **Honeypoten läses ur DOM och stoppar inskicket tyst med samma tack som ett
+  lyckat inskick. `botcheck` tas bort ur kroppen.** Hur Web3Forms tolkar ett
+  JSON-booleskt värde är inte prövat, och ett stopp i klienten drar inte av på
+  månadstaket. Ett fält som alltid är falskt hade åter varit en konstant
+  (påverkat av lärdom: **ja**, 2026-11-08 "honeypot-fältet läses aldrig")
+- **Honeypotens prov har en negativ kontroll före ändringen (H0).** Utan H0 hade 0
+  begäranden i H2 kunnat bero på att provet inte ser några alls (påverkat av
+  lärdom: **ja**, 2026-10-05 "ett larm är inte ett kvitto")
+- **`.gitattributes` gäller `robots.txt` och binärfilerna, inte hela repot.** En
+  `* text=auto` hade krävt en omnormalisering av befintliga filer utan att något
+  krav kräver det (påverkat av lärdom: **ja**, 2026-11-08 "`robots.txt` blir CRLF".
+  Planen: bygg inte för framtiden)
+- **Radslutet verifieras genom en ny utcheckning i en klon med
+  `core.autocrlf=true`, med och utan filen.** Arbetsträdet visar LF bara för att
+  filen aldrig checkats ut på nytt (påverkat av lärdom: **ja**, samma post)
+- **Preloadens bredder grindas i `validate-data.mjs`, inte i `prerender.mjs`, och
+  inte bara med en uppräkning i kommentaren.** Felet ska stoppa bygget innan något
+  byggs, och en kommentar larmar inte (påverkat av lärdom: **ja**, 2026-11-08
+  "`profile.js` lovar 'ändra bara här'", och 2026-10-02 "definierad på två
+  oberoende ställen")
+- **`imagesizes` och `width`/`height` ingår inte i grinden.** `imagesizes` står i
+  JSX som ett Node-skript inte kan läsa, och `width`/`height` är källans format
+  och inte en bredd ur listan. Kommentarerna i `index.html` och `Hero.jsx` säger
+  att `imagesizes` inte kontrolleras (påverkat av
+  lärdom: **ja**, 2026-10-05 "ett löfte i en fil får aldrig vara osant")
+- **Brytpunktslistan anger avsikt och räknar inte upp moduler.** "Större
+  hero-typografi" vid 600 var falskt sedan rubriken fick `clamp()`, och en ny
+  uppräkning hade blivit fel på samma sätt (påverkat av lärdom: **ja**, 2026-11-08
+  "sex kommentarer", ÅTERKOMMANDE: en uppräkning av något i andra filer skrivs om
+  till invarianten)
+- **Äldre stycken rättade i samma redigering:** "Brytpunkter", M-översikten, M10c:s kommentar i
+  `profile.js`, M20-tabellens rad 3, M20 punkt 3:s uträkning, M20 grind 7, M21 punkt 4,
+  M21 punkt 5:s riskmening, M21 5c, "Skräppostskydd: honeypot", formulärets
+  "Verifiering" och mappstrukturen (påverkat av lärdom: **ja**, 2026-10-02
+  "överspelade stycken står kvar", ÅTERKOMMANDE)
+- **RÄTTAT 2026-11-08, efter byggarens mätning. 5c blockerar bara `*web3forms*`,
+  och körningen är ogiltig om hCaptchas `api.js` inte laddades.** Blockeringen av
+  hCaptcha skapade själv det `console.error` som fällde grinden, på korrekt kod.
+  Ett undantag för just den posten hade varit att dokumentera ett falsklarm i
+  stället för att bygga om grinden. Den negativa kontrollen ger fortfarande #418
+  (påverkat av lärdom: **ja**, 2026-10-05 "en grind som fälls av fel skäl lär oss
+  att ignorera den")
+- **RÄTTAT 2026-11-08. Breddgrinden läser filens mått ur en `new Image()` utan
+  `srcset`.** Påståendet att kvoten är densamma vid DPR 2 var falskt: Chrome
+  avrundar `naturalWidth` till 159 (319/2), och felet blev exakt 0,5. En vidgad
+  tolerans hade bara gömt avrundningen (påverkat av lärdom: **ja**, 2026-11-07 "mät
+  förväntad siffra i sitt villkor innan den skrivs in")
+- **RÄTTAT 2026-11-08. Grind 7:s grep gäller bara heros tre filer.** Träffen i
+  `projects.js` är ett annat löfte, prövat sant. En grind som fäller ett sant
+  löfte hade fällts av fel skäl (påverkat av lärdom: **ja**, 2026-10-05 samma post)
 
 ## Öppna punkter som INTE är arkitektens att besluta
 

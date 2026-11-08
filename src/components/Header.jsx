@@ -23,19 +23,20 @@ const navSections = sections.filter(
  * landar mittemellan två heltalspixlar hade då kunnat hamna i ingen sektion. */
 const READING_BAND = 8;
 
-/* ===== PROJEKTETS FÖRSTA useEffect ======================================
- * Medvetet, och bara här. ARKITEKTUR.md: aria-current kräver en
- * IntersectionObserver och blir därmed projektets första useEffect - "det ska
- * vara ett medvetet val och inte smyga in tidigare".
+/* ===== EN useEffect ÄR ETT MEDVETET VAL =================================
+ * En effekt skrivs bara där tillståndet inte går att få ur render eller CSS.
+ * aria-current kräver en IntersectionObserver och därmed en effekt. Beslutat
+ * i ARKITEKTUR.md, "aria-current byter regel: läsraden, inte störst yta".
  *
- * Jag prövade om det gick utan. Det gör det inte: vilken sektion som är i vy
- * är ett tillstånd som bara webbläsaren känner, och det finns ingen
- * CSS-mekanism som kan sätta ett ARIA-attribut.
+ * Det går inte utan: vilken sektion som är i vy är ett tillstånd som bara
+ * webbläsaren känner, och det finns ingen CSS-mekanism som kan sätta ett
+ * ARIA-attribut.
  *
  * STÄDNINGEN ÄR POÄNGEN. En observer som överlever en avmontering är en läcka,
  * och i StrictMode körs effekten två gånger i utvecklingsläge - utan disconnect
  * hade två observers varit igång samtidigt och skrivit över varandra. Samma sak
- * gäller de två fönsterlyssnarna nedan.
+ * gäller fönsterlyssnarna nedan: varje lyssnare som läggs till tas bort i
+ * städfunktionen.
  *
  * ===== REGELN: LÄSRADEN, INTE STÖRST SYNLIG YTA =====
  * Den sektion som skär ett tunt band direkt under headern är aktuell.

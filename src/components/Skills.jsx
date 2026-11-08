@@ -23,12 +23,14 @@ function Skills() {
 
   return (
     /* Ett kort per grupp, gruppnamnet som h3 och kompetenserna som chips i en
-       riktig lista. Beslutat i ARKITEKTUR.md, "A6 - Kortet, chipset och
-       rutnätet".
+       riktig lista. Kortet och rutnätet är beslutade i ARKITEKTUR.md, "A6 -
+       Kortet, chipset och rutnätet", och chipsen i "M15 - Kompetenschipsen".
 
        KORTETS RUBRIKRAD INNEHÅLLER BARA h3-texten: inget svg, inget dolt span
-       och inget ::before-innehåll. Beslutat i ARKITEKTUR.md, "A3 - Inga
-       ikoner", som också stänger dörren för ett ikonberoende. */
+       och inget ::before-innehåll. En ikon i projektet bär en funktion och
+       står bredvid en text som säger samma sak, och en ikon vid ett
+       gruppnamn hade bara upprepat rubriken. Ikonerna är egna inline-SVG,
+       inget beroende. Beslutat i ARKITEKTUR.md, "M9 - Ikonerna". */
     <Section id={section?.id} title={section?.label}>
       <div className={styles.grid}>
         {/* Varje kort tonar in med sitt stegnummer, taket ur Reveal.jsx
@@ -43,7 +45,7 @@ function Skills() {
             </h3>
 
             {/* Varje kort är en riktig lista: skärmläsaren annonserar
-                antalet, vilket är den enda "räkning" sidan behöver. */}
+                antalet, så kortet skriver inget eget antal. */}
             <ul className={styles.chips}>
               {group.skills.map((skill) => (
                 <SkillChip key={skill.name} name={skill.name} />

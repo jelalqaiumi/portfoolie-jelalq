@@ -5,10 +5,11 @@ arkitektens beslut R1–R6, efter granskarens efterkontroll (G1-rättningen
 GODKÄND) och arkitektens beslut **M10c**, efter **M11b**, efter att P10 byggts,
 arkitektens beslut **M12b**, P5 omgång 4:s återlämning och **Jelals besked om hero
 på mobil**, och **igen** efter att P9b, P5 omgång 5, P11–P14 byggts och arkitekten
-skrivit **M19**. **Denna omgång (paket P1–P17) står först.** Den tidigare omgången
-(paket A–M, innehållsuppdraget 2026-10-07) står **oförändrad** längre ner i filen,
-under rubriken "Plan: Byt innehållet i hero ...". Där har jag bara markerat de
-paket som är avslutade.
+skrivit **M19**. **Uppdaterad 2026-11-08** efter P14b (M19), P14c (M20), P15-fix
+(M21), commit `525afa1` och **G2: EJ GODKÄND** (sex fynd). **Denna omgång (paket
+P1–P17) står först.** Den tidigare omgången (paket A–M, innehållsuppdraget
+2026-10-07) står **oförändrad** längre ner i filen, under rubriken "Plan: Byt
+innehållet i hero ...". Där har jag bara markerat de paket som är avslutade.
 
 Uppdraget står i **`UPPDRAG-2026-11-07.md`** i projektroten. **Avsnittet "Jelals
 beslut (2026-11-07)" är bindande och går före uppdragstexten** där de krockar.
@@ -41,16 +42,18 @@ senare med arkitektens namn ur `ARKITEKTUR.md`. Heros fjärde och femte omgång
 heter **P5 omgång 4** (M10c) och **P5 omgång 5** (M10d). **P9b** är följdpaketet
 med arkitektens namn ur M11b och M12b. **P11b** (M15b), **P12b** (M14b) och
 **P14b** (M19) är följdpaket till P11, P12 och P14 med arkitektens beslut som
-underlag. **P8b finns inte som eget paket.** P8:s tre öppna frågor avgjordes i
-M11b (rad 1–3) och ingick i P9b.
+underlag. **P14c** (M20, ny logga) och **P15-fix** (M21) har arkitektens namn.
+Paketen efter G2 heter **G2-kommentarerna** (fynd 1), **G2-rättning** (fynd 2–6
+enligt **M22**) och **efterkontrollen av G2**. **P8b finns inte som eget paket.**
+P8:s tre öppna frågor avgjordes i M11b (rad 1–3) och ingick i P9b.
 
 ---
 
-## Status 2026-11-07, efter P14 och M19
+## Status 2026-11-08, efter G2
 
 | Paket | Läge |
 |---|---|
-| P1 | **Klart.** Besluten M1–M18 står i `ARKITEKTUR.md`, och följdbesluten därefter (M8b, M10b–M10d, M11b, M12b, M14b, M15b, M19) |
+| P1 | **Klart.** Besluten M1–M18 står i `ARKITEKTUR.md`, och följdbesluten därefter (M8b, M10b–M10d, M11b, M12b, M14b, M15b, M19, M20, M21) |
 | P2, P3, P4, P5, P6, P7 | **Byggda.** P5 byggdes i fem omgångar, se nedan |
 | P4b | **Byggt.** Följdpaket enligt M8b |
 | G1 | **Genomförd: EJ GODKÄND, sju fynd** (`LARDOMAR.md`, posterna daterade 2026-11-07). Fynd 1–7 är åtgärdade |
@@ -64,12 +67,33 @@ M11b (rad 1–3) och ingick i P9b.
 | P12, P12b | **Byggda.** P12b enligt **M14b**: gemensamt kompetensurval i `src/lib/skillRules.js`, och tal som är 0 döljs |
 | P13 | **Byggt** |
 | P14 | **Byggt**, med en avvikelse under mätningen, se nedan |
-| **P14b** | **PÅGÅR** enligt **M19** ("sista öppna punkterna före G2") |
-| P15, P16, P17, commit och push | Ej startade |
+| **P14b** | **Byggt och mätt** enligt **M19** |
+| **P14c** | **Byggt och mätt** enligt **M20** (ny logga) |
+| **P15 med P15-fix** | **Klar.** P15-fix enligt **M21**. P14b, P14c och P15-fix är byggda och mätta i steg 1–4. **Lighthouse, median: 97 på mobil och 100 på desktop. Accessibility, Best practices och SEO: 100.** P15 del B är omkörd på det slutliga bygget, med **0 fel** |
+| Commit | **`525afa1`**, lokal, **inte pushad** |
+| **P16 (G2)** | **Genomförd: EJ GODKÄND, sex fynd** (`LARDOMAR.md`, posterna daterade 2026-11-08) |
+| **G2-kommentarerna** (fynd 1) | **PÅGÅR.** Byggaren rättar de falska kommentarerna |
+| **M22** | **Ej skriven.** Arkitekten avgör fynd 2–6 |
+| G2-rättning, efterkontrollen av G2, P17, commit och push | Ej startade |
 
 "Byggt" betyder att byggarens verifiering är gjord. G1 underkände P1–P7 som
 helhet. **Med G1-rättningen godkänd är G1:s fynd åtgärdade, och P1–P7 räknas som
-godkända mot G1.** Den slutliga prövningen av hela omgången är G2 (P16).
+godkända mot G1.** G2 (P16) prövade hela omgången och underkände den. **Omgången
+räknas som godkänd först när efterkontrollen av G2 är godkänd.**
+
+**G2:s sex fynd**, med samma ordning som posterna 2026-11-08 i `LARDOMAR.md`:
+
+1. Sex kommentarer påstår ett tillstånd som moderniseringen ändrade (ÅTERFALL).
+   → G2-kommentarerna, pågår.
+2. `profile.js` lovar "ändra bara här", men heros bredder står på tre ställen.
+   → M22.
+3. En rättad grind och ett uppmätt utfall står orättade på andra ställen
+   (ÅTERFALL). → Den del som gäller `PLAN.md:961` är rättad i denna
+   uppdatering (P14b grind 3, märkt RÄTTAT 2026-11-08). De delar som står i
+   `ARKITEKTUR.md` → M22.
+4. M21 5c kan inte larma på Reacts hydreringsfel i produktion (ÅTERFALL). → M22.
+5. Honeypot-fältet läses aldrig, så det kan inte stoppa något. → M22.
+6. `robots.txt` blir CRLF i en färsk klon, och M21 kräver LF. → M22.
 
 **Avvikelse under P14.** Byggaren hängde sig under mätningen, efter att koden var
 skriven. Samordnaren stoppade processerna och kontrollerade att sidan renderas.
@@ -85,6 +109,40 @@ Risker.
 Varje "Regel framåt" i `LARDOMAR.md` är bindande. Dessa påverkar denna omgång
 konkret:
 
+**Nya efter G2 (posterna 2026-11-08), och vad de gör med planen:**
+
+- **2026-11-08 (ÅTERFALL, 3+), en rättad grind och ett uppmätt utfall står
+  orättade på andra ställen: när en grind eller ett förväntat tal rättas, sök
+  efter kommandot eller talet i både `ARKITEKTUR.md` och `PLAN.md`, och märk varje
+  träff `RÄTTAT <datum>, se <avsnitt>` i samma ändring.** → Gjort i denna
+  uppdatering för P14b grind 3. Sökningen på `Mejl`, `emailLabel` och
+  `columnHeading` i `PLAN.md` gav bara den raden som grind. **Varje grind eller
+  tal som M22 rättar söks också i `PLAN.md`**, och G2-rättningens `Godkänt när`
+  kräver sökningen i båda filerna.
+- **2026-11-08 (ÅTERFALL, 3+), sex kommentarer påstår ett tillstånd som
+  moderniseringen ändrade.** → G2-kommentarerna och G2-rättningen kör sökningen
+  ur posten (`enda`, `första`, `bara här`, antal tillstånd, användningar och
+  värden, och "ARKITEKTUR.md säger/anger/tar inte") mot sina ändrade filer, och
+  redovisar varje träff med `fil:rad`.
+- **2026-11-08, ett löfte i en datafil ska prövas med `grep` innan det skrivs.**
+  → Arkitekten väljer i M22 mellan att löftet i `profile.js` räknar upp de andra
+  ställena och en grind som jämför preloaden med `HERO_IMAGE_WIDTHS`. Planen
+  väljer inte.
+- **2026-11-08 (ÅTERFALL), en konsolgrind räknas inte som klar förrän dess
+  negativa kontroll har körts mot ett produktionsbygge.** → Gäller M21 5c i
+  G2-rättningen. Utdata från den negativa kontrollen sparas i scratchpad och
+  anges med sökväg i överlämningen.
+- **2026-11-08, ett skyddsfält prövas med ett negativt prov.** → Gäller
+  honeypoten i G2-rättningen: rutan kryssas i, inskicket avlyssnas, och kroppen
+  visas.
+- **2026-11-08, ett krav på radslut skrivs in i repot och verifieras i en färsk
+  klon.** → Gäller `robots.txt` i G2-rättningen.
+- **2026-10-02, `ARKITEKTUR.md` ändras inte under ett pass som bygger mot den.**
+  → M22 skrivs **medan** G2-kommentarerna byggs. Det är bara tillåtet om M22 inte
+  ändrar något som G2-kommentarerna bygger mot. Se Risker.
+- **2026-10-02 + 2026-10-05 (ÅTERFALL), arbetsträdet fryses under granskning.**
+  → `GRANSKNING-PAGAR` skapas också före **efterkontrollen av G2**.
+
 **Nya efter P14, avvikelsen under mätningen och M19, och vad de gör med planen:**
 
 - **2026-10-05, mät aldrig `dist/` utan att binda det till källan. Regeln gäller
@@ -92,7 +150,8 @@ konkret:
   serverade dev-servern en inaktuell modul. Därför mäter **P14b och P15** mot ett
   färskt `vite preview` efter `npm run build`, och överlämningen anger
   byggkommandot och tidsstämpeln för senast ändrade fil i `src/`. Dev-servern
-  används inte för någon mätning.
+  används inte för någon mätning. **Gäller också G2-rättningen och
+  efterkontrollen.**
 - **2026-10-02 + 2026-10-05, servrar: porten mäts med `netstat` före start och
   efter stopp, och servern stoppas via PID.** → Den hängda byggaren kan ha lämnat
   processer kvar. P14b mäter porten **före** start, inte bara efter stopp, och
@@ -100,7 +159,8 @@ konkret:
 - **Breda agentuppdrag hänger sig (projektets minne: dela uppdragen smalt, mät
   själv det som avgör).** → Byggaren hängde sig i mätfasen av P14. **P14b körs
   därför i två smala steg:** först ändringarna och de grindar som är sökningar och
-  bygge, därefter de renderade mätningarna i en egen körning. Se P14b.
+  bygge, därefter de renderade mätningarna i en egen körning. Se P14b. **Samma
+  sak gäller G2-rättningen och efterkontrollen**, som bara prövar G2:s sex fynd.
 - **2026-10-02 + 2026-11-07 (ÅTERFALL), kodkommentarer bär uppmätta tal.** → M19
   punkt 12 räknar upp sju kommentarer, och de är punkter i P14b:s `Ingår:`. Hittar
   den bredare sökningen fler uppmätta tal lämnas de tillbaka till arkitekten och
@@ -113,6 +173,7 @@ konkret:
   för rad. Jelals två öppna frågor (fraserna med streck, "1 PROJEKT") är punkter i
   P16, inte bisatser någon annanstans. M19:s "inte kontrollerat av mig" (vilka rader
   P14 ändrade i `global.css`, `tokens.css` och `profile.js`) är en punkt i P16.
+  **Efter G2:** M22:s tabell blir G2-rättningens `Ingår:`, rad för rad.
 
 **Nya efter P10, M12b och Jelals besked (punkterna är genomförda):**
 
@@ -122,8 +183,8 @@ konkret:
   arkitektens tabell som underlag. P8b upplöstes i P9b.
 - **2026-10-02, paket 4 byggdes under pågående arbete: `ARKITEKTUR.md` ändras inte
   under ett pass som bygger mot den.** → M10d skrevs medan P9b byggdes, på
-  villkoret att den inte rörde något P9b byggde mot. **Gäller nu M19 och P14b:**
-  `ARKITEKTUR.md` ändras inte medan P14b byggs.
+  villkoret att den inte rörde något P9b byggde mot. **Gällde M19 och P14b:**
+  `ARKITEKTUR.md` ändrades inte medan P14b byggdes.
 - **2026-11-07, `clientWidth`-grinden larmade av fel skäl: en förväntad
   mätsiffra ska ha mätts en gång innan den skrivs in i `ARKITEKTUR.md`.** → Gällde
   P5 omgång 5. Gäller också P14b: de uppmätta talen står i överlämningen.
@@ -178,8 +239,9 @@ konkret:
   minne).** Två granskningspunkter: **G1 efter P7** (projektkortet) och **G2 vid
   slutleveransen (P16)**. Övriga paket avslutas med byggarens egen
   verifieringslista och grönt `npm run build`. Det avviker från CLAUDE.md:s "kör
-  alltid granskare" och är Jelals uttryckliga val. **P14b följer huvudregeln:**
-  byggarens grindar, ingen egen granskning. G2 är nästa granskning.
+  alltid granskare" och är Jelals uttryckliga val. **P14b följde huvudregeln:**
+  byggarens grindar, ingen egen granskning. **Efter G2** följer en smal
+  efterkontroll av granskaren, som efter G1.
 - **2026-10-02 + 2026-10-05 (ÅTERFALL), arbetsträdet fryses under granskning.**
   `GRANSKNING-PAGAR` skapas före G2 och raderas när rapporten är levererad. Inget
   P-paket byggs medan filen finns. P14b kräver att filen **inte** finns.
@@ -202,16 +264,18 @@ konkret:
 - **2026-10-02, sidans enda `<h1>` och `label`.** → P14b grind 4 (rubriken
   "Kontakt" exakt en gång, inget `h1`–`h6` i footern) och P15 punkt 7.
 - **2026-10-02 + 2026-10-05, datadrivet.** Räknarna och nyckeltalen räknas ur
-  data, aldrig skrivs. → Jelals fråga om "1 PROJEKT" i P16 gäller **om** talet ska
+  data, aldrig skrivs. → Jelals fråga om "1 PROJEKT" gäller **om** talet ska
   visas, inte hur det räknas.
 - **2026-10-05, ett löfte i en fil Jelal redigerar får aldrig vara osant.** →
-  `profile.js`-kommentaren rättas i P14b (M19 punkt 13). `README.md` och `GUIDE.md`
-  i P17.
+  `profile.js`-kommentaren rättades i P14b (M19 punkt 13), och fynd 2 i G2 gäller
+  samma fil igen (M22). `README.md` och `GUIDE.md` i P17.
 - **2026-10-05, mät artefakten, inte deklarationen — teckengrinden.** Grinden
   läser `cmap` ur **varje** woff2-fil och **alla** `@font-face`.
 - **2026-10-05, en grind som fälls av fel skäl lär oss att ignorera den.** När en
   grind fäller i P14b eller P15 rättas orsaken av det paket som äger filen, aldrig
-  grinden.
+  grinden. **Undantaget är en grind som själv är fel skriven**, som P14b grind 3
+  (G2-fynd 3). Den rättas av den som äger dokumentet, och den gamla lydelsen märks
+  RÄTTAT.
 - **2026-10-08, kontrast: tokennamnet är ingen motivering.** → P14b grind 6
   (footerns etikett, länkar, tagline och copyright mätta mot `--bg`) och P15
   punkt 2.
@@ -287,11 +351,17 @@ konkret:
 | P12b | ~~Följdpaket enligt M14b: gemensamt kompetensurval i `skillRules.js`, och tal som är 0 döljs~~ **BYGGT** | byggare | Enligt M14b |
 | P13 | ~~Kontakt: två kolumner, och mättabellen i `Contact.module.css` omskriven~~ **BYGGT** | byggare | Formuläret fungerar som före, layouten håller 360 px, och ingen kommentar bär ett uppmätt tal |
 | P14 | ~~Footer: logga, tagline, länkkolumner, copyright, avdelare~~ **BYGGT** (avvikelse under mätningen, se Status) | byggare | Länkar renderas bara när adressen finns, och kontrasten är mätt |
-| **P14b** | **De sista öppna punkterna före G2 enligt M19: footerns etikett, e-posten i klartext, ett `rel`-mönster, markeringarna och sju kommentarer. Tio filer. PÅGÅR** | byggare | M19:s tio grindar redovisade, mätta mot färskt `vite preview`. Se eget avsnitt |
-| P15 | Slutkontroll: 360 px, kontrast AA, tangentbord, Lighthouse, före/efter, fillista | byggare | Alla mätserier redovisade som upprepbara kriterier. **P15 bygger ingenting.** Förutsätter P14b |
-| **P16 (G2)** | **GRANSKNINGSPUNKT 2 och LEVERANS: hård granskning av hela omgången, och Jelal ser före/efter** | granskare, sedan projektledare | Fynden i `LARDOMAR.md`, Jelal har sett jämförelsen och svarat på de öppna frågorna |
-| P17 | Dokumentation: README, GUIDE.md (tidigare paket H), profilfilerna och `optimize:images` efter M10c och M10d, listan över ändrade filer | dokumentator | Guiden är **genomspelad**: att lägga till ett projekt enligt den ger grönt bygge |
-| Commit och push | Omgången checkas in och pushas | samordnare | `git status` är ren och pushen har gått igenom |
+| **P14b** | ~~De sista öppna punkterna före G2 enligt M19: footerns etikett, e-posten i klartext, ett `rel`-mönster, markeringarna och sju kommentarer. Tio filer~~ **BYGGT OCH MÄTT.** Grind 3 RÄTTAT 2026-11-08, se eget avsnitt | byggare | M19:s tio grindar redovisade, mätta mot färskt `vite preview`. Se eget avsnitt |
+| **P14c** | ~~Ny logga enligt M20~~ **BYGGT OCH MÄTT** | byggare | Enligt M20 |
+| P15 | ~~Slutkontroll: 360 px, kontrast AA, tangentbord, Lighthouse, före/efter, fillista~~ **KLAR, med P15-fix enligt M21.** Lighthouse-median 97 mobil, 100 desktop. Accessibility, Best practices och SEO 100. Del B omkörd på slutliga bygget: 0 fel | byggare | Alla mätserier redovisade som upprepbara kriterier. **P15 bygger ingenting** (rättningarna låg i P15-fix) |
+| Commit `525afa1` | ~~P14b, P14c och P15-fix incheckade~~ **KLART, lokalt. Inte pushad** | samordnare | Incheckat |
+| **P16 (G2)** | ~~**GRANSKNINGSPUNKT 2: hård granskning av hela omgången**~~ **GENOMFÖRD: EJ GODKÄND, sex fynd** (`LARDOMAR.md` 2026-11-08) | granskare | Fynden i `LARDOMAR.md`. Leveransfrågorna till Jelal står kvar, se Öppna frågor |
+| **G2-kommentarerna** | **Fynd 1: de falska kommentarerna. PÅGÅR** | byggare | Varje kommentar i fynd 1 beskriver invarianten, och sökningen ur posten 2026-11-08 är redovisad med `fil:rad` |
+| **M22** | **Arkitektens beslut om fynd 2–6**, med en tabell "exakt vad G2-rättningen ändrar" | arkitekt | Varje fynd 2–6 har ett beslut och en rad i tabellen, och varje rättad grind eller tal i `ARKITEKTUR.md` är också sökt i `PLAN.md` |
+| **G2-rättning** | **Fynd 2–6. Ingår: enligt M22** (fylls i när M22 finns) | byggare | M22:s grindar redovisade, mätta mot färskt `vite preview`. Se eget avsnitt |
+| **Efterkontroll av G2** | **Smal efterkontroll mot G2:s sex fynd** | granskare | Varje fynd 1–6 bekräftat som åtgärdat, eller ett nytt fynd i `LARDOMAR.md` |
+| P17 | Dokumentation: README, GUIDE.md (tidigare paket H), **de gamla filnamnen och färgerna**, profilfilerna och `optimize:images` efter M10c och M10d, listan över ändrade filer | dokumentator | Guiden är **genomspelad**: att lägga till ett projekt enligt den ger grönt bygge |
+| Commit och push | Omgången checkas in och pushas, tillsammans med `525afa1` | samordnare | `git status` är ren och pushen har gått igenom |
 
 Därefter, utanför denna omgång: **paket L** från förra omgången.
 
@@ -299,34 +369,46 @@ Därefter, utanför denna omgång: **paket L** från förra omgången.
 
 Byggt hittills: P1 → P2 → P3 → P4 → P4b → P5 → P6 → P7 → **G1** →
 G1-kommentarerna → **G1-rättningen** → P8 → P9 → P10 (med P5 omgång 4 parallellt
-med P9 och P10) → P9b ∥ P5 omgång 5 → P11 → P11b → P12 → P12b → P13 → P14.
+med P9 och P10) → P9b ∥ P5 omgång 5 → P11 → P11b → P12 → P12b → P13 → P14 →
+P14b → P14c → P15 med P15-fix → commit `525afa1` → **G2 (EJ GODKÄND)**.
 
-**Ordningen härifrån:**
+**Pågår nu:** G2-kommentarerna (fynd 1, byggaren). M22 (fynd 2–6, arkitekten) är
+nästa steg och får skrivas samtidigt, på villkoret i Risker.
 
-1. **P14b** (M19) — pågår
-2. **P15** (slutkontroll)
-3. **G2 / P16**
-4. **P17** (dokumentation)
-5. **Commit och push**
+**Ordningen därefter:**
 
-- **P14b efter P14.** Uppfyllt. M19 förutsätter att P14 är överlämnat och att
-  ingen `GRANSKNING-PAGAR` finns.
-- **P15 efter P14b.** P15 mäter hela sidan och bygger ingenting. Mäter den före
-  P14b mäter den en footer och en `rel`-regel som P14b ändrar.
-- **P16 efter P15.** P16 kräver `GRANSKNING-PAGAR`.
-- **P17 efter P16, commit och push efter P17.**
-- **`ARKITEKTUR.md` ändras inte under P14b eller P15**, och inte alls under G2.
+1. **G2-rättning** (enligt M22)
+2. **Efterkontroll av G2** (granskaren, smal, mot G2:s sex fynd)
+3. **P17** (dokumentatorn: README, GUIDE och de gamla filnamnen och färgerna)
+4. **Commit och push**
 
-**Körbart:** sidan är körbar efter varje paket. Vill Jelal se den före G2 kan
-samordnaren visa den, mot ett färskt `vite preview`.
+- **G2-rättning efter M22 och efter G2-kommentarerna.** G2-rättningens `Ingår:`
+  finns först när M22 finns. Den startar inte förrän G2-kommentarerna är
+  överlämnade, så att två byggare inte ändrar samma fil. Fynd 1 och fynd 5 rör
+  båda `ContactForm.jsx`.
+- **Efterkontrollen efter G2-rättningen.** Den prövar alla sex fynden, också fynd
+  1, och kräver `GRANSKNING-PAGAR`.
+- **P17 efter efterkontrollen**, och commit och push efter P17.
+- **`ARKITEKTUR.md` ändras inte under G2-rättningen eller under efterkontrollen.**
+
+**Körbart:** sidan är körbar efter varje paket. Vill Jelal se den före
+efterkontrollen kan samordnaren visa den, mot ett färskt `vite preview`.
 
 ---
 
-## Öppna punkter utan paket
+## Öppna frågor till Jelal
 
-Inga. **Jelals två öppna frågor** (fraserna som hade streck, och nyckeltalet
-"1 PROJEKT") ligger bland frågorna i **P16**. Tills han svarat står texterna som
-de är byggda, och inget paket ändrar dem.
+Dessa står kvar (läget 2026-11-08). Tills han svarat står texterna som de är
+byggda, och inget paket ändrar dem. **Ett svar som kräver en ändring blir ett eget
+paket före P17.**
+
+1. **Sidbeskrivningen (meta description).** Ett förslag finns. Godkänner han det,
+   eller vill han ha en annan text?
+2. **Fraserna med streck:** ska de strykas helt eller skrivas om? Det gäller "webb-
+   och mobilappar", "en webb- och mobilapp", "Något gick fel – försök igen" och
+   titelns tankstreck.
+3. **Nyckeltalet "1 PROJEKT":** ska det stå kvar så länge det bara finns ett
+   projekt?
 
 ---
 
@@ -857,8 +939,8 @@ branschen" utgår tills Jelal ger det.
 **P12b ingick:** enligt **M14b**: ett gemensamt kompetensurval i
 `src/lib/skillRules.js`, och tal som är 0 döljs.
 
-**Öppen fråga till Jelal (P16):** ska "1 PROJEKT" stå kvar så länge det bara
-finns ett projekt?
+**Öppen fråga till Jelal:** ska "1 PROJEKT" stå kvar så länge det bara finns ett
+projekt? Står kvar, se Öppna frågor till Jelal.
 
 ---
 
@@ -887,15 +969,19 @@ görs från och med nu mot ett färskt `vite preview`, aldrig mot dev-servern.**
 
 Det som återstod efter P14 (markeringarna, footerns rubrik och e-posttext,
 `rel`-mönstret, kommentarer med uppmätta tal, `profile.js`-kommentaren) är avgjort
-i **M19** och genomförs i **P14b**.
+i **M19** och genomfördes i **P14b**.
 
 ---
 
-## P14b — sista öppna punkterna före G2, enligt M19 (PÅGÅR)
+## P14b — sista öppna punkterna före G2, enligt M19 (BYGGT OCH MÄTT)
 
 **Agent:** byggare. **Förutsättning:** P14 överlämnat (uppfyllt), M19 i
 `ARKITEKTUR.md` (uppfyllt), och ingen `GRANSKNING-PAGAR` i projektroten.
-**Blockerar:** P15, och därmed G2.
+**Blockerade:** P15, och därmed G2.
+
+**Utfall 2026-11-08:** byggt och mätt, incheckat i `525afa1`. G2 fann att grind 3
+nedan var fel skriven (G2-fynd 3, ett återfall). Den gamla lydelsen står kvar på
+sin plats, märkt RÄTTAT.
 
 **Mål:** att inga `EJ I ARKITEKTUR`- eller `OPEN-KEY`-markeringar finns kvar,
 att footern inte har någon rubrik och visar e-postadressen i klartext, att varje
@@ -939,7 +1025,7 @@ M19**, och byggaren svarar med `fil:rad` per rad. **Inga andra filer.**
 - Att skriva om ett uppmätt tal som M19 punkt 12 inte räknar upp. Hittas ett, lämnas
   det tillbaka till arkitekten.
 - Texterna i Jelals två öppna frågor (fraserna som hade streck, "1 PROJEKT"). De
-  står kvar som de är tills Jelal svarat i P16.
+  står kvar som de är tills Jelal svarat.
 - `ARKITEKTUR.md` och `PLAN.md`.
 
 **Genomförs i två steg** (projektets minne: breda uppdrag hänger sig, och P14:s
@@ -958,7 +1044,13 @@ rullningslistvillkor:
 1. `grep -rn "EJ I ARKITEKTUR\|OPEN-KEY" src scripts index.html` ger **0** träffar.
 2. `grep -rn 'rel="noreferrer"' src` ger 0. Antalet rader med `target="_blank"` i
    `src` är lika med antalet med `rel="noopener noreferrer"`.
-3. `grep -rn "columnHeading\|emailLabel\|Mejl" src` ger 0.
+3. ~~`grep -rn "columnHeading\|emailLabel\|Mejl" src` ger 0.~~ **RÄTTAT
+   2026-11-08, se M19 grind 3 i `ARKITEKTUR.md` (rättad i M20).** Den gamla
+   lydelsen sökte "Mejl" i hela `src` och larmar av fel skäl på
+   `src/components/ContactForm.jsx:42`. Gällande grind: `columnHeading` och
+   `emailLabel` ger 0 i `src`, och "Mejl" söks **bara i
+   `src/components/Footer.jsx`**, där den ska ge 0. G2-fynd 3, ett återfall
+   (`LARDOMAR.md` 2026-11-08).
 4. Renderad sida vid 360 × 640 och 1280 × 800: `h1`–`h6` har texten "Kontakt"
    **exakt en gång**, `footer` har inget `h1`–`h6`, footerns e-postlänk har
    adressen som text, och varje `a[target="_blank"]` i `footer` och `#contact` har
@@ -985,11 +1077,31 @@ för senast ändrade fil i `src/`, och vilken server mätningarna gjordes mot.
 
 ---
 
-## P15 — Slutkontroll
+## P14c — ny logga, enligt M20 (BYGGT OCH MÄTT)
+
+**Agent:** byggare. **Beslut:** M20 i `ARKITEKTUR.md`.
+
+**Utfall 2026-11-08:** byggt och mätt, incheckat i `525afa1`. Innehållet och
+grindarna står i M20. Jag har inte fört in dem här i efterhand. G2-fynd 3 gäller
+bland annat två tal i `ARKITEKTUR.md` från P14c:s mätning, och de avgörs i M22.
+
+---
+
+## P15 — Slutkontroll (KLAR, med P15-fix enligt M21)
 
 **Agent:** byggare. **Förutsättning:** P3–P14, P9b, P5 omgång 5, P11b, P12b och
 **P14b**. **P15 bygger ingenting.** Fallerar en rad lämnas fyndet tillbaka till det
 paket som äger filen, som rättar, och P15 körs om.
+
+**Utfall 2026-11-08:** rättningarna gjordes i **P15-fix** enligt **M21**. P14b,
+P14c och P15-fix är byggda och mätta i steg 1–4, och incheckade i `525afa1`.
+
+- **Lighthouse, median:** 97 på mobil och 100 på desktop. Accessibility, Best
+  practices och SEO: 100.
+- **P15 del B** är omkörd på det slutliga bygget, med **0 fel**.
+
+G2-fynd 4 (M21 5c) och G2-fynd 6 (M21 punkt 4, `robots.txt`) gäller M21:s grindar,
+och de avgörs i M22.
 
 **Varje mätning görs mot ett färskt `vite preview` efter `npm run build`, aldrig
 mot dev-servern** (avvikelsen under P14). Porten mäts med `netstat` före start och
@@ -1020,11 +1132,16 @@ ledig enligt `netstat`.
 
 ---
 
-## P16 — Granskningspunkt 2 (G2) och LEVERANS
+## P16 — Granskningspunkt 2 (G2) och LEVERANS (G2 GENOMFÖRD, EJ GODKÄND)
 
 **Agent:** granskare, därefter projektledare. **Förutsättning:** P15.
 
-**Ingår:** `GRANSKNING-PAGAR` och frysningen som i G1. Hård granskning av hela
+**Utfall 2026-11-08:** **EJ GODKÄND, sex fynd**, nedskrivna i `LARDOMAR.md`
+(posterna daterade 2026-11-08). Fynd 1 rättas i **G2-kommentarerna**, fynd 2–6 i
+**G2-rättning** enligt **M22**, och alla sex prövas i **efterkontrollen av G2**.
+Se listan under Status.
+
+**Ingick:** `GRANSKNING-PAGAR` och frysningen som i G1. Hård granskning av hela
 omgången: varje beslut i P1 punkt för punkt mot koden med `fil:rad`, inklusive
 M10d, M11b, M12b, M14b, M15b och M19, de upphävda strängarna mot `src/`,
 `scripts/`, **`index.html`** och `GUIDE.md`, och att inga `EJ I ARKITEKTUR` finns
@@ -1035,36 +1152,78 @@ kvar. Därtill:
   ändrade i de tre filerna.
 - **Jelals beslut 7 och 8:** att de är genomförda på den renderade sidan.
 
-Därefter visas före/efter och fillistan för Jelal.
-
-**Frågor till Jelal vid leverans:**
-- Awles beskrivning och footerns tagline, om de inte redan godkänts.
-- **Fraserna som hade streck:** ska de strykas helt i stället för att skrivas om?
-  Det gäller "webb- och mobilappar", "en webb- och mobilapp", "Något gick fel –
-  försök igen" och titelns tankstreck.
-- **Nyckeltalet "1 PROJEKT":** ska det stå kvar så länge det bara finns ett
-  projekt?
-- Kvarvarande frågor från förra omgången: Hem och Ekonomi, LinkedIn och
-  granskningsrytmen. Att paket L körs härnäst.
+**Frågor till Jelal vid leverans:** de som står kvar 2026-11-08 är samlade under
+**Öppna frågor till Jelal** ovan: sidbeskrivningen, fraserna med streck och
+"1 PROJEKT".
 
 Frågan om ansiktet på smal skärm är **struken**. Jelal beslutade 2026-11-07
 (beslut 8): bilden överst och texten under på mobil, och scroll till knapparna
 accepteras på små telefoner.
 
-**Godkänt när:** fynden står i `LARDOMAR.md` och är åtgärdade eller uppskjutna av
-Jelal, Jelal har sett jämförelsen, och varje fråga ovan har ett svar. Ett svar som
-kräver en ändring blir ett eget paket före P17.
+**Godkänt när:** fynden står i `LARDOMAR.md` (uppfyllt) och är åtgärdade eller
+uppskjutna av Jelal, Jelal har sett jämförelsen, och varje öppen fråga har ett
+svar. Fynden räknas som åtgärdade först när efterkontrollen av G2 är godkänd. Ett
+svar som kräver en ändring blir ett eget paket före P17.
+
+---
+
+## G2-kommentarerna — fynd 1 (PÅGÅR)
+
+**Agent:** byggare. **Förutsättning:** G2:s rapport (uppfyllt).
+
+**Ingår:** G2-fynd 1, de sex falska kommentarerna i posten 2026-11-08
+("Kodkommentarer: sex kommentarer påstår ett tillstånd som moderniseringen
+ändrade") omskrivna till invarianter, med regeln i samma post.
+
+**Godkänt när:** varje kommentar i fyndet beskriver invarianten, sökningen ur
+postens "Regel framåt" är körd mot de ändrade filerna och redovisad med `fil:rad`,
+och `npm run validate:data`, `npm run build` och `npm run lint` är gröna.
+
+---
+
+## G2-rättning — fynd 2–6, enligt M22
+
+**Agent:** byggare. **Förutsättning:** M22 i `ARKITEKTUR.md`, G2-kommentarerna
+överlämnade, och ingen `GRANSKNING-PAGAR` i projektroten. **Blockerar:**
+efterkontrollen av G2.
+
+**Ingår:** enligt M22. Fylls i när M22 finns, en punkt per rad i arkitektens
+tabell, på samma sätt som P14b:s `Ingår:` följer M19.
+
+**Godkänt när:** fylls i när M22 finns. Därtill, oberoende av M22:
+
+- Varje grind eller tal som M22 rättar är sökt i både `ARKITEKTUR.md` och
+  `PLAN.md`, och varje träff är rättad eller märkt RÄTTAT (posten 2026-11-08).
+- Renderade mätningar görs mot ett färskt `vite preview` efter `npm run build`,
+  med `netstat` före start och efter stopp.
+- `npm run validate:data`, `npm run build` och `npm run lint` är gröna.
+
+---
+
+## Efterkontroll av G2
+
+**Agent:** granskare. **Förutsättning:** G2-rättning överlämnad.
+
+**Ingår:** en **smal** efterkontroll mot G2:s sex fynd, och bara mot dem.
+`GRANSKNING-PAGAR` skapas före start och raderas när rapporten är levererad, och
+ändringslistan med datum tas vid start och slut.
+
+**Godkänt när:** varje fynd 1–6 är bekräftat som åtgärdat med `fil:rad` eller med
+en mätning. Ett nytt fel som efterkontrollen hittar skrivs in i `LARDOMAR.md`.
 
 ---
 
 ## P17 — Dokumentation
 
-**Agent:** dokumentator. **Förutsättning:** P16. Ersätter förra omgångens paket H.
+**Agent:** dokumentator. **Förutsättning:** efterkontrollen av G2 godkänd.
+Ersätter förra omgångens paket H.
 
 **Ingår:**
 - README, och GUIDE.md omskriven: projektdatan (nya fält, kategori, status, bild
   i 4:3), kompetenserna (förra H:s innehåll) och filtret. Listan över ändrade
   filer.
+- **De gamla filnamnen och färgerna.** README och GUIDE får inte nämna en fil som
+  inte längre finns eller en färg eller ett tokennamn som har upphävts.
 - **Profilfilerna och `optimize:images` efter M10c och M10d.** `README.md` och
   `GUIDE.md` nämner fortfarande profilfilerna och `optimize:images`. Efter P5
   omgång 4 finns inte `public/assets/profile/` och `assets-source/profile.jpg`.
@@ -1084,10 +1243,12 @@ GUIDE.md` är redovisad, och varje träff stämmer med M10c och M10d.
 
 **Agent:** samordnare. **Förutsättning:** P17 klart.
 
-**Ingår:** incheckning av omgångens filer och push till `main`. Varje paket har
-checkat in bara sina egna filer, så detta steg tar det som återstår efter P17.
-Den otrackade `assets-source/hero-portrait.jpg`, `public/assets/hero/` och de nya
-filerna under `src/` ingår.
+**Ingår:** incheckning av omgångens filer och push till `main`. Commit `525afa1`
+(P14b, P14c och P15-fix) finns redan lokalt och är inte pushad. Den pushas i samma
+steg. Varje paket har checkat in bara sina egna filer, så detta steg tar det som
+återstår efter P17. Den otrackade `assets-source/hero-portrait.jpg`,
+`public/assets/hero/` och de nya filerna under `src/` ingår, om de inte redan är
+incheckade.
 
 **Godkänt när:** `git status` är ren, ingen fil utan ägande paket är med (jämfört
 mot fillistan från P15 punkt 6), och pushen har gått igenom.
@@ -1096,7 +1257,29 @@ mot fillistan från P15 punkt 6), och pushen har gått igenom.
 
 ## Risker (denna omgång)
 
-**Nya efter P14 och M19:**
+**Nya efter G2:**
+
+- **M22 skrivs medan G2-kommentarerna byggs, och ändrar något byggaren bygger
+  mot.** Fynd 1 hänvisar till M21 punkt 1, och fynd 4 och 6 gäller också M21.
+  **Märks tidigt** genom att arkitekten i M22 skriver ut vilka avsnitt M22 ändrar,
+  och genom att M22 inte rör M21 punkt 1 förrän G2-kommentarerna är överlämnade.
+- **Två byggare ändrar samma fil.** Fynd 1 och fynd 5 rör båda `ContactForm.jsx`.
+  **Märks tidigt** genom att G2-rättning inte startar förrän G2-kommentarerna är
+  överlämnade, och genom `git status` före varje överlämning.
+- **Efterkontrollen växer till en ny G2.** **Märks tidigt** genom att den bara
+  prövar de sex fynden. Ett nytt fel blir en post i `LARDOMAR.md`, inte en ny
+  granskningsrunda.
+- **En rättad grind står kvar orättad i ett annat dokument igen** (G2-fynd 3,
+  återfall). **Märks tidigt** genom att G2-rättningens `Godkänt när` kräver
+  sökningen i både `ARKITEKTUR.md` och `PLAN.md`.
+- **`525afa1` ligger kvar lokalt utan push.** Försvinner arbetsträdet finns
+  omgången bara på en maskin. **Märks tidigt** genom att commit och push står som
+  eget steg, och genom `git status` mot `origin/main`.
+- **Jelals svar kräver en ändring efter efterkontrollen.** Sidbeskrivningen ändrar
+  troligen `index.html`. **Märks tidigt** genom att ett svar som kräver kod blir
+  ett eget paket före P17, inte en ändring i dokumentationspaketet.
+
+**Efter P14 och M19:**
 
 - **En mätning görs mot dev-servern och mäter en inaktuell modul.** Det hände under
   P14 (vit sida på 5173). Ett grönt eller rött mätvärde säger då ingenting om

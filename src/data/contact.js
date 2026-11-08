@@ -28,10 +28,13 @@
  *    någonstans. Det enda som bevisar att den är på är att ett verkligt
  *    meddelande kommer fram.
  *
- * TRE REGLER SOM BYGGET KONTROLLERAR (npm run build stannar annars):
+ * REGLER SOM BYGGET KONTROLLERAR (npm run build stannar annars). Listan är
+ * en hjälp, och det som gäller är grindarna i scripts/validate-data.mjs:
  *   - email måste finnas och innehålla text.
- *   - Varje länk måste ha en label.
- *   - form.endpoint och form.accessKey måste finnas och innehålla text.
+ *   - links måste vara en lista. Varje länk måste ha en label, och url är en
+ *     adress eller null, aldrig tom och aldrig "#".
+ *   - form.endpoint, form.accessKey och form.hcaptchaSiteKey måste finnas och
+ *     innehålla text.
  */
 
 /**

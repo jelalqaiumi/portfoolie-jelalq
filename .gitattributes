@@ -1,0 +1,7 @@
+# Radslut och binarfiler. Beslutat i ARKITEKTUR.md: M22 punkt 4.
+# robots.txt levereras med LF oavsett core.autocrlf (M21 punkt 4).
+public/robots.txt text eol=lf
+*.webp binary
+*.png binary
+*.jpg binary
+*.woff2 binary

@@ -23,7 +23,9 @@
          det största elementet i första skärmen. imagesrcset och imagesizes ska
          vara exakt samma som srcSet och sizes på bilden i
          src/components/Hero.jsx - annars hämtar webbläsaren bilden två gånger.
-         Ändras det ena ändras det andra, i samma redigering. -->
+         Ändras det ena ändras det andra, i samma redigering. Bygget stannar om
+         imagesrcset eller href inte stämmer med HERO_IMAGE_WIDTHS i
+         src/data/profile.js. imagesizes kontrolleras inte. -->
     <link rel="preload" as="image" type="image/webp" href="/assets/hero/hero-1440.webp" imagesrcset="/assets/hero/hero-960.webp 960w, /assets/hero/hero-1440.webp 1440w, /assets/hero/hero-1672.webp 1672w" imagesizes="(min-width: 900px) 100vw, 178vw" fetchpriority="high" />
   </head>
   <body>

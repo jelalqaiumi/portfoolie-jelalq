@@ -68,6 +68,10 @@ export const skillGroups = [
       { name: 'CSS (Grid, Flexbox, responsiv design)' },
       { name: 'Vite' },
       { name: 'Blazor' },
+      { name: 'Next.js' },
+      { name: 'TypeScript' },
+      { name: 'TanStack Query' },
+      { name: 'Zod' },
     ],
   },
   {
@@ -88,6 +92,7 @@ export const skillGroups = [
       { name: 'SQL' },
       { name: 'MongoDB' },
       { name: 'Datamodellering och normalisering' },
+      { name: 'Supabase' },
     ],
   },
   {

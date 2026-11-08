@@ -605,7 +605,65 @@ function checkContact(mod) {
  * rollen fritt - grinden fäller bara ett fält som saknas eller bara har
  * blanksteg, alltså en tom rollrad i hero.
  * ======================================================================== */
+/* ===== heros preload i index.html =======================================
+ * index.html kan inte importera HERO_IMAGE_WIDTHS, så samma bredder står
+ * skrivna i preloaden. Glider de isär hämtas bilden två gånger, eller en fil
+ * som inte finns. Grinden gör att glidningen stoppar bygget i stället för att
+ * tiga. Beslutat i ARKITEKTUR.md: M22 punkt 5.
+ *
+ * VILKEN LEGITIM ÄNDRING FÅR FÄLLA DEN? En ändring av bredderna i profile.js
+ * utan samma ändring i index.html, och det är just felet. Åtgärden meddelandet
+ * föreskriver, den väntade strängen inskriven i index.html, får den att tiga.
+ * imagesizes jämförs inte: strängen står i Hero.jsx, som inte går att läsa
+ * utan JSX.
+ * ======================================================================== */
+/** @param {unknown} widths  HERO_IMAGE_WIDTHS ur profile.js. */
+function checkHeroPreload(widths) /* : void */ {
+  if (!Array.isArray(widths) || widths.length < 2 || !widths.every((w) => Number.isInteger(w) && w > 0)) {
+    fail('profile.js: HERO_IMAGE_WIDTHS saknas eller är inte en lista med minst två positiva heltal');
+    return;
+  }
+
+  let html;
+  try {
+    html = readFileSync(join(PROJECT_ROOT, 'index.html'), 'utf8');
+  } catch (error) {
+    fail(`index.html: filen kunde inte läsas (${error.message})`);
+    return;
+  }
+
+  const preloads = [...html.matchAll(/<link\b[^>]*>/g)]
+    .map((match) => match[0])
+    .filter((tag) => tag.includes('rel="preload"') && tag.includes('as="image"'));
+
+  if (preloads.length !== 1) {
+    const n = preloads.length;
+    fail(`index.html: heros preload (<link rel="preload" as="image">) finns ${n} gånger, ska finnas 1`);
+    return;
+  }
+
+  const [tag] = preloads;
+
+  const expectedSrcset = widths.map((w) => `/assets/hero/hero-${w}.webp ${w}w`).join(', ');
+  const actualSrcset = tag.match(/\bimagesrcset="([^"]*)"/)?.[1] ?? '(saknas)';
+  if (actualSrcset !== expectedSrcset) {
+    fail(`index.html: preloadens imagesrcset är "${actualSrcset}", men HERO_IMAGE_WIDTHS i profile.js ger "${expectedSrcset}". Skriv in den väntade strängen i imagesrcset i index.html.`);
+  }
+
+  const expectedHref = `/assets/hero/hero-${widths[1]}.webp`;
+  const actualHref = tag.match(/\shref="([^"]*)"/)?.[1] ?? '(saknas)';
+  if (actualHref !== expectedHref) {
+    fail(`index.html: preloadens href är "${actualHref}", men Hero.jsx laddar "${expectedHref}" (HERO_IMAGE_WIDTHS[1]). Skriv in den väntade sökvägen i href i index.html.`);
+  }
+
+  if (actualSrcset === expectedSrcset && actualHref === expectedHref) {
+    summary.push('heros preload stämmer med HERO_IMAGE_WIDTHS');
+  }
+}
+
 function checkProfile(mod) {
+  checkHeroPreload(mod.HERO_IMAGE_WIDTHS);
+
   const { profile } = mod;
 
   if (profile === null || typeof profile !== 'object' || Array.isArray(profile)) {

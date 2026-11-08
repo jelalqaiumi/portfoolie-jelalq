@@ -69,9 +69,9 @@ function About() {
           Reveal (M12), som inte sätter något mått.
 
           Nyckeln är styckets egen text. Det finns inget id att använda, och
-          index som nyckel är projektets enda ställe där det hade varit
-          frestande - men texten är stabil, unik i praktiken och ändrar sig
-          bara när Jelal skriver om stycket, vilket är precis när React ska
+          index som nyckel hade varit frestande här - men texten är stabil,
+          unik i praktiken och ändrar sig bara när Jelal skriver om stycket,
+          vilket är precis när React ska
           montera om det. Skriver han två identiska stycken varnar React i
           utvecklingsläge; det är en synlig påminnelse, inte ett fel på sidan. */}
       {/* Texten tonar in som en enhet (ARKITEKTUR.md, M12). Omslaget har

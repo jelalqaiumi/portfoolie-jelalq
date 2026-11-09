@@ -4,7 +4,10 @@ import { sectionIndexLabel } from '../lib/sectionLabel.js';
 import typeStyles from '../styles/type.module.css';
 import styles from './Section.module.css';
 
-function Section({ id, title, children, className }) {
+/* Det enda värdet utöver standardytan. Beslutat i ARKITEKTUR.md: M23. */
+export const SURFACE_LIGHT = 'light';
+
+function Section({ id, title, children, className, surface }) {
   /* Ofullständig datapost: rendera inget element alls i stället för en sektion
    * med ett tomt <h2></h2>. En label med bara blanksteg är lika tom som en
    * som saknas - därför trim(), inte bara en truthy-kontroll. */
@@ -23,9 +26,15 @@ function Section({ id, title, children, className }) {
    * linjen mellan sektioner ligger också där, som syskonselektorn
    * section[id] + section[id]. Behöver roten egen stil läggs klassen tillbaka
    * i Section.module.css och sätts före className här - jämför .hero i
-   * Hero.module.css, som bär heros bakgrund på samma sätt. */
+   * Hero.module.css, som bär heros bakgrund på samma sätt. Ytan sätts som
+   * attribut på roten, inte som klass, och tokens.css binder om färgerna för
+   * den (ARKITEKTUR.md, M23). */
   return (
-    <section id={id} className={className}>
+    <section
+      id={id}
+      className={className}
+      data-surface={surface === SURFACE_LIGHT ? SURFACE_LIGHT : undefined}
+    >
       <div className={styles.inner}>
         {/* Rubriken tonar in som en enhet (ARKITEKTUR.md, M12). Omslaget är
             till för hela rubrikblocket, så att etiketten ovanför h2 följer

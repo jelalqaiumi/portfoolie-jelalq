@@ -154,6 +154,14 @@ section[id] + section[id] {
   border-top: 1px solid var(--line);
 }
 
+/* Där ytan byter mellan två sektioner är färgskiftet gränsen, och linjen görs
+ * genomskinlig. Den behåller sin bredd, så att ingen sektion byter höjd.
+ * Beslutat i ARKITEKTUR.md: M23. */
+section[id]:not([data-surface='light']) + section[id][data-surface='light'],
+section[id][data-surface='light'] + section[id]:not([data-surface='light']) {
+  border-top-color: transparent;
+}
+
 /* Tillgänglighetsprimitiv. MEDVETET UNDANTAG från regeln att global.css bara
  * innehåller reset och baselement - beslutat i ARKITEKTUR.md, "Fyra
  * noteringar från paket 2B" och M20 (klassen står kvar) och ska inte

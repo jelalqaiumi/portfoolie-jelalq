@@ -1,5 +1,6 @@
-/* Grind mot kvarglömda tokenreferenser och mot tokens utan konsument. Beslut
- * A9, M5g och M5h i ARKITEKTUR.md.
+/* Grind mot kvarglömda tokenreferenser, mot tokens utan konsument och mot
+ * ombindningar av tokens som inte finns. Beslut A9, M5g, M5h och M23 i
+ * ARKITEKTUR.md.
  *
  * Körs både manuellt (`npm run validate:tokens`) och i `build`, efter
  * validate-data.mjs.
@@ -12,8 +13,8 @@
  *
  * REGELN, och den har inget tröskeltal och ingen tolkning:
  *   Varje custom property-namn som förekommer i src/**\/*.{css,jsx,js} eller
- *   scripts/*.mjs måste vara DEKLARERAT i tokens.css (namnet följt av kolon,
- *   utanför kommentarer). Det gäller varje namn, inte bara färgerna.
+ *   scripts/*.mjs måste vara DEKLARERAT i :root i tokens.css (namnet följt av
+ *   kolon, utanför kommentarer). Det gäller varje namn, inte bara färgerna.
  *
  * src/data/ GENOMSÖKS INTE. Det är Jelals filer, och ingen text han skriver
  * ska kunna fälla en tokengrind. Datafilerna refererar inga tokens.
@@ -46,6 +47,15 @@
  * konsument. Ett token deklareras i samma paket som dess första konsument.
  * VILKEN LEGITIM ÄNDRING FÅR FÄLLA DEN HALVAN? Att en konsument tas bort medan
  * tokenet står kvar. Åtgärden är att ta bort tokenet, och då tiger grinden.
+ *
+ * OMBINDNINGEN (M23): tokens.css binder om en del av namnen i ett block efter
+ * :root. Bara :root räknas som deklarerat, och varje namn som tilldelas ett
+ * värde utanför :root, utanför kommentarer, ska också finnas i :root. Annars
+ * hade ett felstavat namn i ombindningen räknats som en ny deklaration och
+ * gått igenom tyst, utan att binda om något.
+ * VILKEN LEGITIM ÄNDRING FÅR FÄLLA DEN? Ingen. Ett namn som binds om utan att
+ * finnas i :root är ett felstavat eller borttaget token, och åtgärden är att
+ * rätta namnet.
  *
  * Inga beroenden. Ren Node.
  */
@@ -139,15 +149,39 @@ try {
 
 const declared = new Set();
 
+/* :root-blocket i den kommentarsblankade texten: början (klammern) och slut.
+ * Bara deklarationerna här räknas som deklarerade (M23). */
+let rootOpen = -1;
+let rootClose = -1;
+
 if (tokensSource !== null) {
-  for (const match of tokensSource.matchAll(DECLARATION_PATTERN)) {
-    declared.add(match[1]);
+  const rootStart = tokensSource.search(/:root\s*\{/);
+  if (rootStart >= 0) {
+    rootOpen = tokensSource.indexOf('{', rootStart);
+    const close = tokensSource.indexOf('}', rootOpen);
+    rootClose = close < 0 ? tokensSource.length : close;
+    for (const match of tokensSource.slice(rootOpen, rootClose).matchAll(DECLARATION_PATTERN)) {
+      declared.add(match[1]);
+    }
   }
 
   if (declared.size === 0) {
     /* Utan deklarationer skulle varje referens fällas, och ett larm på allt är
      * lika oanvändbart som inget larm. Då är det tokens.css som är trasig. */
     errors.push('validate-tokens.mjs: inga tokendeklarationer hittades i tokens.css - filen är troligen trasig eller flyttad');
+  }
+
+  /* Ombindningen: varje namn som tilldelas ett värde utanför :root ska finnas
+   * i :root. En rad per namn och rad. Utan :root rapporteras det nedan, och
+   * då säger den här kontrollen inget. */
+  if (rootOpen >= 0) {
+    for (const match of tokensSource.matchAll(DECLARATION_PATTERN)) {
+      if (match.index >= rootOpen && match.index < rootClose) continue;
+      if (declared.has(match[1])) continue;
+      errors.push(
+        `validate-tokens.mjs: ombindningen gäller ett token som inte finns i :root ("${match[1]}" i ${shownPath(TOKENS_FILE)}:${lineAt(tokensSource, match.index)})`,
+      );
+    }
   }
 
   /* tokens.css själv: varje var() utanför kommentarer ska peka på ett
@@ -233,14 +267,11 @@ function blankJsComments(source) {
 
 if (tokensSource !== null) {
   /* Bara deklarationerna i :root räknas. */
-  const rootStart = tokensSource.search(/:root\s*\{/);
-
-  if (rootStart < 0) {
+  if (rootOpen < 0) {
     errors.push('validate-tokens.mjs: inget :root-block hittades i tokens.css');
   } else {
-    const open = tokensSource.indexOf('{', rootStart);
-    const close = tokensSource.indexOf('}', open);
-    const rootBlock = tokensSource.slice(open, close < 0 ? tokensSource.length : close);
+    const open = rootOpen;
+    const rootBlock = tokensSource.slice(rootOpen, rootClose);
 
     const consumed = new Set();
     for (const match of tokensSource.matchAll(VAR_PATTERN)) consumed.add(match[1]);

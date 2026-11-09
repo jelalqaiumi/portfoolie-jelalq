@@ -2,7 +2,7 @@
  * kommer från <Section> respektive global.css - modulen får ALDRIG sätta
  * padding-inline (ARKITEKTUR.md, "Var sidmarginalen bor").
  *
- * Sektionen ligger på sidans mörka bakgrund, som hela sidan.
+ * Sektionens yta och färger kommer från Section (ARKITEKTUR.md, M23).
  *
  * Modulen är avsiktligt kort. Sektionen är en rubrik och några stycken text;
  * behöver den mer än detta är det inte längre den lilla sektion Jelal bad om. */

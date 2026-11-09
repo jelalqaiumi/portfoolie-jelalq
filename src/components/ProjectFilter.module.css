@@ -44,7 +44,7 @@
 }
 
 .segment[aria-pressed='true'] {
-  background-color: var(--accent);
+  background-color: var(--accent-fill);
   border-color: var(--accent);
   color: var(--ink-inverse);
 }

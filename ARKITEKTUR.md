@@ -1,7 +1,8 @@
 # Arkitektur
 
 Gäller projektet **Portfolio för Jelal Qaiumi** (React + Vite, ren CSS, mörk bas
-med orange som enda accentfärg).
+med orange som enda accentfärg). **Tillägg 2026-11-08, se M23:** Projekt och Om mig
+är ljusa sektioner på loggans botten `#f6f4f0`.
 
 Underlag: `BRIEF.md`, `PLAN.md`, `UPPDRAG-2026-10-07.md`, ~~`assets-source/logo.png`~~
 (**UPPHÄVT 2026-11-07, se M20:** loggans källa är `assets-source/jq-logo-light.png`)
@@ -89,7 +90,7 @@ fynd.
 | "lugn in-animation" som beställd | ingen animation, uppdragets egen regel | "A11 — Ingen animation införs" |
 | `--color-text-dim` | `--color-text-muted`; tokenet är borttaget | "A8 — Footerns kontrast" |
 | "Footer, metadata, ej ifyllda pills" (tokenets användning) | ↑ | ↑ |
-| uppräkningen av fem tokens i `.surface-light` (i `Projects.jsx`/`Skills.jsx`) | konsekvensen, utan lista | "A9 — Kommentarer som räknar upp tokens" |
+| uppräkningen av fem tokens i `.surface-light` (i `Projects.jsx`/`Skills.jsx`) | konsekvensen, utan lista. **Tillägg 2026-11-08, M23:** samma regel gäller blocket `[data-surface='light']`. Uppräkningen av vad det binder om står bara i blocket | "A9 — Kommentarer som räknar upp tokens", M23 punkt 9 |
 | de 18 gamla gruppubrikerna, t.ex. `React Native — komponenter och API:er`, `Säker webbutveckling`, `Kodkvalitet och arkitektur` | de nio grupperna i "Kompetenssektionen görs om från grunden" | A1 + A6 |
 | `exakt tre linjer` / `de tre linjerna` (om sektionsavgränsarna) | en linje per par av renderade `section[id]`; antalet skrivs inte i prosa | "Sektionsavgränsare" |
 | `ca 12,2:1` / `ca 5,6:1` (hero:s textkvoter som överslag) | uppmätt **12,226:1** och **5,567:1** mot `--color-bg-top` | "A5 — Knappstilarna" |
@@ -109,14 +110,14 @@ fynd.
 | `Antalskontrollen 93` / `93 handskrivna poster` / `93 rader` (som antal i prosa) | inget antal grindas och inget antal står i prosa | A1 + A17 |
 | `filled: true` (som värde på en post i `skills.js`) | fältet är borttaget; inga sammanslagningar, alltså inga `MERGED`-mål | A1 + A2 |
 | `292` / `267` / `56 gamla poster` / `50 filled: false` (antal ur den gamla listan) | nio grupper och 53 namn, inget antal grindas | A1 + A6 |
-| `#D9D9DE` (som ljusa ytans ram eller som avgränsarlinje) | ~~`#CFCFD4` — **1,413:1** mot `#F4F4F6`~~ — **även ersättningen är upphävd 2026-11-07:** ingen ljus yta finns | M2 (raden skrevs när "De dämpade pillarna" gällde) |
+| `#D9D9DE` (som ljusa ytans ram eller som avgränsarlinje) | ~~`#CFCFD4` — **1,413:1** mot `#F4F4F6`~~ — ~~**även ersättningen är upphävd 2026-11-07:** ingen ljus yta finns~~ **UPPHÄVT 2026-11-08, se M23:** en ljus yta finns igen. Dess linje är `--line` `#e2ded7` och dess kontrollram `--line-strong` `#7a756f`. Varken `#D9D9DE`, `#CFCFD4` eller `#F4F4F6` används | M2, M23 punkt 2 (raden skrevs när "De dämpade pillarna" gällde) |
 | "de dämpade pillarnas ram" / "de ifyllda pillarna" som **motivering** för ett tokenvärde | konsumenten är kortets och chipsets ram (A6) | ↑ |
 | **Tillagt 2026-11-07, moderniseringen:** | | |
 | `Didact Gothic` / `didact-gothic-latin-400.woff2` | Urbanist, Manrope, JetBrains Mono | "M1 — Typsnitten" |
 | "en enda vikt" / `font-weight: inherit` (på rubriker) / "sätts aldrig till något annat än 400" | `--weight-regular` / `--weight-semibold` / `--weight-bold` | M1 + M5 |
 | `--font-sans` | `--font-body` (och `--font-heading`, `--font-mono`) | M1 + M5 |
 | "Systemfont-stack, ingen webbfont" | självhostade woff2 | M1 |
-| `surface-light` / `.surface-light` / `className="surface-light"` | klassen finns inte | "M2 — `.surface-light` tas bort helt" |
+| `surface-light` / `.surface-light` / `className="surface-light"` | ~~klassen finns inte~~ **"Gäller i stället" UPPHÄVT 2026-11-08, se M23:** strängen förblir förbjuden, men en ljus yta finns: attributet `data-surface="light"` satt av `Section`, och blocket `[data-surface='light']` i `tokens.css` | ~~"M2 — `.surface-light` tas bort helt"~~ M2 + M23 punkt 1 |
 | varje `--color-`-namn: `--color-bg`, `--color-surface`, `--color-bg-top`, `--color-header-border`, `--color-border`, `--color-field-border`, `--color-text`, `--color-text-muted`, `--color-accent`, `--color-accent-hover`, `--color-on-accent`, `--color-overlay-grey`, `--color-focus`, `--color-error`, `--color-media-*` | översättningstabellen | "M5 — Tokens" |
 | `--transition` / `150ms ease` | `var(--duration-fast) var(--ease-out)` | M5 |
 | `--tracking-wide` | utgår, ingen konsument | M5 |
@@ -186,6 +187,13 @@ fynd.
 | "Den här sidan behöver JavaScript för att visas" / "helt klientrenderad" / "blir blank utan JavaScript" | sidan förrenderas vid bygget och syns utan JavaScript. `<noscript>` har texten i M21 punkt 5 | M21 punkt 5 |
 | "anropar den före `createRoot`" / "före `createRoot(...).render`" (om `enableReveal`) | före `hydrateRoot` i bygget och före `createRoot` i dev | M21 punkt 5 |
 | "varje fil i `dist/` har en referens" utan undantag | ett undantag: `robots.txt` | M21 punkt 4 |
+| **Tillagt 2026-11-08, M23 (ljusa sektioner):** | | |
+| "mörk rakt igenom" / "Sidan har ingen ljus yta" / "ingen ombindning av färgtokens" som gällande | Projekt och Om mig är ljusa, via `data-surface="light"` | M23 |
+| `rgba(20, 20, 20, .62)` (pillens bakgrund) | `rgba(20, 20, 20, .9)`. Reservregeln `.94` är oförändrad | M23 punkt 3 |
+| `.segment[aria-pressed='true']` med `background-color: var(--accent)` | `background-color: var(--accent-fill); border-color: var(--accent);` | M23 punkt 3 |
+| `function Section({ id, title, children, className })` som gällande signatur | `function Section({ id, title, children, className, surface })` | M23 punkt 1 |
+| `className` / global klass som bärare av den ljusa ytan | attributet `data-surface`, ingen klass | M23 punkt 1 |
+| `#ff6b00` som text, länk eller fokusring på ljus botten | `--accent` binds om till `#b84a00`. `#ff6b00` bara som yta, `--accent-fill` | M23 punkt 2 |
 
 Jag skriver in nya rader här varje gång jag upphäver något. Raderna tas aldrig
 bort — en tom tabell går inte att skilja från en obevakad.
@@ -242,7 +250,7 @@ krockar gäller M-avsnittet, och motsägelsen lämnas tillbaka hit.
 | # | Beslut i en mening | Genomförs i | Upphäver (märkt på sin plats) |
 |---|--------------------|-------------|-------------------------------|
 | M1 | Tre självhostade woff2 (Urbanist, Manrope, JetBrains Mono), latin, och teckengrinden mäter varje familj mot de fält som renderas i den. Textstilarna i `type.module.css` sätts i JSX, aldrig med `composes` (efter P5) | P2, P5 | "Typsnittet — Didact Gothic, en enda vikt" med 1–5, Teknikval-raden "Systemfont-stack" |
-| M2 | `.surface-light` tas bort helt | P2 | "Ljus yta — Kompetenser får vit bakgrund" med alla underavsnitt |
+| M2 | `.surface-light` tas bort helt. **Premissen "mörk rakt igenom" UPPHÄVD 2026-11-08, se M23:** klassen förblir borta, men ljusa sektioner finns igen | P2 | "Ljus yta — Kompetenser får vit bakgrund" med alla underavsnitt |
 | M3 | Projektdatan byter till uppdragets fältnamn, `logo` utgår, en länkregel i `src/lib/projectRules.js` | P6 | "`src/data/projects.js` — projekt" |
 | M4 | Projektbilden blir 4:3, vänsterförankrad beskärning, bredderna 600 och 1200, `loading="lazy"`; kortets deklarationer | P6 (bild), P7 (kort) | "Projektkortens bredd — läget med ETT projekt" med underavsnitt |
 | M5 | Uppdragets tokennamn ersätter `--color-*` rakt av, översättningstabell, och tokengrinden gäller varje custom property | P2 | "Färger", "A8", "Typografi", "Layout, radier och övrigt", "Accentfärg — mätning" |
@@ -263,6 +271,7 @@ krockar gäller M-avsnittet, och motsägelsen lämnas tillbaka hit.
 | M20 | **Ny logga (Jelal 2026-11-07, "Kör på B"):** hela loggan (JQ-rutan plus ordmärket i `--ink`, genomskinlig botten) i naven och footern, 34 px hög, `alt="Jelal Qaiumi"` i headerns länk utan dold text. JQ-rutan ensam, opak och utan luft, är favicon och apple-touch-icon. Källan är `assets-source/jq-logo-light.png`. Dessutom formulärtexterna efter Jelals beslut 7 | **P14c** (efter P14b, före P15) | "Headerns logotyp" med alla underavsnitt, M10c:s ikondel och ikongrind (rad 14), M16:s footermärke, M19 punkt 12:s rader om loggan, mappstrukturens loggrader, "Källbilder bor utanför `public/`" (loggraden), "Vad som INTE görs i bildskriptet" (loggstycket), Öppen punkt 5 (accentfärgen) |
 | M22 | **Rättningar efter G2 (2026-11-08):** grinden 5c lyssnar på `Runtime.exceptionThrown` och på produktionsnumren; M20:s breddgrind jämför mot den laddade filen; honeypoten läses ur DOM och stoppar inskicket tyst; `.gitattributes` låser `robots.txt` till LF; bygget jämför heros preload med `HERO_IMAGE_WIDTHS`; brytpunktslistan anger avsikt, inte moduler | **G2-rättning** | M21 5c, M21 punkt 5:s riskmening, M20 punkt 3:s uträkning och grind 7, M20-tabellens rad 3, "Skräppostskydd: honeypot" (premissen), M10c:s kommentar i `profile.js`, "Brytpunkter" (raderna sm och md) |
 | M21 | **Prestanda före G2 (2026-11-08):** fem Lighthouse-körningar per läge; hCaptcha laddas först när formuläret närmar sig vyn eller får fokus; projektbildens `sizes` rättas; `meta description` (förslag) och `robots.txt`; sidan förrenderas vid bygget med `react-dom/server` och hydreras | **P15-fix** (efter P15 del A, före resten av P15) | M17:s antal körningar, "Tre noteringar från granskningen" punkt 1 (`<noscript>`-texten), M12:s och M12b punkt 3:s "före `createRoot`", Teknikval-raden React (skälet "ingen SSR"), mappstrukturens rader för `index.html`, `package.json`, `public/` och `main.jsx`, "Leveransens storlek" (undantaget `robots.txt`) |
+| M23 | **Ljusa sektioner efter loggan (Jelals beslut 9, 2026-11-08):** Projekt och Om mig får `data-surface="light"` via `Section`, och ett block efter `:root` binder om färgtokens och målar botten `#f6f4f0` och texten `#141414`. Accenten för text, länk och ring blir `#b84a00`, och `--accent-fill` `#ff6b00` bär orange yta under mörk text. Pillen blir `.9`. Ingen synlig linje vid ytbyte. `validate-tokens.mjs` grindar att varje ombundet namn finns i `:root` | **P18** (a tokens och mekanism, b projekt, c Om mig, d mätning) | M2:s premiss och avgränsarföljd, tabellraderna om `surface-light` och `#D9D9DE`, M6:s pillbakgrund, M11:s valda segment, M13:s och komponenttabellernas `Section`-signatur, "Sektionsavgränsare" (linjen vid ytbyte), den öppna punkten om den ljusa ytans placering, M2-raden i beslutsloggen för P1 |
 
 **Efter G1 (2026-11-07):** besluten R1–R6 står i "Besluten efter G1", sist i
 M-avsnittet, och genomförs i paketet G1-rättningen. De rättar A4, M3, M4, M5,
@@ -551,9 +560,18 @@ de tre familjerna, att `document.fonts` har en post med den familjen och
 `status === 'loaded'`. Dessutom första namnet i den beräknade `font-family` på
 `h1`, på ett stycke brödtext och på ett mono-element.
 
-### M2 — `.surface-light` tas bort helt (P2)
+### M2 — `.surface-light` tas bort helt (P2) — premissen "mörk rakt igenom" och följden för avgränsarna UPPHÄVDA 2026-11-08, se M23
 
-Den nya designen är mörk rakt igenom. **Klassen, ombindningsblocket i
+> **UPPHÄVT 2026-11-08, se M23 (Jelals beslut 9):** sidan har ljusa sektioner igen,
+> Projekt och Om mig. Mekanismen är attributet `data-surface="light"` och ett
+> ombindningsblock direkt efter `:root`, inte klassen. **Det som fortfarande
+> gäller ur M2:** klassen `.surface-light` finns inte och kommer inte tillbaka, och
+> `grep -rn "surface-light" src scripts` ger noll. Punkten om avgränsarna nedan
+> gäller bara mellan två mörka sektioner (M23 punkt 5). Meningen "Den nya designen
+> är mörk rakt igenom" och raden om `validate-tokens.mjs` är historik: skriptet
+> räknar i dag bara `:root` som deklarerat och grindar ombindningen (M23 punkt 1).
+
+~~Den nya designen är mörk rakt igenom.~~ **Klassen, ombindningsblocket i
 `tokens.css` och `className="surface-light"` i `Projects.jsx` tas bort i P2.**
 Ingenting behålls "för framtiden".
 
@@ -1029,8 +1047,10 @@ deklarationer står exakt som i `UPPDRAG-2026-11-07.md`. Resten är mina.
 --ink-subtle: #8d8780;
 --ink-inverse: #141414;
 --accent: #ff6b00;
+--accent-fill: #ff6b00;                   /* ← P18b, med ProjectFilter.module.css (M23). Binds aldrig om */
 --accent-hover: #ff8a3d;
 --positive: #5dbb7e;
+/* + blocket [data-surface='light'] direkt efter :root, tecken för tecken i M23 punkt 2 (P18a) */
 --error: #f85149;
 --overlay-grey: rgba(32, 32, 36, 0.45);  /* UPPHÄVT 2026-11-07, M10c: tas bort i P5 omgång 4, konsumenten (tonplattan) utgår */
 /* + de fem temporära --media-*-tokens nedan, med dagens värden oförändrade. Tas bort i P7 */
@@ -1179,7 +1199,9 @@ mot `--accent` ca 6,45. `--accent` som text mot `--bg` ca 6,67. `--error` mot
 - **Regeln:** varje namn som matchar `(?<![\w-])--[a-z][a-z0-9]*(?:-[a-z0-9]+)*`
   i `src/**/*.{css,jsx,js}` och `scripts/*.mjs` ska vara **deklarerat** i
   `tokens.css` (`--namn:` utanför kommentarer). Kommentarer räknas som
-  förekomster, som i dag.
+  förekomster, som i dag. **Skärpt 2026-11-08, se M23 punkt 1 (P18a):**
+  deklarerat betyder deklarerat i `:root`, och varje `--namn:` utanför `:root`
+  (ombindningen) ska också finnas i `:root`, med ett eget meddelande.
 - **`src/data/` genomsöks inte.** Det är Jelals filer, och ingen text han skriver
   ska kunna fälla en tokengrind. Datafilerna refererar inga tokens.
 - **`tokens.css` själv:** kommentarerna är fortfarande undantagna, men varje
@@ -1257,7 +1279,7 @@ Ingen av dem står som tal någon annanstans.
   padding: 8px 8px 8px 24px;
   border: 1px solid var(--line);
   border-radius: var(--radius-pill);
-  background-color: rgba(20, 20, 20, .62);
+  background-color: rgba(20, 20, 20, .62); /* UPPHÄVT 2026-11-08, se M23 punkt 3: rgba(20, 20, 20, .9), i P18b */
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   pointer-events: auto;
@@ -2605,6 +2627,8 @@ för tecken:**
   white-space: nowrap;
 }
 
+/* UPPHÄVT 2026-11-08, se M23 punkt 3: ytan är var(--accent-fill) och ramen
+   var(--accent), i P18b. Deklarationen nedan är historik. */
 .segment[aria-pressed='true'] {
   background-color: var(--accent);
   border-color: var(--accent);
@@ -3060,7 +3084,8 @@ Står i "Beslutslogg — M12b, fynden från P10, 2026-11-07" sist i beslutslogge
 - `src/lib/sectionLabel.js`:
   `export function sectionIndexLabel(sections, id)` → `'01 / 04'`, eller `null` om
   `id` inte finns. Siffrorna fylls ut till två tecken.
-- `Section.jsx` behåller signaturen `function Section({ id, title, children, className })`.
+- `Section.jsx` behåller signaturen ~~`function Section({ id, title, children, className })`~~
+  (**signaturen UPPHÄVD 2026-11-08, se M23 punkt 1:** `function Section({ id, title, children, className, surface })`, i P18a. Etiketten nedan gäller).
   Ovanför `h2` renderas `<p className={styles.label} aria-hidden="true">{indexLabel} · {title}</p>`,
   där `className` är `` `${typeStyles.meta} ${styles.label}` `` (M1, "Hur stilen
   når elementet"). Versalerna kommer från CSS.
@@ -3394,7 +3419,7 @@ märkta där.
 | `src/components/MobileMenu.jsx` | `function MobileMenu({ id, open, onClose, links, currentId, cta, triggerRef })` | P4 | Panelen i M8. `links` är `{ id, label }[]`, `cta` är `{ href, text }` eller `null` |
 | `src/components/MenuIcon.jsx`, `CloseIcon.jsx`, `SearchIcon.jsx` | `function MenuIcon()` etc. | P4, P9 | M9 |
 | `src/components/Hero.jsx` | `function Hero()` | P5, P5 omgång 4, P5 omgång 5 | M10, M10b. Bakgrundsbilden och profilbilden enligt M10c, bilden överst på mobil enligt M10d |
-| `src/components/Section.jsx` | `function Section({ id, title, children, className })` | P11 | Etiketten i M13 och `Reveal` runt rubriken (P10) |
+| `src/components/Section.jsx` | ~~`function Section({ id, title, children, className })`~~ **UPPHÄVT 2026-11-08, se M23 punkt 1:** `function Section({ id, title, children, className, surface })` och `export const SURFACE_LIGHT = 'light'` | P11, **P18a** | Etiketten i M13 och `Reveal` runt rubriken (P10). `surface` sätter `data-surface` på roten (M23) |
 | `src/components/Projects.jsx` | `function Projects()` | P7–P10, P9b | Filtrets state, live-raden (räknar `displayed`, M12b punkt 4), rutnätet, tomma lägen, faserna i M12 med villkoret i M12b punkt 5 (`pending`-ref, `sameSlugs`). Äger `allSegmentRef` och fokus efter "Rensa filter" (M11b punkt 11, P9b) |
 | `src/components/ProjectFilter.jsx` | `function ProjectFilter({ counts, total, techOptions, filter, onChange })` i P8–P9. **`allRef` läggs till i P9b**, som `function ProjectFilter({ counts, total, techOptions, filter, onChange, allRef })`, när fokusflytten (M11b punkt 11) är dess första konsument | P8, P9, P9b | M11, M11b |
 | `src/components/ProjectCard.jsx` | `function ProjectCard({ project })` i P7. **`index` läggs till i P10**, som `function ProjectCard({ project, index })`, när `Reveal` (M12) är dess första konsument (rättat 2026-11-07, R1) | P7, P10 | M4. `isComplete` finns inte längre här. Kortets id hämtas ur `cardIds(slug)` från G1-rättningen (R2) |
@@ -5000,6 +5025,442 @@ samma fil samtidigt.
    "en rättad grind står orättad").
 9. Varje beslut i M22 besvaras i överlämningen med `fil:rad` (LARDOMAR 2026-10-05).
 
+### M23 — ljusa sektioner efter loggan (Jelals beslut 9, 2026-11-08, genomförs i P18)
+
+**Underlag:** `UPPDRAG-2026-11-07.md`, beslut 9, som är bindande: ljusa sektioner
+växlar med mörka. Nav och hero förblir mörka. **Projekt** och **Om mig** får
+loggans varma ljusa botten `#f6f4f0` (uppmätt i `assets-source/jq-logo-light.png`)
+och mörk text `#141414`. Kompetenser, kontakt och footer förblir mörka. Sidans
+ordning är hero, projekt, kompetenser, om mig, kontakt, alltså mörk, ljus, mörk,
+ljus, mörk.
+
+**Detta avsnitt upphäver**, märkt på sin plats: M2 (premissen "mörk rakt igenom"
+och följden för sektionsavgränsarna), raderna om `surface-light` och `#D9D9DE` i
+tabellen över förbjudna strängar, M-översiktens rad M2, M6:s deklaration av
+pillens bakgrund, M11:s deklaration av `.segment[aria-pressed='true']`, M13:s och
+komponenttabellernas signatur för `Section`, "Sektionsavgränsare" (linjen vid
+ytbyte), den öppna punkten om den ljusa ytans placering och M2:s rad i
+beslutsloggen för P1. Den gamla `.surface-light` blir **inte** tillbaka: namnet
+förblir förbjudet, och mekanismen nedan är en annan.
+
+~~**Alla kvoter nedan är räknade** med WCAG 2.x relativ luminans ur hexvärdena,
+inte mätta i webbläsaren. P18d mäter dem i den renderade sidan (punkt 8), och en
+avvikelse större än 0,01 är ett fynd mot detta avsnitt.~~ **RÄTTAT 2026-11-08:**
+kvoterna nedan räknades först ur hexvärdena och är nu **uppmätta** i den renderade
+sidan (beräknad förgrund mot beräknad botten, WCAG 2.x), vid 1280 och 360 px.
+Varje avvikelse mot talen i punkt 2 och 3 var under 0,01, så talen står kvar som de
+är och gäller som mätvärden. Mätningen: `#projects` i P18b,
+`scratchpad\p18b\k-normal-1280.json` och `k-normal-360.json` (till exempel `h2`
+16,771 och sektionsetiketten 4,941 mot `rgb(246, 244, 240)`), och `#about` i P18c,
+`scratchpad\p18c\result.json` (stycket 7,037, `h2` och nyckeltalen 16,77,
+etiketterna 4,94). Scratchpad är sessionens:
+`C:\Users\qaium\AppData\Local\Temp\claude\C--Users-qaium-source-repos-Portfoolie-Jelalq\2976d642-d53a-4f4f-b63b-0cbef3977385\scratchpad`.
+En senare avvikelse större än 0,01 är fortfarande ett fynd mot detta avsnitt.
+
+#### Punkt 1 — mekanismen: attributet `data-surface="light"` på sektionen, satt av `Section`
+
+| Fråga | Beslut |
+|-------|--------|
+| Klass eller attribut | **Attributet `data-surface="light"`.** En global klass hade blivit en fjärde global klass, och M12 stängde dörren efter `.reveal`. En modulklass går inte att nå från `tokens.css` |
+| Namnet | `data-surface`, värdet `light`. `surface-light` förblir en förbjuden sträng (tabellen är rättad, se raden). Inget annat värde finns. Standardytan har inget attribut alls |
+| Var tokens binds om | I `src/styles/tokens.css`, i ett block **direkt efter** `:root`. Blocket målar också sektionens botten och text (se nedan) |
+| Var attributet sätts | **Av `Section`, via en ny prop `surface`.** `Projects.jsx` och `About.jsx` skickar `surface={SURFACE_LIGHT}`. Inte ur `sections.js`: det är Jelals fil, ett fält där hade krävt nya grindar i `validate-data.mjs`, och ytan är ett designbeslut, inte innehåll. Inte som `className`: en modulklass når inte tokens |
+| Ordningen ändras | Ytan följer sektionen, inte platsen. Flyttar Jelal sektionerna kan två ljusa hamna intill varandra. Det är godtaget, och då står linjen kvar mellan dem i den ljusa `--line` |
+
+**`src/components/Section.jsx`, signaturen och attributet:**
+
+```jsx
+/* Det enda värdet utöver standardytan. Beslutat i ARKITEKTUR.md: M23. */
+export const SURFACE_LIGHT = 'light';
+
+function Section({ id, title, children, className, surface })
+```
+
+Roten renderas som
+`<section id={id} className={className} data-surface={surface === SURFACE_LIGHT ? SURFACE_LIGHT : undefined}>`.
+Ett annat värde på `surface` ger inget attribut, alltså den mörka ytan. Resten av
+komponenten är oförändrad. `Reveal.jsx` har redan en namngiven export bredvid
+komponenten, så mönstret finns och lintet är grönt med det.
+
+**`src/components/Projects.jsx` och `src/components/About.jsx`:** importen blir
+`import Section, { SURFACE_LIGHT } from './Section.jsx';`, och `<Section …>` får
+`surface={SURFACE_LIGHT}` sist bland sina props. Inget annat ändras i JSX.
+
+**Blocket måste måla, inte bara binda om.** `body` sätter `color: var(--ink)`, och
+ett färdigt beräknat `color` ärvs som värde, inte som variabel. Utan
+`background-color` och `color` i blocket står `h2`, kortets `h3` och nyckeltalen
+kvar i den ljusa mörka-läges-texten på ljus botten. Samma lärdom som den gamla
+klassen fick lära sig ("Mekanismen", historik).
+
+**Invariant:** inget token i `:root` får definieras med `var()` på ett färgtoken som
+binds om. Ett sådant värde räknas ut i `:root` och följer inte med in i sektionen.
+I dag finns inget, och P18a bekräftar det med
+`grep -n "var(--\(bg\|surface\|line\|ink\|accent\|positive\|shadow\)" src/styles/tokens.css`,
+som bara får träffa blocket nedan.
+
+**`validate-tokens.mjs` tål ombindningen och fäller ett felstavat ombundet namn.**
+Före P18a räknades varje `--namn:` i hela `tokens.css` som deklarerat, så ett
+`--ink-mutted:` i blocket hade gått igenom tyst och aldrig larmat. Ändringen, som
+P18a har genomfört (**RÄTTAT 2026-11-08**, tidigare "i dag"):
+
+1. **Deklarerat** betyder deklarerat **i `:root`**. Mängden `declared` byggs bara ur
+   `:root`-blocket (samma utsnitt som M5h redan använder). OK-radens antal är
+   oförändrat, eftersom varje ombundet namn också finns i `:root`.
+2. **Ny grind:** varje `--namn:` i `tokens.css` utanför `:root` och utanför
+   kommentarer ska finnas i `declared`. Meddelandet, tecken för tecken:
+   `validate-tokens.mjs: ombindningen gäller ett token som inte finns i :root ("--x" i src/styles/tokens.css:<rad>)`.
+   En rad per namn och rad.
+3. Kontrollen av `var()` i `tokens.css` och M5h är oförändrade. `var(--bg)` och
+   `var(--ink)` i blocket pekar på deklarerade namn.
+4. Huvudkommentaren i skriptet får ett stycke om den nya halvan, utan tokennamn
+   (skriptet genomsöker sig självt), med raden "VILKEN LEGITIM ÄNDRING FÅR FÄLLA
+   DEN? Ingen. Ett namn som binds om utan att finnas i :root är ett felstavat eller
+   borttaget token, och åtgärden är att rätta namnet."
+
+**Prövas i P18a, i denna ordning:** (a) rätt block: tyst, OK-raden. (b)
+`--ink-mutted: #57524c;` tillagt i blocket: **exakt en** rad, den nya, med rätt
+radnummer. (c) borttaget: tyst. (d) `--x-test: 0;` **bara** i blocket och
+`width: var(--x-test);` i `Section.module.css`: två rader, den nya grinden och
+"tokenet finns inte i tokens.css". Det visar att `declared` är `:root` ensam. (e)
+borttaget: tyst. Utskriften av (b) och (d) sparas i scratchpad under `p18\`.
+
+#### Punkt 2 — den ljusa paletten, tecken för tecken
+
+**`src/styles/tokens.css`, direkt efter `:root`:**
+
+```css
+/* Ljus sektion, loggans varma botten. Section sätter attributet, och blocket
+ * binder om ärvda färgtokens för allt inuti sektionen. Det målar också
+ * sektionens botten och text, eftersom en färg som body redan räknat ut ärvs
+ * som färdigt värde och inte följer en ombindning. Varje namn här ska finnas i
+ * :root, och validate-tokens.mjs fäller ett som inte gör det. Tokens som inte
+ * binds om har samma värde som i :root. Beslutat i ARKITEKTUR.md: M23. */
+[data-surface='light'] {
+  --bg: #f6f4f0;
+  /* Kort och paneler ligger ljusare än botten. */
+  --surface: #ffffff;
+  --surface-2: #ebe8e2;
+
+  /* Dekorativ linje. Duger inte som avgränsning av en gränssnittskomponent. */
+  /* --line mot --bg: 1,221:1 och mot --surface: 1,341:1 — dekorativ */
+  --line: #e2ded7;
+
+  /* --line-strong binds inte om. Mot --bg här: 4,154:1 — 1.4.11 uppfyllt */
+  /* --line-strong mot --surface här: 4,564:1 — 1.4.11 uppfyllt */
+
+  /* --ink mot --bg: 16,771:1 — AA normal */
+  /* --ink mot --surface: 18,423:1 — AA normal */
+  /* --ink mot --surface-2: 15,066:1 — AA normal */
+  --ink: #141414;
+
+  /* --ink-muted mot --bg: 7,037:1 — AA normal */
+  /* --ink-muted mot --surface: 7,730:1 — AA normal */
+  --ink-muted: #57524c;
+
+  /* --ink-subtle mot --bg: 4,941:1 — AA normal */
+  /* --ink-subtle mot --surface: 5,428:1 — AA normal */
+  --ink-subtle: #6f6961;
+
+  /* Orange som text, linje och fokusring. Aldrig som yta under mörk text:
+   * en sådan yta använder --accent-fill, som inte binds om. */
+  /* --accent mot --bg: 4,758:1 — AA normal */
+  /* --accent mot --surface: 5,227:1 — AA normal */
+  --accent: #b84a00;
+
+  /* Hover rör sig bort från underlaget: på ljus botten mörknar den. */
+  /* --accent-hover mot --bg: 6,285:1 — AA normal */
+  /* --accent-hover mot --surface: 6,904:1 — AA normal */
+  --accent-hover: #9a3d00;
+
+  /* --positive mot --surface: 4,305:1 — 1.4.11 uppfyllt */
+  --positive: #2f8a52;
+
+  /* Samma lyft som på mörk botten, med en skugga som syns på ljus. */
+  --shadow-lift: 0 24px 60px rgba(20, 20, 20, .16);
+
+  background-color: var(--bg);
+  color: var(--ink);
+}
+```
+
+**Nytt i `:root` (P18b, samma steg som konsumenten, M5h), direkt efter `--accent`:**
+
+```css
+  /* Orange YTA under mörk text. Binds aldrig om, så att mörk text på orange
+   * håller sin kvot i varje sektion. */
+  /* --ink-inverse mot --accent-fill: 6,452:1 — AA normal */
+  --accent-fill: #ff6b00;
+```
+
+Värdet är detsamma som `--accent` i `:root`. Det är inget alias i M5:s mening: i en
+ljus sektion är de två olika, och det är skälet till att namnet finns. Konsumenten
+är segmentet i punkt 3. De mörka sektionernas knappar (`Header`, `Hero`,
+`MobileMenu`, `ContactForm`) behåller `--accent` och rörs inte, eftersom ingen av
+dem renderas i en ljus sektion. Det mäts i punkt 8 (K5).
+
+**Kvoterna, och varför varje värde:**
+
+| Token | Ljust värde | Mot `--bg` `#f6f4f0` | Mot `--surface` `#ffffff` | Krav |
+|-------|-------------|----------------------|---------------------------|------|
+| `--ink` | `#141414` | 16,771 | 18,423 | 4,5 |
+| `--ink-muted` | `#57524c` | 7,037 | 7,730 | 4,5 |
+| `--ink-subtle` | `#6f6961` | 4,941 | 5,428 | 4,5 |
+| `--accent` (text, länk, ring) | `#b84a00` | 4,758 | 5,227 | 4,5 text, 3 ring |
+| `--accent-hover` | `#9a3d00` | 6,285 | 6,904 | 4,5 |
+| `--line-strong` (oförändrad `#7a756f`) | — | 4,154 | 4,564 | 3 (1.4.11) |
+| `--line` | `#e2ded7` | 1,221 | 1,341 | dekorativ |
+| `--positive` | `#2f8a52` | 3,919 | 4,305 | 3 (pricken) |
+| `--ink-inverse` på `--accent-fill` | `#141414` på `#ff6b00` | — | — | 6,452, 4,5 |
+
+- **`#ff6b00` mot `#f6f4f0` är 2,599:1** (inte 2,7) och mot `#ffffff` 2,855:1. Det
+  klarar varken text eller 1.4.11. Därför `#b84a00`: kulören 24° mot `#ff6b00`:s
+  25°, alltså samma orange, mörkare. Mörk text på `#b84a00` ger 3,524:1 och
+  faller, och det är skälet till `--accent-fill`.
+- **`--line-strong` binds inte om.** Dagens `#7a756f` ger 4,154:1 mot den ljusa
+  botten, över 3:1 med marginal och nästan samma tyngd som på mörk (4,169:1).
+- **`--ink-inverse`, `--accent-fill` och `--error` binds inte om.** `--ink-inverse`
+  är redan `#141414`. `--error` har ingen konsument i Projekt eller Om mig.
+- **Fokusringen** är `outline: 2px solid var(--accent)` i `global.css` och
+  `a.card:focus-visible` i `ProjectCard.module.css`. Den följer ombindningen:
+  4,758:1 mot botten, 5,227:1 mot panelens och kortets vita yta. Ingen fil ändras
+  för den.
+
+#### Punkt 3 — projektkortet och filtret på ljus botten
+
+**Inga ändringar i `ProjectCard.module.css`, `Chip.module.css` eller
+`Projects.module.css`.** Allt följer ombindningen:
+
+| Del | Resultat på ljus botten |
+|-----|--------------------------|
+| Kortets yta och ram | `--surface` `#ffffff` med `--line` `#e2ded7`, som på mörk: kortet skiljs från botten av ytan och ramen är dekorativ (hela kortet är länken) |
+| Hover | Ramen blir `--line-strong` (4,564:1 mot kortet, 4,154:1 mot botten), lyftet är oförändrat och skuggan är den ljusa `--shadow-lift` |
+| Fokus | Ringen `#b84a00`, 4,758:1 mot botten |
+| Bild och bildyta | Bilden oförändrad. `--surface-2` `#ebe8e2` syns bara om bilden saknas |
+| Logobrickan | Oförändrad: `rgba(255, 255, 255, .92)` med `--ink-inverse`. Den ligger på bilden och är byggd för det |
+| Statusbadgen | Ram `--line-strong`, text `--ink-muted` 7,730:1 mot kortet |
+| Live-pricken | `--positive` `#2f8a52`, 4,305:1 mot kortet. Övriga statusar `--ink-subtle` 5,428:1. Pricken är dekorativ bredvid texten, men den ska synas |
+| Text i kortet | `h3` ärver `--ink` 18,423:1, beskrivningen `--ink-muted` 7,730:1, kategori och taggar `--ink-subtle` 5,428:1 |
+| Filterpanelen | `--surface` med `--line`, som kortet |
+| Segmenten | Text `--ink-muted` 7,730:1, ram `--line-strong` 4,564:1. Inaktiva `--ink-subtle` och `--line` (inaktiva kontroller är undantagna i 1.4.3 och 1.4.11) |
+| Chipsen | Text `--ink-muted` 7,730:1, ram 4,564:1. Valt chip: text och ram `--accent` 5,227:1 |
+| Sökfältet | Botten `--bg` inne i den vita panelen, ram `--line-strong` 4,154:1 mot fältet och 4,564:1 mot panelen, text `--ink` 16,771:1, platshållare `--ink-subtle` 4,941:1, ikon `--ink-muted` 7,037:1 |
+| Live-raden, "Inga projekt matchar filtret.", "Rensa filter" | `--ink-subtle` 4,941:1, `--ink-muted` 7,037:1 respektive `--ink` 16,771:1 med ram `--line-strong` 4,154:1 |
+
+**Enda ändringen: det valda segmentet.** Före P18b var det `--accent` som yta och
+ram (**RÄTTAT 2026-11-08**, tidigare "i dag"). I en ljus sektion hade det blivit `#b84a00` under mörk text, 3,524:1. **`src/components/ProjectFilter.module.css`,
+tecken för tecken:**
+
+```css
+.segment[aria-pressed='true'] {
+  background-color: var(--accent-fill);
+  border-color: var(--accent);
+  color: var(--ink-inverse);
+}
+```
+
+Texten får 6,452:1. Ytan `#ff6b00` mot den vita panelen är 2,855:1, under 3:1, så
+ytan ensam får inte bära läget. Det gör ramen: `#b84a00` mot panelen är 5,227:1.
+På mörk botten är `--accent` och `--accent-fill` samma värde, så segmentet är
+pixelidentiskt där.
+
+**Headern över en ljus sektion.** Pillen var före P18 `rgba(20, 20, 20, .62)` med
+blur (**RÄTTAT 2026-11-08**, tidigare "i dag"). Över vit yta (panelen och korten)
+hade den blivit en mellangrå `rgb(109, 109, 109)`.
+Navtexten hade då fått 4,573:1, den orange understrykningen för aktiv länk och
+fokusringen 1,804:1, och menyknappens ram 1,129:1. Ringen hade fallit på 1.4.11, och
+pillen hade inte längre varit mörk, vilket beslut 9 kräver. **`src/components/Header.module.css`,
+`.pill`, en rad, tecken för tecken:**
+
+```css
+  background-color: rgba(20, 20, 20, .9);
+```
+
+Över vitt blir pillen `rgb(44, 44, 44)` (43,5): navtexten 12,482:1, orange ring och
+understrykning 4,925:1, menyknappens ram 3,081:1. Reservregeln utan blur (`.94`)
+är oförändrad. Över mörk botten blir pillen ett steg mörkare (19,6 mot 18,5 per
+kanal). Inget mått, ingen höjd och ingen annan regel i Header ändras.
+**Mobilmenyns panel** renderas av `Header`, utanför varje `<section>`, och läser
+`:root`. Den är mörk och fast oberoende av sektion, och ingen fil i menyn ändras.
+
+#### Punkt 4 — Om mig
+
+**Inga ändringar i `About.module.css` eller `KeyFigures.module.css`** utom
+kommentaren i punkt 9. Styckena `--ink-muted` 7,037:1, länken `--accent` 4,758:1
+med understrykning, hover `--accent-hover` 6,285:1, fokus 4,758:1. Nyckeltalen
+ärver `--ink` 16,771:1 och etiketterna är `--ink-subtle` 4,941:1.
+
+#### Punkt 5 — övergången mellan sektionerna och etiketten
+
+**Ingen synlig linje där ytan byter.** Färgskiftet är gränsen. Linjen blir
+**genomskinlig**, inte borttagen, så att ingen sektion byter höjd och de mörka
+sektionerna kan jämföras pixel för pixel. **`src/styles/global.css`, direkt efter
+regeln `section[id] + section[id]`, tecken för tecken:**
+
+```css
+/* Där ytan byter mellan två sektioner är färgskiftet gränsen, och linjen görs
+ * genomskinlig. Den behåller sin bredd, så att ingen sektion byter höjd.
+ * Beslutat i ARKITEKTUR.md: M23. */
+section[id]:not([data-surface='light']) + section[id][data-surface='light'],
+section[id][data-surface='light'] + section[id]:not([data-surface='light']) {
+  border-top-color: transparent;
+}
+```
+
+Med dagens ordning byter ytan vid varje gräns, så ingen linje syns. Den översta
+pixelraden i Kompetenser och Kontakt blir sidans `--bg` `#101010` i stället för
+`--line` `#2e2e2e`. Det är den enda tillåtna pixelskillnaden i en mörk sektion
+(punkt 8, P2). Footerns egen `border-top` rörs inte.
+
+**Sektionsetiketten** ("01 / 04 · PROJEKT") är `typeStyles.meta`, alltså
+`--ink-subtle`: 4,941:1 mot den ljusa botten. `h2` ärver `--ink` 16,771:1. Ingen
+ändring.
+
+#### Punkt 6 — reveal, animationer och mobilmenyn
+
+**Bekräftat, ingen ändring.** `.reveal` och filtrets faser ändrar bara `opacity`
+och `transform`, ingen färg. Kortets hover-övergång gäller `transform`,
+`box-shadow` och `border-color` och tar de ombundna värdena. Mobilmenyn: se punkt 3.
+
+#### Punkt 7 — bilderna
+
+**Hero-bilden och projektbilden ändras inte.** Inga filer under `assets-source/`,
+`public/assets/` eller `src/data/` rörs, och `optimize-images.mjs` och
+`optimize-project-images.mjs` körs inte.
+
+#### Punkt 8 — mätningen (P18d)
+
+Färskt bygge, `vite preview`, `netstat`-regeln (LARDOMAR 2026-10-02 och
+2026-10-05), DPR 1. ~~rullningslisten reserverad (`innerWidth - clientWidth` = 15
+utskrivet före varje serie, LARDOMAR 2026-10-08)~~
+
+**RÄTTAT 2026-11-09 (LARDOMAR 2026-11-09):** Villkoret "`innerWidth -
+clientWidth` = 15" gäller inte i P, eftersom P fotograferar med
+`captureBeyondViewport: true`. Den första sådana skärmbilden tar bort
+rullningslisten. Utan uppvärmning ändrar sig layouten mitt i mätningen: varje
+sektion blir 3 px högre vid 1280 (`scratchpad\p18d\neg\dbg.txt`), och P4 larmar
+falskt på den korrekta sidan med `stable=false/false`
+(`scratchpad\p18d\neg\n2-correct-nowarm.log`). Därför gäller detta i P:
+1. Efter injektionerna i P2 tas alltid en första skärmbild innan rektanglarna
+   mäts: `Page.captureScreenshot` med `clip { x: 0, y: 0, width: 10, height: 10,
+   scale: 1 }` och `captureBeyondViewport: true`, följd av 300 ms väntan.
+2. Efter den skärmbilden skrivs `innerWidth - document.documentElement.clientWidth`
+   ut för varje sida och bredd. Förväntat värde är **0**, inte 15.
+3. Reservationen syns i stället i sektionernas bredd: varje rektangel i P3 är
+   **345** px bred vid 360 och **1265** px vid 1280 (`scratchpad\p18d\result.json`).
+   En annan bredd skrivs ut och fäller körningen.
+4. Rektanglarna mäts före och efter fotograferingen. Skiljer de sig
+   (`stable=false`) fälls hela körningen, inte bara jämförelsen.
+
+K-serien fotograferar inte och behåller rullningslisten reserverad
+(`innerWidth - clientWidth` = 15 utskrivet före varje serie, LARDOMAR 2026-10-08).
+Skripten och utdata ligger i
+scratchpad under `p18\`. `sharp` laddas ur projektets `node_modules` med
+`createRequire(<projektrot>/package.json)`. Inget nytt beroende.
+
+**K — kontrast i de två ljusa sektionerna, vid 360 × 640 och 1280 × 800.**
+
+| # | Läge | Villkor |
+|---|------|---------|
+| K1 | Vila. Varje textnod med synlig text i `#projects` och `#about`, också `aria-hidden` | Förgrund = beräknat `color`. Bakgrund = första förfader med en icke genomskinlig `background-color`, sammansatt. Logobrickan sätts samman mot svart (värsta fallet). `GRIND:` varje kvot ≥ 4,5. Lägsta kvot och dess element skrivs ut |
+| K2 | Hover. Pekaren flyttas med `Input.dispatchMouseEvent` till mitten av varje `a.card` och varje länk i `#about`, och väntan är `--duration-base` + 50 ms | `GRIND:` K1 för texten i elementet, och kortets `border-color` mot botten ≥ 3 |
+| K3 | Fokus. Tab genom varje fokuserbart element i `#projects` och `#about`, med riktiga tangenthändelser | `GRIND:` `outline-color` mot förälderns sammansatta botten ≥ 3, och K1 för elementets text |
+| K4 | Aktivt. Ett segment med antal > 0 utöver "Alla" klickat, ett chip klickat, och sökfältet med en sträng som ger noll träffar | `GRIND:` text på segmentet mot `--accent-fill` ≥ 4,5, segmentets och chipsets ram mot panelen ≥ 3, chipsets text ≥ 4,5, "Inga projekt matchar filtret." och "Rensa filter" enligt K1 |
+| K5 | Inga orange ytor under mörk text i en ljus sektion | `GRIND:` inget element i `[data-surface='light']` har beräknad `background-color` `rgb(184, 74, 0)` |
+| K6 | Headern, 1280 och 360, sidan rullad så att pillen ligger över `#projects` | Pillens beräknade bakgrund sätts samman mot vitt (värsta fallet). `GRIND:` navlänkens text ≥ 4,5, `--accent` (understrykning och ring) ≥ 3, menyknappens ram ≥ 3 vid 360 |
+| K7 | Mobilmenyn öppen vid 360, sidan rullad till `#projects` | `GRIND:` panelens `background-color` är `rgb(16, 16, 16)` och länkarnas `color` `rgb(244, 241, 236)` |
+
+Förväntad lägsta textkvot i K1–K4: 4,758 (länken i Om mig mot botten). Förväntad
+lägsta ring- och ramkvot: 4,154 (`--line-strong` mot botten).
+En kvot som avviker mer än 0,01 från tabellen i punkt 2 är ett fynd, även om den
+klarar kravet.
+
+**P — inget läcker: pixeljämförelse mot dagens bygge, vid 360 × 640 och 1280 × 800.**
+
+1. Före-bygget: `git worktree add <scratchpad>\p18\before <commit före P18a>`,
+   `npm ci` och `npm run build` där, `vite preview` på 4361. Efter-bygget på 4362.
+2. I båda: `Emulation.setEmulatedMedia` med `prefers-reduced-motion: reduce` (alla
+   `.reveal` synliga), `Network.setBlockedURLs` för `*hcaptcha.com*` (widgeten
+   renderas likadant i båda, och denna körning mäter inga konsolfel),
+   `header { visibility: hidden !important; }` injicerat (pillen ändras med avsikt
+   i punkt 3 och är ingen sektion), `document.fonts.ready` och varje `img.complete`.
+3. **RÄTTAT 2026-11-09:** Först uppvärmningsskärmbilden (10 × 10 px,
+   `captureBeyondViewport: true`) och utskriften av rullningslistens bredd (0),
+   enligt rättelsen överst i punkt 8. Därefter mäts rektanglarna.
+   `GRIND:` `document.documentElement.scrollHeight` och rektangeln för `#hero`,
+   `#skills`, `#contact` och `footer` är lika före och efter, ± 0, och bredden är
+   345 vid 360 och 1265 vid 1280.
+4. Varje rektangel tas med `Page.captureScreenshot` (`clip` i dokumentkoordinater,
+   `scale: 1`, `captureBeyondViewport: true`) och jämförs pixel för pixel.
+   **RÄTTAT 2026-11-09:** Rektanglarna mäts om efter fotograferingen. `GRIND:`
+   `stable=true` för båda sidorna. `stable=false` fäller körningen.
+   Byggaren redovisar varje avvikelse från denna metod i överlämningen med
+   `fil:rad` i skriptet.
+   `GRIND:` `#hero` och `footer` har 0 skilda pixlar. `#skills` och `#contact` har
+   0 skilda pixlar från rad 1 och nedåt, och rad 0 är `rgb(46, 46, 46)` före och
+   `rgb(16, 16, 16)` efter i hela bredden (punkt 5).
+
+**L — Lighthouse:** M21 punkt 0, kategorin tillgänglighet, mobil och dator, fem
+körningar per läge. `GRIND:` alla tio är 100.
+
+**S — beslut 7:** M19:s grind 5 (`document.title`, `document.body.innerText` och
+`noscript`), vid 360 och 1280. `GRIND:` inget `-`, `–` eller `—`. P18 lägger inte
+till någon synlig text.
+
+**D — dokument och kommentarer:** `grep -rn "surface-light" src scripts index.html`
+ger 0. Tabellen över förbjudna strängar körs mot `src`, `scripts` och `index.html`.
+Kommentarsgrepen ur LARDOMAR 2026-11-08 ("sex kommentarer") körs mot varje ändrad
+fil, plus `grep -n "mörk\|ljus\|ingen ombindning" <ändrade filer>`, och varje träff
+läses med hela sitt kommentarsblock och redovisas med `fil:rad`.
+`git diff --stat <commit före P18a> -- assets-source public src/data` är tomt.
+
+**Negativa kontroller.** Varje kontroll redovisar att den larmade, vilket element
+som bar larmet, och att larmet upphörde när injektionen togs bort (LARDOMAR
+2026-10-05).
+
+| # | Injektion | Förväntat larm |
+|---|-----------|----------------|
+| N1 | `[data-surface='light'] { --ink-subtle: #8d8780; }` i efter-sidan | K1 fäller etiketten över Projekt, live-raden och nyckeltalens etiketter, ca 3,235:1 |
+| N2 | `document.getElementById('skills').setAttribute('data-surface', 'light')` i efter-sidan | P4 fäller `#skills` med fler än 0 skilda pixlar |
+| N3 | Pillens bakgrund satt tillbaka till `rgba(20, 20, 20, .62)` på elementet (`header [class*="pill"]`, träffmängden 1 utskriven) | K6 fäller ringen och understrykningen, 1,804:1 |
+| N4 | En kopia av `dist/` där regeln för valt segment i den byggda CSS-filen har `background-color: var(--accent)` | K4 fäller segmentets text (3,524:1), och K5 fäller segmentet |
+| N5 | En kopia av `dist/` med samma ändring som N1 | L ger under 100 på mobil, med `color-contrast` som orsak |
+| N6 | En textnod `a-b` tillagd i `#about` | S fäller den, med elementet utskrivet |
+
+Tokengrindens negativa kontroller står i punkt 1 och körs i P18a.
+
+#### Punkt 9 — kommentarer som blir falska
+
+Rättas i samma steg som filen ändras, till invarianten och utan uppräkning
+(LARDOMAR 2026-10-08 och 2026-11-08):
+
+| Fil | Stycke | Blir |
+|-----|--------|------|
+| `src/styles/tokens.css:24-25` | "Sidan har ingen ljus yta och ingen ombindning av färgtokens." | "Färgerna här är sidans mörka bas. En ljus sektion binder om en del av dem i blocket efter :root (ARKITEKTUR.md, M23)." (P18a) |
+| `src/components/Section.jsx:21-26` | Kommentaren om sektionsroten | En mening till: "Ytan sätts som attribut på roten, inte som klass, och tokens.css binder om färgerna för den (ARKITEKTUR.md, M23)." (P18a) |
+| `src/components/About.module.css:5` | "Sektionen ligger på sidans mörka bakgrund, som hela sidan." | "Sektionens yta och färger kommer från Section (ARKITEKTUR.md, M23)." (P18c) |
+
+Byggaren läser dessutom hela kommentarsblocket kring varje redigerad rad, och
+särskilt sektionsavgränsarens block i `global.css`.
+
+#### Punkt 10 — paketet P18, fyra steg
+
+Ett steg i taget, och nästa startar först när föregående är överlämnat med sina
+grindar gröna. Varje steg avslutas med `npm run validate:data`,
+`npm run validate:tokens`, `npm run build` och `npm run lint`.
+
+| Steg | Filer | Klart när |
+|------|-------|-----------|
+| **P18a — tokens och mekanism** | `tokens.css` (blocket i punkt 2 och kommentaren i punkt 9), `validate-tokens.mjs` (punkt 1), `Section.jsx` (prop, export och attribut, punkt 1 och 9), `global.css` (regeln i punkt 5) | Tokengrindens prov (a)–(e). Invarianten om `var()` i `:root`. Ingen sektion har attributet än, så **P-jämförelsen i punkt 8 ger 0 skilda pixlar i hela sidan**, även Projekt och Om mig, med headern synlig. Det visar att mekanismen inte läcker innan den används |
+| **P18b — projektsektionen** | `Projects.jsx` (`surface`), `tokens.css` (`--accent-fill`), `ProjectFilter.module.css` (segmentet, punkt 3), `Header.module.css` (`.pill`, punkt 3) | K1–K7 för `#projects` vid 360 och 1280. M5h tyst (`--accent-fill` har sin konsument) |
+| **P18c — Om mig** | `About.jsx` (`surface`), `About.module.css` (kommentaren, punkt 9) | K1–K3 för `#about` vid 360 och 1280 |
+| **P18d — mätningen** | Inga filer i `src/` eller `scripts/` | K, P, L, S, D och N1–N6 enligt punkt 8, med sökvägar till utdata. Varje beslut i M23 besvaras med `fil:rad` (LARDOMAR 2026-10-05) |
+
+**Rörs inte i P18:** `ProjectCard.*`, `Chip.*`, `Projects.module.css`,
+`KeyFigures.*`, `Skills.*`, `Contact.*`, `ContactForm.*`, `Footer.*`, `Hero.*`,
+`MobileMenu.*`, `Header.jsx`, `App.jsx`, `type.module.css`, `src/data/`,
+`src/lib/`, bilderna, `validate-data.mjs`, `prerender.mjs`, `package.json`.
+`PLAN.md` får paketet av projektledaren.
+
 ---
 
 ## Paket A — besluten för innehållsuppdraget 2026-10-08, och var de står
@@ -5078,7 +5539,7 @@ Portfoolie-Jelalq/
 │  ├─ validate-data.mjs           Grindar src/data/. Första steget i build. Jämför också heros preload i index.html med HERO_IMAGE_WIDTHS (M22 punkt 5).
 │  ├─ font-coverage.mjs           Läser cmap ur en woff2-fil. Anropas av validate-data.mjs, en gång per fil (M1d).
 │  ├─ optimize-project-images.mjs Projektbilder 4:3, webp, vänsterförankrad beskärning (M4, P6). Manuellt, inte i build.
-│  ├─ validate-tokens.mjs         Grindar att varje custom property som nämns är deklarerad i tokens.css (M5g, P2). I build.
+│  ├─ validate-tokens.mjs         Grindar att varje custom property som nämns är deklarerad i :root i tokens.css (M5g, P2), att varje deklaration har en konsument (M5h) och att varje ombundet namn finns i :root (M23, P18a). I build.
 │  └─ prerender.mjs               Förrenderar <App /> in i dist/index.html efter vite build (M21, P15-fix). Sista steget i build.
 ├─ assets-source/                 KÄLLBILDER. Publiceras ALDRIG — ligger utanför public/.
 │  ├─ jq-logo-light.png           ORIGINAL 2000x774 — läses, skrivs aldrig över (M20, P14c)
@@ -5102,7 +5563,7 @@ Portfoolie-Jelalq/
    ├─ components/                 En komponent per fil + en .module.css per komponent (ikonerna har ingen, M9)
    ├─ data/                       Ren data. Innehåll som Jelal redigerar. Ingen JSX här. Ny: profile.js (M10, P5).
    ├─ lib/                        NY (M3, P6). Ren JavaScript utan React/JSX/DOM: projectRules.js, sectionLabel.js, keyFigures.js, skillRules.js (P12b, M14b).
-   └─ styles/                     fonts.css, tokens.css, global.css, type.module.css (M1).
+   └─ styles/                     fonts.css, tokens.css, global.css, type.module.css (M1). tokens.css har :root och, direkt efter, ombindningen [data-surface='light'] (M23, P18a).
       └─ fonts/                   urbanist-latin-var.woff2, manrope-latin-var.woff2, jetbrains-mono-latin-400.woff2 + OFL-*.txt (M1, P2).
 ```
 
@@ -6493,9 +6954,11 @@ innehåll fått ett namngivet nytt hem.
 
 ### Ljus yta — Kompetenser får vit bakgrund, beslutat av Jelal 2026-10-05 — UPPHÄVT 2026-11-07, se M2
 
-> **`.surface-light` tas bort helt i P2.** Den nya designen är mörk rakt igenom
-> (Jelals beslut 4). Hela avsnittet och vart och ett av dess underavsnitt är
-> historik och bär sin egen märkning.
+> **`.surface-light` tas bort helt i P2.** ~~Den nya designen är mörk rakt igenom
+> (Jelals beslut 4).~~ **UPPHÄVT 2026-11-08, se M23:** Projekt och Om mig är ljusa
+> igen (Jelals beslut 9), men med en annan mekanism, andra värden och en annan
+> sektion än här. Bygg inget ur detta avsnitt. Hela avsnittet och vart och ett av
+> dess underavsnitt är historik och bär sin egen märkning.
 
 Jelal: *"sektionen med kompetens sidan ha bakrunden vit."* Varje färg i sektionen
 är vald för mörk botten, så det här är ingen enradsändring.
@@ -8238,7 +8701,7 @@ Utöver det:
 |-----|----------|--------|
 | `src/App.jsx` | `function App()` | Renderar `<Header />`, `<main>` med `<Hero />` följt av `sections.map(...)` som slår upp komponenten i `SECTION_COMPONENTS`, och `<Footer />`. Uppslaget är konfiguration, inte logik — se "`sections.js` blir åter enda källan". |
 | `src/components/Header.jsx` | `function Header()` | Sticky header. JQ-märket (`logo-mark-tight-96/192.png`, `alt=""` + `aria-hidden="true"`) plus namnet som HTML-text, tillsammans **en** länk till `HERO_ID`, utan platta eller ram runt märket. Headerbandet är grått (`--color-bg-top`). Navlänkar genereras från hela `sections`. Tar inga props. Detaljerna står i "Headerns uppbyggnad" — den som bara läser denna rad har inte hela beslutet. |
-| `src/components/Section.jsx` | `function Section({ id, title, children, className })` | Återanvänd ram för skills/projects/contact. Renderar `<section id={id}>` med `<h2>{title}</h2>` och innehållet. `className` är valfri och läggs till efter modulens egen klass. Används **inte** av Hero. |
+| `src/components/Section.jsx` | ~~`function Section({ id, title, children, className })`~~ **UPPHÄVT 2026-11-08, se M23 punkt 1:** `function Section({ id, title, children, className, surface })` | Återanvänd ram för skills/projects/contact. Renderar `<section id={id}>` med `<h2>{title}</h2>` och innehållet. `className` är valfri och läggs till efter modulens egen klass. Används **inte** av Hero. |
 | `src/components/Hero.jsx` | `function Hero()` | Renderar sin egen `<section id="hero">` med `<h1>`, rollrad, ingress, **de två knapparna** (A5) och profilbilden. Egen, eftersom hero har `h1` och ingen `h2`-rubrik. Knapparnas mål hämtas ur `PROJECTS_ID` och `CONTACT_ID` — aldrig som literal. |
 | `src/components/Skills.jsx` | `function Skills()` | Läser `skillGroups` från `src/data/skills.js`. Renderar **ett kort per grupp** med `h3` och en `<ul>` av `<SkillChip />` (A6). Ingen teckenförklaring, ingen skill-data i filen. |
 | `src/components/SkillChip.jsx` | `function SkillChip({ name })` | Renderar en `<li className={styles.chip}>` med namnet. **Ett enda utseende** (A2). Ren presentation, inget state. Hette `SkillPill.jsx` före 2026-10-08. |
@@ -8929,6 +9392,12 @@ nytt beslut.
 > **Regeln gäller** (`section[id] + section[id]`, full bredd). Färgen är `--line`.
 > Gränsen header → hero finns inte längre som linje, eftersom headern är en
 > svävande pill med egen kant (M6). Tabellens rad med den ljusa ytan utgår (M2).
+>
+> **Linjen vid ytbyte UPPHÄVD 2026-11-08, se M23 punkt 5:** där en mörk och en
+> ljus sektion möts är linjen genomskinlig (`border-top-color: transparent`, bredden
+> står kvar). Den syns bara mellan två sektioner med samma yta. Med dagens ordning
+> byter ytan vid varje gräns, så ingen linje syns. Antalet skrivs fortfarande inte i
+> prosa.
 
 Jelals ord: *"mellan varje sektion dra en liten och tunn streck så man ser vart
 sektionerna är på sidan"*. Det upphäver rättelse 6. Hans beslut gäller — han har
@@ -11835,7 +12304,9 @@ punkter:**
   (påverkat av lärdom: **ja** — 2026-10-05 "mät artefakten, inte deklarationen",
   2026-10-05 "en grind som fälls av fel skäl", 2026-10-02 "namnge inget
   okontrollerat")
-- **M2: `.surface-light` bort helt** — designen är mörk rakt igenom, och en klass
+- **M2: `.surface-light` bort helt** — ~~designen är mörk rakt igenom~~ (**premissen
+  UPPHÄVD 2026-11-08, se M23:** ljusa sektioner finns igen, med attributet
+  `data-surface`), och en klass
   "för framtiden" är dött fält. (påverkat av lärdom: **ja** — 2026-10-08 "två
   kommentarer räknar upp en ombindning som togs bort": varje kommentar som nämner
   klassen skrivs om i samma ändring)
@@ -12392,6 +12863,64 @@ punkter:**
   `projects.js` är ett annat löfte, prövat sant. En grind som fäller ett sant
   löfte hade fällts av fel skäl (påverkat av lärdom: **ja**, 2026-10-05 samma post)
 
+### Beslutslogg — M23, ljusa sektioner efter loggan, 2026-11-08
+
+- **Attributet `data-surface="light"`, inte en klass.** En global klass hade blivit
+  den fjärde, och M12 stängde dörren efter `.reveal`. Namnet `surface-light` står
+  kvar som förbjudet, så ingen kan läsa det gamla avsnittet som gällande
+  (påverkat av lärdom: **ja**, 2026-10-02 "överspelade stycken står kvar",
+  ÅTERKOMMANDE)
+- **`Section` sätter attributet via `surface`, och `Projects.jsx` och `About.jsx`
+  skickar det.** Inte ur `sections.js`: ett fält i Jelals fil hade krävt nya
+  grindar, och ytan är design, inte innehåll (påverkat av lärdom: **ja**,
+  2026-10-02 "saknade eller dubbla fält i datafilen går igenom tyst". Planen: bygg
+  inte för framtiden)
+- **Blocket målar `background-color` och `color` själv.** Ett färdigt beräknat
+  `color` på `body` ärvs som värde och följer inte ombindningen (påverkat av
+  lärdom: **ja**, raden "klassen måste måla, inte bara binda om" i den gamla
+  rättelsetabellen)
+- **`validate-tokens.mjs` räknar bara `:root` som deklarerat och grindar
+  ombindningen.** I dag hade ett felstavat ombundet namn räknats som deklarerat och
+  gått igenom tyst. Prövas med rätt, fel och rättat block, och med ett namn som
+  bara finns i blocket (påverkat av lärdom: **ja**, 2026-10-05 "en grind prövas med
+  tre indata", och 2026-10-08 "två kommentarer räknar upp en ombindning",
+  ÅTERKOMMANDE)
+- **Accenten för text, länk och ring blir `#b84a00` i ljus sektion, och
+  `--accent-fill` `#ff6b00` bär ytan under mörk text.** `#ff6b00` ger 2,599:1 mot
+  botten, och mörk text på `#b84a00` ger 3,524:1. Ett token kan inte klara båda.
+  Fokusringen följer utan att någon fil ändras (påverkat av lärdom: **ja**,
+  2026-10-08 "ett tokennamn får aldrig vara motivering för ett kontrastvärde":
+  varje kvot står vid sitt token)
+- **Det valda segmentets ram är `--accent`, inte ytan.** Ytan `#ff6b00` mot den vita
+  panelen är 2,855:1 och kan inte ensam visa läget (påverkat av lärdom: **nej**,
+  ett nytt fall av samma kontrastregel)
+- **`--line-strong`, `--ink-inverse` och `--error` binds inte om.** `#7a756f` ger
+  4,154:1 på ljus botten, `--ink-inverse` är redan `#141414`, och `--error` har
+  ingen konsument i en ljus sektion. Färre ombindningar ger färre ställen att mäta
+  (påverkat av lärdom: **ja**, 2026-11-07 "tokens utan konsument")
+- **Pillen blir `rgba(20, 20, 20, .9)`.** Med `.62` över vitt föll ringen och
+  understrykningen på 1,804:1, och pillen var inte längre mörk, vilket beslut 9
+  kräver. Hero-jämförelsen görs därför med headern dold, och skälet står i
+  mätningen (påverkat av lärdom: **ja**, 2026-11-07 "mät förväntad siffra i sitt
+  villkor": värdet är räknat mot vitt, det värsta fallet, och mäts i K6)
+- **Linjen vid ytbyte blir genomskinlig, inte borttagen.** Bredden står kvar, så
+  ingen sektion byter höjd och de mörka sektionerna kan jämföras pixel för pixel.
+  Enda tillåtna skillnaden är rad 0 i Kompetenser och Kontakt, och den är utskriven
+  (påverkat av lärdom: **ja**, 2026-11-07 "grinden mätte en egenskap som inte är
+  invarianten": jämförelsen gäller pixlarna, inte deklarationerna)
+- **P18a ska ge noll skilda pixlar i hela sidan.** Mekanismen finns då men används
+  inte, och det visar att den inte läcker innan den tas i bruk (påverkat av lärdom:
+  **ja**, 2026-10-02 "bygg inte vidare på något som inte är verifierat")
+- **Fyra små steg och en mätning för sig.** Breda byggaruppdrag har hängt sig
+  (samordnarens erfarenhet, inte en post i `LARDOMAR.md`)
+- **Äldre stycken rättade i samma redigering:** inledningen, tabellen över
+  förbjudna strängar (tre rader rättade, sex tillagda), M-översikten (M2 och M23),
+  M2, M5:s `:root`-block och M5g, M6:s pill, M11:s segment, M13, komponenttabellen,
+  mappstrukturen, "Ljus yta", "Sektionsavgränsare", gränssnittstabellen, M2-raden
+  i beslutsloggen för P1 och den öppna punkten om den ljusa ytan (påverkat av
+  lärdom: **ja**, 2026-10-02 "överspelade stycken står kvar", ÅTERKOMMANDE, och
+  2026-11-07 "sök på `.<klass> {` när ett beslut ändrar en deklaration")
+
 ## Öppna punkter som INTE är arkitektens att besluta
 
 **BESVARAD 2026-11-07 av Jelal, se M10d:** bilden överst och texten under, och
@@ -12463,8 +12992,9 @@ kostar det antingen knapparna ovanför skärmkanten eller en mindre rubrik.
   avviker därmed från Jelals formulering. Ska läggas fram.
 - ~~**Om mig-sektionens innehåll**~~ — **BESVARAD 2026-10-07:** Jelal har skrivit
   texten ordagrant i sitt uppdrag. Skrivs in i paket F, tecken för tecken.
-- ~~**Den ljusa ytans placering efter omordningen**~~ — **UPPHÄVT 2026-11-07:**
-  ingen ljus yta finns (M2).
+- ~~**Den ljusa ytans placering efter omordningen**~~ — ~~**UPPHÄVT 2026-11-07:**
+  ingen ljus yta finns (M2).~~ **BESVARAD 2026-11-08 av Jelal (beslut 9), se M23:**
+  Projekt och Om mig är ljusa.
 - **Länkspaltens `h3` "Kontaktuppgifter"** är min text, inte Jelals. Ska godkännas.
 - ~~**Länkarna hamnar under formuläret på mobil**~~ — **UPPHÄVT 2026-11-07:**
   kontaktuppgifterna står först (M16).

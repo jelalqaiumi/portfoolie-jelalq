@@ -85,10 +85,17 @@ ska synas direkt i webbläsaren, men ett fel ska aldrig nå ett bygge.
   stämmer med `HERO_IMAGE_WIDTHS` i `src/data/profile.js`. Alla fel skrivs ut
   på en gång, på svenska, med filnamnet först. När allt går igenom skrivs en
   rad som börjar med `Validering OK`.
-- **`scripts/validate-tokens.mjs`** kontrollerar att varje CSS variabel som
-  nämns i `src/` eller `scripts/` är deklarerad i `tokens.css`, och att varje
-  deklarerad variabel används någonstans. Kommentarer räknas som förekomster.
-  `src/data/` genomsöks inte.
+- **`scripts/validate-tokens.mjs`** gör tre kontroller mot
+  `src/styles/tokens.css`. Bara blocket `:root` räknas som deklarerat. En
+  variabel som bara står i ett annat block i filen räknas inte som deklarerad.
+  1. Varje CSS variabel som nämns i `src/` eller `scripts/` ska vara deklarerad
+     i `:root`. Kommentarer räknas som förekomster, utom kommentarerna i
+     `tokens.css`. `src/data/` genomsöks inte.
+  2. Varje variabel i `:root` ska användas med `var()` någonstans i `src/`.
+     En kommentar räknas inte som användning.
+  3. Varje variabel som får ett nytt värde utanför `:root`, i blocket för de
+     ljusa sektionerna, ska också finnas i `:root`. Ett felstavat namn där
+     fäller alltså bygget i stället för att tyst inte binda om något.
 - **`scripts/prerender.mjs`** kontrollerar den förrenderade sidan: exakt en
   `<h1>`, exakt en hero, att varje klassnamn finns i det byggda CSS och att
   captchan inte är förrenderad. Felraderna börjar med `prerender:`. Fallerar
@@ -147,7 +154,16 @@ rör `document` eller `window`.
   `App.jsx`.
 - **Sektionerna i `<main>` är direkta syskon.** Linjen mellan sektionerna är
   regeln `section[id] + section[id]` i `global.css`. Ett omslag runt en sektion
-  bryter kedjan utan felmeddelande.
+  bryter kedjan utan felmeddelande. Där en mörk och en ljus sektion möts är
+  linjen genomskinlig men behåller sin bredd, så färgskiftet är gränsen. Med
+  dagens ordning byter ytan vid varje gräns, och ingen linje syns.
+- **Projekt och Om mig är ljusa, resten av sidan är mörk.** `Projects.jsx` och
+  `About.jsx` skickar `surface={SURFACE_LIGHT}` till `Section`, som sätter
+  attributet `data-surface="light"` på sektionen. Blocket
+  `[data-surface='light']` direkt efter `:root` i `tokens.css` binder om
+  färgerna för allt i sektionen. Ytan följer komponenten, inte platsen i
+  `sections.js`. Headern och mobilmenyn ligger utanför sektionerna och är
+  alltid mörka.
 - **Ofullständig data renderas inte.** Ett projekt som inte är komplett ger
   inget kort, en kompetens utan namn ger inget chip och en länk med
   `url: null` visas inte. Komponenterna och valideringen använder samma regler.

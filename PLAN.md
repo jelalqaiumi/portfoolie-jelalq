@@ -1,3 +1,170 @@
+# Plan: P18 — ljusa sektioner efter loggan (Jelals beslut 9, M23), stängd med granskning, commit och push
+
+Skriven 2026-11-08 av projektledaren, **i efterhand**: P18a–P18c och P18d del 1–2
+är redan byggda och mätta. Planen ger dem sina poster och planerar det som
+återstår. Granskningen av P18 gav **EJ GODKÄND** med tre fynd, och fynd 2 var att
+denna post saknades.
+
+**Underlag:**
+
+- `UPPDRAG-2026-11-07.md`, avsnittet "Jelals beslut", **beslut 9** (bindande):
+  temat följer loggan. Nav och hero förblir mörka. Projekt och Om mig får loggans
+  varma ljusa botten med mörk text och orange accent. Kompetenser, kontakt och
+  footer förblir mörka.
+- `ARKITEKTUR.md`, **M23** (punkt 1–10). Punkt 10 delar P18 i stegen P18a–P18d.
+  Punkt 8 har mätserierna K, P, L, S och D och de negativa kontrollerna N1–N6.
+  Talen och tecknen står där och skrivs inte av här.
+- `LARDOMAR.md`, posterna daterade 2026-11-08.
+
+**Den förra planen** (moderniseringen P1–P17 och innehållsomgången A–M) är
+ersatt här. Den finns oförändrad i `git show 6d74727:PLAN.md`. Omgången är
+avslutad: G2 godkänd, P17 klar, och allt är incheckat i `6d74727`. Den commiten är
+**inte pushad**. Paket L från omgången A–M står fortfarande utanför planen. Jag har
+inte kontrollerat om de öppna frågorna till Jelal i den förra planen
+(sidbeskrivningen, fraserna med streck och "1 PROJEKT") har fått svar. Där står de
+som de var.
+
+---
+
+## Status 2026-11-08
+
+| Paket | Läge |
+|---|---|
+| P18a — tokens och mekanism | **Byggt och mätt.** P-jämförelsen gav 0 skilda pixlar i hela sidan |
+| P18b — projektsektionen | **Byggt och mätt.** K1–K7 utan fel |
+| P18c — Om mig | **Byggt och mätt.** Kontrasten godkänd, höjderna oförändrade |
+| P18d del 1 och 2 | **Mätta.** P, S och L. L gav tillgänglighet 100 i 10 av 10 körningar, prestanda 97 på mobil och 100 på desktop |
+| Granskning av P18 | **EJ GODKÄND, tre fynd** (se nedan) |
+| P18d del 3 (fynd 1) | **KLAR 2026-11-09.** N2, N5 och N6 körda och larmar, underlag i `scratchpad\p18d\neg\`. Efterkontrollen godkände fynd 1 i sak; M23 punkt 8 rättas av arkitekten |
+| PLAN-posten (fynd 2) | **Klar med denna fil** |
+| P18-dok (fynd 3) | Ej startat. Dokumentatorn |
+| M23-stängning | Ej startad. Arkitekten |
+| Efterkontroll av P18, commit, push | Ej startade |
+
+**Granskningens tre fynd:**
+
+1. De negativa kontrollerna N2, N5 och N6 saknas. → P18d del 3.
+2. `PLAN.md` saknar P18. → Denna fil.
+3. `README.md:88-90` beskriver tokengrinden som den var före M23. → P18-dok.
+
+---
+
+## Lärdomar som gäller här
+
+Alla regler under "Regel framåt" i `LARDOMAR.md` är bindande. Dessa påverkar
+planen direkt:
+
+- **2026-11-08, P18 byggdes och mättes utan någon post i `PLAN.md`.** → Det är
+  orsaken till denna fil. Varje återstående paket har en egen rad och ett eget
+  `Klart när`, och namnen går att söka på: **P18d del 3**, **P18-dok**,
+  **M23-stängning**, **Efterkontroll av P18** och **Commit och push av P18**.
+  Byggaren startar inget paket som inte ger någon träff i `PLAN.md`.
+- **2026-11-08 (ÅTERFALL), P18d saknar N5 och N6.** → P18d del 3 är inte
+  överlämnat förrän varje rad N1–N6 har en sökväg i scratchpad. Filen ska visa
+  larmet, elementet som bar det och att larmet upphörde efter återställningen. En
+  ersatt kontroll redovisas som avvikelse, och arkitekten godkänner den.
+- **2026-11-08 (ÅTERFALL), en konsolgrind räknas inte som klar förrän dess
+  negativa kontroll har körts mot ett produktionsbygge.** → N5 körs mot en kopia
+  av `dist/` från ett färskt bygge, enligt M23 punkt 8. Ingen dev-server används.
+- **2026-11-08, README beskriver tokengrinden som den var före M23.** → P18-dok
+  kör sökningen ur postens regel mot `README.md`, `GUIDE.md`, `ARKITEKTUR.md` och
+  `PLAN.md`. Varje träff som återger vad grinden kontrollerar rättas, eller
+  lämnas tillbaka med `fil:rad`. Därför återger denna plan inte grindens regel. Den
+  står i M23 punkt 1.
+- **2026-11-08 (ÅTERFALL, 3+), en rättad grind eller ett uppmätt tal står
+  orättat på andra ställen.** → M23-stängningen söker varje tal den ersätter i
+  både `ARKITEKTUR.md` och `PLAN.md`. Därför skriver denna plan **inga förväntade
+  kvoter**. De står bara i M23.
+- **2026-11-08, rubriken över en uträkning säger fortfarande "inte uppmätt".** →
+  M23-stängningen söker efter `uträknat` och `inte uppmätt` i M23 och i rubrikerna
+  ovanför, och rättar eller märker varje träff som gäller ett tal den ersätter.
+- **2026-10-02, `ARKITEKTUR.md` ändras inte under ett pass som bygger eller mäter
+  mot den.** → M23-stängningen startar först när P18d del 3 är överlämnat. N5 och
+  N6 mäter mot M23 punkt 8.
+- **2026-10-05, mät aldrig `dist/` utan att binda det till källan, och servrar:
+  `netstat` före start och efter stopp, stopp via PID.** → Gäller P18d del 3.
+  Mätningen görs mot ett färskt `vite preview` efter ett färskt bygge.
+- **2026-10-02 + 2026-10-05 (ÅTERFALL), arbetsträdet fryses under granskning.** →
+  `GRANSKNING-PAGAR` skapas före efterkontrollen av P18 och raderas när rapporten
+  är levererad. Inget paket ändrar filer medan filen finns.
+- **Projektets minne: breda agentuppdrag hänger sig, och hård granskning sker vid
+  leverans.** → P18d del 3 är bara tre kontroller. Efterkontrollen är smal och
+  prövar bara granskningens tre fynd och stängningens ändringar. Den är ingen ny
+  helgranskning.
+
+---
+
+## Arbetspaket
+
+| # | Uppgift | Agent | Klar när |
+|---|---------|-------|----------|
+| 1 | ~~**P18a — tokens och mekanism**, enligt M23 punkt 10~~ **KLART** | byggare | Tokengrindens prov (a)–(e) redovisade, och P-jämförelsen gav 0 skilda pixlar i hela sidan (uppfyllt) |
+| 2 | ~~**P18b — projektsektionen**, enligt M23 punkt 10~~ **KLART** | byggare | K1–K7 för `#projects` vid 360 och 1280 utan fel, och M5h tyst (uppfyllt) |
+| 3 | ~~**P18c — Om mig**, enligt M23 punkt 10~~ **KLART** | byggare | K1–K3 för `#about` vid 360 och 1280 utan fel, och höjderna oförändrade (uppfyllt) |
+| 4 | **P18d — mätningen.** ~~Del 1 och 2: P, S och L~~ **KLARA.** **P18d del 3: N2, N5 och N6 (fynd 1). KLAR 2026-11-09** | byggare | Varje rad N1–N6 har en sökväg i scratchpad med larm, element och återställning. Serien D har också en sökväg (mitt underlag säger inte om D är körd). Varje beslut i M23 är besvarat med `fil:rad`. Inga filer i `src/` eller `scripts/` är ändrade |
+| 5 | **P18-dok:** `README.md:88-90` skrivs om så att den stämmer med tokengrinden efter M23 (fynd 3) | dokumentator | Stycket stämmer med M23 punkt 1 och skriptets huvudkommentar. Sökningen ur posten 2026-11-08 är redovisad träff för träff med `fil:rad`. Bara `README.md` (och `GUIDE.md` om sökningen träffar där) är ändrade |
+| 6 | **M23-stängning:** de uträknade kvoterna i M23 ersätts med de uppmätta från P18b–P18d | arkitekt | Varje uträknat tal i M23 har sitt uppmätta värde med källa (steg och sökväg), eller är märkt med varför det inte mättes. Sökningen efter talen och efter `uträknat` och `inte uppmätt` i `ARKITEKTUR.md` och `PLAN.md` är redovisad, och varje träff är rättad eller märkt RÄTTAT. Bara `ARKITEKTUR.md` är ändrad |
+| 7 | **Efterkontroll av P18**, smal | granskare | Granskningens fynd 1–3 och M23-stängningen är bekräftade med `fil:rad` eller en sökväg, eller så finns ett nytt fynd i `LARDOMAR.md`. `GRANSKNING-PAGAR` skapades före start och är raderad |
+| 8 | **Commit och push av P18.** Samordnaren checkar in, och **Jelal pushar själv** (verktyget nekar `git push`) | samordnare, sedan Jelal | `git status` är ren och varje incheckad fil hör till P18 eller dess följdpaket (P18-dok, M23-stängning, `LARDOMAR.md`, `UPPDRAG-2026-11-07.md`, `PLAN.md`). Efter Jelals push innehåller `origin/main` både `6d74727` och P18-commiten |
+
+### Ordning och beroenden
+
+Gjort: P18a → P18b → P18c → P18d del 1 och 2 → granskning (EJ GODKÄND).
+
+**Pågår nu:** P18d del 3 (byggaren).
+
+**Därefter:**
+
+1. **P18-dok** får gå parallellt med P18d del 3. Det är olika filer, och README
+   är inget P18d mäter mot.
+2. **M23-stängning** startar **efter** att P18d del 3 är överlämnat. Den behöver
+   de uppmätta talen, och `ARKITEKTUR.md` ändras inte medan det mäts mot M23.
+3. **Efterkontroll av P18** startar när paket 4, 5 och 6 är överlämnade.
+4. **Commit**, när efterkontrollen är godkänd.
+5. **Jelal pushar.** Det gäller både `6d74727` och P18-commiten.
+
+Sidan är körbar hela tiden. Vill Jelal se de ljusa sektionerna före commit kan
+samordnaren visa dem mot ett färskt `vite preview`.
+
+---
+
+## Risker
+
+- **P18d del 3 hänger sig eller växer.** Breda mätuppdrag har hängt sig förut.
+  **Märks tidigt** genom att uppdraget bara gäller tre rader, och genom att
+  överlämningen listar N1–N6 med en sökväg per rad. En rad utan sökväg betyder att
+  steget inte är klart.
+- **N5 kan inte ge det förväntade larmet.** Lighthouse kanske inte fäller
+  tillgänglighet på den injicerade kvoten, på samma sätt som honeypotprovet i M22
+  inte kunde ge sitt utfall. Den frestande utvägen är att byggaren byter kontroll på
+  eget beslut. **Märks tidigt** genom att en ersatt kontroll står som avvikelse och
+  lämnas till arkitekten, som godkänner den eller skriver om raden i M23.
+- **Arkitekten ändrar M23 medan N5 och N6 körs.** **Märks tidigt** genom ordningen
+  ovan och genom `git status` på `ARKITEKTUR.md` i byggarens överlämning.
+- **Ett uppmätt tal hamnar på ett ställe och det uträknade står kvar på ett annat**
+  (återfall 3+). **Märks tidigt** genom att M23-stängningens `Klart när` kräver
+  sökningen i både `ARKITEKTUR.md` och `PLAN.md`, och genom att denna plan inte
+  innehåller några kvoter.
+- **README-rättningen återger grindens regel med egna ord och blir fel igen.**
+  **Märks tidigt** genom att P18-dok jämför mot M23 punkt 1 och skriptets
+  huvudkommentar, och genom att efterkontrollen läser stycket mot skriptet.
+- **Efterkontrollen växer till en ny helgranskning.** **Märks tidigt** genom att
+  den bara prövar de tre fynden och stängningen. Ett nytt fel blir en post i
+  `LARDOMAR.md`.
+- **`6d74727` och P18 ligger kvar lokalt utan push.** Försvinner arbetsträdet
+  finns leveransen bara på en maskin. **Märks tidigt** genom att pushen står som
+  eget steg hos Jelal, och genom att `git status` mot `origin/main` visas för
+  honom vid commit.
+- **Commiten får med en fil utan ägande paket.** Arbetsträdet har ändringar i
+  elva filer under `src/` och `scripts/` (enligt granskningen) plus dokumenten.
+  **Märks tidigt** genom att samordnaren jämför `git diff 6d74727 --stat` mot
+  filerna i M23 punkt 10 och listan "Rörs inte i P18" före incheckningen.
+
+
+---
+
+# Tidigare omgångar (oförändrade, ur 6d74727)
+
 # Plan: Modernisera portfolion enligt `UPPDRAG-2026-11-07.md` — mörk, lugn premiumdesign, nya projektkort med filter, utan att bryta sidan
 
 Skriven 2026-11-07. **Uppdaterad samma dag** efter G1 (EJ GODKÄND, sju fynd) och

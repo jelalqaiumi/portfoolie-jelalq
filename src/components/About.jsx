@@ -1,4 +1,4 @@
-import Section from './Section.jsx';
+import Section, { SURFACE_LIGHT } from './Section.jsx';
 import Reveal from './Reveal.jsx';
 import KeyFigures from './KeyFigures.jsx';
 import { isComplete } from '../lib/projectRules.js';
@@ -63,7 +63,7 @@ function About() {
   );
 
   return (
-    <Section id={section?.id} title={section?.label}>
+    <Section id={section?.id} title={section?.label} surface={SURFACE_LIGHT}>
       {/* Ett <p> per post, och inget omslag med egen stil. Beslutat i
           ARKITEKTUR.md, "src/data/about.js - Om mig". Det enda omslaget är
           Reveal (M12), som inte sätter något mått.

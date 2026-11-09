@@ -250,6 +250,11 @@ samma redigering. Ingen kontroll jämför de två.
 Rubrikerna i navigeringen ändrar du med `label` i `src/data/sections.js`. Där
 bestämmer ordningen i listan också ordningen på sidan. Rör inte `id`.
 
+Projekt och Om mig har ljus bakgrund och de andra sektionerna mörk, var de än
+står i listan. Flyttar du sektionerna kan två ljusa eller två mörka hamna
+intill varandra. Det är tillåtet, och då syns en tunn linje mellan dem i
+stället för färgskiftet.
+
 ## 7. Texter som ligger i komponenterna
 
 Några texter ligger inte i `src/data/` utan i komponenterna. Ändra bara

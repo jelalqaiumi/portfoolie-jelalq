@@ -21,8 +21,9 @@
  */
 
 :root {
-  /* Färger - mörk bas rakt igenom, orange som ENDA accent. Sidan har ingen
-   * ljus yta och ingen ombindning av färgtokens.
+  /* Färger - orange som ENDA accent. Färgerna här är sidans mörka bas. En
+   * ljus sektion binder om en del av dem i blocket efter :root (ARKITEKTUR.md,
+   * M23).
    *
    * Uppmätta kontrastkvoter, en rad per bakgrund tokenet faktiskt står mot.
    * Ett tokennamn är ingen motivering för ett kontrastvärde - kvoten är det.
@@ -59,6 +60,11 @@
 
   /* --accent som text mot --bg: 6,664:1 — AA normal */
   --accent: #ff6b00;
+
+  /* Orange YTA under mörk text. Binds aldrig om, så att mörk text på orange
+   * håller sin kvot i varje sektion. */
+  /* --ink-inverse mot --accent-fill: 6,452:1 — AA normal */
+  --accent-fill: #ff6b00;
 
   /* Hover rör sig bort från underlaget: på mörk yta ljusnar den. */
   /* --accent-hover som text mot --bg: 8,114:1 — AA normal */
@@ -156,4 +162,57 @@
    * här sitt standardvärde, så att ett element utan stegnummer inte väntar. */
   --reveal-index: 0;
   --reveal-stagger: 70ms;
+}
+
+/* Ljus sektion, loggans varma botten. Section sätter attributet, och blocket
+ * binder om ärvda färgtokens för allt inuti sektionen. Det målar också
+ * sektionens botten och text, eftersom en färg som body redan räknat ut ärvs
+ * som färdigt värde och inte följer en ombindning. Varje namn här ska finnas i
+ * :root, och validate-tokens.mjs fäller ett som inte gör det. Tokens som inte
+ * binds om har samma värde som i :root. Beslutat i ARKITEKTUR.md: M23. */
+[data-surface='light'] {
+  --bg: #f6f4f0;
+  /* Kort och paneler ligger ljusare än botten. */
+  --surface: #ffffff;
+  --surface-2: #ebe8e2;
+
+  /* Dekorativ linje. Duger inte som avgränsning av en gränssnittskomponent. */
+  /* --line mot --bg: 1,221:1 och mot --surface: 1,341:1 — dekorativ */
+  --line: #e2ded7;
+
+  /* --line-strong binds inte om. Mot --bg här: 4,154:1 — 1.4.11 uppfyllt */
+  /* --line-strong mot --surface här: 4,564:1 — 1.4.11 uppfyllt */
+
+  /* --ink mot --bg: 16,771:1 — AA normal */
+  /* --ink mot --surface: 18,423:1 — AA normal */
+  /* --ink mot --surface-2: 15,066:1 — AA normal */
+  --ink: #141414;
+
+  /* --ink-muted mot --bg: 7,037:1 — AA normal */
+  /* --ink-muted mot --surface: 7,730:1 — AA normal */
+  --ink-muted: #57524c;
+
+  /* --ink-subtle mot --bg: 4,941:1 — AA normal */
+  /* --ink-subtle mot --surface: 5,428:1 — AA normal */
+  --ink-subtle: #6f6961;
+
+  /* Orange som text, linje och fokusring. Aldrig som yta under mörk text:
+   * en sådan yta använder --accent-fill, som inte binds om. */
+  /* --accent mot --bg: 4,758:1 — AA normal */
+  /* --accent mot --surface: 5,227:1 — AA normal */
+  --accent: #b84a00;
+
+  /* Hover rör sig bort från underlaget: på ljus botten mörknar den. */
+  /* --accent-hover mot --bg: 6,285:1 — AA normal */
+  /* --accent-hover mot --surface: 6,904:1 — AA normal */
+  --accent-hover: #9a3d00;
+
+  /* --positive mot --surface: 4,305:1 — 1.4.11 uppfyllt */
+  --positive: #2f8a52;
+
+  /* Samma lyft som på mörk botten, med en skugga som syns på ljus. */
+  --shadow-lift: 0 24px 60px rgba(20, 20, 20, .16);
+
+  background-color: var(--bg);
+  color: var(--ink);
 }

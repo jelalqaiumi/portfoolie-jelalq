@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import Section from './Section.jsx';
+import Section, { SURFACE_LIGHT } from './Section.jsx';
 import ProjectCard from './ProjectCard.jsx';
 import ProjectFilter from './ProjectFilter.jsx';
 import Reveal, { REVEAL_INDEX_MAX } from './Reveal.jsx';
@@ -115,7 +115,7 @@ function Projects() {
   }
 
   return (
-    <Section id={section?.id} title={section?.label}>
+    <Section id={section?.id} title={section?.label} surface={SURFACE_LIGHT}>
       {visible.length === 0 ? (
         /* TOMT LÄGE. En kort rad, aldrig en tom yta. Villkoret står på
          * filtrerade listan och inte på projects.length: finns bara

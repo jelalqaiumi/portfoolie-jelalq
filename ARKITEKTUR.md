@@ -264,11 +264,11 @@ krockar gäller M-avsnittet, och motsägelsen lämnas tillbaka hit.
 | M7 | `aria-current`-observern behålls, understrykningen läggs på den. Hover i pillen är en understrykning i `--ink`, ingen färgändring (efter P4) | P3, P4b | "Hover — mätningen säger tvärtom mot magkänslan" |
 | M8 | Hamburgermeny under 900 px, dialog med fokusfälla, Esc, scroll-lås och CTA i panelen. M8b avgör P3:s och P4:s öppna markeringar. Låset får inte flytta layouten: `scrollbar-gutter: stable` på `html` (M10b punkt 3) | P4, P4b, P5 omgång 2 (punkt 3) | "Navigeringen på smal skärm" med underavsnitt (alternativ (d) var avfärdat) |
 | M9 | Tre egna inline-SVG, inget beroende | P4, P9 | "A3 — Inga ikoner" |
-| M10 | Heros texter (h1 är ett markerat förslag), ~~glöd~~, knappstilar och heros fyra markeringar. M10b: heros `padding-block`, h1:s grad från 900 px med `.inner` i full bredd, `scrollbar-gutter` på `html`, och mätseriens vyporter. **M10c (Jelal 2026-11-07): porträttet blir heros svartvita bakgrundsbild och profilbild. Cirkeln, bildspåret, glöden, tonplattan och profilvarianterna utgår, och mätserien skrivs om** | P5 (omgång 2 för M10b, **omgång 4 för M10c**) | "Hero får grå bakgrund", "A5 … Knappstilarna", "Heros `EJ I ARKITEKTUR`-markeringar", A5 "Vad som får vika" steg 1. **M10c upphäver:** M10:s glöd, bildspår och porträttrader, M10b:s spår- och 72 px-grind och förväntade tal, "Profilbilden är rund" med underavsnitt, "Källa och beskärning", "Utdatafiler", "Vad som INTE görs i bildskriptet", `--overlay-grey` |
+| M10 | Heros texter (h1 ~~är ett markerat förslag~~ **GODKÄND ordagrant av Jelal 2026-11-18**, inget namn i hero), ~~glöd~~, knappstilar och heros fyra markeringar. M10b: heros `padding-block`, h1:s grad från 900 px med `.inner` i full bredd, `scrollbar-gutter` på `html`, och mätseriens vyporter. **M10c (Jelal 2026-11-07): porträttet blir heros svartvita bakgrundsbild och profilbild. Cirkeln, bildspåret, glöden, tonplattan och profilvarianterna utgår, och mätserien skrivs om** | P5 (omgång 2 för M10b, **omgång 4 för M10c**) | "Hero får grå bakgrund", "A5 … Knappstilarna", "Heros `EJ I ARKITEKTUR`-markeringar", A5 "Vad som får vika" steg 1. **M10c upphäver:** M10:s glöd, bildspår och porträttrader, M10b:s spår- och 72 px-grind och förväntade tal, "Profilbilden är rund" med underavsnitt, "Källa och beskärning", "Utdatafiler", "Vad som INTE görs i bildskriptet", `--overlay-grey` |
 | M11 | Filtret: chips ur datan, segment med 0 visas men är inaktiva, OCH mellan alla villkor, live-raden `aria-live="polite"`. **M11b avgör P8:s och P9:s tolv markeringar och flyttar fokus till "Alla" efter "Rensa filter"** | P8, P9, **P9b (efter P10)** | — |
 | M12 | Animationerna: `.reveal` via en gemensam observer, aldrig dold utan observer, stagger 70 ms med tak, och reducerad rörelse stänger av allt. **M12b: ett ankarmål (`.reveal[id]`) tonas bara i opacitet, headern tål att observer saknas, `enableReveal` flyttar till `main.jsx`, live-raden räknar den visade listan, och en fas startar bara när mängden slugs ändras** | P7 (hover), P10, **P9b (M12b)** | "A11 — Ingen animation införs". **M12b ändrar:** M11b punkt 4 (vakten i `ProjectFilter.jsx` utgår) och M11:s live-rad |
 | M13 | Sektionsetiketten `01 / 04 · PROJEKT` räknas ur `sections` utan hero och är `aria-hidden`. Nämnaren är `sections.length`, och avståndet till `h2` är `--space-3` (M15b) | P11, P11b | — |
-| M14 | Nyckeltalen är "Projekt" och "Kompetenser", båda härledda; "år i branschen" utgår tills Jelal svarat. M14b: kompetensurvalet bor i `src/lib/skillRules.js`, och ett tal som är 0 visas inte | P12, P12b | M14:s "unika namn" |
+| M14 | Nyckeltalen är "Projekt" och "Kompetenser", båda härledda; "år i branschen" utgår ~~tills Jelal svarat~~ (**BESVARAD 2026-11-18:** utelämnas, Jelals beslut). M14b: kompetensurvalet bor i `src/lib/skillRules.js`, och ett tal som är 0 visas inte | P12, P12b | M14:s "unika namn" |
 | M15 | Kompetenschipsen får filterchipsens stil via en gemensam `Chip`-komponent. M15b: `--space-1` är borttaget, och mono-typklasserna sätter vikten 400 själva | P9 (Chip), P11, P11b | "A6" (chipset och `.cardTitle`), "Chipsens färg", Spacing-raden `--space-1` |
 | M16 | Kontakt: uppgifterna till vänster, formuläret i en panel till höger, hCaptcha `compact`. Footer: GitHub renderas inte så länge den är `null` | P13, P14 | "Kontaktsektionen blir tvåspaltig" med underavsnitt |
 | M17 | Lighthouse körs med `npx` mot `vite preview` och installerad Chrome, mobil och dator. ~~median av tre~~ **Ändrat 2026-11-08, M21 punkt 0:** fem körningar per läge, medianen | P15 | Teknikval (inget verktyg fanns) |
@@ -1471,7 +1471,7 @@ stroke-linecap="round"`:
 | Konstant | Text | Status |
 |----------|------|--------|
 | `eyebrowText` | `Portfolio` (versaler via `.eyebrow`, inte i DOM) | Uppdragets |
-| `headline` | `Jag bygger webb- och mobilappar, från gränssnitt till API.` | **FÖRSLAG.** Uppdragets "t.ex."-text. Står med kommentaren att den väntar på Jelals svar. Ingen agent ändrar den utan svar |
+| `headline` | `Jag bygger webb- och mobilappar, från gränssnitt till API.` (**RÄTTAT 2026-11-18:** strängen i koden är `Jag bygger webbappar och mobilappar, från gränssnitt till API.`) | ~~**FÖRSLAG.** Uppdragets "t.ex."-text. Står med kommentaren att den väntar på Jelals svar. Ingen agent ändrar den utan svar~~ **BESVARAD 2026-11-18: GODKÄND ordagrant av Jelal.** Jelals. Byggaren tar bort FÖRSLAG-märkningen i `src/components/Hero.jsx:12-14`. Ingen annan kod ändras |
 | `intro` | oförändrad, Jelals exakta från 2026-10-07 | Jelals |
 | `primaryActionText`, `secondaryActionText` | oförändrade | Jelals |
 | `name`, `role` | flyttar till `src/data/profile.js` (nedan) | Jelals |
@@ -1484,7 +1484,9 @@ barn, efter `.inner`, och inte längre ett element i `.inner`.)
 Modulklasserna `.eyebrow` och `.role` i `Hero.module.css` tas bort (M1, "Hur
 stilen når elementet"; avgjort efter P5). **Sidans enda `h1` är `headline`.**
 Namnet syns då inte längre som rubrik. Logga-länkens dolda text, `<title>` och
-footern bär det. Det är fråga 2 till Jelal.
+footern bär det. ~~Det är fråga 2 till Jelal.~~ **BESVARAD 2026-11-18:** Jelal vill
+inte ha namnet i hero. Överraden "Portfolio" står kvar, och namnet syns i loggan,
+fliken och footern.
 
 **`src/data/profile.js` (P5)**, eftersom `role` nu läses av både hero och footern
 (M16) och står i `<title>`:
@@ -3119,8 +3121,9 @@ Står i "Beslutslogg — M12b, fynden från P10, 2026-11-07" sist i beslutslogge
   `src/lib/skillRules.js` (rättat 2026-11-07, M14b punkt 1. Tidigare stod "antalet
   unika namn", vilket är samma tal bara så länge `validate-data.mjs` fäller dubbla
   namn). Ett tal med värdet 0 tas inte med i listan (M14b punkt 6).
-- **"År i branschen" utgår** tills Jelal har gett talet (fråga 3). Det är ett
-  påstående om honom.
+- **"År i branschen" utgår** ~~tills Jelal har gett talet (fråga 3)~~. Det är ett
+  påstående om honom. **BESVARAD 2026-11-18:** Jelal vill inte ha nyckeltalet, så
+  det läggs inte till.
 - **"Teknologier" byts mot "Kompetenser".** Projektdatan har sex tekniker från ett
   projekt, och kompetenslistan blandar tekniker och arbetssätt. Etiketten ska säga
   vad som faktiskt räknas.
@@ -12856,7 +12859,8 @@ punkter:**
 - **M10: h1 som markerat förslag, inte som beslut** — texten är Jelals att ge.
   Bygget får inte stå still, men förslaget får inte se ut som ett beslut. (påverkat
   av lärdom: **ja** — 2026-10-02 "sidans enda h1", och projektets regel att inga
-  texter om Jelal hittas på)
+  texter om Jelal hittas på). **BESVARAD 2026-11-18:** Jelal godkände h1 ordagrant,
+  och FÖRSLAG-märkningen tas bort ur `Hero.jsx`
 - **M11: sökfältets kant `--line-strong` i stället för uppdragets `--line`** — en
   medveten avvikelse, eftersom uppdragets eget AA-krav fäller `--line`. (påverkat
   av lärdom: **ja** — 2026-10-08 "kontrast: tokennamnet är ingen motivering")
@@ -12866,7 +12870,8 @@ punkter:**
   observern borttagen)
 - **M14: "Kompetenser" i stället för "Teknologier", och inget "år i branschen"** —
   etiketten ska säga vad som räknas, och ett påhittat tal är ett påstående om
-  Jelal. (påverkat av lärdom: nej, projektets regel om texter om Jelal)
+  Jelal. (påverkat av lärdom: nej, projektets regel om texter om Jelal).
+  **BESVARAD 2026-11-18:** Jelal valde att utelämna "år i branschen"
 - **M16: kontakten vänds, och hCaptcha blir `compact`** — den nya sidmarginalen gör
   att den normala widgeten (302 px) inte ryms vid 360 px. Det upptäcktes när
   sidmarginalens följder räknades igenom, inte i uppdragstexten. (påverkat av
@@ -13530,31 +13535,46 @@ historik och blockerar inte längre P19c:
 **BESVARAD 2026-11-07 av Jelal, se M10d:** bilden överst och texten under, och
 knapparna får hamna under skärmkanten. Frågan nedan är historik.
 
+**BESVARAD 2026-11-18 av Jelal: SOM NU.** Den gällande mobillayouten står kvar,
+alltså M10d: bilden överst och texten under. Läget med ansiktet bakom rubriken
+under en toning, som frågan nedan beskriver, är redan upphävt (M10c tabellrad 12,
+se M10d). Ingen ändring. Frågan nedan är historik.
+
 **Ny 2026-11-07, M10c. Fråga till Jelal, blockerar inte bygget:** vid 360 px ryms
 inte både ett fritt ansikte och knapparna i första skärmen. Ansiktet ligger därför
 bakom rubriken under en lätt toning, och resten av texten står på mörk botten.
 Jelal får se skärmbilderna från P5 omgång 4. Vill han ha ansiktet fritt på mobil
 kostar det antingen knapparna ovanför skärmkanten eller en mindre rubrik.
 
-**Nya 2026-11-07, ur paket P1. Frågor till Jelal. Inget av dem blockerar bygget:**
+**Nya 2026-11-07, ur paket P1. Frågor till Jelal. Inget av dem blockerar bygget.**
+**Alla BESVARADE 2026-11-18 av Jelal**, se svaret först i varje punkt. Frågetexten
+efter svaret är historik.
 
-1. **h1 i hero.** Byggt med uppdragets exempel "Jag bygger webb- och mobilappar,
+1. **BESVARAD 2026-11-18: GODKÄND ordagrant.** h1 är
+   "Jag bygger webbappar och mobilappar, från gränssnitt till API.", som i
+   `Hero.jsx` i dag, och ingressen står kvar. Byggaren tar bort FÖRSLAG-märkningen
+   i `src/components/Hero.jsx:12-14` (raderna från "⚠️ FÖRSLAG" till "denna rad
+   tas bort") och ändrar ingen annan kod. Historik: **h1 i hero.** Byggt med uppdragets exempel "Jag bygger webb- och mobilappar,
    från gränssnitt till API." som markerat förslag (M10). Det upprepar början av
    din nuvarande ingress ("Jag bygger webb- och mobilappar i React, React Native
    och .NET …"). Vilken text ska h1 ha, och ska ingressen stå kvar som den är?
-2. **Ditt namn i hero.** I dag är h1 "Jelal Qaiumi". Med det nya h1 syns namnet
+2. **BESVARAD 2026-11-18: NEJ, som nu.** Överraden "Portfolio" står kvar, och
+   namnet syns bara i loggan, fliken och footern. Historik: **Ditt namn i hero.** I dag är h1 "Jelal Qaiumi". Med det nya h1 syns namnet
    inte längre som rubrik på sidan (bara i fliktiteln, i footern och för
    skärmläsare i loggan). Är det okej, eller ska namnet synas i hero?
-3. **År i branschen.** Nyckeltalet är utelämnat tills du anger ett tal och från
+3. **BESVARAD 2026-11-18: UTELÄMNAS.** Nyckeltalet läggs inte till, och M14:s två
+   nyckeltal gäller. Historik: **År i branschen.** Nyckeltalet är utelämnat tills du anger ett tal och från
    vilket år det räknas (M14).
-4. **GitHub.** Bekräfta att GitHub-länken ska vara borta tills vidare. Den visas
+4. **BESVARAD 2026-11-18, se M24 punkt 7:** GitHub visas inte på sidan och står
+   bara i sameAs. Historik: **GitHub.** Bekräfta att GitHub-länken ska vara borta tills vidare. Den visas
    inte någonstans så länge `contact.js` har `null` (M16).
 5. **BESVARAD 2026-11-07 av den nya loggan, se M20:** dess ruta är `#ff6b00`, samma
    som `--accent`, så skillnaden finns inte längre. Historik: **Accentfärgen.**
    Uppdraget anger `#ff6b00`, och loggan är uppmätt till
    `#FC6F03`. Skillnaden är knappt synlig, men de står bredvid varandra i naven.
    Byggt som `#ff6b00` (M5).
-6. **Footerns tagline.** Byggd med din rollrad "Systemutvecklare · Fullstack" så att
+6. **BESVARAD 2026-11-18: GODKÄND.** Taglinen är "Systemutvecklare · Fullstack",
+   som byggd. Historik: **Footerns tagline.** Byggd med din rollrad "Systemutvecklare · Fullstack" så att
    ingen ny text hittas på (M16). Vill du ha en annan?
 
 **Nya 2026-10-08, ur paket A:**

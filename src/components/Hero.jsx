@@ -9,9 +9,8 @@ const eyebrowText = 'Portfolio';
 
 /* Sidans enda <h1>. Skrivs HÄR och får aldrig läsas ur sections.js "label".
  *
- * ⚠️ FÖRSLAG - VÄNTAR PÅ JELALS GODKÄNNANDE. Texten är uppdragets exempeltext
- * ("t.ex.") och inte Jelals egna ord. Ingen agent ändrar den utan hans svar;
- * när han svarat byts strängen och denna rad tas bort. */
+ * Texten är godkänd ordagrant av Jelal 2026-11-18 och är Jelals att ändra.
+ * Beslutat i ARKITEKTUR.md: M10. */
 const headline = 'Jag bygger webbappar och mobilappar, från gränssnitt till API.';
 
 /* Ingressen är Jelals egna ord och bara hans att ändra.

@@ -188,6 +188,8 @@ Källbilderna ligger i `assets-source/`. Skripten läser dem men skriver aldrig
 
    Skriptet gör heros svartvita bilder, loggan och ikonerna, och lägger dem i
    `public/assets/`.
+3. Har du bytt porträttet: kör också `npm run optimize:share-image`, så att
+   delningskortet får samma bild (se avsnitt 8).
 
 Skriptet förväntar sig exakt samma mått som den nuvarande källbilden, och för
 loggan även samma placering av rutan och texten i bilden. Har den nya bilden
@@ -227,9 +229,8 @@ Rubriken "Om mig" står inte här, utan som `label` i `src/data/sections.js`.
 - **Formuläret:** `form` styr vart formuläret skickar. Läs kommentaren i filen
   innan du ändrar något där.
 
-LinkedIn adressen är härledd ur ditt användarnamn och har inte gått att
-kontrollera automatiskt. Klicka på länken på sidan och byt adressen om den
-leder fel.
+Varje länk med en adress står också i den strukturerade datan för sökmotorer
+(se avsnitt 8). Du behöver inte göra något extra för det.
 
 **Två saker som inte syns i koden:**
 
@@ -244,8 +245,11 @@ leder fel.
 **Fil:** `src/data/profile.js`
 
 `name` och `role` står här. Kommentaren i filen visar var de syns.
-**Ändrar du `role` ska du ändra samma text i `<title>` i `index.html`**, i
-samma redigering. Ingen kontroll jämför de två.
+**Namnet och rollen står också i `<title>` i `index.html`**, som
+`namn · roll` med en mittpunkt emellan. Ändrar du något av dem stannar
+bygget och skriver ut exakt vilken titel som ska stå. Skriv in den i
+`<title>` och bygg igen. Delningskortet och sökmotorernas data får det nya
+namnet och rollen av sig själva.
 
 Rubrikerna i navigeringen ändrar du med `label` i `src/data/sections.js`. Där
 bestämmer ordningen i listan också ordningen på sidan. Rör inte `id`.
@@ -272,13 +276,78 @@ texten inom citattecknen.
 | Formulärets felmeddelanden för fälten | `src/components/ContactForm.jsx` | funktionen `validate` |
 | Formulärets besked efter inskick | `src/components/ContactForm.jsx` | `status` |
 | Texten på formulärets knapp | `src/components/ContactForm.jsx` | sök med Ctrl+F på texten du ser på knappen |
-| Sidbeskrivningen för sökmotorer (ett förslag) | `index.html` | `<meta name="description">` |
+| Sidbeskrivningen för sökmotorer. Samma text blir delningskortets beskrivning vid bygget. | `index.html` | `<meta name="description">` |
 
 Texten i `<noscript>` i `index.html` är beslutad ordagrant i `ARKITEKTUR.md`.
 Ändra den inte själv.
 
 Kör `npm run build` efter en ändring i en komponent. Ett skrivfel där fångas
 först av bygget.
+
+## 8. Sökmotorer och delningskortet
+
+När sidan delas på till exempel LinkedIn visas ett kort med bild, titel och
+beskrivning. Sökmotorerna får dessutom en adress, en sitemap och uppgifter
+om dig. Allt det skrivs in i sidans `<head>` när du kör `npm run build`. Det
+finns inte i `npm run dev`, och du ska aldrig skriva sådana taggar för hand i
+`index.html`: då stannar bygget.
+
+### Byta domän
+
+**Fil:** `src/data/site.js`
+
+1. Byt adressen i `url`. Den ska börja med `https://`, ha små bokstäver och
+   sluta med ett snedstreck, till exempel `https://exempel.se/`.
+2. Kör `npm run build`. Bygget stannar, eftersom domänen också står i
+   `public/robots.txt` och `public/sitemap.xml`, och skriver ut exakt vad
+   som ska stå i de två filerna.
+3. Skriv in det utskrivna innehållet i båda filerna och bygg igen.
+
+Fler ställen behöver du inte röra. Canonical, delningskortet och
+sökmotorernas data får den nya adressen av sig själva.
+
+### Profilerna som sökmotorerna ser (sameAs)
+
+Listan byggs av två saker, i denna ordning:
+
+- varje länk i `src/data/contact.js` som har en adress, alltså de länkar som
+  syns på sidan;
+- adresserna i `sameAsExtra` i `src/data/site.js`. Där står profiler som bara
+  ska finnas för sökmotorerna och inte visas på sidan. I dag är det GitHub.
+
+Samma adress tas bara med en gång. Vill du visa GitHub på sidan igen: skriv
+adressen i `contact.js` och gör `sameAsExtra` till `[]`. Varje adress i
+`sameAsExtra` måste börja med `https://`.
+
+### Delningsbilden
+
+Bilden görs av heroporträttet, `assets-source/hero-portrait.jpg`. Har du bytt
+porträttet (avsnitt 3) kör du också:
+
+```sh
+npm run optimize:share-image
+```
+
+Skriptet gör en svartvit bild på 1200 × 630 px och lägger den i
+`public/assets/share/`. Det beskär nederst så att ansiktet står kvar.
+Precis som `optimize:images` kräver det samma mått på källbilden som i dag,
+och stannar annars med en rad som börjar med `FEL`. Då har ingenting
+skrivits. Checka in den nya bilden tillsammans med porträttet.
+
+### Kontrollera efter publicering
+
+Det här går bara att göra när sidan ligger ute på sin riktiga adress.
+
+- **Delningskortet:** klistra in adressen i LinkedIns Post Inspector
+  (`https://www.linkedin.com/post-inspector/`). Där ser du kortet som
+  LinkedIn visar det. LinkedIn sparar kortet en tid, så efter en ändring
+  behöver du köra adressen där igen för att få den nya versionen.
+- **Den strukturerade datan:** klistra in adressen i Googles test för
+  utökade sökresultat (`https://search.google.com/test/rich-results`). Den
+  ska hitta en `Person` och en `WebSite` utan fel.
+- **Sitemapen:** lägg till domänen i Google Search Console
+  (`https://search.google.com/search-console`), öppna Sitemaps och skicka in
+  `sitemap.xml`. Det behöver bara göras en gång, och igen om du byter domän.
 
 ## När bygget stannar på en grind
 
@@ -291,11 +360,16 @@ på raden visar vilket steg som stannade.
 |---|---|---|
 | Namnet på en datafil, till exempel `projects.js:` | Datakontrollen hittade ett fel i den filen. Resten av raden säger vad, och oftast vilken post. | Rätta det som står. Läs kommentaren högst upp i filen om du är osäker på regeln. |
 | Namnet på en datafil följt av `tecken saknas i` | Ett tecken i din text finns inte i typsnittet. Raden visar tecknet och fältet. | Byt tecknet mot ett vanligt tecken. Behöver du verkligen tecknet är det ett jobb för utvecklaren. |
-| `index.html:` | Heros bildbredder i `profile.js` stämmer inte med `index.html`. | Raden säger exakt vad som ska stå i `index.html`. Skriv in det, eller ångra ändringen i `profile.js`. |
+| `index.html:` | Heros bildbredder eller namnet och rollen i `profile.js` stämmer inte med `index.html`. | Raden säger exakt vad som ska stå i `index.html`. Skriv in det, eller ångra ändringen i `profile.js`. |
+| `site.js:` | Domänen eller en adress i `sameAsExtra` är inte skriven som bygget kräver. | Rätta adressen enligt raden och kommentaren högst upp i `site.js`. |
+| `public/robots.txt:` eller `public/sitemap.xml:` | Filen stämmer inte med domänen i `site.js`, eller har fel radslut. | Raden skriver ut exakt vad som ska stå. Skriv in det. Se avsnitt 8. |
 | `sidans id:` | En `slug` eller ett grupp `id` är samma som ett id som sidan redan använder. | Välj ett annat namn. |
 | `validate-tokens.mjs:` eller `tokens.css:` | Tokengrinden. Gäller CSS och inte din text. | Ångra den senaste ändringen i komponenten eller CSS filen och fråga utvecklaren. |
 | En sökväg till en `.jsx` fil, med radnummer | `vite build` hittade ett skrivfel i en komponent. | Gå till raden. Oftast saknas ett citattecken, ett kommatecken eller en klammer. |
-| `prerender:` | Förrenderingen av sidan stannade. | Ångra den senaste ändringen i komponenten och fråga utvecklaren. |
+| `prerender:` och `står redan i index.html` | En canonical, en `og:` eller `twitter:` tagg eller JSON-LD är skriven för hand i `index.html`. | Ta bort taggen ur `index.html`. Bygget skriver in den själv. |
+| `prerender:` och `share-1200x630.jpg saknas` | Delningsbilden finns inte. | Kör `npm run optimize:share-image` och checka in bilden. |
+| `prerender:` och `<meta name="description">` | Sidbeskrivningen i `index.html` är tom eller står två gånger. | Låt den stå exakt en gång, med text. |
+| `prerender:`, något annat | Förrenderingen av sidan stannade. | Ångra den senaste ändringen i komponenten och fråga utvecklaren. |
 
 Datakontrollen skriver ut alla fel på en gång, inte ett i taget. Sista raden
 säger hur många fel den hittade. Ett skrivfel i en datafil, till exempel ett
@@ -303,8 +377,9 @@ glömt kommatecken, ger en rad som säger att filen inte går att läsa och vilk
 fil det gäller.
 
 Bildskripten har egna grindar. `npm run optimize:images` stannar med
-`AVBRYTER`, och `npm run optimize:projects` stannar med `FEL`. I båda fallen
-har ingenting skrivits.
+`AVBRYTER`, och `npm run optimize:projects` och
+`npm run optimize:share-image` stannar med `FEL`. I alla tre fallen har
+ingenting skrivits.
 
 **Det här är inte fel:**
 

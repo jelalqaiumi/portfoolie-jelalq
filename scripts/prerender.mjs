@@ -1,9 +1,13 @@
-/* Förrendering vid bygget. Beslutat i ARKITEKTUR.md: M21 punkt 5.
+/* Förrendering vid bygget. Beslutat i ARKITEKTUR.md: M21 punkt 5 och M24.
  *
  * Körs som sista steg i `npm run build`, efter `vite build`. Skriptet
  * renderar <App /> till en sträng med Vites SSR-bygge av src/prerender.jsx och
  * lägger strängen i den tomma roten i dist/index.html. Sidan syns då innan
  * bundlen har körts, och main.jsx hydrerar den i stället för att rita om.
+ *
+ * I samma körning skrivs canonical, delningskortet och JSON-LD in i <head>,
+ * härledda ur src/data/ med scripts/seo.mjs. De står aldrig i index.html, och
+ * bygget stannar om någon skriver dem där (M24 punkt 3).
  *
  * Inga exporter. Varje fel skrivs som "prerender: <vad som är fel>" och ger
  * avslutskod 1. Fallerar något steg är dist/index.html orörd: den nya filen
@@ -16,6 +20,7 @@
 import { existsSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { SHARE_IMAGE, headTags } from './seo.mjs';
 
 /* Snedstreck framåt även på Windows: sökvägarna står i felmeddelandena. */
 const DIST_HTML = 'dist/index.html';
@@ -23,6 +28,16 @@ const DIST_ASSETS = 'dist/assets';
 const SSR_OUT_DIR = 'node_modules/.cache/prerender';
 const SSR_ENTRY = 'src/prerender.jsx';
 const SECTIONS_FILE = 'src/data/sections.js';
+const SITE_FILE = 'src/data/site.js';
+const PROFILE_FILE = 'src/data/profile.js';
+const CONTACT_FILE = 'src/data/contact.js';
+
+/* Mönster som visar att en tagg som skriptet skriver redan står för hand i
+ * index.html (grind P2). De matchar attributets namn och värde oberoende av
+ * citattecken, blanksteg och skiftläge, eftersom en handskriven tagg kan ha
+ * vilken skrivform som helst. Beslutat i ARKITEKTUR.md: M24 punkt 3. */
+const HAND_TAG_ATTR = /\b(?:rel|property|name)\s*=\s*["']?\s*(?:canonical|og:|twitter:)/gi;
+const HAND_TAG_LDJSON = /\btype\s*=\s*["']?\s*application\/ld\+json/gi;
 
 /* Högst så många klassnamn räknas upp när G3 fäller, så att ett helt
  * omhashat bygge inte ger en sida felutskrift. */
@@ -47,14 +62,18 @@ function escapeRegExp(text) {
   return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+/** @param {string} file  Sökväg till en datafil, relativ till projektroten. */
+async function importData(file) /* : Promise<object> */ {
+  try {
+    return await import(pathToFileURL(resolve(file)).href);
+  } catch (error) {
+    return fail(`${file}: filen går inte att tolka som JavaScript (${reason(error)})`);
+  }
+}
+
 /* Läser id-konstanterna ur sections.js, som är enda källan för dem. */
 async function readIds() {
-  let mod;
-  try {
-    mod = await import(pathToFileURL(resolve(SECTIONS_FILE)).href);
-  } catch (error) {
-    fail(`${SECTIONS_FILE}: filen går inte att tolka som JavaScript (${reason(error)})`);
-  }
+  const mod = await importData(SECTIONS_FILE);
   for (const name of ['ROOT_ID', 'HERO_ID']) {
     if (typeof mod[name] !== 'string' || mod[name].trim() === '') {
       fail(`${SECTIONS_FILE}: exporten ${name} saknas eller är tom`);
@@ -147,6 +166,13 @@ function readBuiltCss() {
     .join('\n');
 }
 
+/* Kastar alla samlade grindfel tillsammans, om det finns några. */
+function throwCollected(errors) {
+  if (errors.length > 0) {
+    throw new PrerenderError(errors.join('\n'));
+  }
+}
+
 /* Steg 5: grindarna mot den renderade strängen. Alla fällda grindar samlas
  * och skrivs ut tillsammans. */
 function checkGates(html, css, ids) {
@@ -192,9 +218,82 @@ function checkGates(html, css, ids) {
     errors.push('prerender: den renderade sidan innehåller hcaptcha, captchan får inte förrenderas');
   }
 
-  if (errors.length > 0) {
-    throw new PrerenderError(errors.join('\n'));
+  throwCollected(errors);
+}
+
+/* Steg 2b: grindarna P1-P4 mot delen före roten och mot dist/. Alla fällda
+ * grindar samlas och skrivs ut tillsammans. Returnerar beskrivningen ur
+ * <meta name="description">, som den står i filen. */
+function checkHeadGates(head) {
+  const errors = [];
+
+  /* P1: taggarna skrivs in före </head>, som måste vara entydig. */
+  const headEnds = count(head, '</head>');
+  if (headEnds !== 1) {
+    errors.push(`prerender: ${DIST_HTML}: </head> finns ${headEnds} gånger före roten, ska finnas 1`);
   }
+
+  /* P2: en handskriven tagg vore en andra källa till samma värde. */
+  for (const pattern of [HAND_TAG_ATTR, HAND_TAG_LDJSON]) {
+    for (const match of head.matchAll(pattern)) {
+      errors.push(
+        `prerender: ${DIST_HTML}: ${match[0]} står redan i index.html. Taggen skrivs av prerender.mjs ur src/data/ (ARKITEKTUR.md M24), ta bort den ur index.html.`,
+      );
+    }
+  }
+
+  /* P3: delningskortets beskrivning är sidbeskrivningen. */
+  const descriptions = [...head.matchAll(/<meta name="description" content="([^"]*)"/g)];
+  let description = null;
+  if (descriptions.length !== 1) {
+    errors.push(`prerender: ${DIST_HTML}: <meta name="description"> finns ${descriptions.length} gånger, ska finnas 1`);
+  } else if (descriptions[0][1].trim() === '') {
+    errors.push(`prerender: ${DIST_HTML}: <meta name="description"> är tom`);
+  } else {
+    description = descriptions[0][1];
+  }
+
+  /* P4: og:image pekar på en fil som måste finnas i leveransen. */
+  if (!existsSync(`dist/${SHARE_IMAGE.path}`)) {
+    errors.push(`prerender: dist/${SHARE_IMAGE.path} saknas (kör npm run optimize:share-image och checka in bilden)`);
+  }
+
+  throwCollected(errors);
+  return description;
+}
+
+/* Steg 2d, P5: JSON-LD-blocken går att tolka, innehåller inget "<" och kan
+ * därför inte avsluta sitt eget skriptblock. */
+function checkJsonLd(tags) {
+  const errors = [];
+
+  const opening = tags.reduce((sum, tag) => sum + count(tag, '<script'), 0);
+  const closing = tags.reduce((sum, tag) => sum + count(tag, '</script>'), 0);
+  if (opening !== 2 || closing !== 2) {
+    errors.push(`prerender: taggarna i <head> har ${opening} <script och ${closing} </script>, ska ha 2 av vardera`);
+  }
+
+  const blocks = tags
+    .map((tag) => tag.match(/^<script type="application\/ld\+json">([\s\S]*)<\/script>$/))
+    .filter((match) => match !== null)
+    .map((match) => match[1]);
+  blocks.forEach((json, index) => {
+    let cause = null;
+    if (json.includes('<')) {
+      cause = 'innehåller "<"';
+    } else {
+      try {
+        JSON.parse(json);
+      } catch (error) {
+        cause = reason(error);
+      }
+    }
+    if (cause !== null) {
+      errors.push(`prerender: JSON-LD-block ${index + 1} går inte att tolka eller innehåller "<" (${cause})`);
+    }
+  });
+
+  throwCollected(errors);
 }
 
 async function main() {
@@ -217,6 +316,23 @@ async function main() {
   if (parts.length !== 2) {
     fail(`${DIST_HTML}: markören ${marker} finns ${parts.length - 1} gånger, ska finnas 1`);
   }
+
+  /* Steg 2a. Innehållet är redan grindat av validate-data.mjs, som körs
+   * först i build. */
+  const { site } = await importData(SITE_FILE);
+  const { profile } = await importData(PROFILE_FILE);
+  const { contact } = await importData(CONTACT_FILE);
+
+  /* Steg 2b. */
+  const description = checkHeadGates(parts[0]);
+
+  /* Steg 2c och 2d. */
+  const tags = headTags({ site, profile, contact, description });
+  checkJsonLd(tags);
+
+  /* Steg 2e. split och inte replace, av samma skäl som vid roten. */
+  const head = parts[0].split('</head>');
+  parts[0] = head[0].trimEnd() + '\n' + tags.map((tag) => '    ' + tag + '\n').join('') + '  </head>' + head[1];
 
   /* Steg 3-5. */
   const html = await renderApp();

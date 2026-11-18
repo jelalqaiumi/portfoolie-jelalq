@@ -4,6 +4,10 @@
  *   E-post   - byt texten i "email" nedan. Den visas i klartext på sidan och
  *              blir en mailto-länk.
  *   En länk  - byt "url" på den raden. Ingen annan fil behöver röras.
+ *              Varje länk med en adress står också i sameAs i sidans
+ *              strukturerade data för sökmotorer. En profil som bara ska stå
+ *              där, och inte på sidan, skrivs i sameAsExtra i
+ *              src/data/site.js.
  *   Ta bort
  *   en länk  - skriv  url: null,  i stället för adressen. Då försvinner
  *              länken helt från sidan. Radera inte raden - null är det som
@@ -59,13 +63,11 @@ export const contact = {
   links: [
     /* GitHub-länken är borttagen på Jelals begäran 2026-10-06. url: null
      * betyder att posten INTE renderas - ingen tom länk uppstår. Fyll i
-     * adressen igen för att få tillbaka den. */
+     * adressen igen för att få tillbaka den. GitHub står i sameAs via
+     * sameAsExtra i src/data/site.js men visas inte på sidan. */
     { label: 'GitHub', url: null },
 
-    /* LinkedIn-adressen är HÄRLEDD, inte verifierad: LinkedIn svarar HTTP 999
-     * på automatiska anrop, alltså blockerat och inte saknat. Slutdelen i en
-     * LinkedIn-adress är inte alltid samma som visningsnamnet. Klicka på
-     * länken och byt raden om den leder fel. */
+    /* LinkedIn-adressen är bekräftad av Jelal 2026-11-18. */
     { label: 'LinkedIn', url: 'https://www.linkedin.com/in/jelalqaiumi' },
   ],
   form: {

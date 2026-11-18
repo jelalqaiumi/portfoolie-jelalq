@@ -2,18 +2,22 @@
  *
  * SÅ ÄNDRAR DU NÅGOT:
  *   Namnet  - byt texten i "name" nedan.
- *   Rollen  - byt texten i "role" nedan, OCH texten efter första
- *             mittpunkten i <title> i index.html. Det är samma sträng på två
- *             ställen, och <title> kan inte läsa härifrån - ändra båda i samma
- *             redigering.
+ *   Rollen  - byt texten i "role" nedan.
+ *   Både namnet och rollen står också i <title> i index.html, som inte kan
+ *   läsa härifrån. Skiljer de sig stannar bygget och skriver ut den väntade
+ *   titeln. Skriv in den i <title>.
  *
  * VAR DE SYNS:
  *   role  - rollraden i hero, under rubriken, och taglinen i footern.
  *   name  - copyright-raden i footern.
+ *   Båda  - fliktiteln, delningskortet och den strukturerade datan för
+ *           sökmotorer.
  *
  * REGLER SOM BYGGET KONTROLLERAR (npm run build stannar annars):
  *   - name måste finnas och innehålla text.
  *   - role måste finnas och innehålla text.
+ *   - <title> i index.html måste vara namnet och rollen med en mittpunkt
+ *     emellan.
  *
  * Heros rubrik står INTE här. Den står i src/components/Hero.jsx.
  */

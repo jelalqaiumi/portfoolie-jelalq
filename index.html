@@ -11,13 +11,13 @@
     <link rel="icon" type="image/png" sizes="96x96" href="/assets/jq-icon-96.png" />
     <link rel="apple-touch-icon" href="/assets/jq-icon-192.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Rollen efter första mittpunkten är samma sträng som "role" i
-         src/data/profile.js. Ändras den där ändras den här, i samma
-         redigering. -->
+    <!-- Titeln är namnet och rollen ur src/data/profile.js med en mittpunkt
+         emellan. Bygget stannar om de skiljer sig. Beslutat i ARKITEKTUR.md:
+         M24. -->
     <title>Jelal Qaiumi · Systemutvecklare · Fullstack</title>
-    <!-- FÖRSLAG som väntar på Jelals godkännande. Texten bygger på heros
-         ingress i src/components/Hero.jsx och ska läsas om när ingressen
-         ändras. Beslutat i ARKITEKTUR.md: M21 punkt 3. -->
+    <!-- Texten bygger på heros ingress i src/components/Hero.jsx och ska
+         läsas om när ingressen ändras. Samma text blir delningskortets
+         beskrivning vid bygget. Beslutat i ARKITEKTUR.md: M21 punkt 3. -->
     <meta name="description" content="Jelal Qaiumi, systemutvecklare. Jag bygger webbappar och mobilappar i React, React Native och .NET, hela vägen från databas till app." />
     <!-- Heros bild hämtas innan JavaScript har renderat sidan, eftersom den är
          det största elementet i första skärmen. imagesrcset och imagesizes ska
@@ -27,6 +27,9 @@
          imagesrcset eller href inte stämmer med HERO_IMAGE_WIDTHS i
          src/data/profile.js. imagesizes kontrolleras inte. -->
     <link rel="preload" as="image" type="image/webp" href="/assets/hero/hero-1440.webp" imagesrcset="/assets/hero/hero-960.webp 960w, /assets/hero/hero-1440.webp 1440w, /assets/hero/hero-1672.webp 1672w" imagesizes="(min-width: 900px) 100vw, 178vw" fetchpriority="high" />
+    <!-- Canonical, delningskortet och den strukturerade datan skrivs in här
+         av scripts/prerender.mjs vid bygget, ur src/data/. Skriv dem inte för
+         hand: bygget stannar om de finns. Beslutat i ARKITEKTUR.md: M24. -->
   </head>
   <body>
     <!-- Sidan förrenderas vid bygget och syns därför utan JavaScript, men det

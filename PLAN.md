@@ -163,6 +163,207 @@ samordnaren visa dem mot ett färskt `vite preview`.
 
 ---
 
+## P19 — Full SEO: canonical, delningskort, JSON-LD och sitemap (KLAR 2026-11-18, godkänd i P19d, Lighthouse SEO 100 mobil och dator)
+
+Skriven 2026-11-18 av projektledaren. Fogas in i `PLAN.md` av samordnaren, ovanför
+"Tidigare omgångar". Ingen tidigare text i `PLAN.md` tas bort.
+
+**Mål (Jelal):** Lighthouse SEO är redan 100. Sidan ska dessutom ha canonical,
+Open Graph och Twitter-kort med en genererad delningsbild, JSON-LD för Person och
+WebSite, och en sitemap som robots.txt pekar på. Domänen är
+`https://jelalqaiumi.se/` (gemener, ingen www).
+
+**Underlag:** `index.html`, `public/robots.txt`, `.gitattributes`,
+`src/data/profile.js`, `src/data/contact.js`, `scripts/optimize-images.mjs`,
+`scripts/prerender.mjs`, `ARKITEKTUR.md` M21 punkt 3 och 4.
+
+### Lärdomar som gäller här
+
+- **2026-11-08, P18 byggdes utan post i `PLAN.md`.** → Detta avsnitt är posten.
+  Byggaren startar P19c först när `grep -n "P19c" PLAN.md` ger träff.
+- **2026-11-08, projektledaren skrev över hela PLAN.md.** → Avsnittet ligger i en
+  separat fil och fogas in. Samordnaren kör `git diff --numstat PLAN.md` efteråt,
+  och kolumnen för borttagna rader ska vara 0.
+- **2026-10-02 (ÅTERFALL, 3+), överspelade stycken står kvar i ARKITEKTUR.md.** →
+  RÄTTAT 2026-11-18 i M24: M21 punkt 4 sade "Ingen `Sitemap`-rad" och att robots.txt var det
+  "**enda** undantaget" från regeln att varje fil i `dist/` har en referens. Båda
+  blir falska med P19. Arkitekten rättar dem på sin plats i samma redigering som
+  M24, och söker efter `Sitemap` och `enda undantag` i `ARKITEKTUR.md` och
+  `PLAN.md`.
+- **2026-11-08, `profile.js` lovar "ändra bara här", men värdet står på flera
+  ställen.** → Domänen kommer att stå i canonical, og:url, og:image, JSON-LD,
+  sitemap och robots.txt. Namn och roll står redan i både `profile.js` och
+  `<title>`. Arkitekten bestämmer för varje värde om det läses ur en enda källa
+  eller skyddas av en grind som fäller bygget när ställena glider isär. Inget löfte
+  om "ändra bara här" skrivs utan att `grep -rn "jelalqaiumi.se" src scripts public index.html`
+  är körd.
+- **2026-10-02, obearbetade källbilder ligger aldrig i `public/`, och varje fil i
+  `dist/` har en referens.** → Delningsbilden genereras ur `assets-source/` och
+  bara resultatet hamnar under `public/`. Den refereras av `og:image`. Sitemapen
+  refereras av robots.txt. Arkitekten skriver om regeln om undantag så att den
+  stämmer.
+- **2026-10-02, ett skript som skriver artefakter skriver till en temporärkatalog
+  och flyttar först när kontrollerna gått igenom.** → Gäller bildgenereringen,
+  och en tvingad grind ska visas lämna målkatalogen orörd.
+- **2026-10-02, utskrivna kontroller märks `GRIND:` eller `UPPLYSNING:`, och en
+  kontroll som behövs två gånger lyfts till en funktion.** → Gäller om
+  bildskriptet utvidgas. Byggaren redovisar `grep -c` på varje `fail()`-meddelande.
+- **2026-10-02, ett npm-script läggs till i samma paket som filen det anropar, och
+  varje script i `package.json` körs en gång före överlämning.**
+- **2026-10-05, mät aldrig `dist/` utan att binda det till källan.** → Alla
+  kontroller i "Godkänt när" görs på ett bygge som körts omedelbart före, och
+  överlämningen anger byggkommandot och tidsstämpeln för senast ändrade fil under
+  `src/`.
+- **2026-10-05, en grind prövas med tre indata: korrekt (tiger), felaktigt
+  (larmar) och den föreskrivna åtgärden (tiger).** → Gäller varje ny grind i P19.
+- **2026-11-08, `robots.txt` blev CRLF i en färsk klon.** → Radslutet för
+  robots.txt, och för sitemap.xml om arkitekten kräver det, verifieras i en färsk
+  klon med `core.autocrlf=true`.
+- **2026-10-02 (ÅTERFALL, 3+), kodkommentarer med uppmätta tal eller med vad
+  ARKITEKTUR.md "säger".** → Kommentarerna i `index.html` och skripten skrivs som
+  invarianter med hänvisning till M24.
+- **Projektets minne: Jelal vill se något körbart snabbt, breda uppdrag hänger
+  sig, inga streck i synlig text.** → Paketet är litet och byggs i ett steg.
+  Granskningen är smal. Description och og:description prövas mot streck.
+
+### Ingår
+
+1. `<link rel="canonical">` med `https://jelalqaiumi.se/` i `<head>`.
+2. Open Graph: `og:title`, `og:description`, `og:url`, `og:type` = `website`,
+   `og:locale` = `sv_SE`, `og:image` (absolut adress), `og:image:width` = 1200,
+   `og:image:height` = 630 och `og:image:alt`. Twitter: `twitter:card` =
+   `summary_large_image`.
+3. Delningsbilden, 1200 × 630, genererad av ett skript ur befintligt material i
+   `assets-source/` (hero-porträttet eller loggan, arkitekten väljer), med ett
+   npm-script. Ingen bild läggs för hand i `public/`.
+4. JSON-LD med `Person` (namn, jobTitle, url, image, sameAs) och `WebSite`.
+   Namn och roll läses ur `src/data/`. Var domänen och sameAs-adresserna bor
+   bestämmer arkitekten, med svaret på fråga B nedan.
+5. `public/sitemap.xml` med startsidan, och raden
+   `Sitemap: https://jelalqaiumi.se/sitemap.xml` i `public/robots.txt`, med
+   LF-radslut.
+6. Jelals godkännande av sidbeskrivningen (fråga A). Efter godkännandet tas
+   FÖRSLAG-markeringen bort ur `index.html`, och M21 punkt 3 uppdateras.
+7. M24 i `ARKITEKTUR.md`, och rättningen av M21 punkt 4 på sin plats.
+
+### Ingår inte
+
+- Fler sidor i sitemapen, `lastmod`-logik utöver vad arkitekten beslutar,
+  `hreflang` och en engelsk version.
+- JSON-LD för projekten, och strukturerad data utöver Person och WebSite.
+- Driftsättning, DNS, Google Search Console och manuell kontroll i externa
+  validerare. Det kan Jelal göra efter driftsättning, och det är inget villkor här.
+- Ändringar av synlig text på sidan, ikoner eller manifest.
+- Ny design av delningsbilden utöver beskärning och placering av befintligt
+  material.
+
+### Två frågor till Jelal (besvaras innan P19c startar)
+
+- **A. Sidbeskrivningen.** Texten i `index.html` är ett FÖRSLAG. Godkänner du den
+  ordagrant, eller vill du ha en annan? Samma text blir `og:description`.
+- **B. GitHub i sameAs.** GitHub-länken på sidan togs bort på din begäran
+  2026-10-06 (`url: null` i `src/data/contact.js`). Ska den tillbaka på sidan, så
+  att sameAs kan läsas ur samma lista, eller ska GitHub bara stå i sameAs och inte
+  synas på sidan? LinkedIn-adressen i `contact.js` är märkt "härledd, inte
+  verifierad", och din adress i uppdraget är densamma. Räknas den nu som
+  verifierad?
+
+**Jelals svar 2026-11-18 (P19a klar):**
+- **A:** "Ja, godkänd". Beskrivningen i `index.html` används ordagrant.
+- **B:** "Bara i JSON-LD". GitHub (`https://github.com/Jelalqaiumi`) står bara i
+  sameAs och syns inte på sidan.
+- **LinkedIn:** "Ja, den stämmer". `https://www.linkedin.com/in/jelalqaiumi` är
+  bekräftad.
+
+### Steg
+
+| # | Uppgift | Agent | Klar när |
+|---|---------|-------|----------|
+| P19a | Fråga A och B till Jelal | samordnare, sedan Jelal | Båda svaren står ordagrant med datum i `PLAN.md` under denna rubrik |
+| P19b | **M24**: källan till varje värde (domän, namn, roll, sameAs), hur JSON-LD och metataggar kommer in i `dist/index.html`, bildens källa, format, beskärning och storlekstak, radslut för sitemap, och grindarna med tre indata vardera. M21 punkt 4 rättas på sin plats | arkitekt | Varje punkt i "Ingår" har ett beslut i M24 med vilket steg som genomför det. `grep -n "Ingen \`Sitemap\`-rad\|enda undantag" ARKITEKTUR.md PLAN.md` ger bara träffar märkta RÄTTAT eller UPPHÄVT |
+| P19c | Bygget enligt M24 | byggare | Alla punkter under "Godkänt när" nedan är redovisade, och varje beslut i M24 är besvarat med `fil:rad` |
+| P19d | Smal granskning av P19 | granskare | Varje punkt under "Godkänt när" är omprövad mot ett eget färskt bygge, eller så finns ett fynd i `LARDOMAR.md` |
+| P19e | Commit. Jelal pushar själv | samordnare, sedan Jelal | `git status` är ren, och varje incheckad fil hör till P19 |
+
+P19a och P19b går parallellt. M24 skrivs så att svaret på fråga B kan föras in
+utan att beslutet görs om. P19c startar när både P19a och P19b är klara.
+
+### Godkänt när (P19c och P19d)
+
+Alla kontroller görs mot `dist/` från ett `npm run build` som körts omedelbart
+före, med kod 0.
+
+1. **Canonical.** `dist/index.html` har exakt en `<link rel="canonical">`, och
+   dess `href` är exakt `https://jelalqaiumi.se/`.
+2. **Open Graph och Twitter.** Var och en av de tio egenskaperna under "Ingår"
+   punkt 2 förekommer exakt en gång i `dist/index.html` med det angivna värdet.
+   `og:url` är lika med canonical. `og:image` börjar med `https://jelalqaiumi.se/`.
+   `og:image:alt` och `og:title` innehåller text, och `og:description` är tecken
+   för tecken lika med `meta name="description"`.
+3. **Delningsbilden.** Filen som `og:image` pekar på finns i `dist/` på samma
+   sökväg. Dess mått läses ur filen själv och är 1200 × 630, och storleken ligger
+   under taket i M24. Ingen fil i `assets-source/` ligger i `public/` eller
+   `dist/`. Bildens npm-script är kört, och en andra körning ger en fil med samma
+   innehållshash. En tvingad grind i skriptet lämnar målkatalogen orörd (sökväg
+   till utdata i scratchpad).
+4. **JSON-LD.** Varje `<script type="application/ld+json">` i `dist/index.html`
+   går att `JSON.parse` utan fel. Tillsammans innehåller de exakt en `Person` och
+   exakt en `WebSite`. `Person.name` och `Person.jobTitle` är lika med värdena i
+   `src/data/` enligt M24, `url` är domänen, `image` är en absolut adress till en
+   fil som finns i `dist/`, och `sameAs` innehåller exakt de adresser som svaret
+   på fråga B ger. **Negativ kontroll** i en kopia av projektet: ändrat namn i
+   `src/data/profile.js` ger det nya namnet i JSON-LD efter bygget, och ett namn
+   som innehåller `</script>` ger fortfarande JSON som går att tolka och samma
+   antal `<script>`-element i sidan.
+5. **Sitemap.** `dist/sitemap.xml` är välformad XML (tolkas utan fel), har
+   rotelementet `urlset` i sitemaps.org-namnrymden och exakt en `<loc>`, som är
+   `https://jelalqaiumi.se/`. `vite preview` svarar 200 på `/sitemap.xml`.
+6. **robots.txt.** `dist/robots.txt` innehåller raden
+   `Sitemap: https://jelalqaiumi.se/sitemap.xml` och raderna enligt M24. I en
+   färsk klon med `core.autocrlf=true` visar `od -c` inget `\r` i robots.txt (och
+   i sitemap.xml om M24 kräver LF där).
+7. **En källa per värde.** Domänen ändrad på ett ställe i en kopia av projektet
+   ger antingen samma ändring överallt i `dist/` eller ett stoppat bygge med ett
+   svenskt meddelande, enligt M24. Samma prov för rollen. Varje grind som P19
+   inför är prövad med korrekt, felaktigt och den föreskrivna åtgärden, med
+   sökväg till utdata.
+8. **Sidbeskrivningen.** Jelals svar på fråga A står i `PLAN.md`.
+   `grep -c "FÖRSLAG" index.html` gäller inte längre beskrivningen, och
+   description och `og:description` ger 0 träffar på streck med samma sökning som
+   i M21 punkt 3.
+9. **Inget annat har gått sönder.** Lighthouse SEO, Bästa praxis och
+   Tillgänglighet är 100 mot ett färskt `vite preview`, mobil och desktop, en
+   körning var. `du -sh dist` och de tre största filerna är redovisade. Varje fil i
+   `dist/` har en referens, eller är ett undantag som M24 räknar upp.
+10. **Städning.** Varje script i `package.json` har körts en gång.
+    `grep -rn "EJ I ARKITEKTUR" src scripts index.html` är redovisad. Kommentarer
+    i ändrade filer bär inga uppmätta tal. `netstat` visar ingen kvarlämnad
+    server efter mätningen.
+
+### Risker
+
+- **Värdena glider isär.** Domän, namn och roll hamnar på sex eller fler ställen,
+  och det första som ändras senare blir det enda som ändras. **Märks tidigt**
+  genom punkt 7 i "Godkänt när", som tvingar fram ett prov där ett ställe ändras.
+- **JSON-LD bryter sidan.** Ett värde ur datan som innehåller `</script>` eller
+  citattecken kan bryta ut ur skriptblocket eller ge ogiltig JSON. **Märks
+  tidigt** genom den negativa kontrollen i punkt 4.
+- **Förrenderingen eller hydreringen påverkas.** Om metataggarna förs in i samma
+  steg som fyller roten kan markeringen som `prerender.mjs` letar efter flyttas.
+  **Märks tidigt** genom att bygget stannar, och genom Lighthouse-körningen i
+  punkt 9.
+- **Delningsbilden blir fel beskuren eller för tung.** 1200 × 630 är bredare än
+  porträttet. **Märks tidigt** genom att arkitekten anger beskärning och
+  storlekstak i M24, och genom att samordnaren visar bilden för Jelal innan
+  commit.
+- **Fråga B blir obesvarad och sameAs gissas.** Den frestande utvägen är att lägga
+  GitHub direkt i JSON-LD och lämna sidans länk som `null`. **Märks tidigt**
+  genom att P19c inte startar förrän svaret står i `PLAN.md`.
+- **M21 punkt 4 står kvar och motsäger M24.** **Märks tidigt** genom
+  sökningen i P19b:s "Klar när".
+- **Paketet växer.** Externa validerare, fler sidor eller projektdata frestar.
+  **Märks tidigt** genom listan "Ingår inte".
+
 # Tidigare omgångar (oförändrade, ur 6d74727)
 
 # Plan: Modernisera portfolion enligt `UPPDRAG-2026-11-07.md` — mörk, lugn premiumdesign, nya projektkort med filter, utan att bryta sidan

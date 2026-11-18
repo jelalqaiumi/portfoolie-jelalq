@@ -19,6 +19,7 @@ import { spawnSync } from 'node:child_process';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { readFontCodePoints } from './font-coverage.mjs';
+import { robotsTxt, sitemapXml, pageTitle, escapeHtml } from './seo.mjs';
 
 /* ===== AKTIVA KONTROLLER =================================================
  * Lägg till en rad här i det paket där datafilen skapas.
@@ -33,6 +34,7 @@ const ACTIVE = [
   'about',
   'contact',
   'profile',
+  'site',
 ];
 
 const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -225,7 +227,8 @@ function checkSkills(mod) {
 
 /* ===== projects.js ======================================================
  * Grindarna är beslutade i ARKITEKTUR.md, "M3 - Projektdatan", ett meddelande
- * per fall. Två steg hör ihop: raden i ACTIVE och posten i CHECKS nedan.
+ * per fall. Aktiveringen kräver raden i ACTIVE, posten i CHECKS och en
+ * typsnittsroll i FONT_ROLES för varje strängfält.
  *
  * VILKEN LEGITIM ÄNDRING FÅR FÄLLA DEM? Ingen. Jelal kan lägga till, ta bort
  * och skriva om projekt fritt - grindarna fäller bara poster som renderar fel
@@ -399,8 +402,9 @@ async function checkProjects(mod) {
 }
 
 /* ===== about.js =========================================================
- * Aktiverad 2026-10-07, tillsammans med datafilen. Tre steg hör ihop: raden i
- * ACTIVE, denna funktion och posten i CHECKS nedan.
+ * Aktiverad 2026-10-07, tillsammans med datafilen. Aktiveringen kräver raden
+ * i ACTIVE, denna funktion, posten i CHECKS och en typsnittsroll i FONT_ROLES
+ * för varje strängfält.
  *
  * Datamodellen har ETT obligatoriskt fält, och det ska därför ha en egen grind
  * oavsett att kontrolltabellen är kort (LARDOMAR.md 2026-10-05: ett fält som en
@@ -525,8 +529,9 @@ function countOccurrences(haystack, needle) {
 }
 
 /* ===== contact.js =======================================================
- * Aktiverad i paket 6, tillsammans med datafilen. Två steg hör ihop: raden i
- * ACTIVE och posten i CHECKS nedan.
+ * Aktiverad i paket 6, tillsammans med datafilen. Aktiveringen kräver raden i
+ * ACTIVE, posten i CHECKS och en typsnittsroll i FONT_ROLES för varje
+ * strängfält.
  * ======================================================================== */
 function checkContact(mod) {
   const { contact } = mod;
@@ -596,14 +601,17 @@ function checkContact(mod) {
 }
 
 /* ===== profile.js =======================================================
- * Aktiverad i paket P5, tillsammans med datafilen. Två steg hör ihop: raden i
- * ACTIVE och posten i CHECKS nedan.
+ * Aktiverad i paket P5, tillsammans med datafilen. Aktiveringen kräver raden i
+ * ACTIVE, posten i CHECKS och en typsnittsroll i FONT_ROLES för varje
+ * strängfält.
  *
  * Båda fälten är OBLIGATORISKA i typedefen och har därför var sin grind.
  *
- * VILKEN LEGITIM ÄNDRING FÅR FÄLLA DEN? Ingen. Jelal kan byta namnet och
- * rollen fritt - grinden fäller bara ett fält som saknas eller bara har
- * blanksteg, alltså en tom rollrad i hero.
+ * VILKEN LEGITIM ÄNDRING FÅR FÄLLA DEN? Grindarna för fälten: ingen, de fäller
+ * bara ett fält som saknas eller bara har blanksteg, alltså en tom rollrad i
+ * hero. Titelgrinden (V9, checkPageTitle nedan): ett nytt namn eller en ny
+ * roll, eftersom <title> i index.html då måste skrivas om. Åtgärden dess
+ * meddelande föreskriver, den väntade titeln inskriven, får den att tiga.
  * ======================================================================== */
 /* ===== heros preload i index.html =======================================
  * index.html kan inte importera HERO_IMAGE_WIDTHS, så samma bredder står
@@ -617,6 +625,23 @@ function checkContact(mod) {
  * imagesizes jämförs inte: strängen står i Hero.jsx, som inte går att läsa
  * utan JSX.
  * ======================================================================== */
+/* index.html läses en gång per körning, och ett läsfel ger ett meddelande en
+ * gång, oavsett hur många grindar som läser filen. */
+let indexHtmlCache;
+
+/** @returns {string | null}  index.html, eller null om filen inte gick att läsa. */
+function readIndexHtml() {
+  if (indexHtmlCache === undefined) {
+    try {
+      indexHtmlCache = readFileSync(join(PROJECT_ROOT, 'index.html'), 'utf8');
+    } catch (error) {
+      fail(`index.html: filen kunde inte läsas (${error.message})`);
+      indexHtmlCache = null;
+    }
+  }
+  return indexHtmlCache;
+}
+
 /** @param {unknown} widths  HERO_IMAGE_WIDTHS ur profile.js. */
 function checkHeroPreload(widths) /* : void */ {
   if (!Array.isArray(widths) || widths.length < 2 || !widths.every((w) => Number.isInteger(w) && w > 0)) {
@@ -624,13 +649,8 @@ function checkHeroPreload(widths) /* : void */ {
     return;
   }
 
-  let html;
-  try {
-    html = readFileSync(join(PROJECT_ROOT, 'index.html'), 'utf8');
-  } catch (error) {
-    fail(`index.html: filen kunde inte läsas (${error.message})`);
-    return;
-  }
+  const html = readIndexHtml();
+  if (html === null) return;
 
   const preloads = [...html.matchAll(/<link\b[^>]*>/g)]
     .map((match) => match[0])
@@ -683,6 +703,141 @@ function checkProfile(mod) {
   }
 
   summary.push('profil med namn och roll');
+
+  if (hasText(profile.name) && hasText(profile.role)) {
+    checkPageTitle(profile);
+  }
+}
+
+/* ===== titeln i index.html ==============================================
+ * <title> kan inte läsa profile.js, så namnet och rollen står skrivna där
+ * också. Grinden gör att de inte kan glida isär utan att bygget stannar.
+ * Beslutat i ARKITEKTUR.md: M24 punkt 2 (V9).
+ *
+ * VILKEN LEGITIM ÄNDRING FÅR FÄLLA DEN? Ett nytt namn eller en ny roll i
+ * profile.js. Åtgärden meddelandet föreskriver, den väntade texten inskriven
+ * i <title>, får den att tiga.
+ * ======================================================================== */
+/** @param {{ name: string, role: string }} profile  Ett profile med name och role som klarat sina grindar. */
+function checkPageTitle(profile) /* : void */ {
+  const html = readIndexHtml();
+  if (html === null) return;
+
+  const titles = [...html.matchAll(/<title>([^<]*)<\/title>/g)];
+  if (titles.length !== 1) {
+    fail(`index.html: <title> finns ${titles.length} gånger, ska finnas 1`);
+    return;
+  }
+
+  const actual = titles[0][1];
+  const expected = escapeHtml(pageTitle(profile));
+  if (actual !== expected) {
+    fail(`index.html: <title> är "${actual}", men profile.js ger "${expected}" (name · role). Skriv in den väntade texten i <title> i index.html.`);
+    return;
+  }
+
+  summary.push('titeln stämmer med namn och roll');
+}
+
+/* ===== site.js ==========================================================
+ * Aktiverad i paket P19c, tillsammans med datafilen. Aktiveringen kräver
+ * raden i ACTIVE, posten i CHECKS och en typsnittsroll i FONT_ROLES för varje
+ * strängfält. Beslutat i ARKITEKTUR.md: M24 punkt 2.
+ *
+ * VILKEN LEGITIM ÄNDRING FÅR FÄLLA DEN? För url och sameAsExtra ingen: varje
+ * adress som skrivs rätt tiger. För robots.txt och sitemap.xml en ny domän i
+ * url. Åtgärden meddelandet föreskriver, det utskrivna innehållet inskrivet i
+ * filen, får den att tiga. Det är avsikten: domänen kan inte ändras på ett
+ * ställe utan att bygget säger var mer.
+ * ======================================================================== */
+/* En https-adress som new URL kan tolka, annars null. */
+function httpsUrl(value) {
+  if (typeof value !== 'string') return null;
+  let parsed;
+  try {
+    parsed = new URL(value);
+  } catch {
+    return null;
+  }
+  return parsed.protocol === 'https:' ? parsed : null;
+}
+
+/** @param {object} mod  Modulen site.js. */
+function checkSite(mod) /* : void */ {
+  const { site } = mod;
+
+  if (site === null || typeof site !== 'object' || Array.isArray(site)) {
+    fail('site.js: site saknas eller är inte ett objekt');
+    return;
+  }
+
+  /* V6 */
+  const { url } = site;
+  const parsed = hasText(url) ? httpsUrl(url) : null;
+  const urlOk =
+    parsed !== null && parsed.pathname === '/' && parsed.search === '' && parsed.hash === '' && parsed.href === url;
+  if (!urlOk) {
+    fail(`site.js: url "${url}" ska vara en https-adress till startsidan, med gemener och ett snedstreck sist (till exempel https://exempel.se/)`);
+  }
+
+  /* V7 */
+  let extraOk = Array.isArray(site.sameAsExtra);
+  if (!extraOk) {
+    fail('site.js: sameAsExtra ska vara en lista (skriv [] om den är tom)');
+  } else {
+    site.sameAsExtra.forEach((v, index) => {
+      if (httpsUrl(v) === null) {
+        fail(`site.js: sameAsExtra[${index + 1}] "${v}" är inte en https-adress`);
+        extraOk = false;
+      }
+    });
+  }
+
+  if (urlOk && extraOk) {
+    summary.push(`site med adress och ${site.sameAsExtra.length} extra sameAs`);
+  }
+
+  if (urlOk) {
+    checkSeoFiles(url);
+  }
+}
+
+/* ===== robots.txt och sitemap.xml =======================================
+ * Statiska filer i public/ som bär domänen. Grinden jämför dem byte för byte
+ * med vad site.url ger. Beslutat i ARKITEKTUR.md: M24 punkt 2 (V8) och
+ * punkt 5.
+ * ======================================================================== */
+/** @param {string} siteUrl  Ett site.url som klarat V6. */
+function checkSeoFiles(siteUrl) /* : void */ {
+  const files = [
+    { name: 'robots.txt', expected: robotsTxt(siteUrl) },
+    { name: 'sitemap.xml', expected: sitemapXml(siteUrl) },
+  ];
+  let allOk = true;
+
+  for (const { name, expected } of files) {
+    let actual;
+    try {
+      actual = readFileSync(join(PROJECT_ROOT, 'public', name), 'utf8');
+    } catch (error) {
+      fail(`public/${name}: filen kunde inte läsas (${error.message})`);
+      allOk = false;
+      continue;
+    }
+
+    if (actual === expected) continue;
+    allOk = false;
+
+    if (actual.replace(/\r\n/g, '\n') === expected) {
+      fail(`public/${name}: filen har CRLF-radslut, ska ha LF (.gitattributes, ARKITEKTUR.md M24 punkt 5)`);
+    } else {
+      fail(`public/${name}: innehållet stämmer inte med url i src/data/site.js. Skriv in exakt detta, med LF-radslut och en radbrytning sist:\n${expected}`);
+    }
+  }
+
+  if (allOk) {
+    summary.push('robots.txt och sitemap.xml stämmer med site.url');
+  }
 }
 
 /* ===== TECKENSNITTETS TÄCKNING ==========================================
@@ -760,6 +915,8 @@ const FONT_ROLES = {
   'contact.form.hcaptchaSiteKey': [],
   'profile.name': ['body'],
   'profile.role': ['body', 'mono'],
+  'site.url': [],
+  'site.sameAsExtra[]': [],
 };
 
 function fontRolesFor(fileName, path) {
@@ -909,6 +1066,11 @@ function checkFontSubset(fileName, mod, coverage) {
     const roles = fontRolesFor(fileName, path);
 
     if (roles === undefined) {
+      /* En sträng där datan ska ha en lista: fältets egen grind har redan
+       * fällt det, och ett meddelande om FONT_ROLES hade pekat på en åtgärd i
+       * skriptet i stället för i datafilen. Beslutat i ARKITEKTUR.md: M24
+       * punkt 2. */
+      if (fontRolesFor(fileName, `${path}[]`) !== undefined) continue;
       if (!reportedPaths.has(path)) {
         reportedPaths.add(path);
         fail(`${fileName}: fältet ${path} saknar typsnittsroll (FONT_ROLES i scripts/validate-data.mjs)`);
@@ -1034,6 +1196,7 @@ const CHECKS = {
   about: checkAbout,
   contact: checkContact,
   profile: checkProfile,
+  site: checkSite,
 };
 
 const FONT_COVERAGE = readFontCoverage();

@@ -194,6 +194,12 @@ fynd.
 | `function Section({ id, title, children, className })` som gällande signatur | `function Section({ id, title, children, className, surface })` | M23 punkt 1 |
 | `className` / global klass som bärare av den ljusa ytan | attributet `data-surface`, ingen klass | M23 punkt 1 |
 | `#ff6b00` som text, länk eller fokusring på ljus botten | `--accent` binds om till `#b84a00`. `#ff6b00` bara som yta, `--accent-fill` | M23 punkt 2 |
+| **Tillagt 2026-11-18, M24 (full SEO):** | | |
+| UPPHÄVT 2026-11-18: "Ingen `Sitemap`-rad" (om robots.txt) | sista raden `Sitemap: <site.url>sitemap.xml`, innehållet exakt `robotsTxt(site.url)` | M24 punkt 5 |
+| "Handskriven, två rader" (om robots.txt) | två rader, tomrad, Sitemap-raden, grindad av V8 | M24 punkt 5 |
+| "referens i `src/` eller `index.html`" som de enda referenskällorna för filer i `dist/` | `src/`, `index.html`, `scripts/seo.mjs` och `public/robots.txt`. Undantaget är `robots.txt` | M24 punkt 6 |
+| `rel="canonical"`, `property="og:`, `name="twitter:` eller `application/ld+json` i `index.html` | skrivs in av `prerender.mjs` i `dist/`, grind P2 | M24 punkt 3 |
+| Domänen skriven i `src/` eller `scripts/` utanför `src/data/site.js` | `site.url`, och adresser byggda med `new URL(…, site.url)` | M24 punkt 1 |
 
 Jag skriver in nya rader här varje gång jag upphäver något. Raderna tas aldrig
 bort — en tom tabell går inte att skilja från en obevakad.
@@ -272,6 +278,7 @@ krockar gäller M-avsnittet, och motsägelsen lämnas tillbaka hit.
 | M22 | **Rättningar efter G2 (2026-11-08):** grinden 5c lyssnar på `Runtime.exceptionThrown` och på produktionsnumren; M20:s breddgrind jämför mot den laddade filen; honeypoten läses ur DOM och stoppar inskicket tyst; `.gitattributes` låser `robots.txt` till LF; bygget jämför heros preload med `HERO_IMAGE_WIDTHS`; brytpunktslistan anger avsikt, inte moduler | **G2-rättning** | M21 5c, M21 punkt 5:s riskmening, M20 punkt 3:s uträkning och grind 7, M20-tabellens rad 3, "Skräppostskydd: honeypot" (premissen), M10c:s kommentar i `profile.js`, "Brytpunkter" (raderna sm och md) |
 | M21 | **Prestanda före G2 (2026-11-08):** fem Lighthouse-körningar per läge; hCaptcha laddas först när formuläret närmar sig vyn eller får fokus; projektbildens `sizes` rättas; `meta description` (förslag) och `robots.txt`; sidan förrenderas vid bygget med `react-dom/server` och hydreras | **P15-fix** (efter P15 del A, före resten av P15) | M17:s antal körningar, "Tre noteringar från granskningen" punkt 1 (`<noscript>`-texten), M12:s och M12b punkt 3:s "före `createRoot`", Teknikval-raden React (skälet "ingen SSR"), mappstrukturens rader för `index.html`, `package.json`, `public/` och `main.jsx`, "Leveransens storlek" (undantaget `robots.txt`) |
 | M23 | **Ljusa sektioner efter loggan (Jelals beslut 9, 2026-11-08):** Projekt och Om mig får `data-surface="light"` via `Section`, och ett block efter `:root` binder om färgtokens och målar botten `#f6f4f0` och texten `#141414`. Accenten för text, länk och ring blir `#b84a00`, och `--accent-fill` `#ff6b00` bär orange yta under mörk text. Pillen blir `.9`. Ingen synlig linje vid ytbyte. `validate-tokens.mjs` grindar att varje ombundet namn finns i `:root` | **P18** (a tokens och mekanism, b projekt, c Om mig, d mätning) | M2:s premiss och avgränsarföljd, tabellraderna om `surface-light` och `#D9D9DE`, M6:s pillbakgrund, M11:s valda segment, M13:s och komponenttabellernas `Section`-signatur, "Sektionsavgränsare" (linjen vid ytbyte), den öppna punkten om den ljusa ytans placering, M2-raden i beslutsloggen för P1 |
+| M24 | **Full SEO (2026-11-18):** domänen bor i `src/data/site.js`. `prerender.mjs` skriver in canonical, Open Graph, Twitter-kortet och två JSON-LD-block (Person, WebSite) i `<head>` i `dist/`, med `</script>` escapat. Delningsbilden 1200 × 630 JPEG, svartvit, görs ur porträttet av ett eget skript. `robots.txt` får Sitemap-raden och `sitemap.xml` tillkommer, båda statiska och grindade byte för byte mot `site.url`. `<title>` grindas mot namn och roll. **Jelal svarade 2026-11-18:** beskrivningen är godkänd, GitHub står bara i sameAs (`sameAsExtra: ['https://github.com/Jelalqaiumi']`), och LinkedIn är bekräftad | **P19c** (efter P19a och P19b) | M21 punkt 4 (Sitemap-raden och referensregeln), M21 punkt 3 (tillägg om `og:description`), M22 punkt 4:s mening om radslut, mappstrukturen, "Leveransens storlek", M20 grind 14, M10c grind 16, "Utdatafiler för ikonen" (gränsen utan undantag), M21:s beslutslogg |
 
 **Efter G1 (2026-11-07):** besluten R1–R6 står i "Besluten efter G1", sist i
 M-avsnittet, och genomförs i paketet G1-rättningen. De rättar A4, M3, M4, M5,
@@ -2239,7 +2246,8 @@ tabellen.
     mer än en gång (LARDOMAR 2026-10-02).
 16. Bygg om och mät `dist/` i samma körning (LARDOMAR 2026-10-05): totalt `<= 1 MB`,
     ingen fil över 300 kB, de tre största filerna redovisade, och varje fil i
-    `dist/` har en referens i `src/` eller `index.html`. Bygget och tidsstämpeln för
+    `dist/` har en referens i `src/` eller `index.html` (**RÄTTAT 2026-11-18, se M24
+    punkt 6:** fyra referenskällor och undantaget `robots.txt`). Bygget och tidsstämpeln för
     den senast ändrade filen under `src/` står i överlämningen.
 
 ##### Grindar före överlämning
@@ -4328,7 +4336,8 @@ utskrivet med menyn stängd):
     och `npm run lint` gröna. `dist/` ≤ 1 MB, ingen fil över 300 kB, de tre största
     redovisade, inget `logo-mark` i `dist/`, och varje fil i `dist/` har en referens
     i `src/` eller `index.html` (**UPPHÄVT i den delen 2026-11-08, se M21 punkt 4:**
-    undantaget `robots.txt`).
+    undantaget `robots.txt`. **RÄTTAT 2026-11-18, se M24 punkt 6:** referenskällorna
+    är också `scripts/seo.mjs` och `public/robots.txt`).
 15. `grep -rnE "[0-9]+ ?px" src/components/Header.jsx src/components/Header.module.css src/components/Footer.jsx src/components/Footer.module.css`:
     varje träff i en kommentar läses, och ett uppmätt tal skrivs om till
     invarianten (LARDOMAR 2026-10-02 och 2026-11-07).
@@ -4492,7 +4501,7 @@ sizes="(min-width: 900px) 380px, (min-width: 600px) 50vw, calc(100vw - 3rem)"
   **UPPLYSNING:** `currentSrc` vid 412 × 823 och DPR 1,75 (Lighthouse-läget). Där
   väntas `awle-1200`, eftersom 364 × 1,75 > 600. Inget krav.
 
-#### Punkt 3 — `<meta name="description">` (FÖRSLAG, väntar på Jelal)
+#### Punkt 3 — `<meta name="description">` — ~~(FÖRSLAG, väntar på Jelal)~~ GODKÄND ordagrant av Jelal 2026-11-18, se M24 punkt 8
 
 **Fil:** `index.html`, raden direkt efter `<title>`:
 
@@ -4500,19 +4509,33 @@ sizes="(min-width: 900px) 380px, (min-width: 600px) 50vw, calc(100vw - 3rem)"
 <meta name="description" content="Jelal Qaiumi, systemutvecklare. Jag bygger webbappar och mobilappar i React, React Native och .NET, hela vägen från databas till app." />
 ```
 
+- **Tillägg 2026-11-18, M24 punkt 3 och 8:** raden är enda källan för
+  sidbeskrivningen. `prerender.mjs` kopierar dess `content` oförändrat till
+  `og:description` vid bygget. **BESVARAD 2026-11-18:** Jelal godkände texten
+  ordagrant (fråga A, stängd). Raden ändras inte.
 - Texten är Jelals egen ingress ur `Hero.jsx`, med namnet och rollordet ur
   `profile.js` framför. Den innehåller inget streck (Jelals beslut 7).
-  **⚠️ FÖRSLAG.** Kommentaren ovanför raden säger att texten väntar på Jelals
-  godkännande, och att den bygger på heros ingress och ska läsas om när ingressen
-  ändras. Ingressen återges inte i kommentaren.
+  ~~**⚠️ FÖRSLAG.** Kommentaren ovanför raden säger att texten väntar på Jelals
+  godkännande~~ **RÄTTAT 2026-11-18, se M24 punkt 8:** texten är godkänd, och P19c
+  tar bort meningen om att den väntar på godkännande ur kommentaren. Att den
+  bygger på heros ingress och ska läsas om när ingressen ändras står kvar.
+  Ingressen återges inte i kommentaren.
 - **Mätning:** Lighthouse-granskningen `meta-description` har `score` 1, och
   `grep -n 'name="description"' index.html | grep -P '[-\x{2010}-\x{2015}]'` ger
   0 träffar. **Negativ kontroll:** samma grep mot en kopia av raden där
   `React Native` är skrivet med bindestreck ger 1 träff.
 
-#### Punkt 4 — `public/robots.txt`
+#### Punkt 4 — `public/robots.txt` — innehållet och referensregeln RÄTTADE 2026-11-18, se M24 punkt 5 och 6
 
-Exakt innehåll, LF-radslut, med radslut efter sista raden (**tillagt 2026-11-08,
+**Gäller från P19c (M24):** `robots.txt` har innehållet `robotsTxt(site.url)` ur
+`scripts/seo.mjs`, alltså de två raderna nedan, en tomrad och raden
+`Sitemap: https://jelalqaiumi.se/sitemap.xml`, och V8 i `validate-data.mjs`
+jämför filen byte för byte. Referensregeln har fyra källor och ett undantag,
+`robots.txt` (M24 punkt 6). Texten nedan beskriver P15-fix och är historik där
+den är överstruken.
+
+~~Exakt innehåll~~ (**RÄTTAT 2026-11-18, se M24 punkt 5:** de två första raderna),
+LF-radslut, med radslut efter sista raden (**tillagt 2026-11-08,
 se M22 punkt 4:** LF garanteras av `.gitattributes`, inte av hur filen skrevs):
 
 ```
@@ -4520,14 +4543,19 @@ User-agent: *
 Allow: /
 ```
 
-- Ingen `Sitemap`-rad, eftersom det inte finns någon sitemap och ingen fastställd
-  domän.
+- **RÄTTAT 2026-11-18:** ~~Ingen `Sitemap`-rad, eftersom det inte finns någon sitemap och ingen fastställd
+  domän.~~ **Se M24 punkt 5:** domänen är fastställd
+  (`site.url`), sitemapen finns, och raden står sist i filen. Genomförs i P19c.
 - **Undantag från regeln "varje fil i `dist/` har en referens"** (Leveransens
   storlek): `robots.txt` läses av sökrobotar på en fast adress och refereras
-  aldrig. Det är det **enda** undantaget. Regeln i LARDOMAR 2026-10-02 bör skrivas
+  aldrig. ~~Det är det **enda** undantaget.~~ **RÄTTAT 2026-11-18, se M24 punkt 6:**
+  `robots.txt` är fortfarande den fil som ingen annan fil refererar, men
+  referenskällorna är nu `src/`, `index.html`, `scripts/seo.mjs` och
+  `public/robots.txt`. Regeln i LARDOMAR 2026-10-02 bör skrivas
   om med undantaget av den som äger filen. Jag rör den inte.
 - **Mätning:** `curl -i http://localhost:<port>/robots.txt` ger 200,
-  `Content-Type: text/plain` och exakt de två raderna. Lighthouse-granskningen
+  `Content-Type: text/plain` och exakt ~~de två raderna~~ (**RÄTTAT 2026-11-18:**
+  innehållet i M24 punkt 5). Lighthouse-granskningen
   `robots-txt` har `score` 1. **Negativ kontroll:** före ändringen är kroppen
   `index.html` (börjar med `<!doctype html>`).
 
@@ -4847,7 +4875,9 @@ public/robots.txt text eol=lf
 - **Ingen `* text=auto eol=lf`.** Den hade ändrat attributen för varje textfil i
   repot, och varje fil som ligger med CRLF i indexet hade då visats som ändrad och
   krävt en omnormalisering. Inget krav i projektet gäller radslutet i andra filer
-  än `robots.txt`.
+  än `robots.txt` (**RÄTTAT 2026-11-18, se M24 punkt 5:** och `sitemap.xml`, som
+  får en egen rad i `.gitattributes`. Filens nya exakta innehåll står där, och
+  blocket ovan är historik från G2-rättning).
 - **`binary` på bildfilerna och typsnitten** gör uttryckligt det git i dag gissar.
   Det ändrar inga befintliga filer, eftersom git redan behandlar dem som binära.
   `*.jpg` tas med för källbilderna i `assets-source/`.
@@ -5461,6 +5491,477 @@ grindar gröna. Varje steg avslutas med `npm run validate:data`,
 `src/lib/`, bilderna, `validate-data.mjs`, `prerender.mjs`, `package.json`.
 `PLAN.md` får paketet av projektledaren.
 
+### M24 — full SEO: canonical, delningskort, JSON-LD och sitemap (2026-11-18, genomförs i P19c)
+
+**Underlag:** `PLAN.md` avsnittet "P19", `LARDOMAR.md`, och miljön kontrollerad
+2026-11-18: `index.html`, `public/robots.txt` (två rader), `.gitattributes`,
+`src/data/profile.js`, `src/data/contact.js` (GitHub `url: null`, LinkedIn
+märkt härledd i kommentaren, bekräftad av Jelal 2026-11-18), `scripts/prerender.mjs`, `scripts/optimize-images.mjs`,
+`scripts/optimize-project-images.mjs` (mönstret `mkdtemp` + `rename`/`copyFile`
+som återanvänds här), `scripts/font-coverage.mjs` (förebilden för en importerad
+hjälpmodul i `scripts/`), `assets-source/hero-portrait.jpg` (1672 × 941),
+`package.json` (`sharp` 0.35.5 som devDependency, `jpeg({ mozjpeg })` finns i
+`node_modules/sharp/dist/output.mjs`). `grep -rn "jelalqaiumi.se" src scripts public index.html`
+gav **0 träffar**: domänen står i dag ingenstans i koden. Lighthouse 12:s
+`canonical`-granskning (`core/audits/seo/canonical.js` i npx-cachen) fäller inte
+en canonical till en annan domän, så mätningen mot `localhost` påverkas inte.
+
+**Inget nytt beroende.** Allt löses med Node, `sharp` (finns) och det
+förrenderingssteg som redan finns.
+
+#### Punkt 1 — en källa per värde
+
+| Värde | Enda källa | Står dessutom i | Skydd när ställena glider isär |
+|-------|------------|-----------------|--------------------------------|
+| Domänen | `src/data/site.js`, `site.url` = `'https://jelalqaiumi.se/'` | `public/robots.txt`, `public/sitemap.xml` (statiska filer, punkt 5) | Grind V8 i `validate-data.mjs`: båda filerna jämförs byte för byte med vad `site.url` ger. Bygget stannar och skriver ut det väntade innehållet |
+| Canonical, `og:url`, `og:image`, JSON-LD `url` och `image` | Härleds ur `site.url` vid bygget (punkt 3) | ingenstans | Kan inte glida: skrivs aldrig för hand. Grind P2 fäller bygget om någon skriver dem i `index.html` |
+| Namnet | `profile.name` i `src/data/profile.js` | `<title>` i `index.html` | Grind V9: `<title>` ska vara exakt `pageTitle(profile)` |
+| Rollen | `profile.role` | `<title>` | Grind V9 (samma) |
+| `og:title` | `pageTitle(profile)`, alltså `` `${name} · ${role}` `` | ingenstans | Härleds |
+| Sidbeskrivningen | `<meta name="description">` i `index.html` (godkänd av Jelal 2026-11-18, punkt 8) | ingenstans | `prerender.mjs` kopierar attributvärdet till `og:description` vid bygget |
+| sameAs | `contact.links[].url` som inte är `null`, följt av `site.sameAsExtra` (Jelals svar 2026-11-18, punkt 7) | ingenstans | Härleds |
+| Delningsbildens sökväg och mått | `SHARE_IMAGE` i `scripts/seo.mjs` | ingenstans | Bildskriptet och `prerender.mjs` importerar konstanten. Grind P4: filen finns i `dist/` |
+
+Inget löfte om "ändra bara här" skrivs för domänen, eftersom den står i tre filer.
+Kommentaren i `site.js` räknar upp de två andra och säger att bygget stannar
+och skriver ut vad som ska stå där (LARDOMAR 2026-11-08, "`profile.js` lovar").
+
+**`src/data/site.js`** (ny), exakt form:
+
+```js
+/** @typedef {Object} Site
+ *  @property {string}   url          OBLIGATORISK. Sidans adress: https, gemener, ett snedstreck sist, ingen sökväg.
+ *  @property {string[]} sameAsExtra  OBLIGATORISK, får vara tom. Profiladresser som står i JSON-LD:s sameAs men INTE visas på sidan. */
+export const site = { url: 'https://jelalqaiumi.se/', sameAsExtra: ['https://github.com/Jelalqaiumi'] };
+```
+
+Adressen i `sameAsExtra` skrivs exakt så, med versalt `J`, som Jelal gav den.
+Kravet på gemener gäller bara `url` (V6), inte `sameAsExtra` (V7).
+
+Filhuvudet följer `profile.js`: "SÅ ÄNDRAR DU NÅGOT" (domänen: byt `url`, kör
+`npm run build`, och skriv in det innehåll bygget skriver ut i `public/robots.txt`
+och `public/sitemap.xml`; en profil som bara ska stå i sameAs: lägg adressen i
+`sameAsExtra`), "VAR DE SYNS" (inte på sidan, bara i sidans `<head>` och i de två
+filerna) och "REGLER SOM BYGGET KONTROLLERAR" (grindarna V6 och V7). Värdet
+`sameAsExtra` är Jelals svar 2026-11-18: GitHub bara i sameAs (punkt 7).
+
+**`scripts/seo.mjs`** (ny). En hjälpmodul utan sidoeffekter och utan
+filåtkomst, som `font-coverage.mjs`. Den importerar ingenting. Den körs aldrig
+direkt och får inget npm-script. Exporterna, med exakt dessa signaturer:
+
+```js
+/** Delningsbildens plats under public/ och dist/, och dess mått. */
+export const SHARE_IMAGE = { path: 'assets/share/share-1200x630.jpg', width: 1200, height: 630 };
+
+/** @param {string} siteUrl  @returns {string}  Exakt innehåll i robots.txt (punkt 5). */
+export function robotsTxt(siteUrl)
+
+/** @param {string} siteUrl  @returns {string}  Exakt innehåll i sitemap.xml (punkt 5). */
+export function sitemapXml(siteUrl)
+
+/** @param {{ name: string, role: string }} profile  @returns {string}  `${name} · ${role}`, rå text, inte escapad. */
+export function pageTitle(profile)
+
+/** @param {{ name: string }} profile  @returns {string}  `Porträtt av ${name}`, rå text. */
+export function shareImageAlt(profile)
+
+/** @param {{ sameAsExtra: string[] }} site  @param {{ links: { url: string|null }[] }} contact  @returns {string[]}
+ *  Varje links[].url som är en sträng, i listans ordning, därefter sameAsExtra. En adress som redan finns tas inte med igen. */
+export function sameAsList(site, contact)
+
+/** @param {string} text  @returns {string}  & < > " som &amp; &lt; &gt; &quot;, & först. För attributvärden och <title>. */
+export function escapeHtml(text)
+
+/** @param {string} text  @returns {string}  & < > som &amp; &lt; &gt;. För <loc> i sitemap.xml. */
+export function escapeXml(text)
+
+/** @param {unknown} value  @returns {string}
+ *  JSON.stringify(value), därefter varje < > & U+2028 U+2029 ersatt med sin JSON-escape: ett omvänt
+ *  snedstreck följt av u003c, u003e, u0026, u2028 respektive u2029 (sex ASCII-tecken per tecken).
+ *  Resultatet tolkas av JSON.parse till samma värde, och kan aldrig innehålla "</script". */
+export function jsonForScript(value)
+
+/** @param {{ site: object, profile: object, contact: object, description: string }} input
+ *  description är attributvärdet ur <meta name="description"> SOM DET STÅR i filen, redan HTML-escapat.
+ *  Det skrivs in oförändrat och escapas INTE igen.
+ *  @returns {string[]}  Taggarna i punkt 3, en per element, i den ordningen, utan indrag. */
+export function headTags(input)
+```
+
+Adresser byggs med `new URL(relativ, siteUrl).href`, aldrig med
+strängsammanfogning: `new URL(SHARE_IMAGE.path, siteUrl).href` och
+`new URL('sitemap.xml', siteUrl).href`.
+
+#### Punkt 2 — grindarna i `validate-data.mjs` (före bygget)
+
+Felet ska stoppa bygget innan något byggs, och skriptet läser redan
+`profile.js` och `index.html` (samma skäl som M22 punkt 5). Ändringar:
+
+- `ACTIVE` får `'site'` sist, och `CHECKS` får `site: checkSite`.
+- `FONT_ROLES` får `'site.url': []` och `'site.sameAsExtra[]': []`. Inget av dem
+  renderas som text.
+- **Tillagt 2026-11-18 efter P19d (LARDOMAR 2026-11-18, "`sameAsExtra` som
+  sträng ger ett följdfel"):** i `checkFontSubset` gäller, före meddelandet om
+  saknad typsnittsroll: är `fontRolesFor(fileName, path)` `undefined` men
+  `fontRolesFor(fileName, `${path}[]`)` inte `undefined`, står en sträng där
+  datan ska ha en lista. Fältet hoppas då över utan meddelande, eftersom fältets
+  egen grind (här V7) redan har fällt det. Regeln gäller varje datafil, inte bara
+  `site.js`. Meddelandet om saknad roll ges som i dag när ingen av nycklarna finns.
+  **Prov N2b:** `sameAsExtra: 'x'` ger exakt ett meddelande, V7:s
+  `site.js: sameAsExtra ska vara en lista (skriv [] om den är tom)`, och inget om
+  `FONT_ROLES`. Åtgärden, `['https://github.com/Jelalqaiumi']`, tiger. Samma prov
+  med `paragraphs: 'text'` i `src/data/about.js` visar att regeln gäller
+  generellt: bara `about.js` egen grind larmar. (Projektposter omfattas redan av
+  M3b, där en fälld post inte läses av typsnittsgrinden alls.)
+- `import { robotsTxt, sitemapXml, pageTitle, escapeHtml } from './seo.mjs';`
+
+Nya funktioner, intill `checkProfile`:
+
+```js
+/** @param {object} mod  Modulen site.js. */
+function checkSite(mod) /* : void */
+/** @param {string} siteUrl  Ett site.url som klarat V6. */
+function checkSeoFiles(siteUrl) /* : void */
+/** @param {{ name: string, role: string }} profile  Ett profile med name och role som klarat sina grindar. */
+function checkPageTitle(profile) /* : void */
+```
+
+`checkSite` anropar `checkSeoFiles(site.url)` bara när V6 gått igenom.
+`checkProfile` anropar `checkPageTitle(profile)` sist, och bara när både `name`
+och `role` har text. Meddelandena, tecken för tecken:
+
+| # | Grind | Meddelande | Legitim ändring som får fälla den |
+|---|-------|------------|-----------------------------------|
+| V6 | `site` är ett objekt, `hasText(site.url)`, `new URL(site.url)` kastar inte, `protocol === 'https:'`, `pathname === '/'`, `search === ''`, `hash === ''` och `new URL(site.url).href === site.url` | `site.js: site saknas eller är inte ett objekt`, respektive `site.js: url "${url}" ska vara en https-adress till startsidan, med gemener och ett snedstreck sist (till exempel https://exempel.se/)` | Ingen. Varje ny domän som skrivs rätt tiger |
+| V7 | `Array.isArray(site.sameAsExtra)`, och varje element en sträng som `new URL` tolkar med `protocol === 'https:'` | `site.js: sameAsExtra ska vara en lista (skriv [] om den är tom)`, respektive `site.js: sameAsExtra[${n}] "${v}" är inte en https-adress` (n räknas från 1) | Ingen |
+| V8 | `public/robots.txt` och `public/sitemap.xml` läses med `readFileSync(…, 'utf8')` i `try/catch`, och var och en ska vara exakt `robotsTxt(url)` respektive `sitemapXml(url)` | Läsfel: `public/<fil>: filen kunde inte läsas (${error.message})`. Bara radsluten skiljer (`actual.replace(/\r\n/g, '\n') === expected`): `public/<fil>: filen har CRLF-radslut, ska ha LF (.gitattributes, ARKITEKTUR.md M24 punkt 5)`. Annars: `` `public/<fil>: innehållet stämmer inte med url i src/data/site.js. Skriv in exakt detta, med LF-radslut och en radbrytning sist:\n${expected}` `` | En ny domän i `site.js`. Åtgärden meddelandet föreskriver, det utskrivna innehållet inskrivet, får den att tiga. Det är avsikten: domänen kan inte ändras på ett ställe utan att bygget säger var mer |
+| V9 | Exakt en `/<title>([^<]*)<\/title>/g` i `index.html`, och dess text lika med `escapeHtml(pageTitle(profile))` | `` `index.html: <title> finns ${n} gånger, ska finnas 1` ``, respektive `` `index.html: <title> är "${faktisk}", men profile.js ger "${väntad}" (name · role). Skriv in den väntade texten i <title> i index.html.` `` | Ett nytt namn eller en ny roll i `profile.js`. Åtgärden, den väntade texten inskriven i `<title>`, får den att tiga |
+
+`index.html` läses en gång per körning: `checkHeroPreload` och `checkPageTitle`
+får samma sträng, läst av en ny funktion `readIndexHtml()` (returnerar
+`string | null`, och lägger själv meddelandet `index.html: filen kunde inte läsas (${error.message})`
+en gång). Läsningen i `checkHeroPreload` flyttar dit, så att meddelandet står en
+gång i skriptet (LARDOMAR 2026-10-02, "en kontroll som behövs två gånger").
+
+OK-raderna, en per grind som gått igenom: `site med adress och ${n} extra sameAs`,
+`robots.txt och sitemap.xml stämmer med site.url`, `titeln stämmer med namn och roll`.
+
+#### Punkt 3 — taggarna och JSON-LD förs in av `prerender.mjs`
+
+**Valt:** `prerender.mjs` skriver in taggarna i `<head>` i samma körning som den
+fyller roten, i samma temporärfil och med samma `renameSync`. **Valt bort:** taggar
+skrivna för hand i `index.html` (domänen på fem ställen och namnet i JSON-LD utan
+källa), och ett eget skript efter `prerender.mjs` (två skript som skriver om samma
+fil, och två flyttar som kan halvlyckas).
+
+`index.html` får **inga** sådana taggar. I `npm run dev` saknas de alltså, och det
+är avsikten: canonical och delningskort gäller den levererade sidan.
+
+**Nya steg i `main()`**, direkt efter steg 2 (delningen vid roten) och före
+SSR-bygget, så att ett fel stoppar körningen innan något renderas. `parts[0]` är
+allt före roten och innehåller `<head>`:
+
+- **2a.** Läs `site.js`, `profile.js` och `contact.js`. Importen med `try/catch`
+  som `readIds()` gör i dag lyfts till en funktion
+  `async function importData(file) /* : Promise<object> */`, som både `readIds()`
+  och 2a anropar, med meddelandet `${file}: filen går inte att tolka som JavaScript (${reason(error)})`
+  på ett ställe. Innehållet är redan grindat av `validate-data.mjs`, som körs
+  först i `build`.
+- **2b. Grindarna P1–P4** nedan, mot `parts[0]` och `dist/`.
+- **2c.** `const tags = headTags({ site, profile, contact, description })`.
+- **2d. Grind P5** mot `tags`.
+- **2e.** `const head = parts[0].split('</head>')`. Ny `parts[0]` =
+  `head[0] + tags.map((tag) => '    ' + tag + '\n').join('') + '  </head>' + head[1]`,
+  där `head[0]` först trimmas i slutet (`trimEnd()`) och får `'\n'`. **Aldrig
+  `String.replace`** med en sträng som ersättning (samma skäl som steg 6).
+- Därefter steg 3–8 oförändrade. Roten, markören och G1–G4 rörs inte.
+
+**Taggarna, i denna ordning**, med `U` = `site.url`, `I` = `new URL(SHARE_IMAGE.path, U).href`,
+`T` = `escapeHtml(pageTitle(profile))`, `D` = `description` oförändrad och
+`A` = `escapeHtml(shareImageAlt(profile))`:
+
+```html
+<link rel="canonical" href="U" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="sv_SE" />
+<meta property="og:url" content="U" />
+<meta property="og:title" content="T" />
+<meta property="og:description" content="D" />
+<meta property="og:image" content="I" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="A" />
+<meta name="twitter:card" content="summary_large_image" />
+<script type="application/ld+json">PERSON</script>
+<script type="application/ld+json">WEBSITE</script>
+```
+
+`U` och `I` går genom `escapeHtml` som allt annat i ett attribut. Bredd och höjd
+skrivs ur `SHARE_IMAGE.width` och `SHARE_IMAGE.height`, inte som literaler.
+`PERSON` = `jsonForScript(…)` av objektet nedan, med nycklarna i denna ordning:
+
+```js
+{ '@context': 'https://schema.org', '@type': 'Person', name: profile.name, jobTitle: profile.role,
+  url: U, image: I, sameAs: sameAsList(site, contact) }
+```
+
+`WEBSITE` = `jsonForScript(…)` av:
+
+```js
+{ '@context': 'https://schema.org', '@type': 'WebSite', name: profile.name, url: U, inLanguage: 'sv' }
+```
+
+- **Två block, inte ett med `@graph`.** Varje block är ett objekt med en `@type`,
+  så att "exakt en Person och exakt en WebSite" kan räknas utan att tolka ett
+  nästlat schema.
+- **`image` är delningsbilden**, inte heros webp. Den är ett porträtt, den har en
+  fast adress, och den hänger inte på `HERO_IMAGE_WIDTHS`.
+- **`sameAs` står alltid med**, även som `[]`.
+- **`og:image:alt`, "Porträtt av Jelal Qaiumi"**, är härledd text och inte
+  Jelals. Samordnaren visar den för Jelal tillsammans med bilden (PLAN.md,
+  risken "fel beskuren").
+
+**Escapningen av `</script>`:** `jsonForScript` ersätter varje `<` i den
+serialiserade JSON-texten med JSON-escapet, ett omvänt snedstreck följt av
+`u003c` (och `>`, `&`, U+2028, U+2029 likaså, punkt 1). I JSON betyder escapet
+samma tecken, så `JSON.parse` ger tillbaka exakt det namn
+som står i `profile.js`, men texten mellan `<script>` och `</script>` kan aldrig
+innehålla `</script`. Ett namn med citattecken eller omvänt snedstreck hanteras
+av `JSON.stringify` själv. Attributvärden går genom `escapeHtml`.
+
+**Grindarna i `prerender.mjs`** (meddelandeformatet `prerender: …` som i dag, och
+alla samlas och skrivs tillsammans som i `checkGates`):
+
+| # | Grind | Meddelande | Legitim ändring som får fälla den |
+|---|-------|------------|-----------------------------------|
+| P1 | `</head>` förekommer exakt en gång i `parts[0]` | `prerender: dist/index.html: </head> finns ${n} gånger före roten, ska finnas 1` | Ingen |
+| P2 | **RÄTTAT 2026-11-18 efter P19d (LARDOMAR 2026-11-18, "P2 släpper igenom enkla citattecken"):** två skiftlägesokänsliga mönster mot `parts[0]`, oberoende av citattecken och blanksteg, som konstanter i `prerender.mjs`: `HAND_TAG_ATTR = /\b(?:rel\|property\|name)\s*=\s*["']?\s*(?:canonical\|og:\|twitter:)/gi` och `HAND_TAG_LDJSON = /\btype\s*=\s*["']?\s*application\/ld\+json/gi`. Varje träff är ett fel. ~~Ingen av strängarna `rel="canonical"`, `property="og:`, `name="twitter:` och `application/ld+json` finns i `parts[0]`~~ | **RÄTTAT 2026-11-18:** ett meddelande per träff, med den matchade texten ordagrant: `prerender: dist/index.html: ${träff} står redan i index.html. Taggen skrivs av prerender.mjs ur src/data/ (ARKITEKTUR.md M24), ta bort den ur index.html.` (~~`${sträng}`~~ var en av de fyra fasta strängarna) | Ingen. En handskriven tagg är en andra källa, och åtgärden (ta bort den) får grinden att tiga. `name="description"` och `name="viewport"` matchar inte, eftersom värdet måste börja med `canonical`, `og:` eller `twitter:` |
+| P3 | Exakt en `/<meta name="description" content="([^"]*)"/g` i `parts[0]`, och värdet har text (`trim() !== ''`) | `prerender: dist/index.html: <meta name="description"> finns ${n} gånger, ska finnas 1`, respektive `prerender: dist/index.html: <meta name="description"> är tom` | Ingen. En ny beskrivning ändrar bara texten |
+| P4 | `existsSync('dist/' + SHARE_IMAGE.path)` | `prerender: dist/${SHARE_IMAGE.path} saknas (kör npm run optimize:share-image och checka in bilden)` | Ingen. Bilden är incheckad, och Vite kopierar den |
+| P5 | Var och en av de två JSON-texterna saknar `<`, och `JSON.parse` av den kastar inte. `tags` innehåller exakt 2 `<script` och 2 `</script>` | `prerender: JSON-LD-block ${n} går inte att tolka eller innehåller "<" (${orsak})`, respektive **RÄTTAT 2026-11-18 efter P19d (LARDOMAR 2026-11-18, "P5:s meddelande säger emot sig självt"):** `prerender: taggarna i <head> har ${opening} <script och ${closing} </script>, ska ha 2 av vardera` (~~`prerender: taggarna i <head> har ${k} <script, ska ha 2`~~ skrev bara ut det ena talet) | Ingen. Grinden skyddar escapningen, och kan bara fällas av en ändring i `seo.mjs` |
+
+**Kommentarer i `index.html`**, skrivna som invarianter (LARDOMAR 2026-10-02 och
+2026-11-07, ÅTERFALL). Ingen av dem får ge en träff på mönstren i P2
+(~~strängarna i P2~~ RÄTTAT 2026-11-18), eftersom kommentaren ligger i `parts[0]`:
+
+- Över `<title>` (ersätter `:14-16`): "Titeln är namnet och rollen ur
+  src/data/profile.js med en mittpunkt emellan. Bygget stannar om de skiljer sig.
+  Beslutat i ARKITEKTUR.md: M24."
+- Över `description` (`:18-20`) läggs en mening till: "Samma text blir
+  delningskortets beskrivning vid bygget." Meningen om att texten väntar på
+  Jelals godkännande tas bort, eftersom han godkände den 2026-11-18 (punkt 8).
+- Ny kommentar direkt före `</head>`: "Canonical, delningskortet och den
+  strukturerade datan skrivs in här av scripts/prerender.mjs vid bygget, ur
+  src/data/. Skriv dem inte för hand: bygget stannar om de finns. Beslutat i
+  ARKITEKTUR.md: M24."
+
+**Kommentaren i `src/data/profile.js`** skrivs om i samma redigering: under "SÅ
+ÄNDRAR DU NÅGOT" står att både namnet och rollen också står i `<title>` i
+`index.html`, och att bygget stannar och skriver ut den väntade titeln om de
+skiljer sig. Under "VAR DE SYNS" läggs till: fliktiteln, delningskortet och den
+strukturerade datan för sökmotorer. Under "REGLER" läggs V9 till. **Kommentaren i
+`src/data/contact.js`**, punkten "En länk": varje länk med en adress står också i
+sameAs i sidans strukturerade data, och en profil som bara ska stå där skrivs i
+`sameAsExtra` i `src/data/site.js`. "Ingen annan fil behöver röras" står kvar,
+eftersom det fortfarande är sant (prövas med greppet i punkt 9). Kommentaren över
+LinkedIn-raden skrivs om: adressen är **bekräftad av Jelal 2026-11-18**, och
+orden "HÄRLEDD, inte verifierad" och uppmaningen att klicka och byta raden tas
+bort. Kommentaren över GitHub-raden får en mening: GitHub står i sameAs via
+`sameAsExtra` i `src/data/site.js` men visas inte på sidan. **Datan i `contact.js`
+rörs inte**, bara kommentarerna (Jelals svar 2026-11-18, punkt 7).
+
+#### Punkt 4 — delningsbilden
+
+- **Källa:** `assets-source/hero-portrait.jpg`, porträttet. Loggan valdes bort:
+  den är 2000 × 774 och hade krävt utfyllnad till 1200 × 630, alltså ny design,
+  vilket "Ingår inte" utesluter.
+- **Skript:** `scripts/optimize-share-image.mjs` (nytt), npm-scriptet
+  `"optimize:share-image": "node scripts/optimize-share-image.mjs"`, tillagt i
+  samma ändring som filen. Körs manuellt och ingår **inte** i `build`, som
+  `optimize:images`. Ett eget skript och inte ett tillägg i `optimize-images.mjs`:
+  den filen bär heros och loggans grindar, och en omkörning av den för en ny bild
+  hade skrivit om elva verifierade filer.
+- **Utdata:** `public/assets/share/share-1200x630.jpg`, sökvägen ur
+  `SHARE_IMAGE.path`. Bilden checkas in, som övriga genererade bilder.
+- **Kedjan, exakt:** `sharp(SOURCE).rotate().resize(SHARE_IMAGE.width, SHARE_IMAGE.height, { fit: 'cover', position: 'top' }).grayscale().toColourspace('srgb').jpeg({ quality: 82, mozjpeg: true })`.
+- **Beskärning:** hela bredden behålls, och det som skärs bort tas nederst
+  (`position: 'top'`). Källan är 1672 × 941 och målet 1,905:1, så skalningen
+  ger 1200 × 675 och 45 rader nederst försvinner, i kavajen. Håret överst står kvar.
+- **Svartvit**, som heros bild på sidan (M10c). Det är sidans befintliga
+  behandling av samma material, ingen ny design. Vill Jelal ha färg är det en rad
+  (`.grayscale()` tas bort) och en omkörning.
+- **JPEG och inte webp:** delningskortet läses av andra tjänsters robotar, och
+  JPEG är det format alla läser. `toColourspace('srgb')` ger tre kanaler, inte en
+  gråskalefil med en kanal.
+- **Storlekstak: 150 kB**, en `GRIND:`. Det är hälften av taket per fil i
+  "Leveransens storlek" och samma tak som projektbilderna. Taket är en gräns, inte
+  ett väntat värde: det uppmätta talet skrivs ut som `UPPLYSNING:` och redovisas i
+  överlämningen. Fäller taket på kvalitet 82 lämnas det tillbaka hit, och
+  kvaliteten sänks inte i tysthet.
+
+**Skriptets ordning**, efter mönstret i `optimize-project-images.mjs`: `fail()`
+kastar ett `GateError`, och `finally` tar bort temporärkatalogen.
+
+1. `assertSafeOutput(target)`: målet får inte vara källan, inte ligga under
+   `assets-source/`, och ska ligga under `public/assets/`. EN funktion, som prövar
+   mot alla källor (LARDOMAR 2026-10-02).
+2. Källan läses med `stat` (storlek och `mtimeMs` sparas), och dess mått efter
+   `.rotate()` ska vara 1672 × 941.
+3. Bilden skrivs till `mkdtemp(join(tmpdir(), 'share-image-'))`.
+4. Grindarna mot filen i temporärkatalogen: `sharp(tmp).metadata()` ger
+   `width` 1200, `height` 630, `format` `'jpeg'` och `channels` 3, och storleken
+   är högst 150 kB. Källan är orörd (samma storlek och `mtimeMs`).
+5. Först därefter `mkdir(dirname(target), { recursive: true })` och
+   `rename(tmp, target)`, med `copyFile` om `rename` fallerar mellan enheter.
+
+Varje utskriven kontroll märks `GRIND:` eller `UPPLYSNING:` (LARDOMAR 2026-10-02),
+och varje `fail()`-meddelande förekommer en gång (`grep -c` redovisas).
+
+#### Punkt 5 — `robots.txt`, `sitemap.xml` och radsluten
+
+Båda filerna är **statiska** i `public/`, handskrivna och grindade byte för byte
+av V8. **Valt bort:** att generera dem i bygget. Det hade gett domänen en enda
+plats, men flyttat `robots.txt` ur `public/` och gjort om M22 punkt 4 för en
+domän som inte väntas ändras. Med grinden kan de inte glida isär utan att bygget
+stannar och säger vad som ska stå.
+
+`robotsTxt(U)` ger exakt, LF och en radbrytning efter sista raden:
+
+```
+User-agent: *
+Allow: /
+
+Sitemap: https://jelalqaiumi.se/sitemap.xml
+```
+
+där sista raden är `` `Sitemap: ${new URL('sitemap.xml', U).href}` ``.
+
+`sitemapXml(U)` ger exakt, LF, två blanksteg per nivå och en radbrytning sist:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://jelalqaiumi.se/</loc>
+  </url>
+</urlset>
+```
+
+där `<loc>` är `escapeXml(U)`. **Ingen `lastmod`:** ett handskrivet datum blir fel
+vid nästa ändring, och en sida utan datum läses ändå.
+
+**`.gitattributes`**, exakt nytt innehåll (ren ASCII, som i M22 punkt 4):
+
+```
+# Radslut och binarfiler. Beslutat i ARKITEKTUR.md: M22 punkt 4 och M24.
+# robots.txt och sitemap.xml levereras med LF oavsett core.autocrlf.
+public/robots.txt text eol=lf
+public/sitemap.xml text eol=lf
+*.webp binary
+*.png binary
+*.jpg binary
+*.woff2 binary
+```
+
+`*.jpg binary` täcker redan delningsbilden. V8 fäller dessutom en CRLF-fil med ett
+eget meddelande, så ett fel radslut stoppar bygget även om attributet saknas.
+
+#### Punkt 6 — regeln om referenser i `dist/`, omskriven
+
+**Gäller från P19c:** varje fil i `dist/` har en referens i `src/`, `index.html`,
+`scripts/seo.mjs` (delningsbilden, som bara refereras ur `SHARE_IMAGE`) eller
+`public/robots.txt` (sitemapen). **Ett undantag:** `robots.txt`, som läses av
+sökrobotar på en fast adress och inte refereras av någon fil. Regeln i
+`LARDOMAR.md` 2026-10-02 ("Ingen fil i `dist/` får sakna en referens i `src/`
+eller `index.html`") bör skrivas om av den som äger filen. Jag rör den inte.
+
+#### Punkt 7 — GitHub i sameAs: BESVARAD av Jelal 2026-11-18
+
+**Svaret:** GitHub ska **bara** stå i sameAs, inte på sidan. Adressen är
+`https://github.com/Jelalqaiumi`. LinkedIn-adressen
+`https://www.linkedin.com/in/jelalqaiumi` är **bekräftad** av Jelal.
+
+**Genomförs i P19c, en datarad:** `site.js` får
+`sameAsExtra: ['https://github.com/Jelalqaiumi']`. Datan i `contact.js` rörs inte:
+GitHub står kvar som `url: null` och renderas inte, och LinkedIn står kvar som den
+är. Bara kommentarerna i `contact.js` ändras (punkt 3). `sameAs` i Person-blocket
+blir alltså exakt, i denna ordning:
+
+```js
+['https://www.linkedin.com/in/jelalqaiumi', 'https://github.com/Jelalqaiumi']
+```
+
+Mekanismen står kvar oförändrad. Ändrar Jelal sig senare är det fortfarande en
+rad: GitHub tillbaka på sidan betyder adressen i `contact.js` och `[]` i
+`sameAsExtra`. En dubblett tas ändå bort av `sameAsList`.
+
+#### Punkt 8 — sidbeskrivningen: GODKÄND av Jelal 2026-11-18
+
+**Svaret:** beskrivningen i `index.html` är godkänd ordagrant. Raden
+`description` ändras inte, och `og:description` blir samma text. P19c tar bort
+meningen om att texten väntar på Jelals godkännande ur kommentaren ovanför
+(punkt 3). Rubriken på M21 punkt 3 är rättad på sin plats. Strecksökningen i M21
+punkt 3 körs ändå en gång i P19c, eftersom `og:description` är ny.
+
+#### Punkt 9 — mätningen (P19c och P19d)
+
+Mot ett `npm run build` som körts omedelbart före. Varje grind prövas med tre
+indata, korrekt (tiger), fel (larmar) och åtgärden meddelandet föreskriver
+(tiger), med sökväg till utdata i scratchpad. Ändringar görs i en kopia av
+projektet eller återställs, och `git diff --exit-code` på de rörda filerna ger 0
+efteråt.
+
+| # | Fel indata | Väntat larm | Åtgärden |
+|---|------------|-------------|----------|
+| N1 (V6) | `url: 'https://Jelalqaiumi.se'` | V6-meddelandet | `'https://jelalqaiumi.se/'` |
+| N2 (V7) | `sameAsExtra: ['http://github.com/Jelalqaiumi']` | V7, element 1 | `['https://github.com/Jelalqaiumi']` |
+| N3 (V8) | `url: 'https://exempel.se/'` | V8 för båda filerna, med det väntade innehållet | Det utskrivna innehållet inskrivet i båda filerna, och bygget går igenom. **Detta är provet "domänen ändrad på ett ställe"** i PLAN.md punkt 7: `dist/` har den nya domänen i canonical, `og:url`, `og:image`, båda JSON-LD-blocken, robots.txt och sitemap.xml, och den gamla ingenstans |
+| N4 (V8) | `public/robots.txt` med CRLF | CRLF-meddelandet | LF |
+| N5 (V9) | `role: 'Utvecklare'` i `profile.js` | V9 med båda titlarna. **Provet "samma för rollen"** | Den väntade titeln i `<title>` |
+| N6 (P2) | `<link rel="canonical" href="https://jelalqaiumi.se/" />` för hand i `index.html` | P2, och `dist/index.html` har samma sha256 som efter `vite build` | Raden borttagen |
+| N6b (P2, tillagd 2026-11-18 efter P19d) | Var för sig, före `</head>` i `index.html`: `<link rel='canonical' href='https://annan.se/' />`, `<meta property='og:title' content='Fel' />`, `<link rel=canonical href=https://annan.se/>`, `<META PROPERTY = "og:title" content="Fel">`, `<meta name='twitter:card' content='summary'>` och `<script type='application/ld+json'>{}</script>` | P2 för var och en, med den matchade texten utskriven, och `dist/index.html` har samma sha256 som efter `vite build` | Raden borttagen: bygget går igenom. **Dessutom tiger P2** med de befintliga `name="description"` och `name="viewport"` (det korrekta indatat) |
+| N7 (P3) | `description`-raden dubblerad | P3, `finns 2 gånger` | En rad |
+| N8 (P4) | `public/assets/share/` borttagen | P4 | `npm run optimize:share-image` |
+| N9 (P5) | I en isolerad kopia av `seo.mjs`: `jsonForScript` = rena `JSON.stringify`, och namnet `Jelal</script><script>x` | P5 | Den riktiga `seo.mjs`: bygget går igenom, båda blocken tolkas av `JSON.parse`, `Person.name` är tecken för tecken det inskrivna namnet, och antalet `<script` i `dist/index.html` är detsamma som med det vanliga namnet. **Detta är den negativa kontrollen i PLAN.md punkt 4** |
+| N9b (P5, tillagd 2026-11-18 efter P19d) | Isolerade kopior av `seo.mjs` med rena `JSON.stringify`: (a) namnet `Jelal</script>x`, så att bara antalet `</script>` är fel (2 och ~~3~~ 4), och (b) namnet `Jelal<script>x`, så att bara antalet `<script` är fel (~~3~~ 4 och 2) | P5:s räknemeddelande med båda talen: (a) ~~`har 2 <script och 3 </script>, ska ha 2 av vardera`~~ `har 2 <script och 4 </script>, ska ha 2 av vardera`, (b) ~~`har 3 <script och 2 </script>, ska ha 2 av vardera`~~ `har 4 <script och 2 </script>, ska ha 2 av vardera`. **RÄTTAT 2026-11-18 efter byggarens mätning (`scratchpad\prov\N9b.txt`):** `profile.name` står i både Person- och WebSite-blocket, så namnet ger två extra taggar och inte en. I båda fallen står också JSON-LD-meddelandet om `"<"`, eftersom grindarna samlas, och det är väntat | Den riktiga `seo.mjs`: bygget går igenom med samma två namn |
+| N10 (bild) | `SIZE_LIMIT_KB` = 1, isolerad ändring | Storleksgrinden. Målfilens sha256 oförändrad (eller filen fortfarande frånvarande vid första körningen), och ingen `share-image-*` kvar i `tmpdir()` | Återställd: körningen går igenom. Två körningar i följd ger samma sha256 |
+
+Utöver tabellen gäller "Godkänt när" i `PLAN.md` P19 punkt 1–10 ordagrant. Måtten
+på delningsbilden läses ur filen själv (`sharp(...).metadata()` eller filens
+SOF-segment), inte ur skriptets utskrift. Greppet `grep -rn "jelalqaiumi.se" src scripts public index.html`
+ska efter P19c ge träffar bara i `src/data/site.js`, `public/robots.txt` och
+`public/sitemap.xml`. Greppet `grep -rn "ändra bara här\|Ingen annan fil" src`
+redovisas, och varje träff prövas mot tabellen i punkt 1.
+
+#### Punkt 10 — vad P19c ändrar
+
+Ett steg, en byggare (PLAN.md: paketet är litet). Jelal har svarat på A och B
+(2026-11-18, punkt 7 och 8). P19c startar när svaren står ordagrant i `PLAN.md`
+(LARDOMAR 2026-11-08, "P18 byggdes utan post i `PLAN.md`").
+
+| Fil | Ändring | Punkt |
+|-----|---------|-------|
+| `src/data/site.js` | Ny, med filhuvud. `sameAsExtra: ['https://github.com/Jelalqaiumi']` | 1, 7 |
+| `scripts/seo.mjs` | Ny, exporterna i punkt 1 | 1, 3, 5 |
+| `scripts/validate-data.mjs` | `ACTIVE`, `CHECKS`, `FONT_ROLES`, `checkSite`, `checkSeoFiles`, `checkPageTitle`, `readIndexHtml` | 2 |
+| `scripts/prerender.mjs` | `importData`, steg 2a–2e, P1–P5, filhuvudets beskrivning av vad skriptet gör | 3 |
+| `scripts/optimize-share-image.mjs` | Ny | 4 |
+| `package.json` | `"optimize:share-image"`. `build` är oförändrad | 4 |
+| `public/assets/share/share-1200x630.jpg` | Genererad | 4 |
+| `public/robots.txt` | Exakt `robotsTxt(U)` | 5 |
+| `public/sitemap.xml` | Ny, exakt `sitemapXml(U)` | 5 |
+| `.gitattributes` | Exakt innehåll i punkt 5 | 5 |
+| `index.html` | Tre kommentarer (punkt 3). Meningen om att beskrivningen väntar på godkännande tas bort. Raden `description` rörs inte | 3, 8 |
+| `src/data/profile.js`, `src/data/contact.js` | Bara kommentarerna (punkt 3). I `contact.js` försvinner "HÄRLEDD, inte verifierad" över LinkedIn. Datan i `contact.js` rörs inte | 3, 7 |
+
+**Rörs inte:** `src/components/`, `src/prerender.jsx`, `src/main.jsx`,
+`vite.config.js`, `scripts/optimize-images.mjs`, `scripts/optimize-project-images.mjs`,
+`validate-tokens.mjs`, `LARDOMAR.md`, `PLAN.md`. Byggaren besvarar varje punkt i
+M24 med `fil:rad` (LARDOMAR 2026-10-05). Varje `.md` som beskriver en grind som
+ändrats (`grep -n "validate-data\|prerender\|robots" README.md GUIDE.md`) lämnas
+till dokumentatorn med `fil:rad` (LARDOMAR 2026-11-08, "README beskriver
+tokengrinden").
+
 ---
 
 ## Paket A — besluten för innehållsuppdraget 2026-10-08, och var de står
@@ -5528,28 +6029,32 @@ skriver; mätningen gällde de strängar jag kunde läsa.
 
 ```
 Portfoolie-Jelalq/
-├─ index.html                     Vites entry. <html lang="sv">, <title>, <meta name="description"> (M21, P15-fix), favicon → /assets/jq-icon-32.png (M20, P14c; var logo-mark-32.png). <div id="root"></div> är markören som scripts/prerender.mjs fyller i dist/ (M21).
-├─ package.json                   Scripts: dev, build, preview (paket 1) + optimize:images (läggs till i paket 2). build slutar med node scripts/prerender.mjs (M21, P15-fix)
+├─ index.html                     Vites entry. <html lang="sv">, <title>, <meta name="description"> (M21, P15-fix), favicon → /assets/jq-icon-32.png (M20, P14c; var logo-mark-32.png). <div id="root"></div> är markören som scripts/prerender.mjs fyller i dist/ (M21). Canonical, delningskort och JSON-LD står INTE här: prerender.mjs skriver in dem före </head> i dist/ (M24, P19c).
+├─ package.json                   Scripts: dev, build, preview (paket 1) + optimize:images (läggs till i paket 2). build slutar med node scripts/prerender.mjs (M21, P15-fix). optimize:share-image (M24, P19c).
 ├─ vite.config.js                 Enbart @vitejs/plugin-react. Ingen extra konfiguration.
-├─ .gitattributes                 robots.txt med LF, bildfiler och woff2 binära. Ingen normalisering av resten (M22 punkt 4, G2-rättning).
+├─ .gitattributes                 robots.txt och sitemap.xml med LF, bildfiler och woff2 binära. Ingen normalisering av resten (M22 punkt 4, G2-rättning; sitemap.xml M24, P19c).
 ├─ ARKITEKTUR.md                  Detta dokument
 ├─ BRIEF.md / PLAN.md / skills.txt
 ├─ scripts/
 │  ├─ optimize-images.mjs         Heros bild, svartvit webp (M10c, P5 omgång 4), och loggan och ikonerna ur jq-logo-light.png (M20, P14c; ersätter logoikonerna från paket 2B). Körs manuellt, ingår INTE i build.
-│  ├─ validate-data.mjs           Grindar src/data/. Första steget i build. Jämför också heros preload i index.html med HERO_IMAGE_WIDTHS (M22 punkt 5).
+│  ├─ validate-data.mjs           Grindar src/data/. Första steget i build. Jämför också heros preload i index.html med HERO_IMAGE_WIDTHS (M22 punkt 5), <title> med namn och roll, och robots.txt och sitemap.xml med site.url (M24, P19c).
+│  ├─ seo.mjs                     Hjälpmodul utan sidoeffekter: SHARE_IMAGE, robots- och sitemaptexten, titeln, taggarna och JSON-LD. Importeras av validate-data.mjs, prerender.mjs och optimize-share-image.mjs (M24, P19c).
+│  ├─ optimize-share-image.mjs    Delningsbilden 1200x630 JPEG ur hero-portrait.jpg (M24, P19c). Manuellt, inte i build.
 │  ├─ font-coverage.mjs           Läser cmap ur en woff2-fil. Anropas av validate-data.mjs, en gång per fil (M1d).
 │  ├─ optimize-project-images.mjs Projektbilder 4:3, webp, vänsterförankrad beskärning (M4, P6). Manuellt, inte i build.
 │  ├─ validate-tokens.mjs         Grindar att varje custom property som nämns är deklarerad i :root i tokens.css (M5g, P2), att varje deklaration har en konsument (M5h) och att varje ombundet namn finns i :root (M23, P18a). I build.
-│  └─ prerender.mjs               Förrenderar <App /> in i dist/index.html efter vite build (M21, P15-fix). Sista steget i build.
+│  └─ prerender.mjs               Förrenderar <App /> in i dist/index.html efter vite build (M21, P15-fix), och skriver in canonical, delningskort och JSON-LD i <head> (M24, P19c). Sista steget i build.
 ├─ assets-source/                 KÄLLBILDER. Publiceras ALDRIG — ligger utanför public/.
 │  ├─ jq-logo-light.png           ORIGINAL 2000x774 — läses, skrivs aldrig över (M20, P14c)
 │  │                              (logo.png UPPHÄVD 2026-11-07, se M20: tas bort i P14c)
 │  ├─ hero-portrait.jpg           ORIGINAL 1672x941 — läses, skrivs aldrig över (M10c, P5 omgång 4)
 │  │                              (profile.jpg UPPHÄVD 2026-11-07, se M10c: tas bort i P5 omgång 4)
 │  └─ projects/                   En PNG per projekt, t.ex. awle.png (M4)
-├─ public/                        Allt här kopieras rakt ut i dist/. Endast genererat, med ETT undantag: robots.txt (M21).
-│  ├─ robots.txt                  Handskriven, två rader (M21 punkt 4, P15-fix)
+├─ public/                        Allt här kopieras rakt ut i dist/. Endast genererat, med två handskrivna filer som bygget grindar mot site.url: robots.txt (M21) och sitemap.xml (M24). ~~ETT undantag: robots.txt~~ RÄTTAT 2026-11-18, se M24 punkt 5.
+│  ├─ robots.txt                  Handskriven, exakt robotsTxt(site.url): två rader, tomrad, Sitemap-raden (M21 punkt 4, P15-fix; Sitemap-raden M24, P19c). ~~två rader~~ RÄTTAT 2026-11-18
+│  ├─ sitemap.xml                 Handskriven, exakt sitemapXml(site.url), en <loc> (M24, P19c)
 │  └─ assets/
+│     ├─ share/                   share-1200x630.jpg, delningsbilden, genererad (M24, P19c)
 │     ├─ hero/                    hero-{960,1440,1672}.webp, svartvita (M10c, P5 omgång 4)
 │     │                           (profile/ UPPHÄVD 2026-11-07, se M10c: tas bort i P5 omgång 4)
 │     ├─ projects/                <namn>-{600,1200}.webp (M4, P6)
@@ -5561,7 +6066,7 @@ Portfoolie-Jelalq/
    ├─ prerender.jsx               export function render(): renderToString av <App /> för scripts/prerender.mjs (M21, P15-fix). Importeras inte av något i src/.
    ├─ App.jsx                     Komponerar sidan: Header, <main> med Hero och sections.map(...), Footer.
    ├─ components/                 En komponent per fil + en .module.css per komponent (ikonerna har ingen, M9)
-   ├─ data/                       Ren data. Innehåll som Jelal redigerar. Ingen JSX här. Ny: profile.js (M10, P5).
+   ├─ data/                       Ren data. Innehåll som Jelal redigerar. Ingen JSX här. Ny: profile.js (M10, P5). Ny: site.js, sidans adress och sameAsExtra (M24, P19c).
    ├─ lib/                        NY (M3, P6). Ren JavaScript utan React/JSX/DOM: projectRules.js, sectionLabel.js, keyFigures.js, skillRules.js (P12b, M14b).
    └─ styles/                     fonts.css, tokens.css, global.css, type.module.css (M1). tokens.css har :root och, direkt efter, ombindningen [data-surface='light'] (M23, P18a).
       └─ fonts/                   urbanist-latin-var.woff2, manrope-latin-var.woff2, jetbrains-mono-latin-400.woff2 + OFL-*.txt (M1, P2).
@@ -5629,7 +6134,7 @@ skrivs ut:
 |----------|-------|
 | `dist/` totalt | **≤ 1 MB** |
 | Enskild fil i `dist/` | **≤ 300 kB** |
-| Filer i `dist/` som ingen kod refererar | **0**. **Ett undantag sedan 2026-11-08 (M21 punkt 4):** `robots.txt`, som läses av sökrobotar på en fast adress och därför aldrig refereras |
+| Filer i `dist/` som ingen kod refererar | **0**. **Ett undantag sedan 2026-11-08 (M21 punkt 4):** `robots.txt`, som läses av sökrobotar på en fast adress och därför aldrig refereras. **RÄTTAT 2026-11-18, se M24 punkt 6:** en referens kan stå i `src/`, `index.html`, `scripts/seo.mjs` (delningsbilden) eller `public/robots.txt` (sitemapen) |
 
 Förväntat utfall efter flytten: ca 0,4–0,5 MB totalt (bildvarianter ~177 kB,
 ikoner ~10 kB, JS och CSS resten). Hamnar siffran nära 1 MB är något fel även om
@@ -5653,6 +6158,7 @@ regression som upptäcks fyra paket senare är dyr att spåra.
 | **oxlint** — mallens egen linter behålls som den levereras | Dev-beroende, noll runtime-kostnad. Vite-mallen `react` ger i dag (vite 8.3.0) `.oxlintrc.json` + `oxlint`, **inte** ESLint. Regeln `react/rules-of-hooks: error` finns med, vilket är exakt det skydd vi ville ha. | Att byta ut mallens linter mot ESLint (nytt beroende och ny konfiguration för ett skydd vi redan har), att strippa lintern helt (tar bort ett verkligt skyddsnät gratis) |
 | Inga andra runtime-beroenden | Briefen: "Inga externa beroenden utöver React/Vite om det inte är motiverat". Ankarnavigering, pills, grid och gråskala löses med plattformen. **Tillägg 2026-11-07:** filtret, mobilmenyn, scroll-reveal och ikonerna löses också med plattformen (M8, M9, M11, M12) | react-router (one-pager använder ankare, och Jelals beslut 1: inga detaljsidor), framer-motion (~~ingen animation är beställd~~ — **skälet UPPHÄVT 2026-11-07:** animation är beställd, men CSS-transitions och en `IntersectionObserver` räcker, M12), ikonbibliotek (~~inga ikoner är beställda~~ — **skälet UPPHÄVT 2026-11-07:** tre ikoner behövs, och tre inline-SVG kostar mindre än ett beroende, M9) |
 | **Lighthouse via `npx`, inte i `package.json`** (tillagt 2026-11-07, M17) | Ett engångsverktyg för slutkontrollen. Det hör inte till bygget och ska inte installeras med det | `lighthouse` som devDependency (ett stort beroendeträd för en mätning per leverans), PageSpeed Insights (kräver en publik adress) |
+| **Canonical, delningskort och JSON-LD skrivs in av `prerender.mjs`, ur `src/data/` och `scripts/seo.mjs`. Delningsbilden görs med `sharp`** (tillagt 2026-11-18, M24) | **Noll nya beroenden.** Förrenderingssteget finns redan och skriver redan `dist/index.html` atomiskt, och `sharp` finns redan som devDependency | `react-helmet` och liknande (runtime-beroende för taggar som aldrig ändras), `vite-plugin-sitemap` (ett beroende för en fil med en `<loc>`), taggarna för hand i `index.html` (domänen på fem ställen och namnet i JSON-LD utan källa) |
 
 | **`@hcaptcha/react-hcaptcha`** | hCaptchas **officiella** React-paket. Sköter skriptladdning, livscykel i React:s modell, skydd mot omrendering och — avgörande — `resetCaptcha()`, som arkitekturen kräver i två lägen. hCaptchas JavaScript laddas externt i **alla** alternativ, så frågan är inte "beroende eller inte" utan vem som skriver limmet. | Web3Forms klientskript som fyller en `div` React äger, **utan dokumenterad återställning**; och att ladda `api.js` själva, vilket flyttar hela livscykeln till oss att underhålla |
 
@@ -6273,7 +6779,7 @@ sektionerna: `MENU_ID` flyttar hit ur `Header.jsx`, och `ROOT_ID` läses av
 `main.jsx`. Valideringen hämtar listan över sidans fasta id genom att läsa varje
 export vars namn slutar på `_ID`, så att listan aldrig skrivs två gånger. Ett nytt
 fast id i en komponent läggs alltså till här, och då omfattas det av grinden utan
-att någon minns att lägga in det. Det enda undantaget är `index.html`, som inte
+att någon minns att lägga in det. Undantaget är `index.html`, som inte
 kan importera. Där står `root` som literal, med en kommentar som pekar på
 `ROOT_ID`.
 
@@ -8016,7 +8522,9 @@ Validering: `paragraphs` är en icke-tom array av icke-tomma strängar, plus
 > **Exemplet nedan har GitHub-adressen ifylld. Det är UPPHÄVT sedan Jelal sa "ta
 > bort github" (2026-10-06).** I filen står `{ label: 'GitHub', url: null }`, och
 > M16 bekräftar 2026-11-07 att länken inte renderas så länge den är `null`.
-> Typedefen och reglerna gäller.
+> Typedefen och reglerna gäller. **Tillägg 2026-11-18, M24 punkt 7:** Jelal vill
+> att GitHub-adressen står i sameAs men inte på sidan. Den skrivs därför i
+> `site.sameAsExtra`, och `url: null` står kvar här.
 
 Alla uppgifter är nu givna (`BRIEF.md`, 2026-10-06).
 
@@ -8071,6 +8579,9 @@ Regler som byggaren måste följa:
 - Att ändra en länk = en rad i denna fil. Ingen komponentfil rörs.
 - Filen inleds med en kommentar på svenska som förklarar just detta.
 
+> **BESVARAD 2026-11-18 av Jelal, se M24 punkt 7:** adressen är bekräftad, och P19c
+> tar bort märkningen ur kommentaren i `contact.js`. Stycket nedan är historik.
+>
 > **LinkedIn-adressen är härledd, inte verifierad.** LinkedIn svarar HTTP 999 på
 > automatiska anrop, alltså blockerat och inte saknat — den gick varken att
 > bekräfta eller avfärda. Slutdelen i en LinkedIn-adress är inte alltid samma som
@@ -8674,6 +9185,16 @@ Utöver det:
   border-box`, aldrig en fast pixelbredd.
 - **Ett riktigt meddelande ska skickas** och landa i `qaiumi@hotmail.com`. Ett
   formulär som inte har levererat ett meddelande är inte verifierat.
+- **Tillägg 2026-11-18, M24:** varje länk vars `url` inte är `null` står också i
+  sameAs i sidans JSON-LD. En profil som bara ska stå i sameAs skrivs i
+  `site.sameAsExtra`, inte här.
+
+### `src/data/site.js` — sidans adress och sameAsExtra (tillagd 2026-11-18, M24, P19c)
+
+Form, typedef, grindar (V6, V7) och vilka andra filer som följer domänen står i
+**M24 punkt 1 och 2**. `sameAsExtra` är
+`['https://github.com/Jelalqaiumi']`, Jelals svar 2026-11-18: GitHub bara i
+sameAs, inte på sidan (M24 punkt 7).
 
 ---
 
@@ -10110,6 +10631,8 @@ Produceras av **samma** `scripts/optimize-images.mjs`, i paket 2B.
 > redan levererar.
 
 **Gränsen "noll orefererade filer i `dist/`" gäller därmed utan undantag.**
+(**RÄTTAT 2026-11-08, se M21 punkt 4, och 2026-11-18, se M24 punkt 6:** ett
+undantag, `robots.txt`, och fyra referenskällor.)
 
 Samtliga ligger under sina tak med `png({ compressionLevel: 9 })` rakt av.
 
@@ -12761,8 +13284,11 @@ punkter:**
   artefakten, inte deklarationen")
 - **`description` är heros ingress plus namn och roll, märkt som FÖRSLAG**
   (påverkat av lärdom: **ja**, 2026-10-02 "rubriken lyder Start": ingen text
-  hittas på, och en härledd text flaggas)
-- **`robots.txt` är det enda undantaget från "ingen orefererad fil i `dist/`".**
+  hittas på, och en härledd text flaggas). **BESVARAD 2026-11-18:** Jelal godkände
+  texten ordagrant, och märkningen tas bort i P19c (M24 punkt 8)
+- **RÄTTAT 2026-11-18:** ~~**`robots.txt` är det enda undantaget från "ingen orefererad fil i `dist/`".**~~
+  **Se M24 punkt 6:** `robots.txt` är fortfarande undantaget,
+  men referenskällorna är fyra, och robots.txt har en Sitemap-rad (M24 punkt 5).
   Regeln i LARDOMAR bör skrivas om av sin ägare (påverkat av lärdom: **ja**,
   2026-10-05 "en bindande regel får aldrig bli inaktuell i tysthet")
 - **Förrendering med `renderToString` och Vites SSR-bygge, och `hydrateRoot`.**
@@ -12921,7 +13447,85 @@ punkter:**
   lärdom: **ja**, 2026-10-02 "överspelade stycken står kvar", ÅTERKOMMANDE, och
   2026-11-07 "sök på `.<klass> {` när ett beslut ändrar en deklaration")
 
+### Beslutslogg — M24, full SEO, 2026-11-18
+
+- **Domänen bor i `src/data/site.js`, och allt i `<head>` härleds ur den vid
+  bygget.** Domänen stod ingenstans i koden (grep gav 0), så den första platsen
+  avgör var alla andra läser. `site.js` och inte `profile.js`, eftersom domänen
+  inte är en egenskap hos personen (påverkat av lärdom: **ja**, 2026-11-08
+  "`profile.js` lovar 'ändra bara här'")
+- **`robots.txt` och `sitemap.xml` är statiska och grindas byte för byte (V8), i
+  stället för att genereras.** Det håller M21 och M22 punkt 4 giltiga och filerna
+  läsbara i repot, och grinden skriver ut exakt vad som ska stå (påverkat av
+  lärdom: **ja**, 2026-10-05 "en grind som fälls av fel skäl": den legitima
+  ändringen fäller den, och den föreskrivna åtgärden får den att tiga)
+- **V8 fäller CRLF med ett eget meddelande.** Radslutet skyddas då av bygget och
+  inte bara av `.gitattributes` (påverkat av lärdom: **ja**, 2026-11-08
+  "`robots.txt` blir CRLF i en färsk klon")
+- **`<title>` grindas mot `name · role` (V9).** Kommentaren i `profile.js` bad
+  redan om två ändringar i samma redigering, och nu blir titeln också `og:title`
+  (påverkat av lärdom: **ja**, 2026-10-02 "definierad på två oberoende ställen")
+- **Taggarna skrivs in av `prerender.mjs` före `</head>`, och P2 förbjuder dem i
+  `index.html`.** Samma atomiska skrivning som roten, och ingen andra källa kan
+  uppstå i tysthet (påverkat av lärdom: **ja**, 2026-10-02 "skriv till en
+  temporärkatalog och flytta sist")
+- **`jsonForScript` escapar `<` som JSON-escapet (omvänt snedstreck och `u003c`), och P5 bevisar det.** JSON-texten
+  kan då aldrig avsluta skriptblocket, och `JSON.parse` ger samma värde. N9
+  visar att grinden larmar utan escapningen (påverkat av lärdom: **ja**,
+  2026-10-05 "ett larm är inte ett kvitto förrän man vet vad som larmade")
+- **sameAs = kontaktlänkarna med adress, sedan `sameAsExtra`.** Jelals svar
+  2026-11-18 (GitHub bara i sameAs, adressen `https://github.com/Jelalqaiumi`)
+  blev en rad i `site.js`, och `contact.js` rörs inte. Ingen agent avgjorde det
+  (påverkat av lärdom: **ja**, 2026-10-02 "ett beslut som saknas uppfinns i
+  koden")
+- **RÄTTAT 2026-11-18 efter P19d: P2 matchar attribut och värde med två
+  skiftlägesokänsliga mönster, P5 skriver ut båda talen, och typsnittsgrinden
+  hoppar över en sträng där datan ska ha en lista.** P2 sökte en skrivform och
+  inte ett attribut, P5:s meddelande hade plats för ett av två tal, och ett
+  typfel i datan gav en åtgärd i skriptet. Nya prov: N6b, N9b och N2b (påverkat
+  av lärdom: **ja**, de tre posterna 2026-11-18 om P2, P5 och `sameAsExtra`)
+- **RÄTTAT 2026-11-18 efter Jelals svar:** beskrivningen är godkänd ordagrant, och
+  LinkedIn-adressen är bekräftad. P19c tar bort märkningarna om förslag och
+  "härledd, inte verifierad" ur kommentarerna i `index.html` och `contact.js`
+  (påverkat av lärdom: **ja**, 2026-11-07 "den beslutade markeringen står kvar
+  efter att dess paket passerat")
+- **Delningsbilden är porträttet, svartvitt, beskuret ovanifrån, JPEG, tak 150
+  kB, i ett eget skript.** Loggan hade krävt utfyllnad, alltså ny design, och
+  `optimize-images.mjs` bär redan elva verifierade filer (påverkat av lärdom:
+  **ja**, 2026-10-02 "skriptet kontrollerar efter att filerna redan är skrivna",
+  och samordnarens erfarenhet att breda uppdrag hänger sig)
+- **`scripts/seo.mjs` är en importerad hjälpmodul, som `font-coverage.mjs`.**
+  Formaten för robots, sitemap, titel och taggar står en gång och läses av tre
+  skript (påverkat av lärdom: **ja**, 2026-10-02 "en kontroll som behövs två
+  gånger lyfts till en funktion")
+- **Ingen `lastmod`, ingen `@graph`, inga fler sidor.** Planen utesluter det, och
+  ett handskrivet datum blir fel (påverkat av lärdom: nej. Planen: bygg inte för
+  framtiden)
+- **Varje verktyg och fil som namnges är kontrollerad i miljön:** `sharp` 0.35.5
+  med `mozjpeg`, källbildens mått, mönstret i `optimize-project-images.mjs`,
+  Lighthouse 12:s `canonical`-granskning (påverkat av lärdom: **ja**, 2026-10-02
+  "ARKITEKTUR.md beskrev verktyg och filer som inte finns")
+- **Äldre stycken rättade i samma redigering:** M21 punkt 4 (Sitemap-raden,
+  undantagsmeningen och mätningen), M21 punkt 3 (tillägg om `og:description`),
+  M21:s beslutslogg, M22 punkt 4:s mening om radslut, mappstrukturen (sju rader),
+  "Leveransens storlek", M20 grind 14, M10c grind 16, "Utdatafiler för ikonen",
+  meningen om `index.html` under `sections.js` (omformulerad utan ändrad mening,
+  så att greppet i P19b:s "Klar när" bara träffar rättade stycken),
+  M-översikten, tabellen över förbjudna strängar (fem rader), Teknikval och
+  kontaktdatans avsnitt (påverkat av lärdom: **ja**, 2026-10-02 "överspelade
+  stycken står kvar", ÅTERKOMMANDE)
+
 ## Öppna punkter som INTE är arkitektens att besluta
+
+**BESVARADE 2026-11-18 av Jelal, se M24 punkt 7 och 8.** Frågorna nedan är
+historik och blockerar inte längre P19c:
+
+- ~~**A. Sidbeskrivningen.** Godkänns förslaget i `index.html` ordagrant?~~
+  **BESVARAD:** godkänd ordagrant (M24 punkt 8).
+- ~~**B. GitHub i sameAs, och LinkedIn.** Ska GitHub tillbaka på sidan, bara stå i
+  sameAs, eller inte finnas alls? Och vilken är adressen? Är LinkedIn-adressen
+  rätt?~~ **BESVARAD:** GitHub bara i sameAs, `https://github.com/Jelalqaiumi`
+  i `site.sameAsExtra`. LinkedIn-adressen är bekräftad (M24 punkt 7).
 
 **BESVARAD 2026-11-07 av Jelal, se M10d:** bilden överst och texten under, och
 knapparna får hamna under skärmkanten. Frågan nedan är historik.
@@ -12978,9 +13582,12 @@ kostar det antingen knapparna ovanför skärmkanten eller en mindre rubrik.
 
 **Äldre punkter:**
 
-- **LinkedIn-adressen är härledd, inte verifierad.** LinkedIn svarar HTTP 999 på
-  automatiska anrop, så den gick varken att bekräfta eller avfärda. Jelal klickar
-  på den när sektionen är byggd. Leder den fel är det en rad i `contact.js`.
+- **BESVARAD 2026-11-18 av Jelal, se M24 punkt 7:** `https://www.linkedin.com/in/jelalqaiumi`
+  är bekräftad, och P19c tar bort "härledd, inte verifierad" ur kommentaren i
+  `contact.js`. Historik: ~~**LinkedIn-adressen är härledd, inte verifierad.**
+  LinkedIn svarar HTTP 999 på automatiska anrop, så den gick varken att bekräfta
+  eller avfärda. Jelal klickar på den när sektionen är byggd. Leder den fel är det
+  en rad i `contact.js`.~~
 - **hCaptcha måste slås på i Web3Forms instrumentpanel.** Steget bor utanför
   arkivet. Byggaren bekräftar i överlämningen att det är gjort, och kravet på ett
   verkligt levererat meddelande är det som bevisar det.

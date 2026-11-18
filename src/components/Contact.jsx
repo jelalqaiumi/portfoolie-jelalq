@@ -46,11 +46,11 @@ function Contact() {
             saknas i modulen blir undefined, och React utelämnar då attributet
             utan att något larmar. */}
         <Reveal index={0}>
-          {/* ===== TEXT SOM JELAL SKA GODKÄNNA =====================
-              Rubriken är arkitektens förslag, inte Jelals ord. Den behövs:
-              utan den blir spalten ett namnlöst block bredvid formuläret, och
-              den som hoppar mellan rubriker med skärmläsare får ingen väg dit.
-              Byt strängen här, ingen annan fil berörs. */}
+          {/* Texten är godkänd ordagrant av Jelal 2026-11-18. Beslutat i
+              ARKITEKTUR.md: M16. Rubriken behövs: utan den blir spalten ett
+              namnlöst block bredvid formuläret, och den som hoppar mellan
+              rubriker med skärmläsare får ingen väg dit. Byt strängen här,
+              ingen annan fil berörs. */}
           <h3 className={styles.linkHeading}>Kontaktuppgifter</h3>
 
           {/* E-posten i KLARTEXT som mailto-länk. Ingen obfuskering, ingen

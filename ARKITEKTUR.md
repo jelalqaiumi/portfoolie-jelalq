@@ -3295,7 +3295,9 @@ button.chip[aria-pressed='true'] {
 **till vänster och först i DOM**, formuläret i en `--surface`-panel till höger.
 Visuell ordning och Tab-ordning är då densamma, alltså samma princip som förut.
 
-- Vänster spalt: `h3` "Kontaktuppgifter", e-posten som `mailto:` i klartext, och
+- Vänster spalt: `h3` "Kontaktuppgifter" (**GODKÄND ordagrant av Jelal
+  2026-11-18.** Byggaren tar bort märkningen "TEXT SOM JELAL SKA GODKÄNNA" i
+  `src/components/Contact.jsx:49-53`. Strängen på `:54` ändras inte), e-posten som `mailto:` i klartext, och
   `contact.links.filter((l) => l.url !== null)`. Det ger LinkedIn i dag.
 - **Rutnätet, tecken för tecken:**
 
@@ -3747,6 +3749,12 @@ Beslut 7 gäller det som syns på sidan, i `<title>` och i `noscript`. Utskrifte
 
 - **Tomma läget** (`.empty`): `--text-base`, `--ink-muted`, `max-width:
   var(--measure)`. Samma som brödtexten i "Om mig". Godkänt.
+  **Tillägg 2026-11-18:** texten, `EMPTY_TEXT` =
+  `'Här lägger jag upp projekt jag har byggt. Än är listan tom.'` i
+  `src/components/Projects.jsx:27`, är **GODKÄND ordagrant av Jelal 2026-11-18**.
+  Byggaren tar bort märkningen "TEXT SOM JELAL SKA GODKÄNNA" och meningen om att
+  texten är ett förslag (`Projects.jsx:19-22`). Meningen om att inget löfte om en
+  tidpunkt ges (`:24-25`) står kvar. Strängen ändras inte.
 - **Textuppskalningen:** `-webkit-text-size-adjust: 100%` behålls. Värdet `100%`
   och inte `none`: `100%` stänger bara av den automatiska uppblåsningen i liggande
   läge, medan användarens egen zoom fungerar. Ingen oprefixad rad läggs till.
@@ -9106,8 +9114,9 @@ inte en spalt.
 **Länkspalten får en egen `h3`.** Utan den blir högerspalten ett namnlöst block
 som svävar bredvid formuläret, och den som hoppar mellan rubriker med skärmläsare
 får ingen väg dit. Förvald text: **"Kontaktuppgifter"**. Neutral och beskrivande —
-**men den är min, inte Jelals, och ska godkännas** som alla texter som talar i
-hans namn.
+~~**men den är min, inte Jelals, och ska godkännas** som alla texter som talar i
+hans namn.~~ **GODKÄND ordagrant av Jelal 2026-11-18, se M16.** Byggaren tar bort
+märkningen "TEXT SOM JELAL SKA GODKÄNNA" i `src/components/Contact.jsx`.
 
 #### Verifiering av flytten — UPPHÄVT 2026-11-07, se M16 (P13:s godkännandepunkter gäller)
 
@@ -13520,6 +13529,17 @@ punkter:**
   kontaktdatans avsnitt (påverkat av lärdom: **ja**, 2026-10-02 "överspelade
   stycken står kvar", ÅTERKOMMANDE)
 
+### Beslutslogg — Jelals svar på de öppna texterna, 2026-11-18
+
+- **h1 i hero, footerns tagline, `h3` "Kontaktuppgifter" (M16) och `EMPTY_TEXT`
+  (M19 punkt 8) är GODKÄNDA ordagrant.** Strängarna i koden ändras inte. Byggaren
+  tar bort FÖRSLAG-märkningen i `Hero.jsx:12-14` och märkningen "TEXT SOM JELAL
+  SKA GODKÄNNA" i `Contact.jsx:49-53` och `Projects.jsx:19-22`, och ingen annan kod
+  (påverkat av lärdom: **ja**, 2026-11-07 "den beslutade markeringen står kvar
+  efter att dess paket passerat")
+- **Namnet i hero: nej. År i branschen: utelämnas. Mobilen vid 360 px: som nu
+  (M10d).** Ingen ändring i koden (påverkat av lärdom: nej)
+
 ## Öppna punkter som INTE är arkitektens att besluta
 
 **BESVARADE 2026-11-18 av Jelal, se M24 punkt 7 och 8.** Frågorna nedan är
@@ -13622,7 +13642,12 @@ efter svaret är historik.
 - ~~**Den ljusa ytans placering efter omordningen**~~ — ~~**UPPHÄVT 2026-11-07:**
   ingen ljus yta finns (M2).~~ **BESVARAD 2026-11-08 av Jelal (beslut 9), se M23:**
   Projekt och Om mig är ljusa.
-- **Länkspaltens `h3` "Kontaktuppgifter"** är min text, inte Jelals. Ska godkännas.
+- **BESVARAD 2026-11-18: GODKÄND ordagrant av Jelal, se M16.** Historik:
+  ~~**Länkspaltens `h3` "Kontaktuppgifter"** är min text, inte Jelals. Ska godkännas.~~
+- **BESVARAD 2026-11-18: GODKÄND ordagrant av Jelal, se M19 punkt 8.** Texten i
+  det tomma läget, `EMPTY_TEXT` i `src/components/Projects.jsx:27`: "Här lägger
+  jag upp projekt jag har byggt. Än är listan tom." Den stod som förslag bara i
+  koden och var inte uppförd här.
 - ~~**Länkarna hamnar under formuläret på mobil**~~ — **UPPHÄVT 2026-11-07:**
   kontaktuppgifterna står först (M16).
 - ~~**Navlänkarnas träffyta på 19 px**~~ — **UPPHÄVT 2026-11-07:** rättas i P3 med

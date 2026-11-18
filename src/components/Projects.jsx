@@ -16,10 +16,10 @@ import { sections, PROJECTS_ID } from '../data/sections.js';
 import typeStyles from '../styles/type.module.css';
 import styles from './Projects.module.css';
 
-/* ===== TEXT SOM JELAL SKA GODKÄNNA ======================================
- * Raden som visas när projektlistan är tom. Texten är ett FÖRSLAG, inte ett
- * beslut: orden väntar på Jelals godkännande. Byt strängen nedan, ingen annan
- * fil behöver röras.
+/* ===== RADEN FÖR EN TOM PROJEKTLISTA ====================================
+ * Raden som visas när projektlistan är tom. Texten är godkänd ordagrant av
+ * Jelal 2026-11-18. Beslutat i ARKITEKTUR.md: M19 punkt 8. Byt strängen
+ * nedan, ingen annan fil behöver röras.
  *
  * Avsiktligt INTE med: "kommer snart", "under uppbyggnad" och varje löfte om
  * en tidpunkt. Sidan ska inte lova något Jelal inte har sagt.

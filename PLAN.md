@@ -163,7 +163,119 @@ samordnaren visa dem mot ett färskt `vite preview`.
 
 ---
 
-## P20 — Ifyllda kompetens-chips i varmvitt (#f6f4f0) med mörk text (KLAR 2026-11-18, godkänd i P20c, Lighthouse tillgänglighet 100)
+## P21 — Ifyllda kompetens-chips i orange (#ff6b00) med mörk text, ersätter P20 (AVBRUTET 2026-11-18, chipsen grå som före P20)
+
+**Ändrat igen 2026-11-18, P21 AVBRUTET:** Jelal såg orange kant och text (P21b omgång 2) och valde "Tillbaka till grå". Kompetens-chipsen ska se ut som före P20. Samordnaren har återställt `Chip.jsx`, `Chip.module.css`, `SkillChip.jsx`, `tokens.css` och `README.md` till läget i `9cb309b` (`git diff 9cb309b -- src` är tom). Arkitekten märker M25 och M26 UPPHÄVDA. P20 och P21 ger ingen kodändring.
+
+**Ändrat 2026-11-18 efter Jelals besked:** Jelal såg de ifyllda orange chipsen (P21b) och svarade "För starkt". Kompetens-chipsen ska i stället ha orange kant och orange text utan fyllning, som ett valt filterchip. Arkitekten rättar M26, byggaren ändrar P21b. Godkänt när gäller med de nya färgerna.
+
+Skriven 2026-11-18 av projektledaren. Fogas in i `PLAN.md` av samordnaren, ovanför
+P20 och "Tidigare omgångar". Ingen tidigare text i `PLAN.md` tas bort.
+
+**Mål (Jelal, 2026-11-18, efter att ha sett P20):** "vit passade inte alls".
+Kompetens-chipsen i den mörka sektionen Kompetens blir ifyllda i orange:
+fyllning `var(--accent-fill)` (#ff6b00) med text `var(--ink-inverse)` (#141414),
+samma som knappen "Kontakta mig". Jelal valde ifylld framför orange kant och text.
+Projektfiltrets chips ändras inte. P20:s mekanism (prop `surface` på `Chip` och
+`data-surface='light'` på chipset) ersätts, den byggs inte ovanpå.
+
+**Underlag:** `src/components/SkillChip.jsx`, `src/components/Chip.jsx`,
+`src/components/Chip.module.css` (regeln `.chip[data-surface='light']`),
+`src/components/ProjectFilter.jsx`, `src/components/ProjectFilter.module.css`,
+`src/styles/tokens.css` (`--accent-fill`, `--ink-inverse` och kvoten 6,452:1 på
+rad 66), `scripts/validate-tokens.mjs`, `ARKITEKTUR.md` M15, M23 och M25.
+
+### Lärdomar som gäller här
+
+- **2026-11-18, P20b mätte mot dev-servern fast M25 kräver `vite preview`.** →
+  Varje mätning i "Godkänt när" görs mot `npx vite preview --port <ledig> --strictPort`
+  av ett färskt bygge, servern stängs via sin PID, och varje mätfil anger port och
+  byggets tidsstämpel. Går det inte: lämna tillbaka, mät aldrig mot dev. K1 för
+  filterchipsen tas innan första ändringen i arbetsträdet, med `git diff --stat`
+  eller `git stash list` som visar att trädet var rent.
+- **2026-11-18, M25 N2 väntade fel detalj för det valda filterchipset.** → Varje
+  negativ kontroll i M26 anger väntat utfall per tillstånd (vilande och
+  `aria-pressed='true'`), uträknat ur specificiteten för varje regel som kan träffa
+  elementet, innan det skrivs in.
+- **2026-11-08, P18 byggdes utan post i `PLAN.md`.** → Detta avsnitt är posten.
+  Byggaren startar P21b först när `grep -n "P21b" PLAN.md` ger träff.
+- **2026-11-08, projektledaren skrev över hela PLAN.md.** → Avsnittet ligger i en
+  separat fil. Samordnaren kör `git diff --numstat PLAN.md` efteråt, borttagna rader = 0.
+- **2026-11-08, värde på flera ställen.** → #ff6b00 och #141414 står redan i
+  `tokens.css`. Inga hexvärden i CSS-moduler; `grep -rn "ff6b00\|141414" src` ger
+  bara träffar i `tokens.css` efter P21b.
+- **2026-11-07, token utan konsument, och 2026-11-08, tokengrinden.** → Blir ett
+  token eller en regel oanvänd när P20:s mekanism tas bort, tas den bort i samma
+  paket. `validate-tokens` ska ge kod 0.
+- **2026-10-08, kvoten skrivs i `tokens.css`.** → Kvoten `--ink-inverse` mot
+  `--accent-fill` finns redan (6,452:1). Arkitekten avgör om den behöver en rad till
+  eller räcker som den står.
+- **Kodkommentarer (ÅTERFALL, 3+).** → `SkillChip.jsx:4-6` och `Chip.jsx:8` beskriver
+  P20:s ljusa yta och blir falska. Byggaren kör grep-regeln 2026-11-08 på ändrade filer
+  och skriver om kommentarerna till invarianten. M25 i `ARKITEKTUR.md` märks ERSATT AV M26.
+- **2026-10-02 och 2026-10-08, 360 px-golvet och rullningslistvillkoret.** → Varje
+  bredd redovisas med sitt rullningslistvillkor.
+
+### Arbetspaket
+
+| # | Uppgift | Agent | Klar när |
+|---|---------|-------|----------|
+| P21a | M26 i `ARKITEKTUR.md`: hur orange fyllning och mörk text når SkillChip, vad som tas bort av P20:s mekanism (prop `surface` på `Chip`, `data-surface` på chipset, regeln `.chip[data-surface='light']`) och vad som står kvar (`SURFACE_LIGHT` används fortfarande av `Section`), att filterchipsen inte påverkas i något tillstånd, vad som händer med kanten, och vilka kommentarer som blir falska. M25 märks ERSATT AV M26. | arkitekt | M26 finns, anger exakt vilka filer som ändras, väntat utfall per tillstånd för filterchipsen är uträknat ur specificiteten, och M25 är märkt ERSATT. |
+| P21b | Ta K1 för filterchipsen mot `vite preview` innan någon fil ändras. Bygg sedan M26. | byggare | Allt under "Godkänt när" punkt 1–7 är kört och redovisat. |
+| P21c | Smal granskning av P21b mot "Godkänt när". Inga nya mätserier utöver dem. | granskare | Utfall skrivet, nya fynd i `LARDOMAR.md`. |
+| P21d | Commit. | samordnaren | `git status` ren för paketets filer. |
+
+**Ingår:**
+- Ifylld bakgrund `var(--accent-fill)` och text `var(--ink-inverse)` på kompetens-chipsen i Kompetens.
+- Borttagning av P20:s mekanism för chipset (prop, attribut och CSS-regel), i den mån M26 säger att den blir oanvänd.
+- Omskrivning av kommentarer i `SkillChip.jsx`, `Chip.jsx` och M15/M25 som beskriver den varmvita ytan.
+
+**Ingår inte:**
+- Projektfiltrets chips (`ProjectFilter.jsx`), deras växlingsläge och fokusstil.
+- Nya färgvärden eller nya tokens för färg.
+- Typsnitt, storlek, radie eller avstånd på chipsen.
+- Hover eller andra tillstånd (kompetens-chipsen är text, inte kontroller).
+- `data-surface='light'` på sektionerna (`Section`, `About`, `Projects`) och de ljusa sektionernas färger.
+
+**Godkänt när:**
+1. K1 för filterchipsen är tagen innan första ändringen i arbetsträdet: `getComputedStyle`
+   för `background-color`, `color`, `border-color` och `padding` på ett filterchip i både
+   vilande och `aria-pressed='true'` läge, mätt mot `vite preview` av ett färskt bygge på
+   egen port. Mätfilen i scratchpad anger port, byggets tidsstämpel och `git diff --stat`
+   (tom) vid mättillfället.
+2. Filterchipsen är oförändrade: samma mätning (K2) efter P21b, mot `vite preview` av
+   ett nytt färskt bygge, är identisk med K1 i båda tillstånden.
+3. Kompetens-chipsen har renderat `background-color` rgb(255, 107, 0) och `color`
+   rgb(20, 20, 20), och kontrasten uträknad ur dessa är minst 4,5:1 (väntat 6,452:1),
+   mätt mot `vite preview`. Kvoten står i `tokens.css`.
+4. Ingen rest av P20:s mekanism på chipset: `grep -rn "surface" src/components/Chip.jsx
+   src/components/Chip.module.css src/components/SkillChip.jsx` ger inga träffar som
+   M26 inte uttryckligen behåller, och inget kompetens-chip har attributet `data-surface`
+   i renderad DOM.
+5. 360 px-golvet håller med det längsta skill-namnet i datan: inget kompetens-chip har
+   `scrollWidth > clientWidth` eller `scrollHeight > clientHeight`, och sidan har inget
+   vågrätt överflöde. Bredd redovisas med rullningslistvillkor. Mätt mot `vite preview`.
+6. `node scripts/validate-tokens.mjs` och `npm run build` ger kod 0.
+7. Lighthouse tillgänglighet 100 på mobil och dator mot `vite preview` av färskt bygge.
+   Preview-servern stängs via sin PID efteråt.
+
+### Risker
+
+- **Mätning mot dev igen.** Dev-servern kan redan köra på 5173. Märks i mätfilerna:
+  saknar de port och byggets tidsstämpel, eller står port 5173, är punkten inte godkänd.
+- **K1 tas för sent.** Byggaren börjar redigera först. Märks på att mätfilen saknar en
+  tom `git diff --stat`, eller har senare tidsstämpel än första ändrade fil.
+- **Filterchipsen följer med.** Ändras `.chip` i stället för en regel bara för
+  kompetens-chipsen slår det mot båda. Märks i punkt 2.
+- **Kompetens-chipsen ser ut som valda filterchips.** Det valda filterchipset har redan
+  samma fyllning och text (`ProjectFilter.module.css:47-49`). Det är Jelals val, men
+  arkitekten noterar det i M26 så att ingen senare "rättar" det; tas upp med Jelal bara
+  om han själv nämner det.
+- **P20 blir kvar halvt.** Prop eller CSS-regel ligger kvar oanvänd. Märks i punkt 4.
+- **Falsk kommentar blir kvar.** Märks med `grep -rn "varmvit\|f6f4f0\|ljus yta" src ARKITEKTUR.md`
+  efter P21b; träffar bara där M26 eller historik uttryckligen avser det.
+
+## P20 — Ifyllda kompetens-chips i varmvitt (#f6f4f0) med mörk text (KLAR 2026-11-18, UPPHÄVD samma dag av Jelal, se P21)
 
 Skriven 2026-11-18 av projektledaren. Fogas in i `PLAN.md` av samordnaren, ovanför
 "Tidigare omgångar". Ingen tidigare text i `PLAN.md` tas bort.

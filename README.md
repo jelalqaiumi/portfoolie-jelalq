@@ -107,8 +107,8 @@ ska synas direkt i webbläsaren, men ett fel ska aldrig nå ett bygge.
      `tokens.css`. `src/data/` genomsöks inte.
   2. Varje variabel i `:root` ska användas med `var()` någonstans i `src/`.
      En kommentar räknas inte som användning.
-  3. Varje variabel som får ett nytt värde utanför `:root`, i blocket för de
-     ljusa sektionerna, ska också finnas i `:root`. Ett felstavat namn där
+  3. Varje variabel som får ett nytt värde utanför `:root`, i blocket
+     `[data-surface='light']` för den ljusa ytan, ska också finnas i `:root`. Ett felstavat namn där
      fäller alltså bygget i stället för att tyst inte binda om något.
 - **`scripts/prerender.mjs`** kontrollerar den förrenderade sidan: exakt en
   `<h1>`, exakt en hero, att varje klassnamn finns i det byggda CSS och att
@@ -180,9 +180,16 @@ rör `document` eller `window`.
   dagens ordning byter ytan vid varje gräns, och ingen linje syns.
 - **Projekt och Om mig är ljusa, resten av sidan är mörk.** `Projects.jsx` och
   `About.jsx` skickar `surface={SURFACE_LIGHT}` till `Section`, som sätter
-  attributet `data-surface="light"` på sektionen. Blocket
-  `[data-surface='light']` direkt efter `:root` i `tokens.css` binder om
-  färgerna för allt i sektionen. Ytan följer komponenten, inte platsen i
+  attributet `data-surface="light"` på sektionen. Samma attribut sätts också
+  på varje kompetens-chip: `SkillChip` skickar `surface={SURFACE_LIGHT}` till
+  `Chip`, som sätter det på sitt `span`, så att kompetenserna står ifyllda i
+  varmvitt med mörk text på den mörka sektionen. `Chip` läser `surface` bara
+  när chipset är text. Projektfiltrets chips är knappar och får aldrig
+  attributet. Blocket `[data-surface='light']` direkt efter `:root` i
+  `tokens.css` binder om färgerna för elementet med attributet och allt inuti
+  det. Regeln `.chip[data-surface='light']` i `Chip.module.css` läser
+  fyllningen och texten ur de ombundna `--bg` och `--ink`, så färgvärdena
+  står bara i `tokens.css`. Ytan följer komponenten, inte platsen i
   `sections.js`. Headern och mobilmenyn ligger utanför sektionerna och är
   alltid mörka.
 - **Ofullständig data renderas inte.** Ett projekt som inte är komplett ger

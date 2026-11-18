@@ -269,7 +269,7 @@ krockar gäller M-avsnittet, och motsägelsen lämnas tillbaka hit.
 | M12 | Animationerna: `.reveal` via en gemensam observer, aldrig dold utan observer, stagger 70 ms med tak, och reducerad rörelse stänger av allt. **M12b: ett ankarmål (`.reveal[id]`) tonas bara i opacitet, headern tål att observer saknas, `enableReveal` flyttar till `main.jsx`, live-raden räknar den visade listan, och en fas startar bara när mängden slugs ändras** | P7 (hover), P10, **P9b (M12b)** | "A11 — Ingen animation införs". **M12b ändrar:** M11b punkt 4 (vakten i `ProjectFilter.jsx` utgår) och M11:s live-rad |
 | M13 | Sektionsetiketten `01 / 04 · PROJEKT` räknas ur `sections` utan hero och är `aria-hidden`. Nämnaren är `sections.length`, och avståndet till `h2` är `--space-3` (M15b) | P11, P11b | — |
 | M14 | Nyckeltalen är "Projekt" och "Kompetenser", båda härledda; "år i branschen" utgår ~~tills Jelal svarat~~ (**BESVARAD 2026-11-18:** utelämnas, Jelals beslut). M14b: kompetensurvalet bor i `src/lib/skillRules.js`, och ett tal som är 0 visas inte | P12, P12b | M14:s "unika namn" |
-| M15 | Kompetenschipsen får filterchipsens stil via en gemensam `Chip`-komponent. M15b: `--space-1` är borttaget, och mono-typklasserna sätter vikten 400 själva | P9 (Chip), P11, P11b | "A6" (chipset och `.cardTitle`), "Chipsens färg", Spacing-raden `--space-1` |
+| M15 | Kompetenschipsen får filterchipsens stil via en gemensam `Chip`-komponent (**RÄTTAT 2026-11-18, se M25:** formen är densamma, men kompetens-chipsen är ifyllda i den ljusa ytan och ser inte längre ut som filterchipsen). M15b: `--space-1` är borttaget, och mono-typklasserna sätter vikten 400 själva | P9 (Chip), P11, P11b | "A6" (chipset och `.cardTitle`), "Chipsens färg", Spacing-raden `--space-1` |
 | M16 | Kontakt: uppgifterna till vänster, formuläret i en panel till höger, hCaptcha `compact`. Footer: GitHub renderas inte så länge den är `null` | P13, P14 | "Kontaktsektionen blir tvåspaltig" med underavsnitt |
 | M17 | Lighthouse körs med `npx` mot `vite preview` och installerad Chrome, mobil och dator. ~~median av tre~~ **Ändrat 2026-11-08, M21 punkt 0:** fem körningar per läge, medianen | P15 | Teknikval (inget verktyg fanns) |
 | M18 | `--content-max: 1180px` och `--content-padding: 1.5rem` | P2 | "Layout, radier och övrigt", värdet i "Var sidmarginalen bor" |
@@ -277,6 +277,7 @@ krockar gäller M-avsnittet, och motsägelsen lämnas tillbaka hit.
 | M20 | **Ny logga (Jelal 2026-11-07, "Kör på B"):** hela loggan (JQ-rutan plus ordmärket i `--ink`, genomskinlig botten) i naven och footern, 34 px hög, `alt="Jelal Qaiumi"` i headerns länk utan dold text. JQ-rutan ensam, opak och utan luft, är favicon och apple-touch-icon. Källan är `assets-source/jq-logo-light.png`. Dessutom formulärtexterna efter Jelals beslut 7 | **P14c** (efter P14b, före P15) | "Headerns logotyp" med alla underavsnitt, M10c:s ikondel och ikongrind (rad 14), M16:s footermärke, M19 punkt 12:s rader om loggan, mappstrukturens loggrader, "Källbilder bor utanför `public/`" (loggraden), "Vad som INTE görs i bildskriptet" (loggstycket), Öppen punkt 5 (accentfärgen) |
 | M22 | **Rättningar efter G2 (2026-11-08):** grinden 5c lyssnar på `Runtime.exceptionThrown` och på produktionsnumren; M20:s breddgrind jämför mot den laddade filen; honeypoten läses ur DOM och stoppar inskicket tyst; `.gitattributes` låser `robots.txt` till LF; bygget jämför heros preload med `HERO_IMAGE_WIDTHS`; brytpunktslistan anger avsikt, inte moduler | **G2-rättning** | M21 5c, M21 punkt 5:s riskmening, M20 punkt 3:s uträkning och grind 7, M20-tabellens rad 3, "Skräppostskydd: honeypot" (premissen), M10c:s kommentar i `profile.js`, "Brytpunkter" (raderna sm och md) |
 | M21 | **Prestanda före G2 (2026-11-08):** fem Lighthouse-körningar per läge; hCaptcha laddas först när formuläret närmar sig vyn eller får fokus; projektbildens `sizes` rättas; `meta description` (förslag) och `robots.txt`; sidan förrenderas vid bygget med `react-dom/server` och hydreras | **P15-fix** (efter P15 del A, före resten av P15) | M17:s antal körningar, "Tre noteringar från granskningen" punkt 1 (`<noscript>`-texten), M12:s och M12b punkt 3:s "före `createRoot`", Teknikval-raden React (skälet "ingen SSR"), mappstrukturens rader för `index.html`, `package.json`, `public/` och `main.jsx`, "Leveransens storlek" (undantaget `robots.txt`) |
+| M25 | **Kompetens-chipsen ifyllda (Jelal 2026-11-18):** chipsets `span` får `data-surface="light"` via en ny prop `surface` på `Chip`, och `.chip[data-surface='light']` läser `var(--bg)` och `var(--ink)`. Inga nya token, inga värden dubblerade. Kanten blir genomskinlig men behåller sin bredd. Filterchipsen är oförändrade | **P20b** | M15:s "ser ut som filterchipsen", M15:s signatur och `SkillChip`-rendering, M23 punkt 1 (var attributet sätts) och M23 punkt 2 (blockets kommentar), komponenttabellen |
 | M23 | **Ljusa sektioner efter loggan (Jelals beslut 9, 2026-11-08):** Projekt och Om mig får `data-surface="light"` via `Section`, och ett block efter `:root` binder om färgtokens och målar botten `#f6f4f0` och texten `#141414`. Accenten för text, länk och ring blir `#b84a00`, och `--accent-fill` `#ff6b00` bär orange yta under mörk text. Pillen blir `.9`. Ingen synlig linje vid ytbyte. `validate-tokens.mjs` grindar att varje ombundet namn finns i `:root` | **P18** (a tokens och mekanism, b projekt, c Om mig, d mätning) | M2:s premiss och avgränsarföljd, tabellraderna om `surface-light` och `#D9D9DE`, M6:s pillbakgrund, M11:s valda segment, M13:s och komponenttabellernas `Section`-signatur, "Sektionsavgränsare" (linjen vid ytbyte), den öppna punkten om den ljusa ytans placering, M2-raden i beslutsloggen för P1 |
 | M24 | **Full SEO (2026-11-18):** domänen bor i `src/data/site.js`. `prerender.mjs` skriver in canonical, Open Graph, Twitter-kortet och två JSON-LD-block (Person, WebSite) i `<head>` i `dist/`, med `</script>` escapat. Delningsbilden 1200 × 630 JPEG, svartvit, görs ur porträttet av ett eget skript. `robots.txt` får Sitemap-raden och `sitemap.xml` tillkommer, båda statiska och grindade byte för byte mot `site.url`. `<title>` grindas mot namn och roll. **Jelal svarade 2026-11-18:** beskrivningen är godkänd, GitHub står bara i sameAs (`sameAsExtra: ['https://github.com/Jelalqaiumi']`), och LinkedIn är bekräftad | **P19c** (efter P19a och P19b) | M21 punkt 4 (Sitemap-raden och referensregeln), M21 punkt 3 (tillägg om `og:description`), M22 punkt 4:s mening om radslut, mappstrukturen, "Leveransens storlek", M20 grind 14, M10c grind 16, "Utdatafiler för ikonen" (gränsen utan undantag), M21:s beslutslogg |
 
@@ -3209,14 +3210,25 @@ inte (P13):
 
 ### M15 — Kompetenschipsen (P9, P11)
 
+> **RÄTTAT 2026-11-18, se M25 (genomförs i P20b):** `Chip` får propen `surface`,
+> som bara läses när chipset är text. `SkillChip` skickar `surface={SURFACE_LIGHT}`,
+> och kompetens-chipsen blir ifyllda med `#f6f4f0` och text `#141414` ur den ljusa
+> ytans tokens. Formen (storlek, radie, typsnitt) är densamma som filterchipsens,
+> men kompetenserna ser inte längre ut som filterchipsen. Signaturen och CSS:en
+> nedan gäller med tilläggen i M25 punkt 1 och 2.
+
 - **En gemensam komponent:** `src/components/Chip.jsx`,
-  `function Chip({ children, pressed, onToggle })`. Med `onToggle` blir den
+  `function Chip({ children, pressed, onToggle })` (**RÄTTAT 2026-11-18, se M25:**
+  `function Chip({ children, pressed, onToggle, surface })`). Med `onToggle` blir den
   `<button type="button" aria-pressed={pressed} onClick={onToggle}>`, och utan blir
   den `<span>`. Stilen bor i `Chip.module.css`. Skapas i P9 (filtret är första
   konsumenten).
 - **`SkillChip.jsx`** behåller signaturen `function SkillChip({ name })` och
-  renderar `<li><Chip>{name}</Chip></li>` (P11). `SkillChip.module.css` tas bort.
-- **`Chip.module.css`, tecken för tecken:**
+  renderar `<li><Chip>{name}</Chip></li>` (P11) (**RÄTTAT 2026-11-18, se M25:**
+  `<li><Chip surface={SURFACE_LIGHT}>{name}</Chip></li>`). `SkillChip.module.css` tas bort.
+- **`Chip.module.css`, tecken för tecken** (**RÄTTAT 2026-11-18, se M25 punkt 2:**
+  regeln `.chip[data-surface='light']` läggs till sist. De två reglerna nedan är
+  oförändrade):
 
 ```css
 .chip {
@@ -3436,8 +3448,8 @@ märkta där.
 | `src/components/Projects.jsx` | `function Projects()` | P7–P10, P9b | Filtrets state, live-raden (räknar `displayed`, M12b punkt 4), rutnätet, tomma lägen, faserna i M12 med villkoret i M12b punkt 5 (`pending`-ref, `sameSlugs`). Äger `allSegmentRef` och fokus efter "Rensa filter" (M11b punkt 11, P9b) |
 | `src/components/ProjectFilter.jsx` | `function ProjectFilter({ counts, total, techOptions, filter, onChange })` i P8–P9. **`allRef` läggs till i P9b**, som `function ProjectFilter({ counts, total, techOptions, filter, onChange, allRef })`, när fokusflytten (M11b punkt 11) är dess första konsument | P8, P9, P9b | M11, M11b |
 | `src/components/ProjectCard.jsx` | `function ProjectCard({ project })` i P7. **`index` läggs till i P10**, som `function ProjectCard({ project, index })`, när `Reveal` (M12) är dess första konsument (rättat 2026-11-07, R1) | P7, P10 | M4. `isComplete` finns inte längre här. Kortets id hämtas ur `cardIds(slug)` från G1-rättningen (R2) |
-| `src/components/Chip.jsx` | `function Chip({ children, pressed, onToggle })` | P9 | M15 |
-| `src/components/SkillChip.jsx` | `function SkillChip({ name })` | P11 | `<li><Chip>{name}</Chip></li>` |
+| `src/components/Chip.jsx` | ~~`function Chip({ children, pressed, onToggle })`~~ **RÄTTAT 2026-11-18:** `function Chip({ children, pressed, onToggle, surface })` | P9, `surface` i P20b | M15, M25 |
+| `src/components/SkillChip.jsx` | `function SkillChip({ name })` | P11 | ~~`<li><Chip>{name}</Chip></li>`~~ **RÄTTAT 2026-11-18, M25:** `<li><Chip surface={SURFACE_LIGHT}>{name}</Chip></li>` |
 | `src/components/Reveal.jsx` | `function Reveal({ as, index, className, children, ...rest })` (default) + `export const REVEAL_INDEX_MAX`. **Ingen annan export** (M12b punkt 3) | P10, P9b | M12 |
 | `src/main.jsx` | Lokal `function enableReveal()`, ingen export | P10, P9b, P15-fix | M12, M12b punkt 3. **M21 punkt 5:** `hydrateRoot` när `#root` har ett barnelement (bygget), annars `createRoot` (dev) |
 | `src/prerender.jsx` | `export function render()` → `string`. **Ingen annan export** | P15-fix | M21 punkt 5. Importeras bara av `scripts/prerender.mjs`, aldrig av något i `src/` |
@@ -5105,7 +5117,7 @@ En senare avvikelse större än 0,01 är fortfarande ett fynd mot detta avsnitt.
 | Klass eller attribut | **Attributet `data-surface="light"`.** En global klass hade blivit en fjärde global klass, och M12 stängde dörren efter `.reveal`. En modulklass går inte att nå från `tokens.css` |
 | Namnet | `data-surface`, värdet `light`. `surface-light` förblir en förbjuden sträng (tabellen är rättad, se raden). Inget annat värde finns. Standardytan har inget attribut alls |
 | Var tokens binds om | I `src/styles/tokens.css`, i ett block **direkt efter** `:root`. Blocket målar också sektionens botten och text (se nedan) |
-| Var attributet sätts | **Av `Section`, via en ny prop `surface`.** `Projects.jsx` och `About.jsx` skickar `surface={SURFACE_LIGHT}`. Inte ur `sections.js`: det är Jelals fil, ett fält där hade krävt nya grindar i `validate-data.mjs`, och ytan är ett designbeslut, inte innehåll. Inte som `className`: en modulklass når inte tokens |
+| Var attributet sätts | **Av `Section`, via en ny prop `surface`.** `Projects.jsx` och `About.jsx` skickar `surface={SURFACE_LIGHT}`. Inte ur `sections.js`: det är Jelals fil, ett fält där hade krävt nya grindar i `validate-data.mjs`, och ytan är ett designbeslut, inte innehåll. Inte som `className`: en modulklass når inte tokens. **Tillägg 2026-11-18, se M25:** kompetens-chipsets `span` bär också attributet, satt av `Chip` via propen `surface`. Inget annat element |
 | Ordningen ändras | Ytan följer sektionen, inte platsen. Flyttar Jelal sektionerna kan två ljusa hamna intill varandra. Det är godtaget, och då står linjen kvar mellan dem i den ljusa `--line` |
 
 **`src/components/Section.jsx`, signaturen och attributet:**
@@ -5167,7 +5179,10 @@ borttaget: tyst. Utskriften av (b) och (d) sparas i scratchpad under `p18\`.
 
 #### Punkt 2 — den ljusa paletten, tecken för tecken
 
-**`src/styles/tokens.css`, direkt efter `:root`:**
+**`src/styles/tokens.css`, direkt efter `:root`** (**RÄTTAT 2026-11-18, se M25
+punkt 4:** i kommentarens första mening blir "Section sätter attributet" till
+"Section och kompetens-chipset sätter attributet (ARKITEKTUR.md, M23 och M25)".
+Allt annat i blocket gäller tecken för tecken):
 
 ```css
 /* Ljus sektion, loggans varma botten. Section sätter attributet, och blocket
@@ -5972,6 +5987,145 @@ M24 med `fil:rad` (LARDOMAR 2026-10-05). Varje `.md` som beskriver en grind som
 ändrats (`grep -n "validate-data\|prerender\|robots" README.md GUIDE.md`) lämnas
 till dokumentatorn med `fil:rad` (LARDOMAR 2026-11-08, "README beskriver
 tokengrinden").
+
+### M25 — kompetens-chipsen ifyllda i varmvitt med mörk text (Jelal 2026-11-18, genomförs i P20b)
+
+**Underlag:** `PLAN.md` avsnittet "P20", och miljön kontrollerad 2026-11-18:
+`src/components/Chip.jsx` (`span` utan `onToggle`, `button` med),
+`src/components/Chip.module.css` (`.chip` och `button.chip[aria-pressed='true']`),
+`src/components/SkillChip.jsx`, `src/components/Section.jsx` (exporterar
+`SURFACE_LIGHT`), `src/styles/tokens.css`. `grep -rn "f6f4f0\|141414" src scripts index.html`
+gav tre träffar, alla i `tokens.css`: `--ink-inverse: #141414` i `:root`, och
+`--bg: #f6f4f0` och `--ink: #141414` i `[data-surface='light']`.
+
+#### Punkt 1 — mekanismen: chipset bär den ljusa ytans attribut
+
+**Valt:** kompetens-chipsets `span` får attributet `data-surface="light"`, samma
+attribut som Projekt och Om mig har (M23). Blocket `[data-surface='light']` i
+`tokens.css` binder då om `--bg` till `#f6f4f0` och `--ink` till `#141414` **på
+chipset självt**, och chipsets egna deklarationer läser dem med `var()`. Värdena
+står kvar på ett ställe, och **inget nytt token** deklareras, så regeln om att
+ett token deklareras med sin första konsument berörs inte.
+
+**Valt bort:**
+- Ett nytt token, till exempel `--chip-fill: #f6f4f0` i `:root`. Det hade
+  dubblerat värdet från det ljusa blocket, och två ställen glider isär.
+- `--chip-fill: var(--bg)` i det ljusa blocket. Ett namn som bara står i blocket
+  fäller `validate-tokens.mjs` (M23 punkt 1), och i `:root` hade det pekat på den
+  mörka `--bg`.
+- `--ink-inverse` som textfärg. Värdet är rätt, men tokenet är "mörk text på
+  orange yta" och dess kvoter gäller orange. En kvot mot `#f6f4f0` hade då stått
+  under ett token som inte betyder det (LARDOMAR 2026-10-08, ett tokennamn är
+  ingen motivering för ett kontrastvärde).
+- En variantklass utan attributet, med `#f6f4f0` utskrivet i modulen. Det är
+  dubbleringen planen varnar för.
+
+**`src/components/Chip.jsx`**, ny signatur:
+
+```jsx
+function Chip({ children, pressed, onToggle, surface })
+```
+
+- `surface` läses **bara i `span`-grenen**: `<span className={styles.chip} data-surface={surface === SURFACE_LIGHT ? SURFACE_LIGHT : undefined}>`.
+  Knappgrenen (`onToggle`) ignorerar `surface` och är oförändrad. Det är det som
+  garanterar att filterchipsen aldrig får ytan, även om någon skickar propen.
+- `import { SURFACE_LIGHT } from './Section.jsx';`. Värdet står en gång, i
+  `Section.jsx`, som M23 bestämde.
+
+**`src/components/SkillChip.jsx`:** signaturen är oförändrad,
+`function SkillChip({ name })`. Den renderar
+`<li><Chip surface={SURFACE_LIGHT}>{name}</Chip></li>`, med
+`import { SURFACE_LIGHT } from './Section.jsx';`.
+
+#### Punkt 2 — CSS, tecken för tecken
+
+**`src/components/Chip.module.css`**, en ny regel efter `button.chip[aria-pressed='true']`.
+`.chip` och knappregeln är oförändrade:
+
+```css
+.chip[data-surface='light'] {
+  border-color: transparent;
+  background-color: var(--bg);
+  color: var(--ink);
+}
+```
+
+- **Specificiteten är 0,2,0.** Den vinner över `.chip` (0,1,0) och över blocket
+  `[data-surface='light']` (0,1,0) oavsett i vilken ordning Vite lägger
+  stilmallarna. Blocket målar redan samma två värden, men ordningen mellan
+  `tokens.css` och `Chip.module.css` är inget kontrakt, och `.chip` sätter
+  `transparent` och `--ink-muted`.
+- **`--ink-muted` används inte av kompetens-chipsen längre.** Texten är `--ink`,
+  som Jelal bad om (`#141414`). Tokenet `--ink-muted` och dess värden ändras inte,
+  och filterchipsen läser det som förut.
+- **Kanten:** `border-color: transparent`, och bredden 1 px står kvar. 1.4.11
+  gäller inte, eftersom kompetens-chipset är text och ingen kontroll, och
+  fyllningen avgränsar chipset mot den mörka sektionen. En grå kant
+  (`--line-strong`) runt en varmvit fyllning hade sett ut som en ram och inte som
+  en fylld bricka. Kanten tas **inte** bort: då krymper chipset med 2 px på höjd
+  och bredd, och "Ingår inte" utesluter storleksändringar. Fyllningen målas under
+  den genomskinliga kanten (`background-clip` är `border-box` som standard), så
+  chipset ser fyllt ut ända ut till kanten.
+
+#### Punkt 3 — kontrasten
+
+Text `--ink` `#141414` mot fyllningen `--bg` `#f6f4f0` i den ljusa ytan:
+**16,771:1, AA normal.** Kvoten är uppmätt i M23 och står redan i `tokens.css`, i
+det ljusa blocket: `/* --ink mot --bg: 16,771:1 — AA normal */`. Ingen ny
+kvotrad skrivs, eftersom paret är detsamma. Blockets huvudkommentar får i stället
+meningen i punkt 4, så att den som läser kvoten vet att den också gäller
+kompetens-chipset. P20b mäter kvoten på renderade värden (punkt 5).
+
+#### Punkt 4 — kommentarer som blir falska, skrivna som invarianter
+
+| Fil:rad | I dag | Blir |
+|---------|-------|------|
+| `src/components/SkillChip.jsx:4-6` | "Utseendet är det gemensamma chipsets, utan växlingsläge, så kompetenserna ser ut som filterchipsen men är text och inte knappar." | "Formen är det gemensamma chipsets, och ytan är den ljusa (attributet data-surface), så att kompetenserna står ifyllda på den mörka sektionen. De är text och inte knappar. Beslutat i ARKITEKTUR.md, M15 och M25." |
+| `src/components/Chip.jsx:3-7` | Säger bara att chipset är en knapp med `onToggle` och text utan | En mening läggs till: "Ytan (surface) gäller bara chipset som text: en knapp får aldrig den ljusa ytan. Beslutat i ARKITEKTUR.md: M25." |
+| `src/components/Chip.module.css:1-4` | Ingen mening om ytan | En mening läggs till: "Ett chip med den ljusa ytan läser fyllning och text ur de ombundna tokens, så att värdena står på ett ställe (ARKITEKTUR.md, M25)." |
+| `src/styles/tokens.css:167` | "Section sätter attributet" | "Section och kompetens-chipset sätter attributet (ARKITEKTUR.md, M23 och M25)". Resten av blockets kommentar står kvar |
+
+`README.md:183-184` beskriver attributet som sektionens. Den lämnas till
+dokumentatorn med `fil:rad`.
+
+#### Punkt 5 — verifieringen (P20b)
+
+Mot `vite preview` av ett färskt `npm run build`, med vyport, DPR och
+rullningslistvillkor redovisade för varje mätning.
+
+| # | Kontroll | Godkänt |
+|---|----------|---------|
+| K1 | **Före P20b**: `getComputedStyle` på det första filterchipset i `#projects` (`button` utan `aria-pressed='true'`) och på det valda (`aria-pressed='true'`): `background-color`, `color`, `border-color`, `padding`, `min-height`, `border-width`. Sparas i scratchpad | Filen finns, med sökväg |
+| K2 | Samma mätning **efter** P20b | Identisk med K1, tecken för tecken (PLAN.md punkt 2) |
+| K3 | Ett kompetens-chip i `#skills`: `getComputedStyle(span).backgroundColor` och `.color` | `rgb(246, 244, 240)` och `rgb(20, 20, 20)`. Kvoten räknad ur de två värdena med WCAG:s formel är 16,771:1 ± 0,001 |
+| K4 | Varje kompetens-chip: `span.dataset.surface === 'light'`. Varje `button` i `#projects`: `!button.hasAttribute('data-surface')` | Sant för alla, och antalen redovisas |
+| K5 | Storleken: för varje kompetens-chip `getBoundingClientRect()` före och efter P20b, vid 360 × 640 och 1280 × 800 | Lika ± 0,5 px |
+| K6 | 360 px-golvet med det längsta namnet i `skills.js` | Inget kompetens-chip har `scrollWidth > clientWidth` eller `scrollHeight > clientHeight`, och sidan har inget vågrätt överflöde (PLAN.md punkt 3) |
+| K7 | `grep -rn "f6f4f0\|141414" src scripts index.html` | Samma tre träffar som före, alla i `tokens.css` |
+| K8 | `node scripts/validate-tokens.mjs`, `npm run build`, `npm run lint` | Kod 0. Lighthouse tillgänglighet 100 mobil och dator (PLAN.md punkt 5) |
+
+**Negativa kontroller**, var och en en isolerad ändring som återställs, med
+`git diff --exit-code` på filen efteråt och utdata i scratchpad:
+
+| # | Ändring | Väntat larm |
+|---|---------|-------------|
+| N1 | `SkillChip.jsx` utan `surface` | K3 ger `rgba(0, 0, 0, 0)` och `rgb(168, 163, 156)`, och K4 larmar |
+| N2 | `Chip.jsx` sätter `data-surface` även i knappgrenen | ~~K2 skiljer från K1 på `background-color` och `color`~~ **RÄTTAT 2026-11-18 efter P20c:** för det **vilande** filterchipset skiljer K2 från K1 på `background-color`, `color` och `border-color`. För det **valda** skiljer bara `background-color`, eftersom `button.chip[aria-pressed='true']` (0,2,1) vinner över `.chip[data-surface='light']` (0,2,0) för `color` och `border-color`. K4 larmar i båda. Det visar att K2 kan se en läcka till filterchipsen |
+| N3 | Regeln i punkt 2 skriven som `[data-surface='light'] { … }` utan `.chip` och placerad före `.chip` i modulen | K3 ger `rgba(0, 0, 0, 0)` som bakgrund, eftersom `.chip` vinner. Det visar varför specificiteten 0,2,0 behövs |
+| N4 | `#f6f4f0` utskrivet i stället för `var(--bg)` i regeln | K7 ger en fjärde träff |
+
+#### Punkt 6 — vad P20b ändrar
+
+| Fil | Ändring | Punkt |
+|-----|---------|-------|
+| `src/components/Chip.jsx` | `surface` i signaturen, attributet i `span`-grenen, importen, kommentaren | 1, 4 |
+| `src/components/SkillChip.jsx` | `surface={SURFACE_LIGHT}`, importen, kommentaren | 1, 4 |
+| `src/components/Chip.module.css` | Regeln i punkt 2, kommentaren | 2, 4 |
+| `src/styles/tokens.css` | Bara kommentaren på rad 167. Inga värden, inga nya token | 4 |
+
+**Rörs inte:** `ProjectFilter.jsx`, `Section.jsx`, `Skills.jsx`,
+`Skills.module.css`, `validate-tokens.mjs`, `global.css`, alla värden i
+`tokens.css`. Byggaren besvarar varje punkt med `fil:rad` (LARDOMAR 2026-10-05).
 
 ---
 
@@ -7097,7 +7251,7 @@ grupp har `title`.
 Rubrikordningen håller: ett `h1` (namnet), `h2` per sektion ur `sections.js`, `h3`
 per kompetensgrupp.
 
-#### Chipsens färg — ett utseendeval att lägga fram — UPPHÄVT 2026-11-07, se M15 (chipsen får filterchipsens stil)
+#### Chipsens färg — ett utseendeval att lägga fram — UPPHÄVT 2026-11-07, se M15 (chipsen får filterchipsens stil) — RÄTTAT 2026-11-18, se M25 (kompetens-chipsen ifyllda `#f6f4f0` med text `#141414`)
 
 Med `filled` borta finns ingen skillnad kvar för orange att bära.
 
@@ -7928,7 +8082,8 @@ skiljer alternativen åt ska man säga det, så att den som väljer vet att det 
 
 > **Gäller:** rutnätet 3/2/1 och kortet (`.grid`, `.card`, `.chips`), med namnen
 > översatta genom M5 (`--surface`, `--line`). **Upphävt:** `.chip`-deklarationen
-> nedan. Chipset får filterchipsens stil via `Chip.jsx` (M15), och
+> nedan. Chipset får filterchipsens stil via `Chip.jsx` (M15; **RÄTTAT 2026-11-18,
+> se M25:** formen, med den ljusa ytans fyllning och text), och
 > `SkillChip.module.css` tas bort i P11. `.cardTitle` byts mot mono-eyebrow-stilen
 > på `h3` (M15). **Därmed är också `.cardTitle`-deklarationen nedan och punkten
 > "Kortets rubrik är `--text-lg`" UPPHÄVDA 2026-11-07, se M15 och M15b:** rubriken
@@ -13529,6 +13684,33 @@ punkter:**
   kontaktdatans avsnitt (påverkat av lärdom: **ja**, 2026-10-02 "överspelade
   stycken står kvar", ÅTERKOMMANDE)
 
+### Beslutslogg — M25, ifyllda kompetens-chips, 2026-11-18
+
+- **Chipset bär den ljusa ytans attribut i stället för att få ett eget token.**
+  Värdena står redan i det ljusa blocket, och ett nytt token hade antingen
+  dubblerat `#f6f4f0` eller fällts av tokengrinden (påverkat av lärdom: **ja**,
+  2026-11-08 "`profile.js` lovar 'ändra bara här'", och 2026-11-07 "tokens utan
+  konsument")
+- **`surface` läses bara i `span`-grenen.** Filterchipsen kan då inte få ytan av
+  misstag, och N2 visar att K2 skulle se det (påverkat av lärdom: **ja**,
+  2026-10-05 "ett larm är inte ett kvitto")
+- **Regeln skrivs `.chip[data-surface='light']`, med specificiteten 0,2,0.**
+  Ordningen mellan `tokens.css` och modulen är inget kontrakt (påverkat av lärdom:
+  nej)
+- **`--ink` och inte `--ink-inverse` som text, och kvoten är den som redan står
+  vid `--ink` mot `--bg` i blocket.** En kvot under ett token som betyder något
+  annat hade varit en motivering genom namn (påverkat av lärdom: **ja**,
+  2026-10-08 "ett tokennamn får aldrig vara motivering för ett kontrastvärde")
+- **Kanten blir genomskinlig men står kvar.** 1.4.11 gäller inte text som inte
+  är en kontroll, och att ta bort kanten hade ändrat storleken (påverkat av
+  lärdom: nej. Planen: "Ingår inte")
+- **Äldre stycken rättade i samma redigering:** M-översikten (M15 och ny M25),
+  M15:s inledning, signatur, `SkillChip` och CSS-rubrik, komponenttabellen efter
+  moderniseringen, M23 punkt 1 och punkt 2:s blockkommentar, "Chipsens färg",
+  A6-notisen och den öppna punkten om chipsens färg (påverkat av lärdom: **ja**,
+  2026-10-02 "överspelade stycken står kvar", ÅTERKOMMANDE, och 2026-11-07 "sök på
+  `.<klass> {`")
+
 ### Beslutslogg — Jelals svar på de öppna texterna, 2026-11-18
 
 - **h1 i hero, footerns tagline, `h3` "Kontaktuppgifter" (M16) och `EMPTY_TEXT`
@@ -13618,7 +13800,8 @@ efter svaret är historik.
   ligger ovanför Om mig. Ordningen är hans beslut från 2026-10-07 och ändras inte
   av oss.
 - ~~**Chipsen blir neutrala i stället för orange**~~ — **UPPHÄVT 2026-11-07:**
-  chipsen får filterchipsens stil enligt uppdraget (M15).
+  chipsen får filterchipsens stil enligt uppdraget (M15). **RÄTTAT 2026-11-18, se
+  M25:** kompetens-chipsen är ifyllda i varmvitt med mörk text, Jelals val.
 
 **Äldre punkter:**
 

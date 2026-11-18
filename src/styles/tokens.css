@@ -164,8 +164,9 @@
   --reveal-stagger: 70ms;
 }
 
-/* Ljus sektion, loggans varma botten. Section sätter attributet, och blocket
- * binder om ärvda färgtokens för allt inuti sektionen. Det målar också
+/* Ljus sektion, loggans varma botten. Section och kompetens-chipset sätter
+ * attributet (ARKITEKTUR.md, M23 och M25), och blocket binder om ärvda
+ * färgtokens för allt inuti sektionen. Det målar också
  * sektionens botten och text, eftersom en färg som body redan räknat ut ärvs
  * som färdigt värde och inte följer en ombindning. Varje namn här ska finnas i
  * :root, och validate-tokens.mjs fäller ett som inte gör det. Tokens som inte

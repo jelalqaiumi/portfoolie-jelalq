@@ -163,6 +163,87 @@ samordnaren visa dem mot ett färskt `vite preview`.
 
 ---
 
+## P20 — Ifyllda kompetens-chips i varmvitt (#f6f4f0) med mörk text (KLAR 2026-11-18, godkänd i P20c, Lighthouse tillgänglighet 100)
+
+Skriven 2026-11-18 av projektledaren. Fogas in i `PLAN.md` av samordnaren, ovanför
+"Tidigare omgångar". Ingen tidigare text i `PLAN.md` tas bort.
+
+**Mål (Jelal, 2026-11-18):** Kompetens-chipsen i den mörka sektionen Kompetens
+(`--bg` #101010) blir ifyllda med varmvitt #f6f4f0, samma värde som `--bg` i
+`[data-surface='light']`, med mörk text #141414. Jelal valde #f6f4f0 framför #ffffff.
+Projektfiltrets chips ändras inte.
+
+**Underlag:** `src/components/SkillChip.jsx`, `src/components/Chip.jsx`,
+`src/components/Chip.module.css`, `src/components/ProjectFilter.jsx`,
+`src/styles/tokens.css` (`:root` och `[data-surface='light']`),
+`scripts/validate-tokens.mjs`, `ARKITEKTUR.md` M15 och M23.
+
+### Lärdomar som gäller här
+
+- **2026-11-08, P18 byggdes utan post i `PLAN.md`.** → Detta avsnitt är posten.
+  Byggaren startar P20b först när `grep -n "P20b" PLAN.md` ger träff.
+- **2026-11-08, projektledaren skrev över hela PLAN.md.** → Avsnittet ligger i en
+  separat fil. Samordnaren kör `git diff --numstat PLAN.md` efteråt, borttagna rader = 0.
+- **2026-11-08, `profile.js` lovar "ändra bara här" men värdet står på flera
+  ställen.** → #f6f4f0 och #141414 står redan i `tokens.css` (ljus `--bg`, `--ink`
+  och `--ink-inverse`). Arkitekten bestämmer i M25 hur värdet återanvänds så att det
+  står på ett ställe, och kör `grep -rn "f6f4f0\|141414" src scripts index.html`
+  före beslutet.
+- **2026-11-07, token utan konsument.** → Ett nytt token deklareras i samma paket
+  som sin första `var()`-konsument, och `validate-tokens` ska ge kod 0.
+- **2026-11-08, README beskriver tokengrinden som före M23.** → Bara namn i `:root`
+  räknas som deklarerade. Ett nytt namn som bara står i den ljusa ytan fäller bygget.
+- **2026-10-08, tokennamn som motivering för kontrast.** → Kvoten text mot fyllning
+  skrivs i `tokens.css` i formatet `/* <token> mot <bakgrund>: X,XXX:1 — AA normal */`.
+- **Kodkommentarer (ÅTERFALL, 3+).** → `SkillChip.jsx:4-6` säger att kompetenserna
+  "ser ut som filterchipsen". Det blir falskt. Byggaren kör grep-regeln 2026-11-08
+  på ändrade filer och skriver om kommentaren till invarianten.
+- **2026-10-02 och 2026-10-08, 360 px-golvet och rullningslistvillkoret.** → Varje
+  bredd redovisas med sitt rullningslistvillkor.
+
+### Arbetspaket
+
+| # | Uppgift | Agent | Klar när |
+|---|---------|-------|----------|
+| P20a | M25 i `ARKITEKTUR.md`: hur fyllningen och textfärgen når SkillChip utan att värdena dubbleras (eget token, variant av Chip eller annat), att filterchipsen inte påverkas, vad som händer med kanten och `--ink-muted`, och vilka kommentarer som blir falska. | arkitekt | M25 finns, anger exakt vilka filer som ändras, och M15:s påstående om att chipsen ser likadana ut är rättat eller märkt RÄTTAT. |
+| P20b | Bygg M25. | byggare | Allt under "Godkänt när" punkt 1–5 är kört och redovisat. |
+| P20c | Smal granskning av P20b mot "Godkänt när". Inga nya mätserier utöver dem. | granskare | Utfall skrivet, nya fynd i `LARDOMAR.md`. |
+| P20d | Commit. | samordnaren | `git status` ren för paketets filer. |
+
+**Ingår:**
+- Ifylld bakgrund #f6f4f0 och text #141414 på kompetens-chipsen i Kompetens.
+- Kontrastkommentar för text mot fyllning i `tokens.css`.
+- Omskrivning av kommentarer som påstår att kompetens-chipsen ser ut som filterchipsen.
+
+**Ingår inte:**
+- Projektfiltrets chips (`ProjectFilter.jsx`), deras växlingsläge och fokusstil.
+- Andra färger, typsnitt, storlek, radie eller avstånd på chipsen.
+- Hover eller andra tillstånd (kompetens-chipsen är text, inte kontroller).
+- Färgerna i de ljusa sektionerna.
+
+**Godkänt när:**
+1. Kontrast text mot fyllning är minst 4,5:1 (AA normal), uppmätt på renderade
+   värden (`getComputedStyle` på ett kompetens-chip, `color` mot `background-color`),
+   och kvoten står i `tokens.css`.
+2. Filterchipsen är oförändrade: `getComputedStyle` för `background-color`, `color`,
+   `border-color` och `padding` på ett filterchip i både vilande och `aria-pressed='true'`
+   läge är identisk före och efter P20b. Före-värdena sparas i scratchpad innan P20b ändrar något.
+3. 360 px-golvet håller med det längsta skill-namnet i datan: inget kompetens-chip har
+   `scrollWidth > clientWidth` eller `scrollHeight > clientHeight`, och sidan har inget
+   vågrätt överflöde. Bredd redovisas med rullningslistvillkor.
+4. `node scripts/validate-tokens.mjs` och `npm run build` ger kod 0.
+5. Lighthouse tillgänglighet 100 på mobil och dator mot `vite preview` av färskt bygge.
+
+### Risker
+
+- **Värdet dubbleras.** Lättast att skriva #f6f4f0 direkt i CSS-modulen. Märks med
+  `grep -rn "f6f4f0" src` efter P20b: träffar bara i `tokens.css`.
+- **Filterchipsen följer med.** En ändring i `.chip` slår mot båda. Märks i punkt 2.
+- **Tokengrinden fäller ett nytt namn** som bara binds i den ljusa ytan. Märks direkt
+  i punkt 4.
+- **Falsk kommentar blir kvar** i `SkillChip.jsx` eller M15. Märks med
+  `grep -rn "filterchipsen" src ARKITEKTUR.md`.
+
 ## P19 — Full SEO: canonical, delningskort, JSON-LD och sitemap (KLAR 2026-11-18, godkänd i P19d, Lighthouse SEO 100 mobil och dator)
 
 Skriven 2026-11-18 av projektledaren. Fogas in i `PLAN.md` av samordnaren, ovanför

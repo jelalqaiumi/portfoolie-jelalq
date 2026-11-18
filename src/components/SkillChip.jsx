@@ -1,9 +1,11 @@
 import Chip from './Chip.jsx';
+import { SURFACE_LIGHT } from './Section.jsx';
 
 /* Ett chip = en kompetens. Ren presentation: inget state och ingen kontroll.
- * Utseendet är det gemensamma chipsets, utan växlingsläge, så kompetenserna ser
- * ut som filterchipsen men är text och inte knappar. Beslutat i ARKITEKTUR.md,
- * M15. Komponenten tar därför inget mer än namnet.
+ * Formen är det gemensamma chipsets, och ytan är den ljusa (attributet
+ * data-surface), så att kompetenserna står ifyllda på den mörka sektionen. De
+ * är text och inte knappar. Beslutat i ARKITEKTUR.md, M15 och M25. Komponenten
+ * tar därför inget mer än namnet.
  *
  * Ett namn som är tomt eller bara blanksteg filtreras bort av den komponent som
  * läser datan (Skills.jsx), så att React-nyckeln aldrig kan bli undefined och
@@ -11,7 +13,7 @@ import Chip from './Chip.jsx';
 function SkillChip({ name }) {
   return (
     <li>
-      <Chip>{name}</Chip>
+      <Chip surface={SURFACE_LIGHT}>{name}</Chip>
     </li>
   );
 }

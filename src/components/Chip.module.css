@@ -1,7 +1,10 @@
 /* Det gemensamma chipset. Beslutat i ARKITEKTUR.md: M15 "Chip.module.css".
  *
  * min-height och inte height: ett långt namn får radbryta inuti chipset i
- * stället för att flöda ut ur det. */
+ * stället för att flöda ut ur det.
+ *
+ * Ett chip med den ljusa ytan läser fyllning och text ur de ombundna tokens,
+ * så att värdena står på ett ställe (ARKITEKTUR.md, M25). */
 .chip {
   display: inline-flex;
   align-items: center;
@@ -20,4 +23,10 @@
 button.chip[aria-pressed='true'] {
   border-color: var(--accent);
   color: var(--accent);
+}
+
+.chip[data-surface='light'] {
+  border-color: transparent;
+  background-color: var(--bg);
+  color: var(--ink);
 }

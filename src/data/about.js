@@ -31,15 +31,13 @@
  * @property {AboutLink|null} link        OBLIGATORISK som fält, får vara null. null = ingen länk i texten.
  */
 
-/* TEXTEN ÄR DIN EGEN, ordagrant som du skrev den i uppdraget 2026-10-07. Den
- * är skriven av tecken för tecken ur den filen och jämförs maskinellt mot den -
- * skriver du om stycket är det ditt eget beslut, men då stämmer det inte längre
- * med uppdragsfilen. */
+/* TEXTEN ÄR DIN EGEN, ordagrant som Jelal skrev den 2026-11-19. Den ersätter
+ * det tidigare stycket från 2026-10-07. */
 
 /** @type {About} */
 export const about = {
   paragraphs: [
-    'Jag är systemutvecklare och gillar att bygga system som gör vardagen enklare. Det roligaste med utveckling är problemlösningen: när något krånglar gräver jag tills jag förstår varför och hittar en lösning som håller. Ett exempel är Hem och Ekonomi, en webbapp och mobilapp för hushållets ekonomi som jag byggt med C#/.NET, React och React Native. Jag är i början av min karriär och utmanar mig gärna med nya saker för att växa. Jag bor i Motala och är öppen för att flytta för rätt tjänst.',
+    'Systemutvecklare som bygger system som gör vardagen enklare. Jag drivs av problemlösning och nöjer mig inte förrän jag förstått grundorsaken och hittat en hållbar lösning. Jag arbetar främst med C#/.NET, React och React Native, från idé till färdig produkt.',
   ],
 
   /* EN LÄNK INNE I TEXTEN, utan att texten innehåller någon markering.
@@ -55,8 +53,6 @@ export const about = {
    * denna fil eller någon komponent behöver ändras.
    *
    * Vill du ingen länk alls: skriv  link: null,  och frasen blir vanlig text. */
-  link: {
-    phrase: 'Hem och Ekonomi',
-    projectSlug: 'hem-och-ekonomi',
-  },
+  /* Den nya texten nämner inget projekt, så ingen fras blir länk. */
+  link: null,
 };

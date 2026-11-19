@@ -93,6 +93,9 @@ export const skillGroups = [
       { name: 'MongoDB' },
       { name: 'Datamodellering och normalisering' },
       { name: 'Supabase' },
+      { name: 'PostgreSQL' },
+      { name: 'Neon' },
+      { name: 'PGlite' },
     ],
   },
   {
@@ -131,6 +134,7 @@ export const skillGroups = [
       { name: 'Azure DevOps' },
       { name: 'CI/CD pipelines (YAML)' },
       { name: 'Azure Web App' },
+      { name: 'Render' },
       { name: 'DevSecOps' },
     ],
   },

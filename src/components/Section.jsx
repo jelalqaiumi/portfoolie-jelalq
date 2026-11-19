@@ -1,7 +1,4 @@
 import Reveal from './Reveal.jsx';
-import { sections } from '../data/sections.js';
-import { sectionIndexLabel } from '../lib/sectionLabel.js';
-import typeStyles from '../styles/type.module.css';
 import styles from './Section.module.css';
 
 /* Det enda värdet utöver standardytan. Beslutat i ARKITEKTUR.md: M23. */
@@ -14,12 +11,6 @@ function Section({ id, title, children, className, surface }) {
   if (!id || typeof title !== 'string' || title.trim() === '') {
     return null;
   }
-
-  /* Etikettens nummer räknas ur sections.js, så att en omordning eller en ny
-   * post följer med utan att någon komponent rörs. Finns id:t inte i listan
-   * finns inget nummer, och då renderas ingen etikett alls i stället för en
-   * halv. Beslutat i ARKITEKTUR.md, M13. */
-  const indexLabel = sectionIndexLabel(sections, id);
 
   /* Modulen har ingen egen klass på sektionsroten, så "className" skickas
    * vidare ensam. Sidomarginalen ligger på section[id] i global.css, och
@@ -36,18 +27,9 @@ function Section({ id, title, children, className, surface }) {
       data-surface={surface === SURFACE_LIGHT ? SURFACE_LIGHT : undefined}
     >
       <div className={styles.inner}>
-        {/* Rubriken tonar in som en enhet (ARKITEKTUR.md, M12). Omslaget är
-            till för hela rubrikblocket, så att etiketten ovanför h2 följer
-            med utan en ny Reveal. */}
+        {/* Rubriken tonar in som en enhet (ARKITEKTUR.md, M12). Sektionsetiketten
+            med numret ("01 / 04") är borttagen på Jelals begäran 2026-11-19. */}
         <Reveal>
-          {/* Etiketten är dold för skärmläsare: den upprepar rubriken med ett
-              nummer, och numret säger inget som rubriknavigeringen inte redan
-              ger. Versalerna kommer från typklassen, inte från texten. */}
-          {indexLabel !== null && (
-            <p className={`${typeStyles.meta} ${styles.label}`} aria-hidden="true">
-              {indexLabel} · {title}
-            </p>
-          )}
           <h2 className={styles.title}>{title}</h2>
         </Reveal>
         {children}

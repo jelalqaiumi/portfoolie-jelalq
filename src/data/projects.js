@@ -97,6 +97,19 @@ export const projects = [
     liveUrl: 'https://awle.se',
     githubUrl: null,
   },
+  {
+    slug: 'hemochekonomi',
+    title: 'Hem och Ekonomi',
+    category: 'Fullstack',
+    status: 'Live',
+    /* Texten och teknikerna är godkända av Jelal 2026-11-19. */
+    description:
+      'En gratis budgetapp för hushållet där man för in inkomster, fasta utgifter och sparande, sätter gränser per kategori och får en överblick månad för månad. Jag byggde både webbplatsen och appen.',
+    tech: ['Node.js', 'PostgreSQL', 'Neon', 'PGlite', 'Render'],
+    image: 'hemochekonomi',
+    liveUrl: 'https://hemochekonomi.se',
+    githubUrl: null,
+  },
 ];
 
 /* Bredderna som varje projektbild genereras i. Läses av kortet, bildskriptet
